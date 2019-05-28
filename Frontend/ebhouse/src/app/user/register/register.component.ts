@@ -40,23 +40,24 @@ export class RegisterComponent implements OnInit {
   
   onSubmit(){
     console.log(toUser(this.userFormGroup.value));
-    this.error = -1;
-    // this.userService
-    // .register(toUser(this.userFormGroup.value))
-    // .subscribe(
-    //   (res) => {
-    //     this.error = -1;
-    //     console.log(res);
-    //     //let r = JSON.parse(res['_body'])
-        
-        
-    //   },
-    //   err => {
-    //     this.error = 1;
-    //     console.log(err);
+    this.userService
+    .register(toUser(this.userFormGroup.value))
+    .subscribe(
+      res => {
+        this.error = -1;
+        console.log(res);
+        //let r = JSON.parse(res['_body'])
+      },
+      err => {
+        this.error = 2;
+        console.log(err);
+        console.log('Error: ' + err.error);
+        console.log('Name: ' + err.name);
+        console.log('Message: ' + err.message);
+        console.log('Status: ' + err.status);
       
-    //   }
-    // );
+      }
+    );
   }
 }
 export function passwordMatch(c: AbstractControl){

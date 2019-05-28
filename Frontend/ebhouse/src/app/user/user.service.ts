@@ -5,19 +5,19 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 const httpOptions = {
   headers: new HttpHeaders({
-    'Content-Type':  'application/json'
+    'Content-Type':  'application/json',
   }),
   withCredentials: true,
+  responseType : 'text'  as 'json'
 };
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private baseUrl: string = 'http://localhost:6969';
+  private baseUrl: string = 'http://localhost:8084/CapstoneProject';
   constructor(private http : HttpClient) {}
-  register (user: User): Observable<User> {
-    console.log(user);
-    return this.http.post<User>(`${this.baseUrl}/api/register`, user, httpOptions)};
+  register (user: User): Observable<String> {
+    return this.http.post<String>(`${this.baseUrl}/api/register`, user, httpOptions)};
 
   // Login (user : User): Observable<Response> {
   //   console.log(user);
@@ -31,11 +31,7 @@ export class UserService {
   // }
 
 
-  private getHeaders(){
-    let headers = new Headers();
-    headers.append('Accept', 'application/json');
-    return headers;
-  }
+ 
   // private handleError<T> (operation = 'operation', result?: T) {
   //   return (error: any): Observable<T> => {
  
