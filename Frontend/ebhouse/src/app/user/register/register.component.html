@@ -1,0 +1,95 @@
+<!-- <div id="preloader">
+  <div class="loader"></div>
+</div> -->
+<!-- preloader area end -->
+<!-- login area start -->
+<div class="login-area">
+    <div class="container">
+        <div class="login-box ptb--100">
+            <form [formGroup]="userFormGroup" (ngSubmit)="onSubmit()">
+                <div class="login-form-head">
+                    <h4>Đăng ký</h4>
+                </div>
+                <div *ngIf="error == -1" class="alert alert-primary" role="alert">
+                    <a href="#" class="alert-link">Đăng ký thành công</a>
+                  </div>
+                  <div *ngIf="error == 1" class="alert alert-danger" role="alert">
+                    <a href="#" class="alert-link">Số điện thoại đã tồn tại</a>
+                  </div>
+                  <div *ngIf="error == 2" class="alert alert-danger" role="alert">
+                    <a href="#" class="alert-link">Có lỗi sảy ra</a>
+                  </div>
+                <div class="login-form-body">
+                    <div class="form-gp focused">
+                        <label for="exampleInputName1">Họ và tên</label>
+                        <input type="text" id="exampleInputName1" formControlName="fullname">
+                        <i class="ti-user"></i>
+                    </div>
+                    <div *ngIf="userFormGroup.controls['fullname'].hasError('required') && (userFormGroup.controls['fullname'].dirty || userFormGroup.controls['fullname'].touched)"
+                        class="alert alert-danger">
+                        Bạn phải nhập họ và tên
+                    </div>
+                    <div *ngIf="userFormGroup.controls['fullname'].hasError('minlength') && (userFormGroup.controls['fullname'].dirty || userFormGroup.controls['fullname'].touched)"
+                        class="alert alert-danger">
+
+                    </div>
+                    <div class="form-gp focused">
+                        <label for="exampleInputEmail1">Số điện thoại</label>
+                        <input type="text" id="exampleInputEmail1" formControlName="phone">
+                        <i class="ti-agenda"></i>
+                    </div>
+
+                    <div *ngIf="userFormGroup.controls['phone'].hasError('required') && (userFormGroup.controls['phone'].dirty || userFormGroup.controls['phone'].touched)"
+                        class="alert alert-danger">
+                        Số điện thoại là bắt buộc
+                    </div>
+                    <div *ngIf="userFormGroup.controls['phone'].hasError('pattern') && (userFormGroup.controls['phone'].dirty || userFormGroup.controls['phone'].touched)"
+                        class="alert alert-danger">
+                        Số điện thoại không đúng định dạng
+                    </div>
+                    <div formGroupName="pw">
+                        <div class="form-gp focused">
+                            <label for="exampleInputPassword1">Mật khẩu</label>
+                            <input type="password" id="exampleInputPassword1" formControlName="password">
+                            <i class="ti-lock"></i>
+                        </div>
+                        <div *ngIf="userFormGroup.get('pw.password')?.errors?.required && (userFormGroup.get('pw.password').dirty || userFormGroup.get('pw.password').touched)"
+                            class="alert alert-danger">
+                            Mật khẩu là bắt buộc
+                        </div>
+                        <div *ngIf="userFormGroup.get('pw.password')?.errors?.minlength && (userFormGroup.get('pw.password').dirty || userFormGroup.get('pw.password').touched)"
+                            class="alert alert-danger">
+                            Mật khẩu phải nhiều hơn 8 ký tự
+                        </div>
+                        <div class="form-gp focused">
+                            <label for="exampleInputPassword2">Nhập lại mật khẩu</label>
+                            <input type="password" id="exampleInputPassword2" formControlName="passwordConfirm">
+                            <i class="ti-lock"></i>
+                        </div>
+                        <div *ngIf="userFormGroup.hasError('passwordnotmatch', ['pw']) && (userFormGroup.get('pw').dirty || userFormGroup.get('pw').touched)"
+                            class="alert alert-danger">
+                            Mật khẩu phải trùng nhau
+                        </div>
+                    </div>
+                    <div class="form-group choose-role">
+                        <label for="exampleFormControlSelect1">Chọn chức năng</label>
+                        <select class="form-control" id="exampleFormControlSelect1" formControlName="role" >
+                            <option value="1">Chủ trọ</option>
+                            <option value="2">Khách thuê</option>
+                        </select>
+                    </div>
+
+
+                    <div class="submit-btn-area">
+                        <button id="form_submit" type="submit" [disabled]="userFormGroup.invalid">Đăng ký <i
+                                class="ti-arrow-right"></i></button>
+                    </div>
+                    <div class="form-footer text-center mt-5">
+                        <p class="text-muted">Đã có tài khoản <a routerLink="/login">Đăng nhập</a></p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- login area end -->
