@@ -1,0 +1,10 @@
+.login-form-body .alert.alert-danger{
+    padding : 0;
+    background: none;
+    color: red;
+    position: relative;
+    top: -20px;
+}
+.form-group.choose-role label{
+    color: #7e74ff;
+}

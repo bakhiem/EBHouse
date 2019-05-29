@@ -26,15 +26,13 @@
 }
 
 html {
-    /* -webkit-font-smoothing: antialiased; */
-    font-family: Tahoma, Geneva, sans-serif;
+    -webkit-font-smoothing: antialiased;
 }
 
 body {
     background: #fff;
-    font-weight: 500;
-    font-family: Tahoma, Geneva, sans-serif;
-    /* -webkit-font-smoothing: antialiased; */
+    font-weight: normal;
+    -webkit-font-smoothing: antialiased;
     /* Fix for webkit rendering */
     -webkit-text-size-adjust: 100%;
 }

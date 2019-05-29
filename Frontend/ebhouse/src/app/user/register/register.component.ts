@@ -9,7 +9,7 @@ import {User} from '../user';
 })
 export class RegisterComponent implements OnInit {
   error : number = 0;
-
+  roleDefault : number = 1;
 
   userFormGroup : FormGroup;
   phonePattern = "((09|03|07|08|05)+([0-9]{8}))";
@@ -28,7 +28,7 @@ export class RegisterComponent implements OnInit {
       }, {
         validator : passwordMatch 
       }),
-      role : ['1'],
+      role : [this.roleDefault],
       phone : this.fb.control('',Validators.compose([
         Validators.required,
         Validators.pattern(this.phonePattern)
@@ -51,11 +51,6 @@ export class RegisterComponent implements OnInit {
       err => {
         this.error = 2;
         console.log(err);
-        console.log('Error: ' + err.error);
-        console.log('Name: ' + err.name);
-        console.log('Message: ' + err.message);
-        console.log('Status: ' + err.status);
-      
       }
     );
   }

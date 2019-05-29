@@ -418,7 +418,7 @@
     border-radius: 15px;
     -webkit-transition: all 0.3s ease 0s;
     transition: all 0.3s ease 0s;
-    box-shadow: 0 0 0 4px rgba(99, 96, 96, 0.03);
+    /* box-shadow: 0 0 0 4px rgba(99, 96, 96, 0.03); */
 }
 
 .sbar_collapsed .nav-btn span:nth-child(2) {
@@ -500,7 +500,7 @@
     font-size: 26px;
     color: #bdbcbc;
     vertical-align: middle;
-    text-shadow: 0 0 8px rgba(0, 0, 0, 0.12);
+    /* text-shadow: 0 0 8px rgba(0, 0, 0, 0.12); */
     -webkit-transition: color 0.3s ease 0s;
     transition: color 0.3s ease 0s;
 }
