@@ -9,14 +9,18 @@ import { LoginComponent } from './user/login/login.component';
 import { RegisterComponent } from './user/register/register.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule }    from '@angular/common/http';
-import { UserService } from './user/user.service';
+import { UserService } from './user/service/user.service';
+import { ConfirmPhoneComponent } from './user/confirm-phone/confirm-phone.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 @NgModule({
   declarations: [
     AppComponent,
     UserComponent,
     DashboardComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    ConfirmPhoneComponent,
+    NotFoundComponent
   ],
   imports: [
     ReactiveFormsModule,
