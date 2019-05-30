@@ -10,14 +10,8 @@
                 <div class="login-form-head">
                     <h4>Đăng ký</h4>
                 </div>
-                <div *ngIf="error == -1" class="alert alert-primary" role="alert">
-                    <a href="#" class="alert-link">Đăng ký thành công</a>
-                  </div>
-                  <div *ngIf="error == 1" class="alert alert-danger" role="alert">
-                    <a href="#" class="alert-link">Số điện thoại đã tồn tại</a>
-                  </div>
-                  <div *ngIf="error == 2" class="alert alert-danger" role="alert">
-                    <a href="#" class="alert-link">Có lỗi sảy ra</a>
+                  <div *ngIf="message" class="alert alert-danger" role="alert">
+                    <a  class="alert-link">{{message}}</a>
                   </div>
                 <div class="login-form-body">
                     <div class="form-gp focused">

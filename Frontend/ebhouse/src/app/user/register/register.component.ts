@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { UserService } from '../service/user.service';
-import { User } from '../user';
+import { User } from '../models/user';
 import { DataService } from '../service/data.service';
 import { Router } from '@angular/router';
 
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  error: number = 0;
+  message: string = "";
   roleDefault: number = 1;
 
   userFormGroup: FormGroup;
@@ -44,24 +44,28 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
-    this.data.changeUser(toUser(this.userFormGroup.value));
-    this.router.navigate(['/phone-confirm']);
+    this.userService
+      .register(toUser(this.userFormGroup.value))
+      .subscribe(
+        res => {
+          let mess: any;
+          mess = JSON.parse("" + res);
+          console.log(mess);
+          if (mess.type == 1) {
+            this.message = mess.message;
+            this.data.changeUser(toUser(this.userFormGroup.value));
+            this.router.navigate(['/verify']);
+          }
+          if (mess.type == 0) {
+            this.message = mess.message;
+          }
 
-    // this.userService
-    // .register(toUser(this.userFormGroup.value))
-    // .subscribe(
-    //   res => {
-    //     this.error = -1;
-    //     console.log(res);
-    //     //let r = JSON.parse(res['_body'])
-    //     this.data.changeUser(toUser(this.userFormGroup.value));
-    //     this.router.navigate(['/phone-confirm']);  
-    //   },
-    //   err => {
-    //     this.error = 2;
-    //     console.log(err);
-    //   }
-    // );
+        },
+        err => {
+          this.message = "Có lỗi sảy ra";
+          console.log(err);
+        }
+      );
   }
 
 }

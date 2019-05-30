@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { UserService } from '../service/user.service';
-import {User} from '../user';
+import { User } from '../models/user';
+import { DataService } from '../service/data.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AuthenticationService } from "../service/authentication.service";
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -9,19 +12,35 @@ import {User} from '../user';
 })
 export class LoginComponent implements OnInit {
 
-  error : number = 0;
-  roleDefault : number = 1;
+  message: string = "";
+  roleDefault: number = 1;
   phonePattern = "((09|03|07|08|05)+([0-9]{8}))";
-  loginFormGroup : FormGroup;
-  constructor(private userService: UserService,
-    private fb : FormBuilder) { }
+  loginFormGroup: FormGroup;
+  user: User;
 
+  constructor(private userService: UserService,
+    private fb: FormBuilder,
+    private authenticationService: AuthenticationService,
+    private router: Router,
+    private data : DataService) {
+    if (this.authenticationService.currentUserValue) {
+      this.router.navigate(['/']);
+    }
+  }
+  
   ngOnInit() {
-    this.loginFormGroup =  this.fb.group({
-      phone : this.fb.control('',Validators.compose([
+    this.data.currentUser.subscribe(user => this.user = user);
+    // if(this.user != null){
+    //   this.router.navigate(['']);
+    // }
+    // else{
+      
+    // }
+    this.loginFormGroup = this.fb.group({
+      phone: this.fb.control('', Validators.compose([
         Validators.required,
         Validators.pattern(this.phonePattern)
-      ]) ),
+      ])),
 
       password: this.fb.control('', Validators.compose([
         Validators.required,
@@ -29,31 +48,36 @@ export class LoginComponent implements OnInit {
       ]))
     });
   }
-  
-  onSubmit(){
+
+  onSubmit() {
     console.log(toUser(this.loginFormGroup.value));
-    // this.userService
-    // .login(toUser(this.loginFormGroup.value))
-    // .subscribe(
-    //   res => {
-    //     this.error = -1;
-    //     console.log(res);
-    //     //let r = JSON.parse(res['_body'])
-    //   },
-    //   err => {
-    //     this.error = 2;
-    //     console.log(err);
-    //   }
-    // );
+    this.authenticationService
+    .login(toUser(this.loginFormGroup.value))
+    .subscribe(
+      res => {
+        let mess: any;
+        mess = JSON.parse("" + res);
+        if (mess.type == 1) {
+          this.message = mess.message;
+        }
+        if (mess.type == 0) {
+          this.message = mess.message;
+        }
+        
+      },
+      err => {
+        this.message = "Có lỗi sảy ra";
+          console.log(err);
+      }
+    );
   }
 
-  
+
 }
-function toUser(r:any): User{
-  console.log(r);
+function toUser(r: any): User {
   let user = <User>({
-   password: r.pw.password,
-   phone : r.phone
- });
- return user;
+    password: r.password,
+    phone: r.phone
+  });
+  return user;
 }

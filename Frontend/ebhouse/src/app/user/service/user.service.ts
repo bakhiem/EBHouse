@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User } from '../user';
+import { User } from '../models/user';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -19,6 +19,11 @@ export class UserService {
   register(user: User): Observable<String> {
     return this.http.post<String>(`${this.baseUrl}/api/register`, user, httpOptions)
   };
+  //after verify otp call this function
+  submit(user: User): Observable<String> {
+    return this.http.post<String>(`${this.baseUrl}/api/register/submit`, user, httpOptions)
+  };
+
   login(user: User): Observable<String> {
     return this.http.post<String>(`${this.baseUrl}/api/login`, user, httpOptions)
   };

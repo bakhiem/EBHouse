@@ -1,26 +1,37 @@
 <div class="login-area">
   <div class="container">
-      <div class="login-box ptb--100">
-          <form [formGroup]="verifyFormGroup" (ngSubmit)="onSubmit()">
-              <div class="login-form-head">
-                  <h4>Xác thực số điện thoại</h4>
-                  <p>Mời nhập mã OTP vừa được gửi kèm qua tin nhắn đến số điện thoại đã đăng ký</p>
-              </div>
-              <div class="login-form-body">
-                  <div class="form-gp focused">
-                      <label for="exampleInputEmail1">Số điện thoại</label>
-                      <input type="text" id="exampleInputEmail1" formControlName="phone">
-                      <i class="ti-agenda"></i>
-                  </div>
-                
-                  <div class="form-gp focused">
-                      <label for="exampleInputPassword1">Mật khẩu</label>
-                      <input type="password" id="exampleInputPassword1" formControlName="password">
-                      <i class="ti-lock"></i>
-                  </div>
-                 
-              </div>
-          </form>
-      </div>
+    <div class="login-box ptb--100">
+      <form [formGroup]="verifyFormGroup">
+        <div class="login-form-head">
+          <h4>Xác thực số điện thoại</h4>
+          <p>Mời nhập mã OTP vừa được gửi kèm qua tin nhắn đến số điện thoại đã đăng ký</p>
+        </div>
+        <div *ngIf="message" class="alert alert-danger" role="alert">
+          <a  class="alert-link">{{message}}</a>
+        </div>
+
+        <div class="login-form-body">
+          <div class="form-gp focused">
+            <label for="exampleInputEmail1">Số điện thoại</label>
+            <input type="text" id="exampleInputEmail1" formControlName="phone">
+            <i class="ti-agenda"></i>
+          </div>
+          <div id="recaptcha-container"></div>
+          <div *ngIf="windowRef.recaptchaVerifier">
+            <button class="btn btn-outline-secondary mb-3 mt-3" (click)="sendLoginCode()">Gửi mã OTP về điện
+              thoại</button>
+          </div>
+          <div *ngIf="windowRef.confirmationResult">
+            <div class="form-gp focused">
+              <label for="exampleInputEmail1">Nhập mã OTP</label>
+              <input type="text" class="form-control mt-3" formControlName="otpcode">
+            </div>
+            <button class="btn btn-outline-secondary mb-3" (click)="verifyLoginCode()">Xác nhận</button>
+          </div>
+        </div>
+      </form>
+
+
+    </div>
   </div>
 </div>
