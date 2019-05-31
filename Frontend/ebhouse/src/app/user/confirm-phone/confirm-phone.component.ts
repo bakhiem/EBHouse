@@ -146,7 +146,7 @@ function formatPhone(phone: String) {
   return formatPhone;
 }
 
-var countdownNum = 30;
+let countdownNum = 30;
 
 function incTimer() {
   setTimeout(function () {
