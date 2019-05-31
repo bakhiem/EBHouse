@@ -1,3 +1,4 @@
+
 <div class="login-area">
   <div class="container">
     <div class="login-box ptb--100">
@@ -16,7 +17,7 @@
             <input type="text" id="exampleInputEmail1" formControlName="phone">
             <i class="ti-agenda"></i>
           </div>
-          <div id="recaptcha-container"></div>
+          <div id="recaptcha-container" data-callback="imNotARobot"></div>
           <div *ngIf="windowRef.recaptchaVerifier">
             <button class="btn btn-outline-secondary mb-3 mt-3" (click)="sendLoginCode()">Gửi mã OTP về điện
               thoại</button>

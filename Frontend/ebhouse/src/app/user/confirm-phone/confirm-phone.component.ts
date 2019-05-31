@@ -27,14 +27,18 @@ export class ConfirmPhoneComponent implements OnInit {
     private data: DataService,
     private userService: UserService
   ) { }
-
+  ngAfterViewInit() {
+    disableButtonOTPBeforeVerify();
+    
+  }
   ngOnInit() {
     this.data.currentUser.subscribe(user => this.user = user);
+    //after register, add user to data service, if don't have data service is fake url and redirect to login.
     if (this.user == null) {
-      this.router.navigate(['']);
+      this.router.navigate(['/login']);
     }
     this.verifyFormGroup = this.fb.group({
-      phone: { value: formatPhone(this.user.phone), disabled: true },
+      phone: { value: (this.user)? formatPhone(this.user.phone) : "", disabled: true },
       otpcode: ''
     });
     var firebaseConfig = {
@@ -48,12 +52,19 @@ export class ConfirmPhoneComponent implements OnInit {
     };
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
-      this.windowRef = this.win.windowRef;
-      this.windowRef.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
-      this.windowRef.recaptchaVerifier.render();
     }
-
-    //disableButtonOTPBeforeVerify();
+    this.windowRef = this.win.windowRef;
+    this.windowRef.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container',{
+      'callback': (response) => {
+          enableButtonOTPBeforeVerify();
+      },
+      'expired-callback': () => {
+        // Response expired. Ask user to solve reCAPTCHA again.
+        
+      }
+    });
+    this.windowRef.recaptchaVerifier.render();
+    
   }
   sendLoginCode() {
     disableButton();
@@ -103,17 +114,21 @@ export class ConfirmPhoneComponent implements OnInit {
         }
       );
   }
+
 }
 
 function disableButtonOTPBeforeVerify() {
-  var capcha = <HTMLInputElement>document.querySelector("recaptcha-container");
   var button = <HTMLInputElement>document.querySelector("button.btn.btn-outline-secondary");
-  //button.disabled;
-  console.log(capcha);
-  capcha.onclick = () => {
-    console.log("ahihi")
-  }
+  button.disabled = true;
 }
+
+function enableButtonOTPBeforeVerify() {
+  
+  var button = <HTMLInputElement>document.querySelector("button.btn.btn-outline-secondary");
+  button.disabled = false;
+  
+}
+
 
 function disableButton() {
   var button = <HTMLInputElement>document.querySelector("button.btn.btn-outline-secondary");

@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { User } from '../models/user';
-
+import { environment } from '../../../environments/environment';
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json',
@@ -15,12 +15,11 @@ const httpOptions = {
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
-    private baseUrl: string = 'http://localhost:8084/CapstoneProject';
+    private baseUrl: string = environment.baseUrl;
     private currentUserSubject: BehaviorSubject<User>;
     public currentUser: Observable<User>;
 
     constructor(private http: HttpClient) {
-        //this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
         this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
         this.currentUser = this.currentUserSubject.asObservable();
     }

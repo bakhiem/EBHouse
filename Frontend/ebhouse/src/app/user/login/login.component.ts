@@ -30,19 +30,13 @@ export class LoginComponent implements OnInit {
   
   ngOnInit() {
     this.data.currentUser.subscribe(user => this.user = user);
-    // if(this.user != null){
-    //   this.router.navigate(['']);
-    // }
-    // else{
-      
-    // }
     this.loginFormGroup = this.fb.group({
-      phone: this.fb.control('', Validators.compose([
+      phone: this.fb.control((this.user)? this.user.phone : "", Validators.compose([
         Validators.required,
         Validators.pattern(this.phonePattern)
       ])),
 
-      password: this.fb.control('', Validators.compose([
+      password: this.fb.control((this.user)? this.user.password : "", Validators.compose([
         Validators.required,
         Validators.minLength(8)
       ]))

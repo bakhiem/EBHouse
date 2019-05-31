@@ -3,6 +3,7 @@ import { User } from '../models/user';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json',
@@ -14,7 +15,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class UserService {
-  private baseUrl: string = 'http://localhost:8084/CapstoneProject';
+  private baseUrl: string = environment.baseUrl;
   constructor(private http: HttpClient) { }
   register(user: User): Observable<String> {
     return this.http.post<String>(`${this.baseUrl}/api/register`, user, httpOptions)
