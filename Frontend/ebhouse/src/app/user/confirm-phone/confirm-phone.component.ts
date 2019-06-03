@@ -110,7 +110,7 @@ export class ConfirmPhoneComponent implements OnInit {
         },
         err => {
           console.log(err);
-          this.message = "Có lỗi sảy ra";
+          this.message = "Có lỗi xảy ra";
         }
       );
   }

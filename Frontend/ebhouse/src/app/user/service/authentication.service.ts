@@ -31,18 +31,27 @@ export class AuthenticationService {
     login(user : User ) {
         return this.http.post<any>(`${this.baseUrl}/api/login`, user ,httpOptions)
             .pipe(map(res => {
-                // login successful if there's a jwt token in the response
-                // if (res && res.token) {
-                //     console.log(res);
-                //     // store user details and jwt token in local storage to keep user logged in between page refreshes
-                //     localStorage.setItem('currentUser', JSON.stringify(res));
-                //     this.currentUserSubject.next(res);
-                // }
+                //login successful if there's a jwt token in the response
+                console.log(res);
+                let resObject = JSON.parse(res);
+                console.log(resObject.data);
+                if(resObject && resObject.data){
+                    let resDataObject = JSON.parse(resObject.data);
+                    console.log(typeof(resDataObject));
+                    if (resDataObject && resDataObject.token) {
+                        //console.log(resObject);
+                        // store user details and jwt token in local storage to keep user logged in between page refreshes
+                        localStorage.setItem('currentUser', JSON.stringify(resDataObject));
+                        this.currentUserSubject.next(resDataObject);
+                    }
+                }
+               
+                
                 // var saveUser : User = {
                 //   phone : user.phone,
                 //   token : res
                 // };
-                console.log(res);
+                //console.log(res);
                 // localStorage.setItem('currentUser', JSON.stringify(saveUser));
                 return res;
             }));

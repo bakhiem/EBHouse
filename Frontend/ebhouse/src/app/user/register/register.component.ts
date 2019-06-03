@@ -62,7 +62,7 @@ export class RegisterComponent implements OnInit {
 
         },
         err => {
-          this.message = "Có lỗi sảy ra";
+          this.message = "Có lỗi xảy ra";
           console.log(err);
         }
       );
