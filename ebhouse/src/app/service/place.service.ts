@@ -11,9 +11,9 @@ export class PlaceService {
     return this.http.get("../../assets/place/tinh_tp.json");
   }
   public getDistric(code : string): Observable<any> {
-    return this.http.get("../../assets/quan-huyen/" + code + ".json");
+    return this.http.get("../../assets/place/quan-huyen/" + code + ".json");
   }
   public getWards(code : string): Observable<any> {
-    return this.http.get("../../assets/xa-phuong/" + code + ".json");
+    return this.http.get("../../assets/place/xa-phuong/" + code + ".json");
   }
 }

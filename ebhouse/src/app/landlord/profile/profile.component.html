@@ -65,27 +65,27 @@
                                 <div class="form-group row">
                                     <div class="col-sm-3">
                                         <label class="col-form-label">Tỉnh / Thành phố </label>
-                                        <select class="custom-select"  formControlName="province">
-                                            <option  *ngFor="let province of dataProvince | async" [ngValue] = "province">
-                                                {{province.name}}
+                                        <select class="custom-select"  formControlName="province" required (change)="onChangeProvince()"  >
+                                            <option  *ngFor="let aprovince of dataProvince" [selected]="aprovince.code  == 01" [ngValue] = "aprovince.code" >
+                                                {{aprovince.name}}
                                             </option>
                                         </select>
                                     </div>
                                     <div class="col-sm-3">
                                         <label class="col-form-label">Quận / Huyện</label>
-                                        <select class="custom-select">
-                                            <option value="1">Thạch Thất</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
+                                        <select class="custom-select"  formControlName="distric" (change)="onChangeDistric()">
+                                                <option  *ngFor="let adistric of dataDistric" [ngValue] = "adistric.code" >
+                                                    {{adistric.name}}
+                                                </option>
+                                            </select>
                                     </div>
                                     <div class="col-sm-3">
                                         <label class="col-form-label">Xã / Phường</label>
-                                        <select class="custom-select">
-                                            <option value="1">Thạch Hòa</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
+                                        <select class="custom-select"  formControlName="wards">
+                                                <option  *ngFor="let awards of dataWards" [ngValue] = "awards.code" >
+                                                    {{awards.name}}
+                                                </option>
+                                            </select>
                                     </div>
                                 </div>
                                 <div class="form-group row">

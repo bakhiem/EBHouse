@@ -4,7 +4,7 @@ import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from
 import { DataService } from '../../user/service/data.service';
 import { PlaceService } from '../../service/place.service';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -13,7 +13,9 @@ import { Observable } from 'rxjs';
 export class LandlordProfileComponent implements OnInit {
   message: string = "";
   roleDefault: number = 1;
-  dataProvince : Observable<Array<any>>;
+  dataProvince: any[];
+  dataDistric: any[];
+  dataWards: any[];
   phonePattern = "((09|03|07|08|05)+([0-9]{8}))";
 
   profileFormGroup: FormGroup;
@@ -24,9 +26,16 @@ export class LandlordProfileComponent implements OnInit {
 
   ngOnInit() {
     //get tinh/tp 
-    this.placeService.getProvince().subscribe(dataProvince => {
-      console.log(dataProvince[1]);
+    this.placeService.getProvince().subscribe(response => {
+      var arr = [];
+      for (var key in response) {
+        arr.push(response[key])
+      }
+      this.dataProvince = arr;
     });
+
+    
+
     this.profileFormGroup = this.fb.group({
       fullname: this.fb.control('', Validators.compose([
         Validators.required
@@ -56,14 +65,37 @@ export class LandlordProfileComponent implements OnInit {
       ])),
 
     });
+
+   
+
     
 
-
   }
+  onChangeProvince(){
+    this.placeService.getDistric(this.profileFormGroup.value.province).subscribe(response => {
+      var arr = [];
+      for (var key in response) {
+        arr.push(response[key])
+      }
+      this.dataDistric = arr;
+    });
+  };
+  onChangeDistric(){
+    this.placeService.getWards(this.profileFormGroup.value.distric).subscribe(response => {
+      var arr = [];
+      for (var key in response) {
+        arr.push(response[key])
+      }
+      this.dataWards = arr;
+    });
+  };
   onSubmit() {
     console.log("Submit");
     console.log(this.profileFormGroup.value)
   }
+
+
+  
   // get isMoreThanToday() {
   //   let date = ;
   //   let varDate = new Date(date); //dd-mm-YYYY
