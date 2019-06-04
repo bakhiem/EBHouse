@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 
 import { DataService } from '../../user/service/data.service';
-
+import { PlaceService } from '../../service/place.service';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -12,15 +13,20 @@ import { Router } from '@angular/router';
 export class LandlordProfileComponent implements OnInit {
   message: string = "";
   roleDefault: number = 1;
-
+  dataProvince : Observable<Array<any>>;
   phonePattern = "((09|03|07|08|05)+([0-9]{8}))";
 
   profileFormGroup: FormGroup;
   constructor(private fb: FormBuilder,
     private data: DataService,
-    private router: Router) { }
+    private router: Router,
+    private placeService: PlaceService) { }
 
   ngOnInit() {
+    //get tinh/tp 
+    this.placeService.getProvince().subscribe(dataProvince => {
+      console.log(dataProvince[1]);
+    });
     this.profileFormGroup = this.fb.group({
       fullname: this.fb.control('', Validators.compose([
         Validators.required
@@ -50,6 +56,8 @@ export class LandlordProfileComponent implements OnInit {
       ])),
 
     });
+    
+
 
   }
   onSubmit() {

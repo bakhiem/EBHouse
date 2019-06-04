@@ -1,7 +1,7 @@
 <div class="profile-area">
-    <div class="container">
+    
         <form [formGroup]="profileFormGroup" (ngSubmit)="onSubmit()">
-            <div class="col-lg-6 col-ml-12">
+            
                 <div class="row">
                     <!-- Textual inputs start -->
                     <div class="col-12 mt-5">
@@ -64,11 +64,11 @@
                                 <!-- end radio -->
                                 <div class="form-group row">
                                     <div class="col-sm-3">
-                                        <label class="col-form-label">Tỉnh / Thành phố</label>
-                                        <select class="custom-select">
-                                            <option value="1">Hà Nội</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
+                                        <label class="col-form-label">Tỉnh / Thành phố </label>
+                                        <select class="custom-select"  formControlName="province">
+                                            <option  *ngFor="let province of dataProvince | async" [ngValue] = "province">
+                                                {{province.name}}
+                                            </option>
                                         </select>
                                     </div>
                                     <div class="col-sm-3">
@@ -110,9 +110,8 @@
                     </div>
                     <!-- Textual inputs end -->
                 </div>
-            </div>
+          
         </form>
 
-    </div>
 </div>
 <!-- login area end -->
