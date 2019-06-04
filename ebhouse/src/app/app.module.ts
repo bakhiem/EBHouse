@@ -14,15 +14,15 @@ import { ConfirmPhoneComponent } from './user/confirm-phone/confirm-phone.compon
 import { NotFoundComponent } from './not-found/not-found.component';
 //import {  ErrorInterceptor } from './helpers/error.interceptor';
 import {  JwtInterceptor } from './helpers/jwt.interceptor';
-import { TenantDashboardComponent } from './tenant/dashboard/dashboard.component';
 
-import { TenantComponent } from './tenant/tenant.component';
 
 
 //landlord routing
 import { LandlordRoutingModule } from './landlord/landlord-routing.module';
 
 import { LandlordModule } from './landlord/landlord.module';
+
+import { TenantModule } from './tenant/tenant.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,9 +31,7 @@ import { LandlordModule } from './landlord/landlord.module';
     LoginComponent,
     RegisterComponent,
     ConfirmPhoneComponent,
-    NotFoundComponent,
-    TenantDashboardComponent,
-    TenantComponent
+    NotFoundComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -41,7 +39,8 @@ import { LandlordModule } from './landlord/landlord.module';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    LandlordModule
+    LandlordModule,
+    TenantModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
