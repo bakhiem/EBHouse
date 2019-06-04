@@ -21,6 +21,9 @@ export class AppComponent {
   get isLandlord() {
     return this.currentUser && this.currentUser.role === Role.Lanlord;
   }
+  get isTenant() {
+    return this.currentUser && this.currentUser.role === Role.Tenant;
+  }
   logout() {
     this.authenticationService.logout();
     this.router.navigate(['/login']);

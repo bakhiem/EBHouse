@@ -27,7 +27,6 @@ export class AuthenticationService {
     public get currentUserValue(): User {
         return this.currentUserSubject.value;
     }
-
     login(user : User ) {
         return this.http.post<any>(`${this.baseUrl}/api/login`, user ,httpOptions)
             .pipe(map(res => {
