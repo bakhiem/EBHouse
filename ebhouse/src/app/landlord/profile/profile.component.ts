@@ -65,14 +65,9 @@ export class LandlordProfileComponent implements OnInit {
       ])),
 
     });
-
-   
-
-    
-
   }
   onChangeProvince(){
-    this.placeService.getDistric(this.profileFormGroup.value.province).subscribe(response => {
+    this.placeService.getDistric(this.profileFormGroup.value.province.code).subscribe(response => {
       var arr = [];
       for (var key in response) {
         arr.push(response[key])
@@ -81,7 +76,7 @@ export class LandlordProfileComponent implements OnInit {
     });
   };
   onChangeDistric(){
-    this.placeService.getWards(this.profileFormGroup.value.distric).subscribe(response => {
+    this.placeService.getWards(this.profileFormGroup.value.distric.code).subscribe(response => {
       var arr = [];
       for (var key in response) {
         arr.push(response[key])
@@ -90,7 +85,8 @@ export class LandlordProfileComponent implements OnInit {
     });
   };
   onSubmit() {
-    console.log("Submit");
+   let fullAddress = this.profileFormGroup.value.address + " , " + this.profileFormGroup.value.wards.name + " , " + this.profileFormGroup.value.distric.name + " , " +this.profileFormGroup.value.province .name;
+    console.log(fullAddress)
     console.log(this.profileFormGroup.value)
   }
 

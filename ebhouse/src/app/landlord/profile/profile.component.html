@@ -66,26 +66,38 @@
                                     <div class="col-sm-3">
                                         <label class="col-form-label">Tỉnh / Thành phố </label>
                                         <select class="custom-select"  formControlName="province" required (change)="onChangeProvince()"  >
-                                            <option  *ngFor="let aprovince of dataProvince" [selected]="aprovince.code  == 01" [ngValue] = "aprovince.code" >
+                                            <option  *ngFor="let aprovince of dataProvince" [selected]="aprovince.code  == 01" [ngValue] = "aprovince" >
                                                 {{aprovince.name}}
                                             </option>
                                         </select>
+                                        <div *ngIf="profileFormGroup.controls['province'].hasError('required') && (profileFormGroup.controls['province'].dirty || profileFormGroup.controls['province'].touched)"
+                                            class="alert alert-danger">
+                                            Tỉnh / Thành phố là bắt buộc
+                                        </div>
                                     </div>
                                     <div class="col-sm-3">
                                         <label class="col-form-label">Quận / Huyện</label>
                                         <select class="custom-select"  formControlName="distric" (change)="onChangeDistric()">
-                                                <option  *ngFor="let adistric of dataDistric" [ngValue] = "adistric.code" >
+                                                <option  *ngFor="let adistric of dataDistric" [ngValue] = "adistric" >
                                                     {{adistric.name}}
                                                 </option>
                                             </select>
+                                            <div *ngIf="profileFormGroup.controls['distric'].hasError('required') && (profileFormGroup.controls['distric'].dirty || profileFormGroup.controls['distric'].touched)"
+                                            class="alert alert-danger">
+                                            Quận / Huyện là bắt buộc
+                                        </div>
                                     </div>
                                     <div class="col-sm-3">
                                         <label class="col-form-label">Xã / Phường</label>
                                         <select class="custom-select"  formControlName="wards">
-                                                <option  *ngFor="let awards of dataWards" [ngValue] = "awards.code" >
+                                                <option  *ngFor="let awards of dataWards" [ngValue] = "awards" >
                                                     {{awards.name}}
                                                 </option>
                                             </select>
+                                            <div *ngIf="profileFormGroup.controls['wards'].hasError('required') && (profileFormGroup.controls['wards'].dirty || profileFormGroup.controls['wards'].touched)"
+                                            class="alert alert-danger">
+                                            Xã / Phường là bắt buộc
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -102,7 +114,8 @@
 
 
 
-                                <input class="btn btn-info mb-3" type="submit" value="Lưu">
+                                <input class="btn btn-info mb-3" type="submit" value="Lưu"  >
+                                <!-- [disabled]="profileFormGroup.invalid" -->
                             </div>
 
                         </div>
