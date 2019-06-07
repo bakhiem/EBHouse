@@ -12,7 +12,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS  }    from '@angular/common/http';
 import { UserService } from './user/service/user.service';
 import { ConfirmPhoneComponent } from './user/confirm-phone/confirm-phone.component';
 import { NotFoundComponent } from './not-found/not-found.component';
-//import {  ErrorInterceptor } from './helpers/error.interceptor';
+import {  ErrorInterceptor } from './helpers/error.interceptor';
 import {  JwtInterceptor } from './helpers/jwt.interceptor';
 
 
@@ -23,6 +23,7 @@ import { LandlordRoutingModule } from './landlord/landlord-routing.module';
 import { LandlordModule } from './landlord/landlord.module';
 
 import { TenantModule } from './tenant/tenant.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,15 +37,16 @@ import { TenantModule } from './tenant/tenant.module';
   imports: [
     ReactiveFormsModule,
     BrowserModule,
-    AppRoutingModule,
     FormsModule,
     HttpClientModule,
     LandlordModule,
-    TenantModule
+    TenantModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    // { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     UserService],
   bootstrap: [AppComponent]
 })

@@ -5,6 +5,9 @@ import { DataService } from '../../user/service/data.service';
 import { PlaceService } from '../../service/place.service';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
+
+
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -17,8 +20,11 @@ export class LandlordProfileComponent implements OnInit {
   dataDistric: any[];
   dataWards: any[];
   phonePattern = "((09|03|07|08|05)+([0-9]{8}))";
-
   profileFormGroup: FormGroup;
+
+  
+
+
   constructor(private fb: FormBuilder,
     private data: DataService,
     private router: Router,
@@ -34,7 +40,7 @@ export class LandlordProfileComponent implements OnInit {
       this.dataProvince = arr;
     });
 
-    
+
 
     this.profileFormGroup = this.fb.group({
       fullname: this.fb.control('', Validators.compose([
@@ -63,10 +69,16 @@ export class LandlordProfileComponent implements OnInit {
       address: this.fb.control('', Validators.compose([
         Validators.required
       ])),
+      frontID: this.fb.control('', Validators.compose([
+        Validators.required
+      ])),
+      backID: this.fb.control('', Validators.compose([
+        Validators.required
+      ])),
 
     });
   }
-  onChangeProvince(){
+  onChangeProvince() {
     this.placeService.getDistric(this.profileFormGroup.value.province.code).subscribe(response => {
       var arr = [];
       for (var key in response) {
@@ -75,7 +87,7 @@ export class LandlordProfileComponent implements OnInit {
       this.dataDistric = arr;
     });
   };
-  onChangeDistric(){
+  onChangeDistric() {
     this.placeService.getWards(this.profileFormGroup.value.distric.code).subscribe(response => {
       var arr = [];
       for (var key in response) {
@@ -85,13 +97,22 @@ export class LandlordProfileComponent implements OnInit {
     });
   };
   onSubmit() {
-   let fullAddress = this.profileFormGroup.value.address + " , " + this.profileFormGroup.value.wards.name + " , " + this.profileFormGroup.value.distric.name + " , " +this.profileFormGroup.value.province .name;
+    let fullAddress = this.profileFormGroup.value.address + " , " + this.profileFormGroup.value.wards.name + " , " + this.profileFormGroup.value.distric.name + " , " + this.profileFormGroup.value.province.name;
     console.log(fullAddress)
     console.log(this.profileFormGroup.value)
   }
+  // uploadFrontID(event) {
+  //   if (event.target.files && event.target.files[0]) {
+  //     const file = event.target.files[0];
+  //     const reader = new FileReader();
+  //     reader.onload = e => this.imageFrontSrc = "" + reader.result;
+  //     reader.readAsDataURL(file);
+  //   }
+  // }
 
 
-  
+
+
   // get isMoreThanToday() {
   //   let date = ;
   //   let varDate = new Date(date); //dd-mm-YYYY

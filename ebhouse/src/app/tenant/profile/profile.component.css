@@ -1,0 +1,21 @@
+.form-group .col-form-label:after {
+    content:"*";
+    color:red;
+  }
+  .previewImg{
+    max-width: 100%;
+    max-height: 390px;
+  }
+  .image-container{
+    height: 100%;
+    max-height: 500px;
+  }
+  .image-container img{
+     margin: 0 auto;
+     display: block;
+  }
+  .modal-content img{
+    max-height: 90vh;
+  }
+.modal-dialog{text-align:center;}
+.modal-content{display:inline-block;}

@@ -1,0 +1,17 @@
+table {
+    width: 100%;
+    margin-top: 20px;
+  }
+  table th{
+    font-size: 1.1rem;
+    color: black;
+  }
+  .create-bh{
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    
+  }
+  .form-group.row{
+    margin-bottom: 0;
+  }

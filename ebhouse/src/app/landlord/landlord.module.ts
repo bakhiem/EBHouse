@@ -7,6 +7,12 @@ import { LandlordDashboardComponent } from './dashboard/dashboard.component';
 
 import { LandlordRoutingModule } from './landlord-routing.module';
 import { BhInfoComponent } from './bh-info/bh-info.component';
+
+//material table
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTableModule } from '@angular/material';
+import { ImageUploadModule } from 'ng2-imageupload';
 @NgModule({
   declarations: [
     LandlordComponent,
@@ -15,10 +21,14 @@ import { BhInfoComponent } from './bh-info/bh-info.component';
     BhInfoComponent
   ],
   imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    MatTableModule,
     CommonModule,
     LandlordRoutingModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    ImageUploadModule 
   ]
 })
 export class LandlordModule { }
