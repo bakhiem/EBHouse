@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { Sort } from '@angular/material';
 import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
-
+import { MatDialog } from '@angular/material';
 import { PlaceService } from '../../service/place.service';
-// export interface Food {
-//   calories: number;
-//   carbs: number;
-//   fat: number;
-//   name: string;
-//   protein: number;
-// }
+import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
+import * as $AB  from 'jquery';
+import * as bootstrap from "bootstrap";
+export interface Food {
+  address: string;
+  numberOfRoom: number;
+  name: string;
+  description: string;
+}
 @Component({
   selector: 'app-bh-info',
   templateUrl: './bh-info.component.html',
@@ -21,20 +23,19 @@ export class BhInfoComponent implements OnInit {
   dataProvince: any[];
   dataDistric: any[];
   dataWards: any[];
+  arrAddress : any[];
   createbhFormGroup: FormGroup;
   
-  // dataSource: Food[] = [
-  //   { name: 'Yogurt', calories: 159, fat: 6, carbs: 24, protein: 4 },
-  //   { name: 'Sandwich', calories: 237, fat: 9, carbs: 37, protein: 4 },
-  //   { name: 'Eclairs', calories: 262, fat: 16, carbs: 24, protein: 6 },
-  //   { name: 'Cupcakes', calories: 305, fat: 4, carbs: 67, protein: 4 },
-  //   { name: 'Gingerbreads', calories: 356, fat: 16, carbs: 49, protein: 4 },
-  // ];
-  // displayedColumns: string[] = ['name', 'calories', 'fat', 'carbs', 'protein'];
+  dataSource: Food[] = [
+    { name: 'Nhà trọ 1', address: "Thôn 3,Thạch Hoà,Thạch Thất,Hà Nội", numberOfRoom: 24,description :"" },
+    { name: 'Nhà trọ 2', address: "Thôn 6,Thạch Hoà,Thạch Thất,Hà Nội", numberOfRoom: 37, description :"" }
+  ];
+  displayedColumns: string[] = ['name', 'address', 'numberOfRoom', 'description','customColumn'];
 
 
   constructor(private fb: FormBuilder,
-    private placeService: PlaceService) { }
+    private placeService: PlaceService,
+    public dialog: MatDialog) { }
   ngOnInit() {
     this.placeService.getProvince().subscribe(response => {
       var arr = [];
@@ -51,7 +52,7 @@ export class BhInfoComponent implements OnInit {
         Validators.required
       ])),
       numberOfRoom: this.fb.control('', Validators.compose([
-        Validators.required,
+        Validators.required,Validators.pattern("[0-9]+")
       ])),
 
       province: this.fb.control('', Validators.compose([
@@ -70,6 +71,47 @@ export class BhInfoComponent implements OnInit {
 
     });
 
+  }
+  //create bh
+  createBh(){
+    this.createbhFormGroup.reset();
+    $('.bd-example-modal-lg').modal('show');
+  }
+  onSubmit(){
+
+  }
+  getProvinceOnEdit(provinceName : string){
+    for (let province of this.dataProvince) {
+        if(provinceName == province.name){
+          this.createbhFormGroup.get('province').setValue(province);
+          console.log('ahihi')
+        }
+    }
+    return '';
+  }
+  //edit and delete boarding-house :
+  editBh(obj){
+    console.log(obj)
+    this.createbhFormGroup.get('name').setValue(obj.name);
+    this.createbhFormGroup.get('numberOfRoom').setValue(obj.numberOfRoom);
+    this.createbhFormGroup.get('description').setValue(obj.description);
+    this.arrAddress =obj.address.split(',');
+    this.getProvinceOnEdit(this.arrAddress[3]);
+    $('.bd-example-modal-lg').modal('show');
+    
+  }
+
+  deleteBh(event){
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '350px',
+      data: "Bạn chắc chắn muốn xóa nhà trọ không ?"
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        console.log('Yes clicked');
+        // DO SOMETHING
+      }
+    });
   }
   onChangeProvince() {
     this.placeService.getDistric(this.createbhFormGroup.value.province.code).subscribe(response => {

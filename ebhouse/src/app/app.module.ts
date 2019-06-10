@@ -3,17 +3,16 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { UserComponent } from './user/user.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './user/login/login.component';
 import { RegisterComponent } from './user/register/register.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS  }    from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { UserService } from './user/service/user.service';
 import { ConfirmPhoneComponent } from './user/confirm-phone/confirm-phone.component';
 import { NotFoundComponent } from './not-found/not-found.component';
-import {  ErrorInterceptor } from './helpers/error.interceptor';
-import {  JwtInterceptor } from './helpers/jwt.interceptor';
+import { ErrorInterceptor } from './helpers/error.interceptor';
+import { JwtInterceptor } from './helpers/jwt.interceptor';
 
 
 
@@ -24,15 +23,19 @@ import { LandlordModule } from './landlord/landlord.module';
 
 import { TenantModule } from './tenant/tenant.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
+
+import {MatDialogModule} from '@angular/material/dialog';
 @NgModule({
   declarations: [
     AppComponent,
-    UserComponent,
     DashboardComponent,
     LoginComponent,
     RegisterComponent,
     ConfirmPhoneComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -43,11 +46,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     TenantModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    MatDialogModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     UserService],
+  entryComponents: [
+    ConfirmationDialogComponent
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

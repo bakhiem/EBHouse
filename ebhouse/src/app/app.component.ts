@@ -1,31 +1,36 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthenticationService } from './user/service/authentication.service';
-import { Role } from './user/models/role';
-import { User } from './user/models/user';
 
+// import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+
+// import { map, filter, scan } from 'rxjs/operators';
+// import { Event as RouterEvent } from '@angular/router';
+// declare var $: any;
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent  {
   title = 'ebhouse';
-  currentUser: User;
+
   constructor(
-    private router: Router,
-    private authenticationService: AuthenticationService
-  ) {
-    this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
-  }
-  get isLandlord() {
-    return this.currentUser && this.currentUser.role === Role.Lanlord;
-  }
-  get isTenant() {
-    return this.currentUser && this.currentUser.role === Role.Tenant;
-  }
-  logout() {
-    this.authenticationService.logout();
-    this.router.navigate(['/login']);
-  }
+    // private router: Router,
+    // private activatedRoute: ActivatedRoute
+) { }
+  // ngOnInit() {
+
+  //   this.router.events.pipe(
+  //     filter(event =>  event instanceof NavigationEnd),
+  //     map(() => this.activatedRoute)
+  //   )
+  //     .subscribe((event) =>  {
+  //       $.getScript('../assets/js/scripts.js'),
+  //       $.getScript('../assets/js/metisMenu.min.js')
+  //     });
+
+
+  // }
+  // ngAfterViewInit() { $("#menu").metisMenu(); }
+
+
 }

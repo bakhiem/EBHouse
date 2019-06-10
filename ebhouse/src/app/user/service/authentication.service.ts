@@ -15,6 +15,7 @@ const httpOptions = {
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
+    userStorage : User;
     private baseUrl: string = environment.baseUrl;
     private currentUserSubject: BehaviorSubject<User>;
     public currentUser: Observable<User>;
@@ -33,26 +34,27 @@ export class AuthenticationService {
                 //login successful if there's a jwt token in the response
                 console.log(res);
                 let resObject = JSON.parse(res);
-                console.log(resObject.data);
+                
                 if(resObject && resObject.data){
-                    let resDataObject = JSON.parse(resObject.data);
-                    console.log(typeof(resDataObject));
-                    if (resDataObject && resDataObject.token) {
+                    console.log(resObject.data);
+                    let resDataObject = resObject.data.map;
+                    if (resDataObject && resDataObject.user_Login.token) {
                         //console.log(resObject);
                         // store user details and jwt token in local storage to keep user logged in between page refreshes
-                        localStorage.setItem('currentUser', JSON.stringify(resDataObject));
-                        this.currentUserSubject.next(resDataObject);
+                         this.userStorage  = {
+                            name : resDataObject.user_Login.name,
+                            phone : resDataObject.user_Login.phone,
+                            id : resDataObject.id,
+                            token : resDataObject.user_Login.token,
+                            status : resDataObject.user_Login.status,
+                            role : resDataObject.role
+                        };
+                        localStorage.setItem('currentUser', JSON.stringify(this.userStorage));
+                        console.log(this.userStorage);
+                        this.currentUserSubject.next(this.userStorage);
                     }
                 }
-               
-                
-                // var saveUser : User = {
-                //   phone : user.phone,
-                //   token : res
-                // };
-                //console.log(res);
-                // localStorage.setItem('currentUser', JSON.stringify(saveUser));
-                return res;
+                return [res,this.userStorage];
             }));
     }
     logout() {

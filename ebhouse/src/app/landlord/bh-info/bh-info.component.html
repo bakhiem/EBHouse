@@ -1,6 +1,6 @@
 <div class="row">
     <div class="create-bh mt-3">
-        <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target=".bd-example-modal-lg">
+        <button type="button" class="btn btn-outline-primary"  (click)="createBh()">
             Tạo nhà trọ
         </button>
     </div>
@@ -15,94 +15,89 @@
                     </div>
                     <div class="modal-body">
                         <!-- Textual inputs start -->
-                        
-                                <div class="form-group row">
-                                    <div class="col-sm-6">
-                                        <label for="example-text-input" class="col-form-label">Tên nhà trọ</label>
-                                        <input class="form-control" type="text" id="example-text-input"
-                                            formControlName="name">
-                                        <div *ngIf="createbhFormGroup.controls['name'].hasError('required') && (createbhFormGroup.controls['name'].dirty || createbhFormGroup.controls['name'].touched)"
-                                            class="alert alert-danger">
-                                            Tên nhà trọ là bắt buộc
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                            <label for="example-tel-input" class="col-form-label">Số lượng phòng</label>
-                                            <input class="form-control" type="tel" id="example-tel-input"
-                                                formControlName="numberOfRoom">
-                                            <div *ngIf="createbhFormGroup.controls['numberOfRoom'].hasError('required') && (createbhFormGroup.controls['numberOfRoom'].dirty || createbhFormGroup.controls['numberOfRoom'].touched)"
-                                                class="alert alert-danger">
-                                                Số lượng phòng là bắt buộc
-                                            </div>
-                                        </div>
-                                </div>
-                               
 
-                                <div class="form-group row">
-                                    <div class="col-sm-3">
-                                        <label class="col-form-label">Tỉnh / Thành phố </label>
-                                        <select class="custom-select" formControlName="province" required
-                                            (change)="onChangeProvince()">
-                                            <option *ngFor="let aprovince of dataProvince"
-                                                [selected]="aprovince.code  == 01" [ngValue]="aprovince">
-                                                {{aprovince.name}}
-                                            </option>
-                                        </select>
-                                        <div *ngIf="createbhFormGroup.controls['province'].hasError('required') && (createbhFormGroup.controls['province'].dirty || createbhFormGroup.controls['province'].touched)"
-                                            class="alert alert-danger">
-                                            Tỉnh / Thành phố là bắt buộc
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <label class="col-form-label">Quận / Huyện</label>
-                                        <select class="custom-select" formControlName="distric"
-                                            (change)="onChangeDistric()">
-                                            <option *ngFor="let adistric of dataDistric" [ngValue]="adistric">
-                                                {{adistric.name}}
-                                            </option>
-                                        </select>
-                                        <div *ngIf="createbhFormGroup.controls['distric'].hasError('required') && (createbhFormGroup.controls['distric'].dirty || createbhFormGroup.controls['distric'].touched)"
-                                            class="alert alert-danger">
-                                            Quận / Huyện là bắt buộc
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <label class="col-form-label">Xã / Phường</label>
-                                        <select class="custom-select" formControlName="wards">
-                                            <option *ngFor="let awards of dataWards" [ngValue]="awards">
-                                                {{awards.name}}
-                                            </option>
-                                        </select>
-                                        <div *ngIf="createbhFormGroup.controls['wards'].hasError('required') && (createbhFormGroup.controls['wards'].dirty || createbhFormGroup.controls['wards'].touched)"
-                                            class="alert alert-danger">
-                                            Xã / Phường là bắt buộc
-                                        </div>
-                                    </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="example-text-input" class="col-form-label required">Tên nhà trọ</label>
+                                <input class="form-control" type="text" id="example-text-input" formControlName="name">
+                                <div *ngIf="createbhFormGroup.controls['name'].hasError('required') && (createbhFormGroup.controls['name'].dirty || createbhFormGroup.controls['name'].touched)"
+                                    class="alert alert-danger">
+                                    Tên nhà trọ là bắt buộc
                                 </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-6">
-                                        <label for="example-tel-input" class="col-form-label">Thôn xóm/ Số nhà</label>
-                                        <input class="form-control" type="tel" id="example-tel-input"
-                                            formControlName="address">
-                                        <div *ngIf="createbhFormGroup.controls['address'].hasError('required') && (createbhFormGroup.controls['address'].dirty || createbhFormGroup.controls['address'].touched)"
-                                            class="alert alert-danger">
-                                            Thôn xóm/ số nhà không được để trống
-                                        </div>
-                                    </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="example-number-input" class="col-form-label required">Số lượng phòng</label>
+                                <input class="form-control" type="number" id="example-number-input"
+                                    formControlName="numberOfRoom">
+                                <div *ngIf="createbhFormGroup.controls['numberOfRoom'].hasError('required') && (createbhFormGroup.controls['numberOfRoom'].dirty || createbhFormGroup.controls['numberOfRoom'].touched)"
+                                    class="alert alert-danger">
+                                    Số lượng phòng là bắt buộc
                                 </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-12">
-                                        <label for="example-tel-input" class="col-form-label">Mô tả</label>
-                                        <textarea class="form-control" rows="3" formControlName="description"></textarea>
-                                    </div>
+                                <div *ngIf="createbhFormGroup.controls['numberOfRoom'].hasError('pattern') && (createbhFormGroup.controls['numberOfRoom'].dirty || createbhFormGroup.controls['numberOfRoom'].touched)"
+                                    class="alert alert-danger">
+                                    Không đúng định dạng
+                                </div>
+                            </div>
+                        </div>
 
-                                </div>
-                               
-                                   
-                              
 
-                                <!-- [disabled]="createbhFormGroup.invalid" -->
-                            
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <label class="col-form-label required">Tỉnh / Thành phố </label>
+                                <select class="custom-select" formControlName="province" required
+                                    (change)="onChangeProvince()">
+                                    <option *ngFor="let aprovince of dataProvince" [selected]="aprovince.code  == 01"
+                                        [ngValue]="aprovince">
+                                        {{aprovince.name}}
+                                    </option>
+                                </select>
+                                <div *ngIf="createbhFormGroup.controls['province'].hasError('required') && (createbhFormGroup.controls['province'].dirty || createbhFormGroup.controls['province'].touched)"
+                                    class="alert alert-danger">
+                                    Tỉnh / Thành phố là bắt buộc
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-form-label required">Quận / Huyện</label>
+                                <select class="custom-select" formControlName="distric" (change)="onChangeDistric()">
+                                    <option *ngFor="let adistric of dataDistric" [ngValue]="adistric">
+                                        {{adistric.name}}
+                                    </option>
+                                </select>
+                                <div *ngIf="createbhFormGroup.controls['distric'].hasError('required') && (createbhFormGroup.controls['distric'].dirty || createbhFormGroup.controls['distric'].touched)"
+                                    class="alert alert-danger">
+                                    Quận / Huyện là bắt buộc
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-form-label required">Xã / Phường</label>
+                                <select class="custom-select" formControlName="wards">
+                                    <option *ngFor="let awards of dataWards" [ngValue]="awards">
+                                        {{awards.name}}
+                                    </option>
+                                </select>
+                                <div *ngIf="createbhFormGroup.controls['wards'].hasError('required') && (createbhFormGroup.controls['wards'].dirty || createbhFormGroup.controls['wards'].touched)"
+                                    class="alert alert-danger">
+                                    Xã / Phường là bắt buộc
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="example-tel-input" class="col-form-label required">Thôn xóm/ Số nhà</label>
+                                <input class="form-control" type="tel" id="example-tel-input" formControlName="address">
+                                <div *ngIf="createbhFormGroup.controls['address'].hasError('required') && (createbhFormGroup.controls['address'].dirty || createbhFormGroup.controls['address'].touched)"
+                                    class="alert alert-danger">
+                                    Thôn xóm/ số nhà không được để trống
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <label for="example-tel-input" class="col-form-label">Mô tả</label>
+                                <textarea class="form-control" rows="3" formControlName="description"></textarea>
+                            </div>
+                        </div>
+                        <!-- [disabled]="createbhFormGroup.invalid" -->
                     </div>
                     <!-- Textual inputs end -->
                     <div class="modal-footer">
@@ -113,5 +108,34 @@
                 </form>
             </div>
         </div>
-    </div>  
+    </div>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Tên nhà trọ</th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+        <ng-container matColumnDef="address">
+            <th mat-header-cell *matHeaderCellDef>Địa chỉ</th>
+            <td mat-cell *matCellDef="let element"> {{element.address}} </td>
+        </ng-container>
+        <ng-container matColumnDef="numberOfRoom">
+            <th mat-header-cell *matHeaderCellDef>Số lượng phòng</th>
+            <td mat-cell *matCellDef="let element"> {{element.numberOfRoom}} </td>
+        </ng-container>
+        <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>Mô tả</th>
+            <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+        </ng-container>
+        <ng-container matColumnDef="customColumn">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+                <ul class="d-flex justify-content-center">
+                    <li class="mr-3"><a  class="text-secondary" (click)="editBh(row)"><i class="fa fa-edit"></i></a></li>
+                    <li><a class="text-danger" (click)="deleteBh(row)" ><i class="ti-trash"></i></a></li>
+                </ul>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
 </div>

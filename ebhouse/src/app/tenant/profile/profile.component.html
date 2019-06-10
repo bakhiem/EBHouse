@@ -114,7 +114,7 @@
                         <!-- begin upload and preview image -->
                         <div class="row ml-1">
                             <div class="custom-file col-sm-5 mr-3 image-container">
-                                <input type="file" imageUpload class="custom-file-input" id="customFile"
+                                <input type="file" imageUpload accept="image/*" class="custom-file-input" id="customFile"
                                     (imageSelected)="uploadFrontID($event)" formControlName="frontID"
                                     [resizeOptions]="resizeOptions">
                                 <label class="custom-file-label" for="customFile">Ảnh chứng minh thư mặt trước</label>

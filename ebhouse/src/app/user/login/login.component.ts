@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,NgZone } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { UserService } from '../service/user.service';
 import { User } from '../models/user';
+import { Role } from '../models/role';
 import { DataService } from '../service/data.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from "../service/authentication.service";
@@ -18,7 +19,9 @@ export class LoginComponent implements OnInit {
   loginFormGroup: FormGroup;
   user: User;
 
-  constructor(private userService: UserService,
+  constructor(
+    private ngZone : NgZone,
+    private userService: UserService,
     private fb: FormBuilder,
     private authenticationService: AuthenticationService,
     private router: Router,
@@ -50,24 +53,27 @@ export class LoginComponent implements OnInit {
     .subscribe(
       res => {
         let mess: any;
-        mess = JSON.parse("" + res);
-        if (mess.type == 1) {
+        mess = JSON.parse("" + res[0]);
+        if (mess.type == 1 || mess.type == 0 || mess.type == 2 ) {
           this.message = mess.message;
         }
-        if (mess.type == 0) {
-          this.message = mess.message;
+        
+        if(res[1]){
+            window.location.reload();
         }
         
       },
       err => {
+        console.log(err);
         this.message = "Có lỗi xảy ra";
-          console.log(err);
+        
       }
     );
   }
 
 
 }
+
 function toUser(r: any): User {
   let user = <User>({
     password: r.password,

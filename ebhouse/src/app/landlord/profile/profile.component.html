@@ -13,8 +13,8 @@
                             <div class="col-sm-6">
                                 <label for="example-text-input" class="col-form-label">Họ tên</label>
                                 <input class="form-control" type="text" id="example-text-input"
-                                    formControlName="fullname">
-                                <div *ngIf="profileFormGroup.controls['fullname'].hasError('required') && (profileFormGroup.controls['fullname'].dirty || profileFormGroup.controls['fullname'].touched)"
+                                    formControlName="name">
+                                <div *ngIf="profileFormGroup.controls['name'].hasError('required') && (profileFormGroup.controls['name'].dirty || profileFormGroup.controls['name'].touched)"
                                     class="alert alert-danger">
                                     Họ tên là bắt buộc
                                 </div>
@@ -38,7 +38,10 @@
                         <div class="form-group row">
                             <div class="col-sm-6">
                                 <label for="example-date-input" class="col-form-label">Ngày sinh</label>
-                                <input class="form-control" type="date" id="example-date-input" formControlName="date">
+                                <input class="form-control"  type="date" id="example-date-input" formControlName="date">
+                               
+                                
+
                             </div>
 
                         </div>
@@ -46,17 +49,17 @@
 
                         <b class="text-muted mb-3 mt-4 d-block">Giới tính :</b>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="customRadio1" class="custom-control-input" value="Male"
+                            <input type="radio" id="customRadio1" class="custom-control-input" value="male"
                                 formControlName="sex">
                             <label class="custom-control-label" for="customRadio1">Nam</label>
                         </div>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="customRadio2" class="custom-control-input" value="Female"
+                            <input type="radio" id="customRadio2" class="custom-control-input" value="female"
                                 formControlName="sex">
                             <label class="custom-control-label" for="customRadio2">Nữ</label>
                         </div>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="customRadio3" class="custom-control-input" value="Other"
+                            <input type="radio" id="customRadio3" class="custom-control-input" value="other"
                                 formControlName="sex">
                             <label class="custom-control-label" for="customRadio3">Khác</label>
                         </div>
@@ -65,9 +68,8 @@
                             <div class="col-sm-3">
                                 <label class="col-form-label">Tỉnh / Thành phố </label>
                                 <select class="custom-select" formControlName="province" required
-                                    (change)="onChangeProvince()">
-                                    <option *ngFor="let aprovince of dataProvince" [selected]="aprovince.code  == 01"
-                                        [ngValue]="aprovince">
+                                    (change)="onChangeProvince()" >
+                                    <option *ngFor="let aprovince of dataProvince" [ngValue]="aprovince">
                                         {{aprovince.name}}
                                     </option>
                                 </select>
@@ -78,7 +80,8 @@
                             </div>
                             <div class="col-sm-3">
                                 <label class="col-form-label">Quận / Huyện</label>
-                                <select class="custom-select" formControlName="distric" (change)="onChangeDistric()">
+                                <select class="custom-select" formControlName="distric" (change)="onChangeDistric()"
+                                    >
                                     <option *ngFor="let adistric of dataDistric" [ngValue]="adistric">
                                         {{adistric.name}}
                                     </option>
@@ -129,7 +132,3 @@
 
 </div>
 <!-- profile area end -->
-
-
-
-

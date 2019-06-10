@@ -9,7 +9,6 @@ import { Role } from '../user/models/role';
 import { BhInfoComponent } from './bh-info/bh-info.component'
 const LandlordChildRouters: Routes = [
   {
-    //path: 'landlord/dashboard', component: LandlordComponent 
     path: 'landlord',
     component: LandlordComponent,
     canActivate: [AuthGuard], data: { roles: [Role.Lanlord] },

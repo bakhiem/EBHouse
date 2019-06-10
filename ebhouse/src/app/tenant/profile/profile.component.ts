@@ -120,7 +120,7 @@ export class TenantProfileComponent implements OnInit {
   // }
   uploadFrontID(imageResult: ImageResult) {
     this.imageFrontSrc = imageResult.resized && imageResult.resized.dataURL || imageResult.dataURL;
-        console.log(imageResult.resized.dataURL);
+        console.log(this.imageFrontSrc);
 }
   uploadBackID(imageResult: ImageResult) {
    this.imageBackSrc = imageResult.resized

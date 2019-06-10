@@ -14,6 +14,7 @@ import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from
   templateUrl: './confirm-phone.component.html',
   styleUrls: ['./confirm-phone.component.css']
 })
+
 export class ConfirmPhoneComponent implements OnInit {
   windowRef: any;
   phoneNumber: string;
@@ -29,16 +30,17 @@ export class ConfirmPhoneComponent implements OnInit {
   ) { }
   ngAfterViewInit() {
     disableButtonOTPBeforeVerify();
-    
+
   }
   ngOnInit() {
     this.data.currentUser.subscribe(user => this.user = user);
+
     //after register, add user to data service, if don't have data service is fake url and redirect to login.
     if (this.user == null) {
       this.router.navigate(['/login']);
     }
     this.verifyFormGroup = this.fb.group({
-      phone: { value: (this.user)? formatPhone(this.user.phone) : "", disabled: true },
+      phone: { value: (this.user) ? formatPhone(this.user.phone) : "", disabled: true },
       otpcode: ''
     });
     var firebaseConfig = {
@@ -54,17 +56,16 @@ export class ConfirmPhoneComponent implements OnInit {
       firebase.initializeApp(firebaseConfig);
     }
     this.windowRef = this.win.windowRef;
-    this.windowRef.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container',{
+    this.windowRef.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
       'callback': (response) => {
-          enableButtonOTPBeforeVerify();
+        enableButtonOTPBeforeVerify();
       },
       'expired-callback': () => {
         // Response expired. Ask user to solve reCAPTCHA again.
-        
+
       }
     });
     this.windowRef.recaptchaVerifier.render();
-    
   }
   sendLoginCode() {
     disableButton();
@@ -102,6 +103,11 @@ export class ConfirmPhoneComponent implements OnInit {
           console.log(mess);
           if (mess.type == 1) {
             this.message = mess.message;
+            countdownNum = 30;
+            disableButtonOTPBeforeVerify();
+            clearTimeout(otpTimeOut);
+            clearTimeout(buttonTimeOut);
+            this.windowRef.confirmationResult = null;
             this.router.navigate(['/login']);
           }
           if (mess.type == 0) {
@@ -116,25 +122,25 @@ export class ConfirmPhoneComponent implements OnInit {
   }
 
 }
-
+let countdownNum = 30;
 function disableButtonOTPBeforeVerify() {
   var button = <HTMLInputElement>document.querySelector("button.btn.btn-outline-secondary");
   button.disabled = true;
 }
 
 function enableButtonOTPBeforeVerify() {
-  
+
   var button = <HTMLInputElement>document.querySelector("button.btn.btn-outline-secondary");
   button.disabled = false;
-  
+
 }
 
-
+var otpTimeOut, buttonTimeOut;
 function disableButton() {
   var button = <HTMLInputElement>document.querySelector("button.btn.btn-outline-secondary");
   button.disabled = true;
   incTimer();
-  setTimeout(function () {
+  buttonTimeOut = setTimeout(function () {
     button.disabled = false;
   }, 30000);
 }
@@ -146,13 +152,13 @@ function formatPhone(phone: String) {
   return formatPhone;
 }
 
-let countdownNum = 30;
+
 
 function incTimer() {
-  setTimeout(function () {
+  otpTimeOut = setTimeout(function () {
     if (countdownNum != 0) {
       countdownNum--;
-      document.querySelector('button.btn.btn-outline-secondary').innerHTML = 'Thời gian còn lại ' + countdownNum + ' giây';
+      document.querySelector('button.btn.btn-outline-secondary').innerHTML = 'Gửi lại mã sau ' + countdownNum + ' giây';
       incTimer();
     } else {
       document.querySelector('button.btn.btn-outline-secondary').innerHTML = 'Gửi lại mã';

@@ -6,4 +6,8 @@ export class User {
     phone ?: string;
     role ?: Role;
     token?: string;
+    address?: string;
+    sex?:string;
+    id?:string;
+    status?:string;
 }

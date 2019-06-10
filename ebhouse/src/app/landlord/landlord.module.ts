@@ -13,6 +13,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material';
 import { ImageUploadModule } from 'ng2-imageupload';
+
 @NgModule({
   declarations: [
     LandlordComponent,
@@ -28,7 +29,7 @@ import { ImageUploadModule } from 'ng2-imageupload';
     LandlordRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    ImageUploadModule 
+    ImageUploadModule,
   ]
 })
 export class LandlordModule { }

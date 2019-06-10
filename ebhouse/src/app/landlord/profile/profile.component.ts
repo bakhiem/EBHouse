@@ -6,13 +6,15 @@ import { PlaceService } from '../../service/place.service';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
-
-
+import { AuthenticationService } from '../../user/service/authentication.service';
+import { User } from '../../user/models/user';
+import * as $ from 'jquery';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
+
 export class LandlordProfileComponent implements OnInit {
   message: string = "";
   roleDefault: number = 1;
@@ -21,32 +23,47 @@ export class LandlordProfileComponent implements OnInit {
   dataWards: any[];
   phonePattern = "((09|03|07|08|05)+([0-9]{8}))";
   profileFormGroup: FormGroup;
+  currentUser: User;
 
-  
-
+  //for edit
+  arrAddress : any[];//store array address of user (['thon3','thach hoa',...])
 
   constructor(private fb: FormBuilder,
     private data: DataService,
     private router: Router,
-    private placeService: PlaceService) { }
+    private placeService: PlaceService,
+    private authenticationService: AuthenticationService, ) {}
 
   ngOnInit() {
+    //edit user
+    this.currentUser = this.authenticationService.currentUserValue;
+    if (this.currentUser) {
+      //this.arrAddress = this.currentUser.address.split(',');
+      this.arrAddress = "Thôn 3,Thạch Hoà,Thạch Thất,Hà Nội".split(',');
+    }
+
     //get tinh/tp 
     this.placeService.getProvince().subscribe(response => {
       var arr = [];
       for (var key in response) {
         arr.push(response[key])
+
+        //for edit
+        if(this.currentUser && response[key].name ==  this.arrAddress[3]){
+          this.profileFormGroup.get('province').setValue(response[key]);
+          this.onChangeProvince();
+        }
       }
       this.dataProvince = arr;
+      console.log(arr);
     });
-
-
+    
 
     this.profileFormGroup = this.fb.group({
-      fullname: this.fb.control('', Validators.compose([
+      name: this.fb.control(this.currentUser ? this.currentUser.name : "", Validators.compose([
         Validators.required
       ])),
-      phone: this.fb.control('', Validators.compose([
+      phone: this.fb.control(this.currentUser ? this.currentUser.phone : "", Validators.compose([
         Validators.required,
         Validators.pattern(this.phonePattern)
       ])),
@@ -54,27 +71,21 @@ export class LandlordProfileComponent implements OnInit {
       date: this.fb.control('2018-03-05', Validators.compose([
         Validators.required
       ])),
-      sex: this.fb.control('Male', Validators.compose([
+      sex: this.fb.control(this.currentUser ? this.currentUser.sex : "", Validators.compose([
         Validators.required
       ])),
-      province: this.fb.control('', Validators.compose([
+      province: this.fb.control("", Validators.compose([
         Validators.required
       ])),
-      distric: this.fb.control('', Validators.compose([
+      distric: this.fb.control("", Validators.compose([
         Validators.required
       ])),
-      wards: this.fb.control('', Validators.compose([
+      wards: this.fb.control("", Validators.compose([
         Validators.required
       ])),
-      address: this.fb.control('', Validators.compose([
+      address: this.fb.control(this.currentUser ? this.arrAddress[0] : "", Validators.compose([
         Validators.required
-      ])),
-      frontID: this.fb.control('', Validators.compose([
-        Validators.required
-      ])),
-      backID: this.fb.control('', Validators.compose([
-        Validators.required
-      ])),
+      ]))
 
     });
   }
@@ -83,6 +94,11 @@ export class LandlordProfileComponent implements OnInit {
       var arr = [];
       for (var key in response) {
         arr.push(response[key])
+        //for edit
+        if(this.currentUser && response[key].name ==  this.arrAddress[2]){
+          this.profileFormGroup.get('distric').setValue(response[key]);
+          this.onChangeDistric();
+        }
       }
       this.dataDistric = arr;
     });
@@ -91,26 +107,35 @@ export class LandlordProfileComponent implements OnInit {
     this.placeService.getWards(this.profileFormGroup.value.distric.code).subscribe(response => {
       var arr = [];
       for (var key in response) {
-        arr.push(response[key])
+        arr.push(response[key]) 
+        //for edit
+        if(this.currentUser && response[key].name ==  this.arrAddress[1]){
+          this.profileFormGroup.get('wards').setValue(response[key]);
+        }
+        
       }
       this.dataWards = arr;
     });
   };
   onSubmit() {
-    let fullAddress = this.profileFormGroup.value.address + " , " + this.profileFormGroup.value.wards.name + " , " + this.profileFormGroup.value.distric.name + " , " + this.profileFormGroup.value.province.name;
+    //if edit, compare if have change then post to server
+    
+    let fullAddress = this.profileFormGroup.value.address + "," + this.profileFormGroup.value.wards.name + "," + this.profileFormGroup.value.distric.name + "," + this.profileFormGroup.value.province.name;
     console.log(fullAddress)
     console.log(this.profileFormGroup.value)
   }
-  // uploadFrontID(event) {
-  //   if (event.target.files && event.target.files[0]) {
-  //     const file = event.target.files[0];
-  //     const reader = new FileReader();
-  //     reader.onload = e => this.imageFrontSrc = "" + reader.result;
-  //     reader.readAsDataURL(file);
-  //   }
-  // }
 
 
+  //for edit information
+  // onEditDistric() {
+  //   this.placeService.getWards(this.profileFormGroup.value.distric.code).subscribe(response => {
+  //     var arr = [];
+  //     for (var key in response) {
+  //       arr.push(response[key])
+  //     }
+  //     this.dataWards = arr;
+  //   });
+  // };
 
 
   // get isMoreThanToday() {

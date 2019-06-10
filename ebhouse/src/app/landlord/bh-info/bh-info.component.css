@@ -15,3 +15,10 @@ table {
   .form-group.row{
     margin-bottom: 0;
   }
+  .form-group .required:after  {
+    content:"*";
+    color:red;
+  }
+  .text-secondary{
+    cursor: pointer;
+  }

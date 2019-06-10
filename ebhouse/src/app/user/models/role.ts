@@ -1,4 +1,4 @@
 export enum Role {
-    Lanlord = '1',
-    Tenant = '2'
+    Lanlord = 'ROLE_LANDLORD',
+    Tenant = 'ROLE_TENANT'
   }

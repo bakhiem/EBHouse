@@ -17,6 +17,7 @@ export class AuthGuard implements CanActivate {
             if (route.data.roles && route.data.roles.indexOf(currentUser.role) === -1) {
                 // role not authorised so redirect to home page
                 this.router.navigate(['/login']);
+                
                 return false;
             }
             // authorised so return true

@@ -8,7 +8,7 @@
   <div class="sidebar-menu">
       <div class="sidebar-header">
           <div class="logo">
-              <a routerLink="/dashboard"><img src="assets/images/icon/logo.png" alt="logo"></a>
+              <a routerLink="/landlord/dashboard" ><img src="assets/images/logo/logo_transparent_white.png" alt="logo"></a>
           </div>
       </div>
       <div class="main-menu">
@@ -17,11 +17,6 @@
                   <ul class="metismenu" id="menu">
                       <li>
                           <a href="javascript:void(0)" aria-expanded="true"><i class="ti-dashboard"></i><span>Quản lý chung</span></a>
-                          <ul class="collapse">
-                              <li><a href="index.html">ICO dashboard</a></li>
-                              <li><a href="index2.html">Ecommerce dashboard</a></li>
-                              <li><a href="index3.html">SEO dashboard</a></li>
-                          </ul>
                       </li>
                       <li routerLink="/landlord/bh-info" routerLinkActive="active">
                           <a href="javascript:void(0)"  aria-expanded="true"><i class="ti-layout-sidebar-left"></i><span>Thông tin nhà trọ
@@ -77,14 +72,9 @@
                               <li><a href="pricing.html">Pricing</a></li>
                           </ul>
                       </li>
-                      <li routerLink="/landlord/profile" routerLinkActive="active">
+                      <li routerLink="/landlord/profile" [routerLinkActive]="['active']">
                           <a href="javascript:void(0)" aria-expanded="true" ><i class="fa fa-user"></i>
                               <span>Thông tin cá nhân</span></a>
-                          <ul class="collapse">
-                              <li><a href="404.html">Error 404</a></li>
-                              <li><a href="403.html">Error 403</a></li>
-                              <li><a href="500.html">Error 500</a></li>
-                          </ul>
                       </li>
                       <li>
                           <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-align-left"></i> <span>Multi

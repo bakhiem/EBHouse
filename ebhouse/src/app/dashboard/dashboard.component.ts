@@ -11,33 +11,46 @@ import { Role } from '../user/models/role';
 })
 export class DashboardComponent implements OnInit {
   currentUser: User;
+  statusUpdateProfile: string = "2";
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService
-  ) { 
+  ) {
     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
   }
   get isLandlord() {
     return (this.currentUser && this.currentUser.role === Role.Lanlord);
   }
- get isTenant() {
+  get isTenant() {
     return (this.currentUser && this.currentUser.role === Role.Tenant);
   }
   deleteDataInLocal() {
     this.authenticationService.logout();
   }
   ngOnInit() {
-      if(this.isLandlord){
+   
+    if (this.isLandlord) {
+      if (this.currentUser.status == this.statusUpdateProfile) {
+        this.router.navigate(['/landlord/profile']);
+      }
+      else {
         this.router.navigate(['/landlord/dashboard']);
       }
-      else if(this.isTenant){
+    }
+    else if (this.isTenant) {
+      if (this.currentUser.status == this.statusUpdateProfile) {
+        this.router.navigate(['/tenant/profile']);
+      }
+      else {
         this.router.navigate(['/tenant/dashboard']);
       }
-      else{
-        console.log("delete")
-        this.deleteDataInLocal();
-        this.router.navigate(['/login']);
-      }
+
+    }
+    else {
+      console.log("delete")
+      this.deleteDataInLocal();
+      this.router.navigate(['/login']);
+    }
   }
 
 }
