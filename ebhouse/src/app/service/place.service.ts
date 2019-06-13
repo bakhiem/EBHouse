@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class PlaceService {
-
   constructor(private http: HttpClient) {}
   public getProvince(): Observable<any> {
     return this.http.get("../../assets/place/tinh_tp.json");

@@ -7,7 +7,7 @@ import { LandlordDashboardComponent } from './dashboard/dashboard.component';
 
 import { LandlordRoutingModule } from './landlord-routing.module';
 import { BhInfoComponent } from './bh-info/bh-info.component';
-
+import { RoomTypeComponent } from './room-type/room-type.component';
 //material table
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -19,7 +19,8 @@ import { ImageUploadModule } from 'ng2-imageupload';
     LandlordComponent,
     LandlordProfileComponent,
     LandlordDashboardComponent,
-    BhInfoComponent
+    BhInfoComponent,
+    RoomTypeComponent
   ],
   imports: [
     BrowserModule,

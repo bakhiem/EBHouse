@@ -14,22 +14,14 @@ import { BoardingHouse } from '../../models/bh';
 
 import { AuthenticationService } from '../../user/service/authentication.service';
 import { User } from '../../user/models/user';
+import { Message } from '../../models/message';
 
-export interface Food {
-  address: string;
-  numberOfRoom: number;
-  name: string;
-  description: string;
-  id: string;
-}
 @Component({
   selector: 'app-bh-info',
   templateUrl: './bh-info.component.html',
   styleUrls: ['./bh-info.component.css']
 })
 export class BhInfoComponent implements OnInit {
-  message: string = "";
-  roleDefault: number = 1;
   dataProvince: any[];
   dataDistric: any[];
   dataWards: any[];
@@ -39,6 +31,12 @@ export class BhInfoComponent implements OnInit {
   currentUser: User;
   isEdit: number = 0;
   currentBh: BoardingHouse;
+
+  //Message
+  successMess: string;
+  errMess: string;
+  deleteSuccess: string;
+  deleteErr: string;
 
   //paging
   perPage: number = 10;
@@ -66,6 +64,7 @@ export class BhInfoComponent implements OnInit {
         arr.push(response[key])
       }
       this.dataProvince = arr;
+      this.dataWards = null;
     });
     //create form group
     this.createbhFormGroup = this.fb.group({
@@ -120,9 +119,11 @@ export class BhInfoComponent implements OnInit {
     this.createbhFormGroup.reset();
     this.isEdit = 0;
     this.currentBh = null;
+    this.resetMess();
     $('.bd-example-modal-lg').modal('show');
   }
   onSubmit() {
+    this.resetMess();
     let fullAddress = this.createbhFormGroup.value.address + "," + this.createbhFormGroup.value.wards.name + "," + this.createbhFormGroup.value.distric.name + "," + this.createbhFormGroup.value.province.name;
     if (this.isEdit == 1) {
       let bh: BoardingHouse = {
@@ -132,19 +133,30 @@ export class BhInfoComponent implements OnInit {
         numberOfRoom: this.createbhFormGroup.value.numberOfRoom,
         description: this.createbhFormGroup.value.description
       }
-     
+
       if (bh.address == this.currentBh.address && bh.name == this.currentBh.name && bh.numberOfRoom == this.currentBh.numberOfRoom && bh.description == this.currentBh.description) {
-        
-        console.log("chua sua gi")
+        this.errMess = Message.notChangeMess;
       }
       else {
-        $('.modal-content').addClass('preLoad');
+        $('.customLoading').addClass('preloader');
+        $('.customLoader').addClass('loader');
         this.service.editBh(bh).subscribe(
           res => {
             console.log(res)
+            let resObject = JSON.parse("" + res);
+            if (resObject.type == 1) {
+              this.successMess = resObject.message;
+              this.currentBh = bh;
+            }
+            else {
+              this.errMess = resObject.message;
+            }
             this.getBoardingHouses()
+            $('.customLoading').removeClass('preloader');
+            $('.customLoader').removeClass('loader');
           },
           err => {
+            this.errMess = Message.defaultErrMess;
             console.log(err)
           }
         )
@@ -159,12 +171,23 @@ export class BhInfoComponent implements OnInit {
         address: fullAddress,
         description: this.createbhFormGroup.value.description,
       }
+      $('.customLoading').addClass('preloader');
+      $('.customLoader').addClass('loader');
       this.service.createBh(bh).subscribe(
         res => {
-          console.log(res)
+          let resObject = JSON.parse("" + res);
+          if (resObject.type == 1) {
+            this.successMess = resObject.message;
+          }
+          else {
+            this.errMess = resObject.message;
+          }
           this.getBoardingHouses()
+          $('.customLoading').removeClass('preloader');
+          $('.customLoader').removeClass('loader');
         },
         err => {
+          this.errMess = Message.defaultErrMess;
           console.log(err)
         }
       )
@@ -201,9 +224,14 @@ export class BhInfoComponent implements OnInit {
     this.getProvinceOnEdit(this.arrAddress[3]);
     this.createbhFormGroup.get('address').setValue(this.arrAddress[0]);
     $('.bd-example-modal-lg').modal('show');
-
+    this.resetMess();
   }
-
+  resetMess() {
+    this.errMess = "";
+    this.successMess = "";
+    this.deleteErr = "";
+    this.deleteSuccess = "";
+  }
   deleteBh(obj) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '350px',
@@ -211,16 +239,29 @@ export class BhInfoComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log(obj);
+        this.resetMess();
         let bh = {
-          id : obj.id
+          id: obj.id
         }
+        $('.customLoading').addClass('preloader');
+        $('.customLoader').addClass('loader');
         this.service.deleteBh(bh).subscribe(
           res => {
             console.log(res)
+            $('.customLoading').removeClass('preloader');
+            $('.customLoader').removeClass('loader');
+            let resObject = JSON.parse("" + res);
+            if (resObject.type == 1) {
+              this.deleteSuccess = resObject.message;
+            }
+            else {
+              this.deleteErr = resObject.message;
+            }
             this.getBoardingHouses()
           },
           err => {
+
+            this.deleteErr = Message.defaultErrMess;
             console.log(err)
           }
         )
@@ -237,6 +278,10 @@ export class BhInfoComponent implements OnInit {
           this.onChangeDistric();
         }
       }
+      if (!this.arrAddress) {
+        this.createbhFormGroup.get('distric').setValue(arr[0]);
+        this.onChangeDistric();
+      }
       this.dataDistric = arr;
     });
   };
@@ -248,6 +293,9 @@ export class BhInfoComponent implements OnInit {
         if (this.arrAddress && this.arrAddress[1] == response[key].name) {
           this.createbhFormGroup.get('wards').setValue(response[key]);
         }
+      }
+      if (!this.arrAddress) {
+        this.createbhFormGroup.get('wards').setValue(arr[0]);
       }
       this.dataWards = arr;
     });

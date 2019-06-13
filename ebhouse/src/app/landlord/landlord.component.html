@@ -23,13 +23,8 @@
                               </span></a>
                          
                       </li>
-                      <li>
+                      <li routerLink="/landlord/room-type" routerLinkActive="active">
                           <a href="javascript:void(0)" aria-expanded="true"><i class="ti-pie-chart"></i><span>Quản lý loại phòng</span></a>
-                          <ul class="collapse">
-                              <li><a href="barchart.html">bar chart</a></li>
-                              <li><a href="linechart.html">line Chart</a></li>
-                              <li><a href="piechart.html">pie chart</a></li>
-                          </ul>
                       </li>
                       <li>
                           <a href="javascript:void(0)" aria-expanded="true"><i class="ti-palette"></i><span>Quản lý phòng</span></a>
@@ -263,17 +258,15 @@
       <!-- page title area start -->
       <div class="page-title-area">
           <div class="row align-items-center">
-              <div class="col-sm-6">
+              <div class="col-sm-8">
                 
               </div>
-              <div class="col-sm-6 clearfix">
-                  <div class="user-profile pull-right">
-                      <h4 class="user-name dropdown-toggle" data-toggle="dropdown">Chọn khu trọ <i class="fa fa-angle-down"></i></h4>
-                      <div class="dropdown-menu">
-                          <a class="dropdown-item" href="#">Message</a>
-                          <a class="dropdown-item" href="#">Settings</a>
-                          <a class="dropdown-item" href="#">Log Out</a>
-                      </div>
+              <div class="col-sm-4 clearfix">
+                <div class="form-group">
+                    <select class="form-control" id="exampleFormControlSelect1">
+                      <option>Khu trọ 1</option>
+                      <option>Khu trọ 2</option>
+                    </select>
                   </div>
               </div>
           </div>
@@ -297,17 +290,3 @@
 
 
 
-<!-- start chart js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
-<!-- start highcharts js -->
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<!-- start zingchart js -->
-<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
-<script>
-zingchart.MODULESDIR = "https://cdn.zingchart.com/modules/";
-ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "ee6b7db5b51705a13dc2339db3edaf6d"];
-</script>
-<!-- all line chart activation -->
-<script src="assets/js/line-chart.js"></script>
-<!-- all pie chart -->
-<script src="assets/js/pie-chart.js"></script>

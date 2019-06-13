@@ -1,0 +1,35 @@
+table {
+    width: 100%;
+    margin-top: 20px;
+  }
+  table th{
+    font-size: 1.1rem;
+    color: black;
+  }
+  .create-bh{
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    
+  }
+  .form-group.row{
+    margin-bottom: 0;
+  }
+  .form-group .required:after  {
+    content:"*";
+    color:red;
+  }
+  .text-secondary{
+    cursor: pointer;
+  }
+  .page .pagination{
+    justify-content: center;
+}
+a.page-link.disabled{
+    background: #007bff;
+    color: white;
+}
+.page{
+   margin: 0 auto;
+   
+}

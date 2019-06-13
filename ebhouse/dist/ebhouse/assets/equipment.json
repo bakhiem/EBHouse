@@ -1,0 +1,34 @@
+[
+    {
+        "id": 4,
+        "name": "Bình nóng lạnh"
+    },
+    {
+        "id": 5,
+        "name": "Điều hòa"
+    },
+        {
+        "id": 6,
+        "name": "Giường"
+    },
+            {
+        "id": 7,
+        "name": "Tủ đồ"
+    },
+                {
+        "id": 8,
+        "name": "Bộ phát wifi"
+    },
+                    {
+        "id": 9,
+        "name": "Gác xép"
+    },
+                        {
+        "id": 10,
+        "name": "Kệ bếp"
+    },
+                            {
+        "id": 11,
+        "name": "Bồn rửa bát"
+    }
+]
