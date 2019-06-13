@@ -95,7 +95,7 @@ export class ConfirmPhoneComponent implements OnInit {
   }
   submit() {
     this.userService
-      .submit(this.user)
+      .submit(toUserSend(this.user))
       .subscribe(
         res => {
           let mess: any;
@@ -121,6 +121,17 @@ export class ConfirmPhoneComponent implements OnInit {
       );
   }
 
+}
+function toUserSend(r: any) {
+  let userSend = <any>{
+    user: {
+      name: r.name,
+      password: r.password,
+      phone: r.phone
+    },
+    role : r.role
+  };
+  return userSend;
 }
 let countdownNum = 30;
 function disableButtonOTPBeforeVerify() {

@@ -17,15 +17,15 @@ const httpOptions = {
 export class UserService {
   private baseUrl: string = environment.baseUrl;
   constructor(private http: HttpClient) { }
-  register(user: User): Observable<String> {
+  register(user: any): Observable<String> {
     return this.http.post<String>(`${this.baseUrl}/api/register`, user, httpOptions)
   };
   //after verify otp call this function
-  submit(user: User): Observable<String> {
+  submit(user: any): Observable<String> {
     return this.http.post<String>(`${this.baseUrl}/api/register/submit`, user, httpOptions)
   };
 
-  login(user: User): Observable<String> {
+  login(user: any): Observable<String> {
     return this.http.post<String>(`${this.baseUrl}/api/login`, user, httpOptions)
   };
 

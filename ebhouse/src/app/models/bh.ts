@@ -1,6 +1,7 @@
 export class BoardingHouse {
     name?: string;
     address?: string;
-    numberRoom ?: string;
+    numberOfRoom ?: string;
     description ?: string;
+    id ?: string;
 }

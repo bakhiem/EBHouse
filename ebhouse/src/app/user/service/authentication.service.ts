@@ -28,25 +28,30 @@ export class AuthenticationService {
     public get currentUserValue(): User {
         return this.currentUserSubject.value;
     }
+ 
+
     login(user : User ) {
         return this.http.post<any>(`${this.baseUrl}/api/login`, user ,httpOptions)
             .pipe(map(res => {
                 //login successful if there's a jwt token in the response
-                console.log(res);
                 let resObject = JSON.parse(res);
                 
                 if(resObject && resObject.data){
                     console.log(resObject.data);
                     let resDataObject = resObject.data.map;
-                    if (resDataObject && resDataObject.user_Login.token) {
+                    
+
+                    let userLogin = JSON.parse(resDataObject.user_Login);
+                    console.log(userLogin);
+                    if (resDataObject && userLogin.token) {
                         //console.log(resObject);
                         // store user details and jwt token in local storage to keep user logged in between page refreshes
                          this.userStorage  = {
-                            name : resDataObject.user_Login.name,
-                            phone : resDataObject.user_Login.phone,
+                            name : userLogin.name,
+                            phone : userLogin.phone,
                             id : resDataObject.id,
-                            token : resDataObject.user_Login.token,
-                            status : resDataObject.user_Login.status,
+                            token : userLogin.token,
+                            status : userLogin.status,
                             role : resDataObject.role
                         };
                         localStorage.setItem('currentUser', JSON.stringify(this.userStorage));

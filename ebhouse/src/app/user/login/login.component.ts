@@ -57,21 +57,16 @@ export class LoginComponent implements OnInit {
         if (mess.type == 1 || mess.type == 0 || mess.type == 2 ) {
           this.message = mess.message;
         }
-        
         if(res[1]){
             window.location.reload();
         }
-        
       },
       err => {
         console.log(err);
         this.message = "Có lỗi xảy ra";
-        
       }
     );
   }
-
-
 }
 
 function toUser(r: any): User {

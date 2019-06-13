@@ -44,8 +44,9 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log(toUserSend(this.userFormGroup.value));
     this.userService
-      .register(toUser(this.userFormGroup.value))
+      .register(toUserSend(this.userFormGroup.value))
       .subscribe(
         res => {
           let mess: any;
@@ -54,7 +55,8 @@ export class RegisterComponent implements OnInit {
           if (mess.type == 1) {
             this.message = mess.message;
             this.data.changeUser(toUser(this.userFormGroup.value));
-            this.router.navigate(['/verify']);
+            console.log(toUser(this.userFormGroup.value))
+           this.router.navigate(['/verify']);
           }
           if (mess.type == 0) {
             this.message = mess.message;
@@ -75,12 +77,26 @@ export function passwordMatch(c: AbstractControl) {
     passwordnotmatch: true
   };
 }
+
+
+function toUserSend(r: any) {
+  let userSend = <any>{
+    user: {
+      name: r.fullname,
+      password: r.pw.password,
+      phone: r.phone
+    }
+  };
+  return userSend;
+}
+
+
 function toUser(r: any): User {
-  let user = <User>({
+  let userSend = <User>({
     name: r.fullname,
     password: r.pw.password,
     role: r.role,
     phone: r.phone
   });
-  return user;
+  return userSend;
 }

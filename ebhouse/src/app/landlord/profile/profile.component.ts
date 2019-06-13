@@ -37,9 +37,8 @@ export class LandlordProfileComponent implements OnInit {
   ngOnInit() {
     //edit user
     this.currentUser = this.authenticationService.currentUserValue;
-    if (this.currentUser) {
-      //this.arrAddress = this.currentUser.address.split(',');
-      this.arrAddress = "Thôn 3,Thạch Hoà,Thạch Thất,Hà Nội".split(',');
+    if (this.currentUser && this.currentUser.address  ) {
+      this.arrAddress = this.currentUser.address.split(',');
     }
 
     //get tinh/tp 
@@ -49,7 +48,7 @@ export class LandlordProfileComponent implements OnInit {
         arr.push(response[key])
 
         //for edit
-        if(this.currentUser && response[key].name ==  this.arrAddress[3]){
+        if(this.currentUser.address && response[key].name ==  this.arrAddress[3]){
           this.profileFormGroup.get('province').setValue(response[key]);
           this.onChangeProvince();
         }
@@ -68,10 +67,10 @@ export class LandlordProfileComponent implements OnInit {
         Validators.pattern(this.phonePattern)
       ])),
 
-      date: this.fb.control('2018-03-05', Validators.compose([
+      date: this.fb.control('', Validators.compose([
         Validators.required
       ])),
-      sex: this.fb.control(this.currentUser ? this.currentUser.sex : "", Validators.compose([
+      sex: this.fb.control(this.currentUser.sex ? this.currentUser.sex : "male", Validators.compose([
         Validators.required
       ])),
       province: this.fb.control("", Validators.compose([
@@ -83,7 +82,7 @@ export class LandlordProfileComponent implements OnInit {
       wards: this.fb.control("", Validators.compose([
         Validators.required
       ])),
-      address: this.fb.control(this.currentUser ? this.arrAddress[0] : "", Validators.compose([
+      address: this.fb.control(this.currentUser.address ? this.arrAddress[0] : "", Validators.compose([
         Validators.required
       ]))
 
@@ -95,7 +94,7 @@ export class LandlordProfileComponent implements OnInit {
       for (var key in response) {
         arr.push(response[key])
         //for edit
-        if(this.currentUser && response[key].name ==  this.arrAddress[2]){
+        if(this.currentUser.address && response[key].name ==  this.arrAddress[2]){
           this.profileFormGroup.get('distric').setValue(response[key]);
           this.onChangeDistric();
         }
@@ -109,7 +108,7 @@ export class LandlordProfileComponent implements OnInit {
       for (var key in response) {
         arr.push(response[key]) 
         //for edit
-        if(this.currentUser && response[key].name ==  this.arrAddress[1]){
+        if(this.currentUser.address && response[key].name ==  this.arrAddress[1]){
           this.profileFormGroup.get('wards').setValue(response[key]);
         }
         
@@ -121,8 +120,7 @@ export class LandlordProfileComponent implements OnInit {
     //if edit, compare if have change then post to server
     
     let fullAddress = this.profileFormGroup.value.address + "," + this.profileFormGroup.value.wards.name + "," + this.profileFormGroup.value.distric.name + "," + this.profileFormGroup.value.province.name;
-    console.log(fullAddress)
-    console.log(this.profileFormGroup.value)
+
   }
 
 
