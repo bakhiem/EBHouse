@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient,HttpErrorResponse,HttpHeaders } from '@angular/common/http';
 import {Landlord} from '../../models/landlord';
 import {BoardingHouse} from '../../models/bh';
+import {RoomType} from '../../models/room-type';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 
@@ -34,5 +35,16 @@ export class LandlordService {
   deleteBh(bh : BoardingHouse) {
     return this.http.post<BoardingHouse>(`${this.baseUrl}/api/landlord/bh/delete`, bh, httpOptions);
   }
-  
+  getRoomTypes(page : any) : Observable<any[]> {
+    return this.http.post<any[]>(`${this.baseUrl}/api/landlord/rt/`, page, httpOptions);
+  }
+  createRt(rt : any) : Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/rt/add`, rt, httpOptions);
+  }
+  editRt(rt : any) : Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/rt/update`, rt, httpOptions);
+  }
+  deleteRt(rt : any) {
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/rt/delete`, rt, httpOptions);
+  }
 }

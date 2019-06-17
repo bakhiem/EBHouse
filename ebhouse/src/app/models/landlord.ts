@@ -1,13 +1,7 @@
 import { Role } from '../user/models/role';
-
+import { User } from '../user/models/user';
 export class Landlord {
-    name?: string;
-    password?: string;
-    phone ?: string;
     role ?: Role;
-    token?: string;
-    address?: string;
-    sex?:string;
     id?:string;
-    status?:string;
+    user?:User;
 }

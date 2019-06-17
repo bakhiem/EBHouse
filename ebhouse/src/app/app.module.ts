@@ -13,7 +13,7 @@ import { ConfirmPhoneComponent } from './user/confirm-phone/confirm-phone.compon
 import { NotFoundComponent } from './not-found/not-found.component';
 import { ErrorInterceptor } from './helpers/error.interceptor';
 import { JwtInterceptor } from './helpers/jwt.interceptor';
-
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 
 //landlord routing
@@ -46,7 +46,8 @@ import {MatDialogModule} from '@angular/material/dialog';
     TenantModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    MatDialogModule
+    MatDialogModule,
+    NgbModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

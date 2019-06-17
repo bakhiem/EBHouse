@@ -10,9 +10,13 @@
               <div class="login-form-head">
                   <h4>Đăng nhập</h4>
               </div>
-              <div *ngIf="message" class="alert alert-danger" role="alert">
-                <a  class="alert-link">{{message}}</a>
-              </div>
+              
+              <div *ngIf="messageSuccess && !messageErr" class="alert alert-success" role="alert">
+                {{messageSuccess}}
+            </div>
+            <div *ngIf="messageErr && !messageSuccess" class="alert alert-danger" role="alert">
+                {{messageErr}}
+            </div>
               <div class="login-form-body">
                   <div class="form-gp focused">
                       <label for="exampleInputEmail1">Số điện thoại</label>

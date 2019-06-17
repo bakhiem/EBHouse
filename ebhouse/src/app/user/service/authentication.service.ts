@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 
 import { User } from '../models/user';
 import { environment } from '../../../environments/environment';
+import { Role } from '../models/role';
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json',
@@ -15,51 +16,62 @@ const httpOptions = {
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
-    userStorage : User;
+    userStorage : any;
     private baseUrl: string = environment.baseUrl;
-    private currentUserSubject: BehaviorSubject<User>;
-    public currentUser: Observable<User>;
+    private currentUserSubject: BehaviorSubject<any>;
+    public currentUser: Observable<any>;
 
     constructor(private http: HttpClient) {
         this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
         this.currentUser = this.currentUserSubject.asObservable();
     }
 
-    public get currentUserValue(): User {
+    public get currentUserValue(): any {
         return this.currentUserSubject.value;
     }
  
 
-    login(user : User ) {
-        return this.http.post<any>(`${this.baseUrl}/api/login`, user ,httpOptions)
+    login(u : User ) {
+        return this.http.post<any>(`${this.baseUrl}/api/login`, u ,httpOptions)
             .pipe(map(res => {
                 //login successful if there's a jwt token in the response
                 let resObject = JSON.parse(res);
                 
                 if(resObject && resObject.data){
-                    console.log(resObject.data);
                     let resDataObject = resObject.data.map;
-                    
-
-                    let userLogin = JSON.parse(resDataObject.user_Login);
-                    console.log(userLogin);
-                    if (resDataObject && userLogin.token) {
-                        //console.log(resObject);
-                        // store user details and jwt token in local storage to keep user logged in between page refreshes
-                         this.userStorage  = {
-                            name : userLogin.name,
-                            phone : userLogin.phone,
-                            id : resDataObject.id,
-                            token : userLogin.token,
-                            status : userLogin.status,
-                            role : resDataObject.role
-                        };
-                        localStorage.setItem('currentUser', JSON.stringify(this.userStorage));
-                        console.log(this.userStorage);
-                        this.currentUserSubject.next(this.userStorage);
+                   
+                    if(resDataObject.role == Role.Lanlord){
+                        let userLogin = JSON.parse(resObject.data.map.landlord);
+                        if (resDataObject && userLogin.user.token) {
+                            console.log(userLogin);
+                            // store user details and jwt token in local storage to keep user logged in between page refreshes
+                             this.userStorage  = {
+                                user : userLogin.user,
+                                id : userLogin.id,
+                                role : resDataObject.role
+                            };
+                            localStorage.setItem('currentUser', JSON.stringify(this.userStorage));
+                            console.log(this.userStorage);
+                            this.currentUserSubject.next(this.userStorage);
+                        }
+                    }
+                    else if(resDataObject.role == Role.Tenant){
+                        let userLogin = JSON.parse(resObject.data.map.tenant);
+                        if (resDataObject && userLogin.user.token) {
+                            console.log(userLogin);
+                            // store user details and jwt token in local storage to keep user logged in between page refreshes
+                             this.userStorage  = {
+                                user : userLogin.user,
+                                id : userLogin.id,
+                                role : resDataObject.role
+                            };
+                            localStorage.setItem('currentUser', JSON.stringify(this.userStorage));
+                            console.log(this.userStorage);
+                            this.currentUserSubject.next(this.userStorage);
+                        }
                     }
                 }
-                return [res,this.userStorage];
+                 return [res,this.userStorage];
             }));
     }
     logout() {

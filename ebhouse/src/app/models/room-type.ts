@@ -5,4 +5,5 @@ export class RoomType {
     capacity ?: number;
     description ?: string;
     lstEquipment ?: any[];
+    id ?: string;
 }

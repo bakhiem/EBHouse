@@ -10,7 +10,7 @@ import { Role } from '../user/models/role';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  currentUser: User;
+  currentUser: any;
   statusUpdateProfile: string = "2";
   constructor(
     private router: Router,
@@ -30,7 +30,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
    
     if (this.isLandlord) {
-      if (this.currentUser.status == this.statusUpdateProfile) {
+      if (this.currentUser.user.status == this.statusUpdateProfile) {
         this.router.navigate(['/landlord/profile']);
       }
       else {
@@ -38,7 +38,7 @@ export class DashboardComponent implements OnInit {
       }
     }
     else if (this.isTenant) {
-      if (this.currentUser.status == this.statusUpdateProfile) {
+      if (this.currentUser.user.status == this.statusUpdateProfile) {
         this.router.navigate(['/tenant/profile']);
       }
       else {

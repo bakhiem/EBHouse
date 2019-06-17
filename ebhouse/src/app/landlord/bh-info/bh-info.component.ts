@@ -138,8 +138,7 @@ export class BhInfoComponent implements OnInit {
         this.errMess = Message.notChangeMess;
       }
       else {
-        $('.customLoading').addClass('preloader');
-        $('.customLoader').addClass('loader');
+        this.addLoading();
         this.service.editBh(bh).subscribe(
           res => {
             console.log(res)
@@ -150,14 +149,15 @@ export class BhInfoComponent implements OnInit {
             }
             else {
               this.errMess = resObject.message;
+              this.currentBh = null;
             }
             this.getBoardingHouses()
-            $('.customLoading').removeClass('preloader');
-            $('.customLoader').removeClass('loader');
+            this.removeLoading();
           },
           err => {
             this.errMess = Message.defaultErrMess;
-            console.log(err)
+            console.log(err);
+            this.removeLoading();
           }
         )
       }
@@ -171,8 +171,7 @@ export class BhInfoComponent implements OnInit {
         address: fullAddress,
         description: this.createbhFormGroup.value.description,
       }
-      $('.customLoading').addClass('preloader');
-      $('.customLoader').addClass('loader');
+     this.addLoading();
       this.service.createBh(bh).subscribe(
         res => {
           let resObject = JSON.parse("" + res);
@@ -181,14 +180,15 @@ export class BhInfoComponent implements OnInit {
           }
           else {
             this.errMess = resObject.message;
+            this.currentBh = null;
           }
           this.getBoardingHouses()
-          $('.customLoading').removeClass('preloader');
-          $('.customLoader').removeClass('loader');
+         this.removeLoading();
         },
         err => {
           this.errMess = Message.defaultErrMess;
           console.log(err)
+          this.removeLoading();
         }
       )
     }
@@ -212,6 +212,16 @@ export class BhInfoComponent implements OnInit {
     }
     return '';
   }
+  addLoading() {
+    $('.customLoading').addClass('preloader');
+    $('.customLoader').addClass('loader');
+  }
+  removeLoading() {
+    $('.customLoading').removeClass('preloader');
+    $('.customLoader').removeClass('loader');
+  }
+
+
   //edit and delete boarding-house :
   editBh(obj) {
     this.isEdit = 1;
@@ -243,13 +253,11 @@ export class BhInfoComponent implements OnInit {
         let bh = {
           id: obj.id
         }
-        $('.customLoading').addClass('preloader');
-        $('.customLoader').addClass('loader');
+        this.addLoading();
         this.service.deleteBh(bh).subscribe(
           res => {
             console.log(res)
-            $('.customLoading').removeClass('preloader');
-            $('.customLoader').removeClass('loader');
+            this.removeLoading();
             let resObject = JSON.parse("" + res);
             if (resObject.type == 1) {
               this.deleteSuccess = resObject.message;
@@ -262,6 +270,7 @@ export class BhInfoComponent implements OnInit {
           err => {
 
             this.deleteErr = Message.defaultErrMess;
+            this.removeLoading();
             console.log(err)
           }
         )

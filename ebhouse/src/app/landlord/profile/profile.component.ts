@@ -23,7 +23,7 @@ export class LandlordProfileComponent implements OnInit {
   dataWards: any[];
   phonePattern = "((09|03|07|08|05)+([0-9]{8}))";
   profileFormGroup: FormGroup;
-  currentUser: User;
+  currentUser: any;
 
   //for edit
   arrAddress : any[];//store array address of user (['thon3','thach hoa',...])
@@ -37,10 +37,10 @@ export class LandlordProfileComponent implements OnInit {
   ngOnInit() {
     //edit user
     this.currentUser = this.authenticationService.currentUserValue;
-    if (this.currentUser && this.currentUser.address  ) {
+    console.log(this.currentUser)
+    if (this.currentUser && this.currentUser.user.address && this.currentUser.user.address) {
       this.arrAddress = this.currentUser.address.split(',');
     }
-
     //get tinh/tp 
     this.placeService.getProvince().subscribe(response => {
       var arr = [];
