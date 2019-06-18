@@ -39,7 +39,7 @@ export class LandlordProfileComponent implements OnInit {
     this.currentUser = this.authenticationService.currentUserValue;
     console.log(this.currentUser)
     if (this.currentUser && this.currentUser.user.address && this.currentUser.user.address) {
-      this.arrAddress = this.currentUser.address.split(',');
+      this.arrAddress = this.currentUser.address.split('-');
     }
     //get tinh/tp 
     this.placeService.getProvince().subscribe(response => {
@@ -119,7 +119,7 @@ export class LandlordProfileComponent implements OnInit {
   onSubmit() {
     //if edit, compare if have change then post to server
     
-    let fullAddress = this.profileFormGroup.value.address + "," + this.profileFormGroup.value.wards.name + "," + this.profileFormGroup.value.distric.name + "," + this.profileFormGroup.value.province.name;
+    let fullAddress = this.profileFormGroup.value.address + "-" + this.profileFormGroup.value.wards.name + "-" + this.profileFormGroup.value.distric.name + "-" + this.profileFormGroup.value.province.name;
 
   }
 

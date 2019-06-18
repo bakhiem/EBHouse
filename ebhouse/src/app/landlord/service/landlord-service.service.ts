@@ -22,7 +22,9 @@ export class LandlordService {
   private baseUrl: string = environment.baseUrl;
   constructor(private http: HttpClient) { }
 
-  
+  getAllBoardingHouses() : Observable<BoardingHouse[]> {
+    return this.http.post<BoardingHouse[]>(`${this.baseUrl}/api/landlord/bh/all`, null, httpOptions);
+  }
   getBoardingHouses(page : any) : Observable<BoardingHouse[]> {
     return this.http.post<BoardingHouse[]>(`${this.baseUrl}/api/landlord/bh/`, page, httpOptions);
   }
@@ -46,5 +48,17 @@ export class LandlordService {
   }
   deleteRt(rt : any) {
     return this.http.post<any>(`${this.baseUrl}/api/landlord/rt/delete`, rt, httpOptions);
+  }
+  getRooms(page : any) : Observable<any[]> {
+    return this.http.post<any[]>(`${this.baseUrl}/api/landlord/room/`, page, httpOptions);
+  }
+  createRoom(room : any) : Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/room/create`, room, httpOptions);
+  }
+  editRoom(room : any) : Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/room/update`, room, httpOptions);
+  }
+  deleteRoom(room : any) {
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/room/delete`, room, httpOptions);
   }
 }

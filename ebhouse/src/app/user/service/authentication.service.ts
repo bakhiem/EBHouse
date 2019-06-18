@@ -36,7 +36,7 @@ export class AuthenticationService {
             .pipe(map(res => {
                 //login successful if there's a jwt token in the response
                 let resObject = JSON.parse(res);
-                
+                console.log(res);
                 if(resObject && resObject.data){
                     let resDataObject = resObject.data.map;
                    

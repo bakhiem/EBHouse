@@ -96,7 +96,7 @@ export class RoomTypeComponent implements OnInit {
 			// Get the value.
 			var input = $this.val();
 			
-			 input = ("" + input).replace(/[\D\s\._\-]+/g, "");
+			    input = ("" + input).replace(/[\D\s\._\-]+/g, "");
 					input = input ? parseInt( "" + input, 10 ) : 0;
 
 					$this.val( function() {
@@ -200,7 +200,7 @@ export class RoomTypeComponent implements OnInit {
           area: this.createRtFormGroup.value.area,
           price: formatPrice,
           capacity: this.createRtFormGroup.value.capacity,
-          description: this.createRtFormGroup.value.description,
+          description: this.createRtFormGroup.value.description ? this.createRtFormGroup.value.description : '',
         }],
         equipment: this.listEquipmentOnSubmit()
       }
@@ -219,7 +219,6 @@ export class RoomTypeComponent implements OnInit {
             }
             else {
               this.errMess = resObject.message;
-              this.currentRt = null;
             }
             this.getRoomTypes()
             this.removeLoading();
@@ -241,7 +240,7 @@ export class RoomTypeComponent implements OnInit {
           area: this.createRtFormGroup.value.area,
           price: formatPrice,
           capacity: this.createRtFormGroup.value.capacity,
-          description: this.createRtFormGroup.value.description,
+          description: this.createRtFormGroup.value.description ? this.createRtFormGroup.value.description : '',
         }],
         equipment: this.listEquipmentOnSubmit()
       }
@@ -255,7 +254,6 @@ export class RoomTypeComponent implements OnInit {
             this.successMess = resObject.message;
           }
           else {
-            this.currentRt = null;
             this.errMess = resObject.message;
           }
           this.getRoomTypes()

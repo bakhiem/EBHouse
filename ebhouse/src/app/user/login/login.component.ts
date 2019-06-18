@@ -58,9 +58,9 @@ export class LoginComponent implements OnInit {
           let mess: any;
           mess = JSON.parse("" + res[0]);
           if (mess.type == 1) {
-            this.messageSuccess = mess.message;
+            // this.messageSuccess = mess.message;
           }
-          else if (mess.type == 0 || mess.type == 2) {
+          else if (mess.type == 0) {
             this.messageErr = mess.message;
           }
           if (res[1]) {

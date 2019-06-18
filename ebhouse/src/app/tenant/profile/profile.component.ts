@@ -106,7 +106,7 @@ export class TenantProfileComponent implements OnInit {
     });
   };
   onSubmit() {
-    let fullAddress = this.profileFormGroup.value.address + " , " + this.profileFormGroup.value.wards.name + " , " + this.profileFormGroup.value.distric.name + " , " + this.profileFormGroup.value.province.name;
+    let fullAddress = this.profileFormGroup.value.address + "-" + this.profileFormGroup.value.wards.name + "-" + this.profileFormGroup.value.distric.name + "-" + this.profileFormGroup.value.province.name;
     console.log(fullAddress)
     console.log(this.profileFormGroup.value)
   }

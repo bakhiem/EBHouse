@@ -8,6 +8,7 @@ import { AuthGuard } from '../guard/auth.guard';
 import { Role } from '../user/models/role';
 import { BhInfoComponent } from './bh-info/bh-info.component';
 import { RoomTypeComponent } from './room-type/room-type.component';
+import { RoomComponent } from './room/room.component';
 const LandlordChildRouters: Routes = [
   {
     path: 'landlord',
@@ -29,6 +30,10 @@ const LandlordChildRouters: Routes = [
       {
         path: 'room-type',
         component: RoomTypeComponent
+      },
+      {
+        path: 'room',
+        component: RoomComponent
       }
     ]
   }
