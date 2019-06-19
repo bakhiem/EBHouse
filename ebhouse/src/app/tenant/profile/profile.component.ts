@@ -37,8 +37,6 @@ export class TenantProfileComponent implements OnInit {
     resizeMaxWidth: 1000
   };
 
-
-
   constructor(
     private fb: FormBuilder,
     private data: DataService,
@@ -48,15 +46,8 @@ export class TenantProfileComponent implements OnInit {
     private service: TenantServiceService) { }
 
     ngOnInit() {
-      //get tinh/tp
-      this.placeService.getProvince().subscribe(response => {
-        var arr = [];
-        for (var key in response) {
-          arr.push(response[key])
-        }
-        this.dataProvince = arr;
-      });
-
+      this.getProvince();
+      this.getProfile();
       this.profileFormGroup = this.fb.group({
         fullname: this.fb.control('', Validators.compose([
           Validators.required
@@ -90,7 +81,6 @@ export class TenantProfileComponent implements OnInit {
           Validators.required
         ])),
       });
-      this.getProfile();
   }
 
   getProfile(){
@@ -103,26 +93,95 @@ export class TenantProfileComponent implements OnInit {
           if(this.tenant.user.address != ' '){
             arr = this.tenant.user.address.split('-');
           }
-
+          this.getAddress();
           this.profileFormGroup.get('fullname').setValue(this.tenant.user.name != ' ' ? this.tenant.user.name : ' ');
           this.profileFormGroup.get('phone').setValue(this.tenant.user.phone != ' ' ? this.tenant.user.phone : ' ');
           if(this.tenant.user.dateOfBirth != 'null'){
             this.profileFormGroup.get('date').setValue(this.tenant.user.dateOfBirth);
           }
           this.profileFormGroup.get('sex').setValue(this.tenant.user.sex);
-          this.profileFormGroup.get('province').setValue(arr != null ? arr[3] : '');
-          this.profileFormGroup.get('distric').setValue(arr != null ? arr[2] : '');
-          this.profileFormGroup.get('wards').setValue(arr != null ? arr[1] : '');
-          this.profileFormGroup.get('address').setValue(arr != null ? arr[0]: '');
-          this.profileFormGroup.get('frontID').setValue(this.tenant.imgArnFront != ' ' ? this.tenant.imgArnFront : '');
-          this.profileFormGroup.get('backID').setValue(this.tenant.imgArnBack != ' ' ? this.tenant.imgArnBack : '' );
+          this.imageFrontSrc = this.tenant.imgArnFront != ' ' ? this.tenant.imgArnFront : '';
+          this.imageBackSrc = this.tenant.imgArnBack != ' ' ? this.tenant.imgArnBack : '';
+          // this.profileFormGroup.get('frontID').setValue(this.tenant.imgArnFront != ' ' ? this.tenant.imgArnFront : '');
+          // this.profileFormGroup.get('backID').setValue(this.tenant.imgArnBack != ' ' ? this.tenant.imgArnBack : '' );
         }else{
           this.message = JSON.parse(response.message);
         }
       }, err => {
-        console.log(err);
         this.message = JSON.parse(err);
       })
+  }
+
+  async getAddress(){
+    let arr = null;
+    if(this.tenant.user.address != ' '){
+      arr = this.tenant.user.address.split('-');
+    }
+    for (let province of this.dataProvince) {
+      if (arr[3] == province.name) {
+        this.profileFormGroup.get('province').setValue(province);
+        let arrDistric= [];
+        this.placeService.getDistric(province.code).subscribe(response => {
+          for (let key in response) {
+            arrDistric.push(response[key])
+          }
+          this.dataDistric = arrDistric;
+          for (let distric of arrDistric) {
+            if (arr[2] == distric.name) {
+              this.profileFormGroup.get('distric').setValue(distric);
+              let arrWards = [];
+              this.placeService.getWards(distric.code).subscribe(response => {
+                for (let key in response) {
+                  arrWards.push(response[key])
+                }
+                this.dataWards = arrWards;
+                for (let wards of arrWards) {
+                  if (arr[1] == wards.name) {
+                    this.profileFormGroup.get('wards').setValue(wards);
+                    this.profileFormGroup.get('address').setValue(arr[0]);
+                    break;
+                  }
+                }
+              });
+              break;
+            }
+          }
+        });
+        break;
+      }
+    }
+  }
+
+  getProvince(){
+    this.placeService.getProvince().subscribe(response => {
+      let arr = [];
+      for (let key in response) {
+        arr.push(response[key])
+      }
+      this.dataProvince = arr;
+    });
+  }
+
+  getDistric(province:any): any[]{
+    let arr = [];
+    this.placeService.getDistric(province.code).subscribe(response => {
+      for (let key in response) {
+        arr.push(response[key])
+      }
+      this.dataDistric = arr;
+    });
+    return arr;
+  }
+
+  getWards(distric:any): any[]{
+    let arr = [];
+    this.placeService.getWards(distric.code).subscribe(response => {
+      for (let key in response) {
+        arr.push(response[key])
+      }
+      this.dataWards = arr;
+    });
+    return arr;
   }
 
   onChangeProvince() {
@@ -132,8 +191,11 @@ export class TenantProfileComponent implements OnInit {
         arr.push(response[key])
       }
       this.dataDistric = arr;
+      this.profileFormGroup.get('distric').setValue(arr[0]);
+      this.onChangeDistric();
     });
   };
+
   onChangeDistric() {
     this.placeService.getWards(this.profileFormGroup.value.distric.code).subscribe(response => {
       var arr = [];
@@ -141,43 +203,20 @@ export class TenantProfileComponent implements OnInit {
         arr.push(response[key])
       }
       this.dataWards = arr;
+      this.profileFormGroup.get('wards').setValue(arr[0]);
     });
   };
+
   onSubmit() {
     let fullAddress = this.profileFormGroup.value.address + "-" + this.profileFormGroup.value.wards.name + "-" + this.profileFormGroup.value.distric.name + "-" + this.profileFormGroup.value.province.name;
     console.log(fullAddress)
     console.log(this.profileFormGroup.value)
   }
-  // uploadFrontID(event) {
-  //   if (event.target.files && event.target.files[0]) {
-  //     const file = event.target.files[0];
-  //     const reader = new FileReader();
-  //     reader.onload = e => this.imageFrontSrc = "" + reader.result;
-  //     reader.readAsDataURL(file);
-  //   }
-  // }
+
   uploadFrontID(imageResult: ImageResult) {
     this.imageFrontSrc = imageResult.resized && imageResult.resized.dataURL || imageResult.dataURL;
-        console.log(this.imageFrontSrc);
-}
-  uploadBackID(imageResult: ImageResult) {
-   this.imageBackSrc = imageResult.resized
-        && imageResult.resized.dataURL
-        || imageResult.dataURL;
   }
-
-
-
-  // get isMoreThanToday() {
-  //   let date = ;
-  //   let varDate = new Date(date); //dd-mm-YYYY
-  //   var today = new Date();
-  //   today.setHours(0, 0, 0, 0);
-
-  //   if (varDate >= today) {
-
-  //     alert("Working!");
-  //   }
-  //   return
-  // }
+  uploadBackID(imageResult: ImageResult) {
+    this.imageBackSrc = imageResult.resized && imageResult.resized.dataURL || imageResult.dataURL;
+  }
 }
