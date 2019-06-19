@@ -40,6 +40,9 @@ export class LandlordService {
   getRoomTypes(page : any) : Observable<any[]> {
     return this.http.post<any[]>(`${this.baseUrl}/api/landlord/rt/`, page, httpOptions);
   }
+  getAllRoomTypes() : Observable<BoardingHouse[]> {
+    return this.http.post<any[]>(`${this.baseUrl}/api/landlord/rt/all`, null, httpOptions);
+  }
   createRt(rt : any) : Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/api/landlord/rt/add`, rt, httpOptions);
   }

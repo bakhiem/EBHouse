@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
- baseUrl : "http://ec2-54-255-244-234.ap-southeast-1.compute.amazonaws.com:8888/ebhouse"
+ baseUrl : "18.139.124.34"
 //  baseUrl : "http://localhost:8080/CapstoneProject"
 };
 

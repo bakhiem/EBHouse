@@ -9,7 +9,7 @@ import { LandlordService } from '../service/landlord-service.service';
 
 import { Landlord } from '../../models/landlord';
 import { BoardingHouse } from '../../models/bh';
-
+import { LandlordComponent } from '../landlord.component';
 
 import { AuthenticationService } from '../../user/service/authentication.service';
 import { User } from '../../user/models/user';
@@ -26,16 +26,19 @@ export class RoomComponent implements OnInit {
   dataWards: any[];
   arrAddress: any[];
   bhList: BoardingHouse[];
+  rtList: any[];
   createRoomFormGroup: FormGroup;
-  currentUser: User;
   isEdit: number = 0;
+  roomList: any[];
   currentBh: BoardingHouse;
+  
+  currentRoom: any;
 
+
+  submitted : any = false;
   //Message
   successMess: string;
   errMess: string;
-  deleteSuccess: string;
-  deleteErr: string;
 
   //paging
   perPage: number = 10;
@@ -43,46 +46,86 @@ export class RoomComponent implements OnInit {
   totalPage: number;
   pageNumbers: number[] = [];
 
-  displayedColumns: string[] = ['name', 'address', 'numberOfRoom', 'description', 'customColumn'];
+  displayedColumns: string[] = ['name', 'roomType', 'area', 'capacity', 'price', 'description', 'customColumn'];
 
 
   constructor(private fb: FormBuilder,
     public dialog: MatDialog,
     private service: LandlordService,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private landlordComponent: LandlordComponent
   ) { }
   ngOnInit() {
-
     this.getRooms();
-    this.currentUser = this.authenticationService.currentUserValue;
+    this.getRoomType();
     this.createRoomFormGroup = this.fb.group({
       name: this.fb.control('', Validators.compose([
         Validators.required
       ])),
       id: '',
-      boardingHouseID: this.fb.control('', Validators.compose([
+      boardingHouse: this.fb.control('', Validators.compose([
         Validators.required
       ])),
-      roomTypeID: this.fb.control('', Validators.compose([
+      roomType: this.fb.control('', Validators.compose([
         Validators.required
       ])),
       description: ''
     });
+  }
+  getRoomType() {
+      this.service.getAllRoomTypes().subscribe(
+        res => {
+          let response = JSON.parse("" + res);
+          if (response.type == 1) {
+            let data = JSON.parse(response.data);
+            this.rtList = data.roomType;
+          }
+        }, err => {
+          console.log(err);
+        })
+    
+  }
+  getRooms() {
+    if (this.landlordComponent.currentBh != null) {
+      this.currentBh = this.landlordComponent.currentBh;
+      $('#boarding-house').val(this.currentBh.name);
+      this.getRoomsFromCurrentBh();
+    }
+    else {
+      this.service.getAllBoardingHouses().subscribe(
+        res => {
+          let response = JSON.parse("" + res);
+          if (response.type == 1) {
+            let data = JSON.parse(response.data);
+            this.bhList = data.boardingHouse;
+            if (this.bhList.length > 0 && this.currentBh == null) {
+              this.currentBh = this.bhList[0];
+              $('#boarding-house').val(this.currentBh.name);
+              this.getRoomsFromCurrentBh();
+            }
+          }
+        }, err => {
+          console.log(err);
+
+        })
+    }
+
 
   }
 
-  getRooms() {
+  getRoomsFromCurrentBh() {
     let page: any = {
+      boardingHouseID: this.currentBh.id,
       page: this.currentPage
     }
+    console.log(page)
     this.service.getRooms(page).subscribe(
       res => {
         console.log(res)
         let response = JSON.parse("" + res);
         if (response.type == 1) {
           let data = JSON.parse(response.data);
-          this.bhList = data.boardingHouse;
-          console.log(response)
+          this.roomList = data.room;
           this.totalPage = Math.ceil(data.totalPage / this.perPage);
           this.toArray(this.totalPage);
         }
@@ -94,44 +137,48 @@ export class RoomComponent implements OnInit {
 
   //create bh
   createRoom() {
-    this.arrAddress = null;
     this.createRoomFormGroup.reset();
     this.isEdit = 0;
-    this.currentBh = null;
     this.resetMess();
+    if(this.rtList){
+      this.createRoomFormGroup.get('roomType').setValue(this.rtList[0]);
+    }
     $('.bd-example-modal-lg').modal('show');
   }
   onSubmit() {
     this.resetMess();
-    let fullAddress = this.createRoomFormGroup.value.address + "-" + this.createRoomFormGroup.value.wards.name + "-" + this.createRoomFormGroup.value.distric.name + "-" + this.createRoomFormGroup.value.province.name;
-    if (this.isEdit == 1) {
-      let bh: BoardingHouse = {
-        id: this.createRoomFormGroup.value.id,
-        name: this.createRoomFormGroup.value.name,
-        address: fullAddress,
-        numberOfRoom: this.createRoomFormGroup.value.numberOfRoom,
-        description: this.createRoomFormGroup.value.description ? this.createRoomFormGroup.value.description : ''
-      }
+    this.submitted = true;
+    console.log(this.createRoomFormGroup.value);
 
-      if (bh.address == this.currentBh.address && bh.name == this.currentBh.name && bh.numberOfRoom == this.currentBh.numberOfRoom && bh.description == this.currentBh.description) {
+    if (this.isEdit == 1) {
+      let room: any = {
+        bhouseID: this.currentBh.id,
+        roomTypeID: this.createRoomFormGroup.value.roomType.id,
+        room : {
+          name : this.createRoomFormGroup.value.name,
+          description: this.createRoomFormGroup.value.description ? this.createRoomFormGroup.value.description : ''
+        }
+      }
+      if (room.roomTypeID == this.currentRoom.roomTypeID && room.room.name == this.currentRoom.name && room.room.description == this.currentRoom.description ) {
         this.errMess = Message.notChangeMess;
       }
       else {
         this.addLoading();
-        this.service.editBh(bh).subscribe(
+        this.service.editBh(room).subscribe(
           res => {
             console.log(res)
             let resObject = JSON.parse("" + res);
             if (resObject.type == 1) {
               this.successMess = resObject.message;
-              this.currentBh = bh;
+              $('.bd-example-modal-lg').modal('hide');
+              this.getRoomsFromCurrentBh();
             }
             else {
               this.errMess = resObject.message;
-              this.currentBh = null;
             }
-            this.getRooms()
             this.removeLoading();
+        
+           
           },
           err => {
             this.errMess = Message.defaultErrMess;
@@ -144,90 +191,106 @@ export class RoomComponent implements OnInit {
 
 
     else if (this.isEdit == 0) {
-      let bh: BoardingHouse = {
-        name: this.createRoomFormGroup.value.name,
-        numberOfRoom: this.createRoomFormGroup.value.numberOfRoom,
-        address: fullAddress,
+      let room: any = {
+        boardingHouseID:  Number(this.currentBh.id) ,
+        roomTypeID: this.createRoomFormGroup.value.roomType.id,
+        roomName: this.createRoomFormGroup.value.name,
         description: this.createRoomFormGroup.value.description ? this.createRoomFormGroup.value.description : ''
       }
+      console.log(room);
+
       this.addLoading();
-      this.service.createRoom(bh).subscribe(
+      this.service.createRoom(room).subscribe(
         res => {
           let resObject = JSON.parse("" + res);
           if (resObject.type == 1) {
             this.successMess = resObject.message;
+            this.getRoomsFromCurrentBh()
+            $('.bd-example-modal-lg').modal('hide');
           }
           else {
             this.errMess = resObject.message;
-            this.currentBh = null;
           }
-          this.getRooms()
           this.removeLoading();
+          
+          
         },
         err => {
           this.errMess = Message.defaultErrMess;
+          this.hiddenMess();
           console.log(err)
           this.removeLoading();
         }
       )
     }
   }
+  hiddenMess(){
+      setTimeout(() => { this.resetMess() }, 5000);
+  }
 
   addLoading() {
+    this.submitted = false;
     $('.customLoading').addClass('preloader');
     $('.customLoader').addClass('loader');
   }
   removeLoading() {
+    this.currentRoom = null;
+    this.hiddenMess();
     $('.customLoading').removeClass('preloader');
     $('.customLoader').removeClass('loader');
   }
 
 
   //edit and delete boarding-house :
-  editBh(obj) {
+  editRoom(obj) {
+    this.createRoomFormGroup.reset();
+    console.log(obj)
     this.isEdit = 1;
-    this.currentBh = obj;
+    this.currentRoom = obj;
     this.createRoomFormGroup.get('name').setValue(obj.name);
-    this.createRoomFormGroup.get('numberOfRoom').setValue(obj.numberOfRoom);
     this.createRoomFormGroup.get('description').setValue(obj.description);
     this.createRoomFormGroup.get('id').setValue(obj.id);
+    for(let i = 0; i < this.rtList.length; i++){
+      if(this.rtList[i].id == obj.roomType.id){
+        this.createRoomFormGroup.get('roomType').setValue(this.rtList[i]);
+        break;
+      }
+    }
+    
     $('.bd-example-modal-lg').modal('show');
     this.resetMess();
   }
   resetMess() {
     this.errMess = "";
     this.successMess = "";
-    this.deleteErr = "";
-    this.deleteSuccess = "";
+    this.submitted = false;
   }
-  deleteBh(obj) {
+  deleteRoom(obj) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '350px',
-      data: "Bạn chắc chắn muốn xóa nhà trọ không ?"
+      width: '400px',
+      data: "Bạn chắc chắn muốn xóa phòng trọ chứ ?"
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.resetMess();
-        let bh = {
-          id: obj.id
+        let rooms = {
+          roomID: [obj.id]
         }
         this.addLoading();
-        this.service.deleteBh(bh).subscribe(
+        this.service.deleteRoom(rooms).subscribe(
           res => {
-            console.log(res)
-            this.removeLoading();
             let resObject = JSON.parse("" + res);
             if (resObject.type == 1) {
-              this.deleteSuccess = resObject.message;
+              this.successMess = resObject.message;
+              this.getRoomsFromCurrentBh();
             }
             else {
-              this.deleteErr = resObject.message;
+              this.errMess = resObject.message;
             }
-            this.getRooms()
+            this.removeLoading();
           },
           err => {
-
-            this.deleteErr = Message.defaultErrMess;
+            this.errMess = Message.defaultErrMess;
             this.removeLoading();
             console.log(err)
           }
@@ -238,25 +301,26 @@ export class RoomComponent implements OnInit {
 
   //paging
   toArray = function (num: number) {
+    this.pageNumbers = [];
     for (let i = 1; i <= num; i++) {
       this.pageNumbers[i - 1] = i;
     }
   }
   goToPage(page: any) { // without type info
     this.currentPage = page;
-    this.getRooms();
+    this.getRoomsFromCurrentBh();
   }
   prePage() {
     if (this.currentPage > 1) {
       this.currentPage = this.currentPage - 1
-      this.getRooms();
+      this.getRoomsFromCurrentBh();
     }
   }
 
   nextPage() {
     if (this.currentPage < this.totalPage) {
       this.currentPage = this.currentPage + 1;
-      this.getRooms();
+      this.getRoomsFromCurrentBh();
     }
   }
 }
