@@ -62,7 +62,6 @@ export class RoomComponent implements OnInit {
       name: this.fb.control('', Validators.compose([
         Validators.required
       ])),
-      id: '',
       roomType: this.fb.control('', Validators.compose([
         Validators.required
       ])),
@@ -135,6 +134,7 @@ export class RoomComponent implements OnInit {
   //create bh
   createRoom() {
     this.createRoomFormGroup.reset();
+    this.currentRoom = null;
     this.isEdit = 0;
     this.resetMess();
     if(this.rtList){
@@ -152,21 +152,24 @@ export class RoomComponent implements OnInit {
         bhouseID: this.currentBh.id,
         roomTypeID: this.createRoomFormGroup.value.roomType.id,
         room : {
+          id : this.currentRoom.id,
           name : this.createRoomFormGroup.value.name,
           description: this.createRoomFormGroup.value.description ? this.createRoomFormGroup.value.description : ''
         }
       }
-      if (room.roomTypeID == this.currentRoom.roomTypeID && room.room.name == this.currentRoom.name && room.room.description == this.currentRoom.description ) {
+      console.log(room)
+      if (room.roomTypeID == this.currentRoom.roomType.id && room.room.name == this.currentRoom.name && room.room.description == this.currentRoom.description ) {
         this.errMess = Message.notChangeMess;
       }
       else {
         this.addLoading();
-        this.service.editBh(room).subscribe(
+        this.service.editRoom(room).subscribe(
           res => {
             console.log(res)
             let resObject = JSON.parse("" + res);
             if (resObject.type == 1) {
               this.successMess = resObject.message;
+              this.currentRoom = null;
               $('.bd-example-modal-lg').modal('hide');
               this.getRoomsFromCurrentBh();
             }
@@ -231,7 +234,6 @@ export class RoomComponent implements OnInit {
     $('.customLoader').addClass('loader');
   }
   removeLoading() {
-    this.currentRoom = null;
     this.hiddenMess();
     $('.customLoading').removeClass('preloader');
     $('.customLoader').removeClass('loader');
@@ -246,7 +248,6 @@ export class RoomComponent implements OnInit {
     this.currentRoom = obj;
     this.createRoomFormGroup.get('name').setValue(obj.name);
     this.createRoomFormGroup.get('description').setValue(obj.description);
-    this.createRoomFormGroup.get('id').setValue(obj.id);
     for(let i = 0; i < this.rtList.length; i++){
       if(this.rtList[i].id == obj.roomType.id){
         this.createRoomFormGroup.get('roomType').setValue(this.rtList[i]);
