@@ -149,7 +149,7 @@ export class RoomComponent implements OnInit {
 
     if (this.isEdit == 1) {
       let room: any = {
-        bhouseID: this.currentBh.id,
+        bhouseID: Number(this.currentBh.id),
         roomTypeID: this.createRoomFormGroup.value.roomType.id,
         room : {
           id : this.currentRoom.id,
