@@ -6,7 +6,11 @@ import { PlaceService } from '../../service/place.service';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
-
+import { TenantServiceService } from '../service/tenant-service.service';
+import { AuthenticationService } from '../../user/service/authentication.service';
+import { User } from '../../user/models/user';
+import { Tenant } from '../../models/tenant';
+import * as $ from 'jquery';
 //image
 import { ImageResult, ResizeOptions } from 'ng2-imageupload';
 
@@ -25,68 +29,86 @@ export class TenantProfileComponent implements OnInit {
   imageFrontSrc: string;
   imageBackSrc: string;
   profileFormGroup: FormGroup;
+  tenant : Tenant;
 
   //resize image
   resizeOptions: ResizeOptions = {
     resizeMaxHeight: 1000,
     resizeMaxWidth: 1000
   };
-  
 
 
-  constructor(private fb: FormBuilder,
+
+  constructor(
+    private fb: FormBuilder,
     private data: DataService,
     private router: Router,
-    private placeService: PlaceService) { }
+    private placeService: PlaceService,
+    private authenticationService: AuthenticationService,
+    private service: TenantServiceService) { }
 
-  ngOnInit() {
-    //get tinh/tp 
-    this.placeService.getProvince().subscribe(response => {
-      var arr = [];
-      for (var key in response) {
-        arr.push(response[key])
-      }
-      this.dataProvince = arr;
-    });
+    ngOnInit() {
+      this.getProfile();
+      //get tinh/tp
+      this.placeService.getProvince().subscribe(response => {
+        var arr = [];
+        for (var key in response) {
+          arr.push(response[key])
+        }
+        this.dataProvince = arr;
+      });
 
+      this.profileFormGroup = this.fb.group({
+        fullname: this.fb.control(this.tenant ? this.tenant.user.name : '', Validators.compose([
+          Validators.required
+        ])),
+        phone: this.fb.control(this.tenant ? this.tenant.user.phone : '', Validators.compose([
+          Validators.required,
+          Validators.pattern(this.phonePattern)
+        ])),
 
-
-    this.profileFormGroup = this.fb.group({
-      fullname: this.fb.control('', Validators.compose([
-        Validators.required
-      ])),
-      phone: this.fb.control('', Validators.compose([
-        Validators.required,
-        Validators.pattern(this.phonePattern)
-      ])),
-
-      date: this.fb.control('2018-03-05', Validators.compose([
-        Validators.required
-      ])),
-      sex: this.fb.control('Male', Validators.compose([
-        Validators.required
-      ])),
-      province: this.fb.control('', Validators.compose([
-        Validators.required
-      ])),
-      distric: this.fb.control('', Validators.compose([
-        Validators.required
-      ])),
-      wards: this.fb.control('', Validators.compose([
-        Validators.required
-      ])),
-      address: this.fb.control('', Validators.compose([
-        Validators.required
-      ])),
-      frontID: this.fb.control('', Validators.compose([
-        Validators.required
-      ])),
-      backID: this.fb.control('', Validators.compose([
-        Validators.required
-      ])),
-
-    });
+        date: this.fb.control(this.tenant ? this.tenant.user.dateOfBirth : '', Validators.compose([
+          Validators.required
+        ])),
+        sex: this.fb.control(this.tenant ? this.tenant.user.sex : 0, Validators.compose([
+          Validators.required
+        ])),
+        province: this.fb.control('', Validators.compose([
+          Validators.required
+        ])),
+        distric: this.fb.control('', Validators.compose([
+          Validators.required
+        ])),
+        wards: this.fb.control('', Validators.compose([
+          Validators.required
+        ])),
+        address: this.fb.control('', Validators.compose([
+          Validators.required
+        ])),
+        frontID: this.fb.control(this.tenant ? this.tenant.imgArnFront : '', Validators.compose([
+          Validators.required
+        ])),
+        backID: this.fb.control(this.tenant ? this.tenant.imgArnBack : '', Validators.compose([
+          Validators.required
+        ])),
+      });
   }
+
+  getProfile(){
+    this.service.getProfile().subscribe(
+      res => {
+        let response = JSON.parse("" + res);
+        if (response.type == 1) {
+          this.tenant = JSON.parse(response.data);
+        }else{
+          this.message = "Có lỗi xảy ra";
+        }
+      }, err => {
+        console.log(err);
+        // this.message = "Có lỗi xảy ra";
+      })
+  }
+
   onChangeProvince() {
     this.placeService.getDistric(this.profileFormGroup.value.province.code).subscribe(response => {
       var arr = [];

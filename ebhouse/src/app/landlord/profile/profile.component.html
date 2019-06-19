@@ -13,8 +13,7 @@
                             <div class="col-sm-6">
                                 <label for="example-text-input" class="col-form-label">Họ tên</label>
                                 <input class="form-control" type="text" id="example-text-input" formControlName="name">
-                                <div *ngIf="profileFormGroup.controls['name'].hasError('required') && (profileFormGroup.controls['name'].dirty || profileFormGroup.controls['name'].touched)"
-                                    class="alert alert-danger">
+                                <div *ngIf="profileFormGroup.controls['name'].hasError('required') && (profileFormGroup.controls['name'].dirty || profileFormGroup.controls['name'].touched)" class="alert alert-danger">
                                     Họ tên là bắt buộc
                                 </div>
                             </div>
@@ -23,12 +22,10 @@
                             <div class="col-sm-6">
                                 <label for="example-tel-input" class="col-form-label">Số điện thoại</label>
                                 <input class="form-control" type="tel" id="example-tel-input" formControlName="phone">
-                                <div *ngIf="profileFormGroup.controls['phone'].hasError('required') && (profileFormGroup.controls['phone'].dirty || profileFormGroup.controls['phone'].touched)"
-                                    class="alert alert-danger">
+                                <div *ngIf="profileFormGroup.controls['phone'].hasError('required') && (profileFormGroup.controls['phone'].dirty || profileFormGroup.controls['phone'].touched)" class="alert alert-danger">
                                     Số điện thoại là bắt buộc
                                 </div>
-                                <div *ngIf="profileFormGroup.controls['phone'].hasError('pattern') && (profileFormGroup.controls['phone'].dirty || profileFormGroup.controls['phone'].touched)"
-                                    class="alert alert-danger">
+                                <div *ngIf="profileFormGroup.controls['phone'].hasError('pattern') && (profileFormGroup.controls['phone'].dirty || profileFormGroup.controls['phone'].touched)" class="alert alert-danger">
                                     Số điện thoại không đúng định dạng
                                 </div>
                             </div>
@@ -38,9 +35,8 @@
                             <div class="col-sm-6">
                                 <label for="example-date-input" class="col-form-label .col-required">Ngày sinh</label>
                                 <input class="form-control" type="date" id="example-date-input" formControlName="date">
-                                <div *ngIf="profileFormGroup.controls['date'].hasError('required') && (profileFormGroup.controls['date'].dirty || profileFormGroup.controls['date'].touched)"
-                                    class="alert alert-danger">
-                                   Ngày sinh là bắt buộc
+                                <div *ngIf="profileFormGroup.controls['date'].hasError('required') && (profileFormGroup.controls['date'].dirty || profileFormGroup.controls['date'].touched)" class="alert alert-danger">
+                                    Ngày sinh là bắt buộc
                                 </div>
 
 
@@ -51,32 +47,27 @@
 
                         <b class="text-muted mb-3 mt-4 d-block col-form-label">Giới tính :</b>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="customRadio1" class="custom-control-input" value="male"
-                                formControlName="sex">
+                            <input type="radio" id="customRadio1" class="custom-control-input" value="male" formControlName="sex">
                             <label class="custom-control-label" for="customRadio1">Nam</label>
                         </div>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="customRadio2" class="custom-control-input" value="female"
-                                formControlName="sex">
+                            <input type="radio" id="customRadio2" class="custom-control-input" value="female" formControlName="sex">
                             <label class="custom-control-label" for="customRadio2">Nữ</label>
                         </div>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="customRadio3" class="custom-control-input" value="other"
-                                formControlName="sex">
+                            <input type="radio" id="customRadio3" class="custom-control-input" value="other" formControlName="sex">
                             <label class="custom-control-label" for="customRadio3">Khác</label>
                         </div>
                         <!-- end radio -->
                         <div class="form-group row">
                             <div class="col-sm-3">
                                 <label class="col-form-label">Tỉnh / Thành phố </label>
-                                <select class="custom-select" formControlName="province" required
-                                    (change)="onChangeProvince()">
+                                <select class="custom-select" formControlName="province" required (change)="onChangeProvince()">
                                     <option *ngFor="let aprovince of dataProvince" [ngValue]="aprovince">
                                         {{aprovince.name}}
                                     </option>
                                 </select>
-                                <div *ngIf="profileFormGroup.controls['province'].hasError('required') && (profileFormGroup.controls['province'].dirty || profileFormGroup.controls['province'].touched)"
-                                    class="alert alert-danger">
+                                <div *ngIf="profileFormGroup.controls['province'].hasError('required') && (profileFormGroup.controls['province'].dirty || profileFormGroup.controls['province'].touched)" class="alert alert-danger">
                                     Tỉnh / Thành phố là bắt buộc
                                 </div>
                             </div>
@@ -87,8 +78,7 @@
                                         {{adistric.name}}
                                     </option>
                                 </select>
-                                <div *ngIf="profileFormGroup.controls['distric'].hasError('required') && (profileFormGroup.controls['distric'].dirty || profileFormGroup.controls['distric'].touched)"
-                                    class="alert alert-danger">
+                                <div *ngIf="profileFormGroup.controls['distric'].hasError('required') && (profileFormGroup.controls['distric'].dirty || profileFormGroup.controls['distric'].touched)" class="alert alert-danger">
                                     Quận / Huyện là bắt buộc
                                 </div>
                             </div>
@@ -99,18 +89,16 @@
                                         {{awards.name}}
                                     </option>
                                 </select>
-                                <div *ngIf="profileFormGroup.controls['wards'].hasError('required') && (profileFormGroup.controls['wards'].dirty || profileFormGroup.controls['wards'].touched)"
-                                    class="alert alert-danger">
+                                <div *ngIf="profileFormGroup.controls['wards'].hasError('required') && (profileFormGroup.controls['wards'].dirty || profileFormGroup.controls['wards'].touched)" class="alert alert-danger">
                                     Xã / Phường là bắt buộc
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-6">
-                                <label for="example-tel-input" >Thôn xóm/ Số nhà</label>
+                                <label for="example-tel-input">Thôn xóm/ Số nhà</label>
                                 <input class="form-control" type="tel" id="example-tel-input" formControlName="address">
-                                <div *ngIf="profileFormGroup.controls['address'].hasError('required') && (profileFormGroup.controls['address'].dirty || profileFormGroup.controls['address'].touched)"
-                                    class="alert alert-danger">
+                                <div *ngIf="profileFormGroup.controls['address'].hasError('required') && (profileFormGroup.controls['address'].dirty || profileFormGroup.controls['address'].touched)" class="alert alert-danger">
                                     Thôn xóm/ số nhà không được để trống
                                 </div>
                             </div>

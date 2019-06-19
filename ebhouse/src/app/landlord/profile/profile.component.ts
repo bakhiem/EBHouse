@@ -41,7 +41,7 @@ export class LandlordProfileComponent implements OnInit {
     if (this.currentUser && this.currentUser.user.address && this.currentUser.user.address) {
       this.arrAddress = this.currentUser.address.split('-');
     }
-    //get tinh/tp 
+    //get tinh/tp
     this.placeService.getProvince().subscribe(response => {
       var arr = [];
       for (var key in response) {
@@ -56,7 +56,7 @@ export class LandlordProfileComponent implements OnInit {
       this.dataProvince = arr;
       console.log(arr);
     });
-    
+
 
     this.profileFormGroup = this.fb.group({
       name: this.fb.control(this.currentUser ? this.currentUser.name : "", Validators.compose([
@@ -106,19 +106,19 @@ export class LandlordProfileComponent implements OnInit {
     this.placeService.getWards(this.profileFormGroup.value.distric.code).subscribe(response => {
       var arr = [];
       for (var key in response) {
-        arr.push(response[key]) 
+        arr.push(response[key])
         //for edit
         if(this.currentUser.address && response[key].name ==  this.arrAddress[1]){
           this.profileFormGroup.get('wards').setValue(response[key]);
         }
-        
+
       }
       this.dataWards = arr;
     });
   };
   onSubmit() {
     //if edit, compare if have change then post to server
-    
+
     let fullAddress = this.profileFormGroup.value.address + "-" + this.profileFormGroup.value.wards.name + "-" + this.profileFormGroup.value.distric.name + "-" + this.profileFormGroup.value.province.name;
 
   }
