@@ -48,7 +48,6 @@ export class TenantProfileComponent implements OnInit {
     private service: TenantServiceService) { }
 
     ngOnInit() {
-      this.getProfile();
       //get tinh/tp
       this.placeService.getProvince().subscribe(response => {
         var arr = [];
@@ -59,18 +58,17 @@ export class TenantProfileComponent implements OnInit {
       });
 
       this.profileFormGroup = this.fb.group({
-        fullname: this.fb.control(this.tenant ? this.tenant.user.name : '', Validators.compose([
+        fullname: this.fb.control('', Validators.compose([
           Validators.required
         ])),
-        phone: this.fb.control(this.tenant ? this.tenant.user.phone : '', Validators.compose([
+        phone: this.fb.control('', Validators.compose([
           Validators.required,
           Validators.pattern(this.phonePattern)
         ])),
-
-        date: this.fb.control(this.tenant ? this.tenant.user.dateOfBirth : '', Validators.compose([
+        date: this.fb.control('', Validators.compose([
           Validators.required
         ])),
-        sex: this.fb.control(this.tenant ? this.tenant.user.sex : 0, Validators.compose([
+        sex: this.fb.control(0, Validators.compose([
           Validators.required
         ])),
         province: this.fb.control('', Validators.compose([
@@ -85,13 +83,14 @@ export class TenantProfileComponent implements OnInit {
         address: this.fb.control('', Validators.compose([
           Validators.required
         ])),
-        frontID: this.fb.control(this.tenant ? this.tenant.imgArnFront : '', Validators.compose([
+        frontID: this.fb.control('', Validators.compose([
           Validators.required
         ])),
-        backID: this.fb.control(this.tenant ? this.tenant.imgArnBack : '', Validators.compose([
+        backID: this.fb.control('', Validators.compose([
           Validators.required
         ])),
       });
+      this.getProfile();
   }
 
   getProfile(){
@@ -100,12 +99,29 @@ export class TenantProfileComponent implements OnInit {
         let response = JSON.parse("" + res);
         if (response.type == 1) {
           this.tenant = JSON.parse(response.data);
+          let arr = null;
+          if(this.tenant.user.address != ' '){
+            arr = this.tenant.user.address.split('-');
+          }
+
+          this.profileFormGroup.get('fullname').setValue(this.tenant.user.name != ' ' ? this.tenant.user.name : ' ');
+          this.profileFormGroup.get('phone').setValue(this.tenant.user.phone != ' ' ? this.tenant.user.phone : ' ');
+          if(this.tenant.user.dateOfBirth != 'null'){
+            this.profileFormGroup.get('date').setValue(this.tenant.user.dateOfBirth);
+          }
+          this.profileFormGroup.get('sex').setValue(this.tenant.user.sex);
+          this.profileFormGroup.get('province').setValue(arr != null ? arr[3] : '');
+          this.profileFormGroup.get('distric').setValue(arr != null ? arr[2] : '');
+          this.profileFormGroup.get('wards').setValue(arr != null ? arr[1] : '');
+          this.profileFormGroup.get('address').setValue(arr != null ? arr[0]: '');
+          this.profileFormGroup.get('frontID').setValue(this.tenant.imgArnFront != ' ' ? this.tenant.imgArnFront : '');
+          this.profileFormGroup.get('backID').setValue(this.tenant.imgArnBack != ' ' ? this.tenant.imgArnBack : '' );
         }else{
-          this.message = "Có lỗi xảy ra";
+          this.message = JSON.parse(response.message);
         }
       }, err => {
         console.log(err);
-        // this.message = "Có lỗi xảy ra";
+        this.message = JSON.parse(err);
       })
   }
 
