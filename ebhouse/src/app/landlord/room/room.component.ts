@@ -63,9 +63,6 @@ export class RoomComponent implements OnInit {
         Validators.required
       ])),
       id: '',
-      boardingHouse: this.fb.control('', Validators.compose([
-        Validators.required
-      ])),
       roomType: this.fb.control('', Validators.compose([
         Validators.required
       ])),
