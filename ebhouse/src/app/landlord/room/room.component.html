@@ -126,7 +126,7 @@
                                         {{type.name}}
                                     </option>
                                 </select>
-                                <div *ngIf="createRoomFormGroup.controls['roomType'].hasError('required') && submitted && (createRoomFormGroup.controls['roomType'].dirty || createRoomFormGroup.controls['roomType'].touched)"
+                                <div *ngIf="createRoomFormGroup.controls['roomType'].hasError('required') && (createRoomFormGroup.controls['roomType'].dirty || createRoomFormGroup.controls['roomType'].touched)"
                                     class="alert alert-danger">
                                     Loại phòng là bắt buộc
                                 </div>

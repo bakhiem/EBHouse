@@ -14,7 +14,7 @@ import { RoomType } from '../../models/room-type';
 
 import { AuthenticationService } from '../../user/service/authentication.service';
 import { User } from '../../user/models/user';
-import { CommonMessage } from '../../models/message';
+import { CommonMessage, Message } from '../../models/message';
 
 @Component({
   selector: 'app-room-type',
@@ -31,17 +31,17 @@ export class RoomTypeComponent implements OnInit {
   //equipment
   dataEquipment: any[];
   //Message
-  successMess: string;
-  errMess: string;
-  deleteSuccess: string;
-  deleteErr: string;
 
+  message: Message = {
+    content: '',
+    type: 0
+  }
   //paging
   perPage: number = 10;
   currentPage: number = 1;
   totalPage: number;
   pageNumbers: number[] = [];
-  displayedColumns: string[] = ['name', 'area', 'capacity', 'price','description','equipment', 'customColumn'];
+  displayedColumns: string[] = ['name', 'area', 'capacity', 'price', 'description', 'equipment', 'customColumn'];
 
 
   constructor(private fb: FormBuilder,
@@ -50,11 +50,6 @@ export class RoomTypeComponent implements OnInit {
     private service: LandlordService,
     private authenticationService: AuthenticationService
   ) {
-
-    //create form group
-
-
-
   }
   ngOnInit() {
     this.createRtFormGroup = this.fb.group({
@@ -79,30 +74,27 @@ export class RoomTypeComponent implements OnInit {
     this.formatCurrency();
 
   }
-  formatCurrency(){
-		var $input = $("#input-price");
-
-		$input.on( "keyup", function( event ) {
-			// When user select text in the document, also abort.
-			var selection = window.getSelection().toString();
-			if ( selection !== '' ) {
-				return;
-			}
-			// When the arrow keys are pressed, abort.
-			if ( $.inArray( event.keyCode, [38,40,37,39] ) !== -1 ) {
-				return;
-			}
-			var $this = $( this );
-			// Get the value.
-			var input = $this.val();
-			
-			    input = ("" + input).replace(/[\D\s\._\-]+/g, "");
-					input = input ? parseInt( "" + input, 10 ) : 0;
-
-					$this.val( function() {
-						return ( input === 0 ) ? "" : input.toLocaleString( "en-US" );
-          } );
-        } );
+  formatCurrency() {
+    var $input = $("#input-price");
+    $input.on("keyup", function (event) {
+      // When user select text in the document, also abort.
+      var selection = window.getSelection().toString();
+      if (selection !== '') {
+        return;
+      }
+      // When the arrow keys are pressed, abort.
+      if ($.inArray(event.keyCode, [38, 40, 37, 39]) !== -1) {
+        return;
+      }
+      var $this = $(this);
+      // Get the value.
+      var input = $this.val();
+      input = ("" + input).replace(/[\D\s\._\-]+/g, "");
+      input = input ? parseInt("" + input, 10) : 0;
+      $this.val(function () {
+        return (input === 0) ? "" : input.toLocaleString("en-US");
+      });
+    });
   }
 
   private getEquipment() {
@@ -126,53 +118,52 @@ export class RoomTypeComponent implements OnInit {
     let page: any = {
       page: this.currentPage
     }
+    this.addLoading();
     this.service.getRoomTypes(page).subscribe(
       res => {
+        this.removeLoading();
         let response = JSON.parse("" + res);
         if (response.type == 1) {
-          console.log(response.data)
-           let resData = JSON.parse(response.data);
-           this.rtList = resData.roomType;
+          let resData = JSON.parse(response.data);
+          this.rtList = resData.roomType;
           this.getChecked();
           this.totalPage = Math.ceil(resData.totalPage / this.perPage);
           this.toArray(this.totalPage);
         }
       }, err => {
+        this.removeLoading();
+        this.message.content = CommonMessage.defaultErrMess;
+        this.message.type = 0;
         console.log(err);
-        // this.message = "Có lỗi xảy ra";
       })
   }
   //convert list id equipment to string equipment
-  getStringEquipment (){
+  getStringEquipment() {
     this.rtList.forEach(element => {
       let stringEquip = '';
       element.lstEquipment.forEach(equipment => {
-        stringEquip  += equipment.name + " - ";
+        stringEquip += equipment.name + " - ";
       });
-      element.equipment = stringEquip.substring(0, stringEquip.length-2);
+      element.equipment = stringEquip.substring(0, stringEquip.length - 2);
     });
     console.log(this.rtList);
   }
 
   //get checked from rtlist
-  getChecked (){
-      this.rtList.forEach(element => {
-        let checked =  Array.apply(null, Array(this.dataEquipment.length)).map(function() { return false });
-        for(let i = 0;i < this.dataEquipment.length ; i++){
+  getChecked() {
+    this.rtList.forEach(element => {
+      let checked = Array.apply(null, Array(this.dataEquipment.length)).map(function () { return false });
+      for (let i = 0; i < this.dataEquipment.length; i++) {
         element.lstEquipment.forEach(equipment => {
-            if(this.dataEquipment[i].id == equipment.id){
-              checked[i] = true
-            }
-            
-          });
+          if (this.dataEquipment[i].id == equipment.id) {
+            checked[i] = true
+          }
+        });
       }
       element.checked = checked;
-      });
-      console.log(this.rtList)
+    });
   }
-
-
-  //create bh
+  //create rt
   createRt() {
     this.createRtFormGroup.reset();
     this.isEdit = 0;
@@ -190,7 +181,6 @@ export class RoomTypeComponent implements OnInit {
     return listEquipment;
   }
   onSubmit() {
-    this.resetMess();
     let formatPrice = this.createRtFormGroup.value.price.split(',').join('');
     if (this.isEdit == 1) {
       let sendToServer = {
@@ -204,36 +194,26 @@ export class RoomTypeComponent implements OnInit {
         }],
         equipment: this.listEquipmentOnSubmit()
       }
-      console.log(sendToServer)
       let newRt = sendToServer.roomType[0];
-      if (newRt.area == this.currentRt.area && newRt.name == this.currentRt.name && newRt.price == this.currentRt.price && newRt.capacity == this.currentRt.capacity && newRt.description == this.currentRt.description && JSON.stringify(this.currentRt['checked'] ) == JSON.stringify(this.createRtFormGroup.controls.dataEquipment.value)) {
-        this.errMess = CommonMessage.notChangeMess;
+      if (newRt.area == this.currentRt.area && newRt.name == this.currentRt.name && newRt.price == this.currentRt.price && newRt.capacity == this.currentRt.capacity && newRt.description == this.currentRt.description && JSON.stringify(this.currentRt['checked']) == JSON.stringify(this.createRtFormGroup.controls.dataEquipment.value)) {
+        this.message.content = CommonMessage.notChangeMess;
+        this.message.type = 0;
       }
       else {
         this.addLoading();
         this.service.editRt(sendToServer).subscribe(
           res => {
-            let resObject = JSON.parse("" + res);
-            if (resObject.type == 1) {
-              this.successMess = resObject.message;
-            }
-            else {
-              this.errMess = resObject.message;
-            }
-            this.getRoomTypes()
-            this.removeLoading();
+            this.successRequestHandle(res);
           },
           err => {
-            this.errMess = CommonMessage.defaultErrMess;
-            this.removeLoading();
-            console.log(err)
+            this.errRequestHandle(err);
           }
         )
       }
     }
 
 
-    else if(this.isEdit == 0) {
+    else if (this.isEdit == 0) {
       let sendToServer = {
         roomType: [{
           name: this.createRtFormGroup.value.name,
@@ -244,29 +224,41 @@ export class RoomTypeComponent implements OnInit {
         }],
         equipment: this.listEquipmentOnSubmit()
       }
-      console.log(sendToServer)
-    this.addLoading();
+      this.addLoading();
       this.service.createRt(sendToServer).subscribe(
         res => {
-          console.log(res)
-          let resObject = JSON.parse("" + res);
-          if (resObject.type == 1) {
-            this.successMess = resObject.message;
-          }
-          else {
-            this.errMess = resObject.message;
-          }
-          this.getRoomTypes()
-          this.removeLoading();
+          this.successRequestHandle(res);
         },
         err => {
-          this.errMess = CommonMessage.defaultErrMess;
-          this.removeLoading();
-          console.log(err)
+          this.errRequestHandle(err);
         }
       )
     }
   }
+
+  successRequestHandle(res) {
+    let resObject = JSON.parse("" + res);
+    if (resObject.type == 1) {
+      this.message.type = 1;
+      this.message.content = resObject.message;
+      this.removeLoading();
+      this.currentRt = null;
+      $('.bd-example-modal-lg').modal('hide');
+      this.getRoomTypes();
+    }
+    else {
+      this.message.type = 0;
+      this.message.content = resObject.message;
+      this.removeLoading();
+    }
+  }
+  errRequestHandle(err) {
+    this.message.type = 0;
+    this.message.content = CommonMessage.defaultErrMess;
+    console.log(err);
+    this.removeLoading();
+  }
+
   addLoading() {
     $('.customLoading').addClass('preloader');
     $('.customLoader').addClass('loader');
@@ -286,15 +278,13 @@ export class RoomTypeComponent implements OnInit {
     this.createRtFormGroup.get('price').setValue(obj.price);
     this.createRtFormGroup.get('capacity').setValue(obj.capacity);
     this.createRtFormGroup.get('id').setValue(obj.id);
-    this.createRtFormGroup.setControl('dataEquipment',this.fb.array(obj.checked ||[]));
+    this.createRtFormGroup.setControl('dataEquipment', this.fb.array(obj.checked || []));
     $('#modalRoomType').modal('show');
     this.resetMess();
   }
   resetMess() {
-    this.errMess = "";
-    this.successMess = "";
-    this.deleteErr = "";
-    this.deleteSuccess = "";
+    this.message.content = '';
+    this.message.type = 0;
   }
   deleteBh(obj) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
@@ -310,21 +300,10 @@ export class RoomTypeComponent implements OnInit {
         this.addLoading();
         this.service.deleteRt(rt).subscribe(
           res => {
-            console.log(res)
-            let resObject = JSON.parse("" + res);
-            if (resObject.type == 1) {
-              this.deleteSuccess = resObject.message;
-            }
-            else {
-              this.deleteErr = resObject.message;
-            }
-            this.getRoomTypes();
-            this.removeLoading();
+            this.successRequestHandle(res)
           },
           err => {
-            this.deleteErr = CommonMessage.defaultErrMess;
-            this.removeLoading();
-            console.log(err)
+            this.errRequestHandle(err)
           }
         )
       }
@@ -341,11 +320,13 @@ export class RoomTypeComponent implements OnInit {
   goToPage(page: any) { // without type info
     this.currentPage = page;
     this.getRoomTypes();
+    this.resetMess();
   }
   prePage() {
     if (this.currentPage > 1) {
       this.currentPage = this.currentPage - 1
       this.getRoomTypes();
+      this.resetMess();
     }
   }
 
@@ -353,6 +334,7 @@ export class RoomTypeComponent implements OnInit {
     if (this.currentPage < this.totalPage) {
       this.currentPage = this.currentPage + 1;
       this.getRoomTypes();
+      this.resetMess();
     }
   }
 }

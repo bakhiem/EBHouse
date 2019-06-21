@@ -4,7 +4,7 @@ import { HttpClient,HttpErrorResponse,HttpHeaders } from '@angular/common/http';
 import {Landlord} from '../../models/landlord';
 import {BoardingHouse} from '../../models/bh';
 import {RoomType} from '../../models/room-type';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError,BehaviorSubject } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 import { catchError, retry } from 'rxjs/operators';
 
@@ -21,9 +21,9 @@ const httpOptions = {
 })
 export class LandlordService {
   private baseUrl: string = environment.baseUrl;
-  currentBh: Subject<any>;
+  currentBh: BehaviorSubject<any>;
   constructor(private http: HttpClient) { 
-    this.currentBh = new Subject();
+    this.currentBh = new BehaviorSubject<any>({})
   }
 
   getAllBoardingHouses() : Observable<BoardingHouse[]> {

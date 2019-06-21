@@ -5,6 +5,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './user/login/login.component';
+
+import { LogoutComponent } from './user/logout/logout.component';
 import { RegisterComponent } from './user/register/register.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -34,7 +36,8 @@ import {MatDialogModule} from '@angular/material/dialog';
     RegisterComponent,
     ConfirmPhoneComponent,
     NotFoundComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    LogoutComponent
   ],
   imports: [
     ReactiveFormsModule,
