@@ -11,11 +11,11 @@
                     <h4>Đăng ký</h4>
                 </div>
                   <div *ngIf="message" class="alert alert-danger" role="alert">
-                    <a  class="alert-link">{{message}}</a>
+                   {{message}}
                   </div>
                 <div class="login-form-body">
                     <div class="form-gp focused">
-                        <label for="exampleInputName1">Họ và tên</label>
+                        <label for="exampleInputName1" class="required">Họ và tên</label>
                         <input type="text" id="exampleInputName1" formControlName="fullname">
                         <i class="ti-user"></i>
                     </div>
@@ -28,7 +28,7 @@
 
                     </div>
                     <div class="form-gp focused">
-                        <label for="exampleInputEmail1">Số điện thoại</label>
+                        <label for="exampleInputEmail1" class="required">Số điện thoại</label>
                         <input type="text" id="exampleInputEmail1" formControlName="phone">
                         <i class="ti-agenda"></i>
                     </div>
@@ -43,7 +43,7 @@
                     </div>
                     <div formGroupName="pw">
                         <div class="form-gp focused">
-                            <label for="exampleInputPassword1">Mật khẩu</label>
+                            <label for="exampleInputPassword1" class="required">Mật khẩu</label>
                             <input type="password" id="exampleInputPassword1" formControlName="password">
                             <i class="ti-lock"></i>
                         </div>
@@ -56,7 +56,7 @@
                             Mật khẩu phải nhiều hơn 8 ký tự
                         </div>
                         <div class="form-gp focused">
-                            <label for="exampleInputPassword2">Nhập lại mật khẩu</label>
+                            <label for="exampleInputPassword2" class="required">Nhập lại mật khẩu</label>
                             <input type="password" id="exampleInputPassword2" formControlName="passwordConfirm">
                             <i class="ti-lock"></i>
                         </div>
@@ -66,7 +66,7 @@
                         </div>
                     </div>
                     <div class="form-group choose-role">
-                        <label for="exampleFormControlSelect1">Chọn chức năng</label>
+                        <label for="exampleFormControlSelect1" class="required">Chọn chức năng</label>
                         <select class="form-control" id="exampleFormControlSelect1" formControlName="role" >
                             <option value="1">Chủ trọ</option>
                             <option value="2">Khách thuê</option>

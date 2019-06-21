@@ -30,7 +30,6 @@ export class ConfirmPhoneComponent implements OnInit {
   ) { }
   ngAfterViewInit() {
     disableButtonOTPBeforeVerify();
-
   }
   ngOnInit() {
     this.data.currentUser.subscribe(user => this.user = user);
@@ -55,6 +54,9 @@ export class ConfirmPhoneComponent implements OnInit {
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
     }
+    else {
+      this.reset();
+    }
     this.windowRef = this.win.windowRef;
     this.windowRef.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
       'callback': (response) => {
@@ -68,6 +70,7 @@ export class ConfirmPhoneComponent implements OnInit {
     this.windowRef.recaptchaVerifier.render();
   }
   sendLoginCode() {
+    $('.otpInput').show();
     disableButton();
     const appVerifier = this.windowRef.recaptchaVerifier;
     const num = "" + formatPhone(this.user.phone);
@@ -80,6 +83,10 @@ export class ConfirmPhoneComponent implements OnInit {
   }
 
   verifyLoginCode() {
+    if(this.verifyFormGroup.value.otpcode.length == 0){
+      this.message = "Điền vào phần nhập mã OTP";
+      return;
+    }
     this.windowRef.confirmationResult
       .confirm(this.verifyFormGroup.value.otpcode)
       .then(result => {
@@ -103,11 +110,8 @@ export class ConfirmPhoneComponent implements OnInit {
           console.log(mess);
           if (mess.type == 1) {
             this.message = mess.message;
-            countdownNum = 30;
-            disableButtonOTPBeforeVerify();
-            clearTimeout(otpTimeOut);
-            clearTimeout(buttonTimeOut);
-            this.windowRef.confirmationResult = null;
+
+            this.reset()
             this.router.navigate(['/login']);
           }
           if (mess.type == 0) {
@@ -120,7 +124,12 @@ export class ConfirmPhoneComponent implements OnInit {
         }
       );
   }
-
+  public reset() {
+    disableButtonOTPBeforeVerify();
+    clearTimeout(otpTimeOut);
+    clearTimeout(buttonTimeOut);
+    countdownNum = 30;
+  }
 }
 function toUserSend(r: any) {
   let userSend = <any>{
@@ -129,30 +138,30 @@ function toUserSend(r: any) {
       password: r.password,
       phone: r.phone
     },
-    role : r.role
+    role: r.role
   };
   return userSend;
 }
 let countdownNum = 30;
 function disableButtonOTPBeforeVerify() {
-  var button = <HTMLInputElement>document.querySelector("button.btn.btn-outline-secondary");
-  button.disabled = true;
+  $('button.btn.btn-outline-secondary').prop('disabled', true);
+  $('.otpInput').hide();
 }
 
 function enableButtonOTPBeforeVerify() {
-
-  var button = <HTMLInputElement>document.querySelector("button.btn.btn-outline-secondary");
-  button.disabled = false;
+  $('button.btn.btn-outline-secondary').prop('disabled', false);
+  $('#recaptcha-container').hide();
 
 }
 
 var otpTimeOut, buttonTimeOut;
 function disableButton() {
-  var button = <HTMLInputElement>document.querySelector("button.btn.btn-outline-secondary");
-  button.disabled = true;
+  $('button.btn.btn-outline-secondary').prop('disabled', true);
   incTimer();
   buttonTimeOut = setTimeout(function () {
-    button.disabled = false;
+    $('button.btn.btn-outline-secondary').prop('disabled', false);
+    $('#recaptcha-container').show();
+    $('.otpInput').hide();
   }, 30000);
 }
 

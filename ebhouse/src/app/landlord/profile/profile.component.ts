@@ -120,7 +120,7 @@ export class LandlordProfileComponent implements OnInit {
     //if edit, compare if have change then post to server
 
     let fullAddress = this.profileFormGroup.value.address + "-" + this.profileFormGroup.value.wards.name + "-" + this.profileFormGroup.value.distric.name + "-" + this.profileFormGroup.value.province.name;
-
+    console.log(this.profileFormGroup.value)
   }
 
 

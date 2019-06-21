@@ -1,34 +1,38 @@
 [
     {
-        "id": 4,
+        "id": 1,
         "name": "Bình nóng lạnh"
     },
     {
-        "id": 5,
+        "id": 2,
         "name": "Điều hòa"
     },
-        {
-        "id": 6,
+    {
+        "id": 3,
         "name": "Giường"
     },
-            {
-        "id": 7,
+    {
+        "id": 4,
         "name": "Tủ đồ"
     },
-                {
-        "id": 8,
+    {
+        "id": 5,
         "name": "Bộ phát wifi"
     },
-                    {
-        "id": 9,
+    {
+        "id": 6,
         "name": "Gác xép"
     },
-                        {
-        "id": 10,
+    {
+        "id": 7,
         "name": "Kệ bếp"
     },
-                            {
-        "id": 11,
+    {
+        "id": 8,
         "name": "Bồn rửa bát"
+    },
+    {
+        "id": 9,
+        "name": "Phòng khép kín"
     }
 ]

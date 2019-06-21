@@ -1,110 +1,76 @@
-<!-- <div class="customLoading">
+<div class="customLoading">
     <div class="customLoader"></div>
 </div>
 <div class="row">
     <div class="create-bh mt-3">
-        <button type="button" class="btn btn-primary" (click)="createRoom()">
-            Tạo nhà trọ
+        <button [disabled]="selection.selected.length == 0 " type="button" class="btn btn-danger mr-3"
+            (click)="deleteMultiRoom()">
+            Xóa nhiều phòng
+        </button>
+        <button type="button" class="btn btn-primary mr-3" (click)="createRoom()">
+            Tạo phòng trọ
+        </button>
+        <button type="button" class="btn btn-info" (click)="createMultiRoom()">
+            Tạo nhiều phòng
         </button>
     </div>
-    <div *ngIf="deleteSuccess && !deleteErr" class="alert alert-success" role="alert">
-        {{deleteSuccess}}
+
+
+    <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
+        {{message.content}}
     </div>
-    <div *ngIf="deleteErr && !deleteSuccess" class="alert alert-danger" role="alert">
-        {{deleteErr}}
-    </div>
-    <div class="modal fade bd-example-modal-lg show">
+    <ng-template #errMess>
+        <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
+            {{message.content}}
+        </div>
+    </ng-template>
+    <div class="modal fade bd-example-modal-lg one-room">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
 
                 <form [formGroup]="createRoomFormGroup" (ngSubmit)="onSubmit()">
                     <div class="modal-header">
-                        <h5 class="modal-title">Tạo nhà trọ</h5>
+                        <h5 class="modal-title">Tạo phòng trọ</h5>
                         <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
                     </div>
                     <div class="modal-body">
-
-                     
-
-                        <div *ngIf="successMess" class="alert alert-success" role="alert">
-                            {{successMess}}
+                        <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success"
+                            role="alert">
+                            {{message.content}}
                         </div>
-                        <div *ngIf="errMess" class="alert alert-danger" role="alert">
-                            {{errMess}}
+                        <ng-template #errMess>
+                            <div *ngIf="message && message.content != '' " class="alert alert-danger" role="alert">
+                                {{message.content}}
+                            </div>
+                        </ng-template>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label for="input-bhouse" class="col-form-label">Nhà trọ</label>
+                                <input class="form-control boarding-house" id='input-bhouse' type="text" disabled>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="col-form-label required">Loại phòng </label>
+                                <select class="custom-select" formControlName="roomType">
+                                    <option *ngFor="let type of rtList" [ngValue]="type">
+                                        {{type.name}}
+                                    </option>
+                                </select>
+                                <div *ngIf="createRoomFormGroup.controls['roomType'].hasError('required')  && (createRoomFormGroup.controls['roomType'].dirty || createRoomFormGroup.controls['roomType'].touched)"
+                                    class="alert alert-danger">
+                                    Loại phòng là bắt buộc
+                                </div>
+                            </div>
+
+
                         </div>
 
                         <div class="form-group row">
-                            <div class="col-sm-6">
-                                <label for="example-text-input" class="col-form-label required">Tên nhà trọ</label>
+                            <div class="col-sm-4">
+                                <label for="example-text-input" class="col-form-label required">Tên phòng</label>
                                 <input class="form-control" type="text" id="example-text-input" formControlName="name">
-                                <div *ngIf="createRoomFormGroup.controls['name'].hasError('required') && (createRoomFormGroup.controls['name'].dirty || createRoomFormGroup.controls['name'].touched)"
+                                <div *ngIf="createRoomFormGroup.controls['name'].hasError('required')  && (createRoomFormGroup.controls['name'].dirty || createRoomFormGroup.controls['name'].touched)"
                                     class="alert alert-danger">
-                                    Tên nhà trọ là bắt buộc
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <label for="example-number-input" class="col-form-label required">Số lượng phòng</label>
-                                <input class="form-control" type="number" id="example-number-input"
-                                    formControlName="numberOfRoom">
-                                <div *ngIf="createRoomFormGroup.controls['numberOfRoom'].hasError('required') && (createRoomFormGroup.controls['numberOfRoom'].dirty || createRoomFormGroup.controls['numberOfRoom'].touched)"
-                                    class="alert alert-danger">
-                                    Số lượng phòng là bắt buộc
-                                </div>
-                                <div *ngIf="createRoomFormGroup.controls['numberOfRoom'].hasError('pattern') && (createRoomFormGroup.controls['numberOfRoom'].dirty || createRoomFormGroup.controls['numberOfRoom'].touched)"
-                                    class="alert alert-danger">
-                                    Không đúng định dạng
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="form-group row">
-                            <div class="col-sm-3">
-                                <label class="col-form-label">Tỉnh / Thành phố </label>
-                                <select class="custom-select" formControlName="province" 
-                                    (change)="onChangeProvince()">
-                                    <option *ngFor="let aprovince of dataProvince" 
-                                        [ngValue]="aprovince">
-                                        {{aprovince.name}}
-                                    </option>
-                                </select>
-                                <div *ngIf="createRoomFormGroup.controls['province'].hasError('required') && (createRoomFormGroup.controls['province'].dirty || createRoomFormGroup.controls['province'].touched)"
-                                    class="alert alert-danger">
-                                    Tỉnh / Thành phố là bắt buộc
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <label class="col-form-label">Quận / Huyện</label>
-                                <select class="custom-select" formControlName="distric" (change)="onChangeDistric()">
-                                    <option *ngFor="let adistric of dataDistric" [ngValue]="adistric">
-                                        {{adistric.name}}
-                                    </option>
-                                </select>
-                                <div *ngIf="createRoomFormGroup.controls['distric'].hasError('required') && (createRoomFormGroup.controls['distric'].dirty || createRoomFormGroup.controls['distric'].touched)"
-                                    class="alert alert-danger">
-                                    Quận / Huyện là bắt buộc
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <label class="col-form-label required">Xã / Phường</label>
-                                <select class="custom-select" formControlName="wards">
-                                    <option *ngFor="let awards of dataWards" [ngValue]="awards">
-                                        {{awards.name}}
-                                    </option>
-                                </select>
-                                <div *ngIf="createRoomFormGroup.controls['wards'].hasError('required') && (createRoomFormGroup.controls['wards'].dirty || createRoomFormGroup.controls['wards'].touched)"
-                                    class="alert alert-danger">
-                                    Xã / Phường là bắt buộc
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-sm-6">
-                                <label for="example-tel-input" class="col-form-label required">Thôn xóm/ Số nhà</label>
-                                <input class="form-control" type="text" id="example-tel-input" formControlName="address">
-                                <div *ngIf="createRoomFormGroup.controls['address'].hasError('required') && (createRoomFormGroup.controls['address'].dirty || createRoomFormGroup.controls['address'].touched)"
-                                    class="alert alert-danger">
-                                    Thôn xóm/ số nhà không được để trống
+                                    Tên phòng trọ là bắt buộc
                                 </div>
                             </div>
                         </div>
@@ -114,30 +80,163 @@
                                 <textarea class="form-control" rows="3" formControlName="description"></textarea>
                             </div>
                         </div>
-                       
+
                     </div>
-                  
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Trở về</button>
-                        <button class="btn btn-info mb-3" type="submit" id="myButton" [disabled]="createRoomFormGroup.invalid"> Lưu</button>
+                        <button class="btn btn-info mb-3" type="submit" id="myButton"
+                            [disabled]="createRoomFormGroup.invalid"> Lưu</button>
                     </div>
 
                 </form>
             </div>
         </div>
     </div>
-    <table mat-table [dataSource]="bhList" class="mat-elevation-z8">
+
+    <div class="modal fade bd-example-modal-lg multi-room">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <form [formGroup]="createMultiRoomFormGroup" (ngSubmit)="onSubmitMultiRoom()">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Tạo nhiều phòng trọ</h5>
+                        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success"
+                            role="alert">
+                            {{message.content}}
+                        </div>
+                        <ng-template #errMess>
+                            <div *ngIf="message && message.content != '' " class="alert alert-danger" role="alert">
+                                {{message.content}}
+                            </div>
+                        </ng-template>
+
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label for="input-bdhouse" class="col-form-label required">Nhà trọ</label>
+                                <input class="form-control boarding-house" id='input-bdhouse' type="text" disabled>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="col-form-label required">Loại phòng </label>
+                                <select class="custom-select" formControlName="roomType">
+                                    <option *ngFor="let type of rtList" [ngValue]="type">
+                                        {{type.name}}
+                                    </option>
+                                </select>
+                                <div *ngIf="createRoomFormGroup.controls['roomType'].hasError('required') && submitted && (createRoomFormGroup.controls['roomType'].dirty || createRoomFormGroup.controls['roomType'].touched)"
+                                    class="alert alert-danger">
+                                    Loại phòng là bắt buộc
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active show" id="home-tab" data-toggle="tab" href="#home"
+                                            role="tab" aria-controls="home" aria-selected="true">Nhập nhiều phòng</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile"
+                                            role="tab" aria-controls="profile" aria-selected="false">Nhập phòng bắt đầu
+                                            và phòng kết thúc</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content mt-3" id="myTabContent" formGroupName="name">
+                                    <div class="tab-pane fade active show" id="home" role="tabpanel"
+                                        aria-labelledby="home-tab">
+                                        <label for="example-text-input" class="col-form-label required">Tên phòng( Ngăn
+                                            cách bởi dấu phẩy, ví dụ : P101,P102)</label>
+                                        <input class="form-control" type="text" id="example-text-input"
+                                            formControlName="nameFormat">
+                                        <div *ngIf="createMultiRoomFormGroup.get('name.nameFormat')?.errors?.pattern && (createMultiRoomFormGroup.get('name.nameFormat').dirty || createMultiRoomFormGroup.get('name.nameFormat').touched)"
+                                            class="alert alert-danger">
+                                           Tên các phòng ngăn cách bởi dấu phẩy
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="profile" role="tabpanel"
+                                        aria-labelledby="profile-tab">
+                                        <label for="example-text-input" class="col-form-label required">Phòng bắt
+                                            đầu(Nhập số, ví dụ : 1)</label>
+                                        <input class="form-control" type="text" id="example-text-input"
+                                            formControlName="nameBegin">
+                                            <div *ngIf="createMultiRoomFormGroup.get('name.nameBegin')?.errors?.pattern && (createMultiRoomFormGroup.get('name.nameBegin').dirty || createMultiRoomFormGroup.get('name.nameBegin').touched)"
+                                            class="alert alert-danger">
+                                          Tên phòng bao gồm các số
+                                        </div>
+                                        <label for="example-text-input" class="col-form-label required">Phòng kết
+                                            thúc(Nhập số, ví dụ : 10)</label>
+                                        <input class="form-control" type="text" id="example-text-input"
+                                            formControlName="nameEnd">
+                                            <div *ngIf="createMultiRoomFormGroup.get('name.nameEnd')?.errors?.pattern && (createMultiRoomFormGroup.get('name.nameEnd').dirty || createMultiRoomFormGroup.get('name.nameEnd').touched)"
+                                            class="alert alert-danger">
+                                            Tên phòng bao gồm các số
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Trở về</button>
+                        <button class="btn btn-info mb-3" type="submit" id="myButton"
+                            [disabled]="createMultiRoomFormGroup.invalid"> Lưu</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <table *ngIf="roomList" mat-table [dataSource]="roomList" class="mat-elevation-z8">
+        <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                </mat-checkbox>
+            </td>
+        </ng-container>
+
+        <!-- Position Column -->
+        <!-- <ng-container matColumnDef="position">
+                        <th mat-header-cell *matHeaderCellDef> No. </th>
+                        <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                    </ng-container> -->
         <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Tên nhà trọ</th>
+            <th mat-header-cell *matHeaderCellDef>Tên phòng</th>
             <td mat-cell *matCellDef="let element"> {{element.name}} </td>
         </ng-container>
-        <ng-container matColumnDef="address">
-            <th mat-header-cell *matHeaderCellDef>Địa chỉ</th>
-            <td mat-cell *matCellDef="let element"> {{element.address}} </td>
+        <ng-container matColumnDef="roomType">
+            <th mat-header-cell *matHeaderCellDef>Loại phòng</th>
+            <td mat-cell *matCellDef="let element"> {{element.roomType.name}} </td>
         </ng-container>
-        <ng-container matColumnDef="numberOfRoom">
-            <th mat-header-cell *matHeaderCellDef>Số lượng phòng</th>
-            <td mat-cell *matCellDef="let element"> {{element.numberOfRoom}} </td>
+        <ng-container matColumnDef="area">
+            <th mat-header-cell *matHeaderCellDef>Diện tích</th>
+            <td mat-cell *matCellDef="let element"> {{element.roomType.area}} </td>
+        </ng-container>
+        <ng-container matColumnDef="capacity">
+            <th mat-header-cell *matHeaderCellDef>Số người tối đa</th>
+            <td mat-cell *matCellDef="let element"> {{element.roomType.capacity}} </td>
+        </ng-container>
+        <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef>Giá</th>
+            <td mat-cell *matCellDef="let element"> {{element.roomType.price}} </td>
         </ng-container>
         <ng-container matColumnDef="description">
             <th mat-header-cell *matHeaderCellDef>Mô tả</th>
@@ -147,14 +246,17 @@
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let row">
                 <ul class="d-flex justify-content-center">
-                    <li class="mr-3"><a class="text-secondary" (click)="editBh(row)"><i class="fa fa-edit"></i></a></li>
-                    <li><a class="text-danger" (click)="deleteBh(row)"><i class="ti-trash"></i></a></li>
+                    <li class="mr-3"><a class="text-secondary" (click)="editRoom(row)"><i class="fa fa-edit"></i></a>
+                    </li>
+                    <li><a class="text-danger" (click)="deleteRoom(row)"><i class="ti-trash"></i></a></li>
                 </ul>
             </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+
+
     <nav class="page mt-3">
         <ul class="pagination">
             <li class="page-item">
@@ -178,4 +280,4 @@
             </li>
         </ul>
     </nav>
-</div> -->
+</div>

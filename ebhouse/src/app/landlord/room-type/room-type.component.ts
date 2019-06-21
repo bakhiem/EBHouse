@@ -14,7 +14,7 @@ import { RoomType } from '../../models/room-type';
 
 import { AuthenticationService } from '../../user/service/authentication.service';
 import { User } from '../../user/models/user';
-import { Message } from '../../models/message';
+import { CommonMessage } from '../../models/message';
 
 @Component({
   selector: 'app-room-type',
@@ -207,7 +207,7 @@ export class RoomTypeComponent implements OnInit {
       console.log(sendToServer)
       let newRt = sendToServer.roomType[0];
       if (newRt.area == this.currentRt.area && newRt.name == this.currentRt.name && newRt.price == this.currentRt.price && newRt.capacity == this.currentRt.capacity && newRt.description == this.currentRt.description && JSON.stringify(this.currentRt['checked'] ) == JSON.stringify(this.createRtFormGroup.controls.dataEquipment.value)) {
-        this.errMess = Message.notChangeMess;
+        this.errMess = CommonMessage.notChangeMess;
       }
       else {
         this.addLoading();
@@ -224,7 +224,7 @@ export class RoomTypeComponent implements OnInit {
             this.removeLoading();
           },
           err => {
-            this.errMess = Message.defaultErrMess;
+            this.errMess = CommonMessage.defaultErrMess;
             this.removeLoading();
             console.log(err)
           }
@@ -260,7 +260,7 @@ export class RoomTypeComponent implements OnInit {
           this.removeLoading();
         },
         err => {
-          this.errMess = Message.defaultErrMess;
+          this.errMess = CommonMessage.defaultErrMess;
           this.removeLoading();
           console.log(err)
         }
@@ -322,7 +322,7 @@ export class RoomTypeComponent implements OnInit {
             this.removeLoading();
           },
           err => {
-            this.deleteErr = Message.defaultErrMess;
+            this.deleteErr = CommonMessage.defaultErrMess;
             this.removeLoading();
             console.log(err)
           }
@@ -333,6 +333,7 @@ export class RoomTypeComponent implements OnInit {
 
   //paging
   toArray = function (num: number) {
+    this.pageNumbers = []
     for (let i = 1; i <= num; i++) {
       this.pageNumbers[i - 1] = i;
     }

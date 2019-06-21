@@ -39,7 +39,6 @@ export class LoginComponent implements OnInit {
         Validators.required,
         Validators.pattern(this.phonePattern)
       ])),
-
       password: this.fb.control((this.user) ? this.user.password : "", Validators.compose([
         Validators.required,
         Validators.minLength(8)
@@ -48,19 +47,33 @@ export class LoginComponent implements OnInit {
     this.messageSuccess = "";
     this.messageErr = "";
   }
-
+  addLoading() {
+    $('.customLoading').addClass('preloader');
+    $('.customLoader').addClass('loader');
+  }
+  removeLoading() {
+    $('.customLoading').removeClass('preloader');
+    $('.customLoader').removeClass('loader');
+  }
   onSubmit() {
+    let rememberPassword = 0;
+    if($('#customControlAutosizing').prop("checked")){
+       rememberPassword = 1;
+    }
+    console.log(rememberPassword)
     console.log(toUser(this.loginFormGroup.value));
+    this.addLoading();
     this.authenticationService
-      .login(toUser(this.loginFormGroup.value))
+      .login(toUser(this.loginFormGroup.value),rememberPassword)
       .subscribe(
         res => {
           let mess: any;
           mess = JSON.parse("" + res[0]);
           if (mess.type == 1) {
-            // this.messageSuccess = mess.message;
+            //handle when login success
           }
           else if (mess.type == 0) {
+            this.removeLoading();
             this.messageErr = mess.message;
           }
           if (res[1]) {
@@ -68,6 +81,7 @@ export class LoginComponent implements OnInit {
           }
         },
         err => {
+          this.removeLoading();
           console.log(err);
           this.messageErr = "Có lỗi xảy ra";
         }

@@ -4,6 +4,7 @@
     color: red;
     position: relative;
     top: -20px;
+    border : none;
 }
 .form-group.choose-role label{
     color: #7e74ff;
