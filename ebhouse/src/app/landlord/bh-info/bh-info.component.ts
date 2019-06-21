@@ -248,7 +248,6 @@ message  : Message = {
             this.successRequestHandle(res)
           },
           err => {
-
             this.successRequestHandle(this.errRequestHandle)
           }
         )
