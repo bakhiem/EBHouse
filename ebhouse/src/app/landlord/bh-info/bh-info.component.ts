@@ -52,7 +52,6 @@ message  : Message = {
   ngOnInit() {
     this.getBoardingHouses();
 
-
     //get province from service
     this.placeService.getProvince().subscribe(response => {
       var arr = [];
@@ -179,6 +178,7 @@ message  : Message = {
       $('.bd-example-modal-lg').modal('hide');
       this.getBoardingHouses();
       this.landlordComponent.getBoardingHouses();
+      this.landlordComponent.currentBh = null;
     }
     else {
       this.message.type = 0;

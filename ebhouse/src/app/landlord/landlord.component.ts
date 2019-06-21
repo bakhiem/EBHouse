@@ -43,7 +43,6 @@ export class LandlordComponent implements OnInit {
       })
   }
   onChangeBh() {
-    console.log(this.currentBh)
     this.service.currentBh.next(this.currentBh);
   }
 }

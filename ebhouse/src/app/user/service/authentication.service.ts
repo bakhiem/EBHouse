@@ -42,14 +42,12 @@ export class AuthenticationService {
             .pipe(map(res => {
                 //login successful if there's a jwt token in the response
                 let resObject = JSON.parse(res);
-                console.log(res);
                 if(resObject && resObject.data){
                     let resDataObject = resObject.data.map;
                    
                     if(resDataObject.role == Role.Lanlord){
                         let userLogin = JSON.parse(resObject.data.map.landlord);
                         if (resDataObject && userLogin.user.token) {
-                            console.log(userLogin);
                             // store user details and jwt token in local storage to keep user logged in between page refreshes
                              this.userStorage  = {
                                 user : userLogin.user,
@@ -69,7 +67,6 @@ export class AuthenticationService {
                     else if(resDataObject.role == Role.Tenant){
                         let userLogin = JSON.parse(resObject.data.map.tenant);
                         if (resDataObject && userLogin.user.token) {
-                            console.log(userLogin);
                             // store user details and jwt token in local storage to keep user logged in between page refreshes
                              this.userStorage  = {
                                 user : userLogin.user,

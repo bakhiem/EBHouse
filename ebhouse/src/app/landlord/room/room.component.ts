@@ -1,8 +1,8 @@
-import { Component, OnInit ,Input} from '@angular/core';
-import {SelectionModel} from '@angular/cdk/collections';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { SelectionModel } from '@angular/cdk/collections';
 import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { MatDialog,MatCheckboxModule } from '@angular/material';
-import {MatTableDataSource} from '@angular/material/table';
+import { MatDialog, MatCheckboxModule } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 import * as $AB from 'jquery';
 import * as bootstrap from "bootstrap";
@@ -16,14 +16,15 @@ import { AuthenticationService } from '../../user/service/authentication.service
 import { User } from '../../user/models/user';
 import { CommonMessage, Message } from '../../models/message';
 import { Observable, throwError } from 'rxjs';
+import { ISubscription } from "rxjs/Subscription";
 @Component({
   selector: 'app-room',
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.css']
 })
-export class RoomComponent implements OnInit {
+export class RoomComponent implements OnInit, OnDestroy {
 
-
+  private subscription: ISubscription;
   rtList: any[];
   createRoomFormGroup: FormGroup;
   createMultiRoomFormGroup: FormGroup;
@@ -35,9 +36,9 @@ export class RoomComponent implements OnInit {
 
 
   //Message
-  message  : Message = {
-    content : '',
-    type : 0
+  message: Message = {
+    content: '',
+    type: 0
   }
 
   patternMultiName = '^([a-zA-Z0-9,]*)$';
@@ -48,8 +49,8 @@ export class RoomComponent implements OnInit {
   totalPage: number;
   pageNumbers: number[] = [];
 
-  displayedColumns: string[] = ['select','name', 'roomType', 'area', 'capacity', 'price', 'description', 'customColumn'];
- 
+  displayedColumns: string[] = ['select', 'name', 'roomType', 'area', 'capacity', 'price', 'description', 'customColumn'];
+
   selection = new SelectionModel<any>(true, []);
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -60,8 +61,8 @@ export class RoomComponent implements OnInit {
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     this.isAllSelected() ?
-        this.selection.clear() :
-        this.roomList.forEach(row => this.selection.select(row));
+      this.selection.clear() :
+      this.roomList.forEach(row => this.selection.select(row));
   }
 
   /** The label for the checkbox on the passed row */
@@ -77,13 +78,16 @@ export class RoomComponent implements OnInit {
     private service: LandlordService,
     private authenticationService: AuthenticationService
   ) { }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
   ngOnInit() {
-    this.service.currentBh.subscribe((data)=>{
+    this.subscription = this.service.currentBh.subscribe((data) => {
       this.currentBh = data;
+      console.log("data")
       $('.boarding-house').val(this.currentBh.name);
       this.getRoomsFromCurrentBh();
     })
-   
     this.getRoomType();
     this.createRoomFormGroup = this.fb.group({
       name: this.fb.control('', Validators.compose([
@@ -98,7 +102,7 @@ export class RoomComponent implements OnInit {
 
     this.createMultiRoomFormGroup = this.fb.group({
       name: this.fb.group({
-        nameFormat : this.fb.control('', Validators.pattern(this.patternMultiName)),
+        nameFormat: this.fb.control('', Validators.pattern(this.patternMultiName)),
         nameBegin: this.fb.control('', Validators.pattern(this.patternBeginName)),
         nameEnd: this.fb.control('', Validators.pattern(this.patternMultiName)),
       }, { validator: atLeastOne(Validators.required, ['nameFormat', 'nameBegin']) }),
@@ -135,7 +139,6 @@ export class RoomComponent implements OnInit {
         if (response.type == 1) {
           let data = JSON.parse(response.data);
           this.roomList = data.room;
-          console.log(this.roomList)
           this.totalPage = Math.ceil(data.totalPage / this.perPage);
           this.toArray(this.totalPage);
         }
@@ -216,7 +219,6 @@ export class RoomComponent implements OnInit {
   successRequestHandle(res) {
     let resObject = JSON.parse("" + res);
     if (resObject.type == 1) {
-      console.log(resObject)
       this.message.type = 1;
       this.message.content = resObject.message;
       this.removeLoading();
@@ -256,7 +258,7 @@ export class RoomComponent implements OnInit {
         let from = this.createMultiRoomFormGroup.value.name.nameBegin;
         let to = this.createMultiRoomFormGroup.value.name.nameEnd;
         let arrRoom = '';
-        if(Number(to) < Number(from)){
+        if (Number(to) < Number(from)) {
           this.message.content = CommonMessage.toSmallerThanFrom;
           this.message.type = 0;
           return;
@@ -311,7 +313,7 @@ export class RoomComponent implements OnInit {
     }
     this.resetMess();
     $('.bd-example-modal-lg.one-room').modal('show');
-    
+
   }
 
   resetMess() {
@@ -344,7 +346,7 @@ export class RoomComponent implements OnInit {
       }
     });
   }
-  deleteMultiRoom(){
+  deleteMultiRoom() {
     this.resetMess();
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '400px',
@@ -353,10 +355,9 @@ export class RoomComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         let roomID = [];
-        for(let i = 0 ; i < this.selection.selected.length ; i ++){
+        for (let i = 0; i < this.selection.selected.length; i++) {
           roomID.push(this.selection.selected[i].id);
         }
-        console.log(roomID)
         let rooms = {
           roomID: roomID
         }

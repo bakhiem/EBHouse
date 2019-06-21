@@ -4,6 +4,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './user/login/login.component';
 import { RegisterComponent } from './user/register/register.component';
 import { ConfirmPhoneComponent } from './user/confirm-phone/confirm-phone.component';
+
+import { LogoutComponent } from './user/logout/logout.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 
 const routes: Routes = [
@@ -12,6 +14,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'verify', component: ConfirmPhoneComponent },
+  { path: 'logout', component: LogoutComponent },
   { path: '**', component: NotFoundComponent}
 ];
 
