@@ -25,7 +25,7 @@ export class TenantServiceService {
     return this.http.post<Tenant>(`${this.baseUrl}/api/profile`, null, httpOptions);
   }
 
-  updateProfile(t : Tenant) : Observable<Tenant>{
-    return this.http.post<Tenant>(`${this.baseUrl}/api/profile/update`, t, httpOptions);
+  updateProfile(t : any) : Observable<Tenant>{
+    return this.http.post<any>(`${this.baseUrl}/api/profile/update`, t, httpOptions);
   }
 }

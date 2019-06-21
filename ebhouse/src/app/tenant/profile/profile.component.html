@@ -104,16 +104,19 @@
                             <div class="custom-file col-sm-5 mr-3 image-container">
                                 <input type="file" imageUpload accept="image/*" class="custom-file-input" id="customFile" (imageSelected)="uploadFrontID($event)" formControlName="frontID" [resizeOptions]="resizeOptions">
                                 <label class="custom-file-label" for="customFile">Ảnh chứng minh thư mặt trước</label>
-
-                                <img [src]="imageFrontSrc" [hidden]="!imageFrontSrc" class="previewImg" alt="" data-toggle="modal" data-target="#modal1">
+                                <img [src]="imageFrontSrc" class="previewImg" alt="" data-toggle="modal" data-target="#modal1">
                             </div>
-
-                            <div class="custom-file col-sm-5 image-container">
+                            <div class="custom-file col-sm-5 mr-3 image-container">
+                                <input type="file" imageUpload accept="image/*" class="custom-file-input" id="customFile2" (imageSelected)="uploadBackID($event)" formControlName="backID" [resizeOptions]="resizeOptions">
+                                <label class="custom-file-label" for="customFile2">Ảnh chứng minh thư mặt sau</label>
+                                <img [src]="imageBackSrc" class="previewImg" alt="" data-toggle="modal" data-target="#modal2">
+                            </div>
+                            <!-- <div class="custom-file col-sm-5 image-container">
                                 <input type="file" imageUpload class="custom-file-input" id="customFile" (imageSelected)="uploadBackID($event)" formControlName="backID" [resizeOptions]="resizeOptions">
 
                                 <label class="custom-file-label text-left" for="customFile">Ảnh chứng minh thư mặt sau</label>
                                 <img [src]="imageBackSrc" [hidden]="!imageBackSrc" class="previewImg" alt="" data-toggle="modal" data-target="#modal2">
-                            </div>
+                            </div> -->
 
                         </div>
                         <!-- end upload and preview image -->

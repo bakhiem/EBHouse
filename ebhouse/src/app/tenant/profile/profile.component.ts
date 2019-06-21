@@ -30,6 +30,7 @@ export class TenantProfileComponent implements OnInit {
   imageBackSrc: string;
   profileFormGroup: FormGroup;
   tenant : Tenant;
+  user : User ;
 
   //resize image
   resizeOptions: ResizeOptions = {
@@ -94,16 +95,14 @@ export class TenantProfileComponent implements OnInit {
             arr = this.tenant.user.address.split('-');
           }
           this.getAddress();
-          this.profileFormGroup.get('fullname').setValue(this.tenant.user.name != ' ' ? this.tenant.user.name : ' ');
-          this.profileFormGroup.get('phone').setValue(this.tenant.user.phone != ' ' ? this.tenant.user.phone : ' ');
+          this.profileFormGroup.get('fullname').setValue(this.tenant.user.name != ' ' ? this.tenant.user.name.trim() : ' ');
+          this.profileFormGroup.get('phone').setValue(this.tenant.user.phone != ' ' ? this.tenant.user.phone.trim() : ' ');
           if(this.tenant.user.dateOfBirth != 'null'){
             this.profileFormGroup.get('date').setValue(this.tenant.user.dateOfBirth);
           }
           this.profileFormGroup.get('sex').setValue(this.tenant.user.sex);
-          this.imageFrontSrc = this.tenant.imgArnFront != ' ' ? this.tenant.imgArnFront : '';
-          this.imageBackSrc = this.tenant.imgArnBack != ' ' ? this.tenant.imgArnBack : '';
-          // this.profileFormGroup.get('frontID').setValue(this.tenant.imgArnFront != ' ' ? this.tenant.imgArnFront : '');
-          // this.profileFormGroup.get('backID').setValue(this.tenant.imgArnBack != ' ' ? this.tenant.imgArnBack : '' );
+          this.imageFrontSrc = this.tenant.imgArnFront != ' ' ? this.tenant.imgArnFront.trim() : '';
+          this.imageBackSrc = this.tenant.imgArnBack  != ' ' ? this.tenant.imgArnBack.trim() : '';
         }else{
           this.message = JSON.parse(response.message);
         }
@@ -112,7 +111,7 @@ export class TenantProfileComponent implements OnInit {
       })
   }
 
-  async getAddress(){
+  getAddress(){
     let arr = null;
     if(this.tenant.user.address != ' '){
       arr = this.tenant.user.address.split('-');
@@ -208,9 +207,27 @@ export class TenantProfileComponent implements OnInit {
   };
 
   onSubmit() {
-    let fullAddress = this.profileFormGroup.value.address + "-" + this.profileFormGroup.value.wards.name + "-" + this.profileFormGroup.value.distric.name + "-" + this.profileFormGroup.value.province.name;
-    console.log(fullAddress)
-    console.log(this.profileFormGroup.value)
+    if(this.profileFormGroup.invalid){
+
+      this.tenant.user.name = this.profileFormGroup.value.fullname;
+      this.tenant.user.address = this.profileFormGroup.value.address + "-" + this.profileFormGroup.value.wards.name + "-" + this.profileFormGroup.value.distric.name + "-" + this.profileFormGroup.value.province.name;
+      this.tenant.user.sex = this.profileFormGroup.value.sex;
+      this.tenant.user.dateOfBirth = this.profileFormGroup.value.date;
+      delete this.tenant.user.password;
+      delete this.tenant.user.cDate;
+      this.tenant.imgArnFront = this.profileFormGroup.value.frontID != "" ? this.imageFrontSrc.split(',')[1] : "" ;
+      this.tenant.imgArnBack = this.profileFormGroup.value.backID != "" ? this.imageBackSrc.split(',')[1] : "" ;
+      this.service.updateProfile({"user": this.tenant.user, "tenant": this.tenant}).subscribe(
+        res => {
+          let response = JSON.parse("" + res);
+          if (response.type == 1) {
+          }else{
+          }
+        }, err => {
+          this.message = JSON.parse(err);
+        })
+    }
+
   }
 
   uploadFrontID(imageResult: ImageResult) {
