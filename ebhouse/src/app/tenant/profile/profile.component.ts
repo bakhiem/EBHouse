@@ -6,6 +6,7 @@ import { PlaceService } from '../../service/place.service';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
+import { CommonMessage, Message } from '../../models/message';
 import { TenantServiceService } from '../service/tenant-service.service';
 import { AuthenticationService } from '../../user/service/authentication.service';
 import { User } from '../../user/models/user';
@@ -20,7 +21,6 @@ import { ImageResult, ResizeOptions } from 'ng2-imageupload';
   styleUrls: ['./profile.component.css']
 })
 export class TenantProfileComponent implements OnInit {
-  message: string = "";
   roleDefault: number = 1;
   dataProvince: any[];
   dataDistric: any[];
@@ -30,7 +30,11 @@ export class TenantProfileComponent implements OnInit {
   imageBackSrc: string;
   profileFormGroup: FormGroup;
   tenant : Tenant;
-  user : User ;
+  user : User;
+  message  : Message = {
+    content : '',
+    type : 0
+  }
 
   //resize image
   resizeOptions: ResizeOptions = {
@@ -47,6 +51,8 @@ export class TenantProfileComponent implements OnInit {
     private service: TenantServiceService) { }
 
     ngOnInit() {
+      this.resetMess();
+      this.removeLoading();
       this.getProvince();
       this.getProfile();
       this.profileFormGroup = this.fb.group({
@@ -85,8 +91,10 @@ export class TenantProfileComponent implements OnInit {
   }
 
   getProfile(){
+    this.addLoading();
     this.service.getProfile().subscribe(
       res => {
+        this.removeLoading();
         let response = JSON.parse("" + res);
         if (response.type == 1) {
           this.tenant = JSON.parse(response.data);
@@ -208,23 +216,26 @@ export class TenantProfileComponent implements OnInit {
 
   onSubmit() {
     if(this.profileFormGroup.invalid){
-
+      this.addLoading();
       this.tenant.user.name = this.profileFormGroup.value.fullname;
       this.tenant.user.address = this.profileFormGroup.value.address + "-" + this.profileFormGroup.value.wards.name + "-" + this.profileFormGroup.value.distric.name + "-" + this.profileFormGroup.value.province.name;
       this.tenant.user.sex = this.profileFormGroup.value.sex;
       this.tenant.user.dateOfBirth = this.profileFormGroup.value.date;
-      delete this.tenant.user.password;
-      delete this.tenant.user.cDate;
       this.tenant.imgArnFront = this.profileFormGroup.value.frontID != "" ? this.imageFrontSrc.split(',')[1] : "" ;
       this.tenant.imgArnBack = this.profileFormGroup.value.backID != "" ? this.imageBackSrc.split(',')[1] : "" ;
       this.service.updateProfile({"user": this.tenant.user, "tenant": this.tenant}).subscribe(
         res => {
+          this.removeLoading();
           let response = JSON.parse("" + res);
           if (response.type == 1) {
+            this.message.type = 1;
           }else{
+            this.message.type = 0;
           }
+          this.message.content = response.message;
         }, err => {
-          this.message = JSON.parse(err);
+          this.message.type = 0;
+          this.message.content = CommonMessage.defaultErrMess;
         })
     }
 
@@ -235,5 +246,19 @@ export class TenantProfileComponent implements OnInit {
   }
   uploadBackID(imageResult: ImageResult) {
     this.imageBackSrc = imageResult.resized && imageResult.resized.dataURL || imageResult.dataURL;
+  }
+
+  addLoading() {
+    $('.customLoading').addClass('preloader');
+    $('.customLoader').addClass('loader');
+  }
+  removeLoading() {
+    $('.customLoading').removeClass('preloader');
+    $('.customLoader').removeClass('loader');
+  }
+
+  resetMess() {
+    this.message.content = '';
+    this.message.type = 0;
   }
 }
