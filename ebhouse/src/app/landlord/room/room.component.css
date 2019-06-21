@@ -15,10 +15,7 @@ table {
   .form-group.row{
     margin-bottom: 0;
   }
-  .form-group .required:after  {
-    content:"*";
-    color:red;
-  }
+  
   .text-secondary{
     cursor: pointer;
   }
@@ -32,4 +29,7 @@ a.page-link.disabled{
 .page{
    margin: 0 auto;
    
+}
+.mat-column-select {
+  overflow: initial;
 }

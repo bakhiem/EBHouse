@@ -1,68 +1,69 @@
-<!-- <div id="preloader">
-  <div class="loader"></div>
-</div> -->
+<div class="customLoading">
+    <div class="customLoader"></div>
+</div>
 <!-- preloader area end -->
 <!-- login area start -->
 <div class="login-area">
-  <div class="container">
-      <div class="login-box ptb--100">
-          <form [formGroup]="loginFormGroup" (ngSubmit)="onSubmit()">
-              <div class="login-form-head">
-                  <h4>Đăng nhập</h4>
-              </div>
-              
-              <div *ngIf="messageSuccess && !messageErr" class="alert alert-success" role="alert">
-                {{messageSuccess}}
-            </div>
-            <div *ngIf="messageErr && !messageSuccess" class="alert alert-danger" role="alert">
-                {{messageErr}}
-            </div>
-              <div class="login-form-body">
-                  <div class="form-gp focused">
-                      <label for="exampleInputEmail1">Số điện thoại</label>
-                      <input type="text" id="exampleInputEmail1" formControlName="phone">
-                      <i class="ti-agenda"></i>
-                  </div>
-                  <!-- <div *ngIf="loginFormGroup.controls['phone'].hasError('required') && (loginFormGroup.controls['phone'].dirty || loginFormGroup.controls['phone'].touched)"
+    <div class="container">
+        <div class="login-box ptb--100">
+            <form [formGroup]="loginFormGroup" (ngSubmit)="onSubmit()">
+                <div class="login-form-head">
+                    <h4>Đăng nhập</h4>
+                </div>
+
+                <div *ngIf="messageSuccess && !messageErr" class="alert alert-success" role="alert">
+                    {{messageSuccess}}
+                </div>
+                <div *ngIf="messageErr && !messageSuccess" class="alert alert-danger" role="alert">
+                    {{messageErr}}
+                </div>
+                <div class="login-form-body">
+                    <div class="form-gp focused">
+                        <label for="exampleInputEmail1" class="required">Số điện thoại</label>
+                        <input type="text" id="exampleInputEmail1" formControlName="phone">
+                        <i class="ti-agenda"></i>
+                    </div>
+                    <div *ngIf="loginFormGroup.controls['phone'].hasError('required') && (loginFormGroup.controls['phone'].dirty || loginFormGroup.controls['phone'].touched)"
                         class="alert alert-danger">
                         Số điện thoại là bắt buộc
                     </div>
                     <div *ngIf="loginFormGroup.controls['phone'].hasError('pattern') && (loginFormGroup.controls['phone'].dirty || loginFormGroup.controls['phone'].touched)"
                         class="alert alert-danger">
                         Số điện thoại không đúng định dạng
-                    </div> -->
-                  <div class="form-gp focused">
-                      <label for="exampleInputPassword1">Mật khẩu</label>
-                      <input type="password" id="exampleInputPassword1" formControlName="password">
-                      <i class="ti-lock"></i>
-                  </div>
-                  <!-- <div *ngIf="loginFormGroup.get('password')?.errors?.required && (loginFormGroup.get('password').dirty || loginFormGroup.get('password').touched)"
-                            class="alert alert-danger">
-                            Mật khẩu là bắt buộc
+                    </div>
+                    <div class="form-gp focused">
+                        <label for="exampleInputPassword1" class="required" >Mật khẩu</label>
+                        <input type="password" id="exampleInputPassword1" formControlName="password">
+                        <i class="ti-lock"></i>
+                    </div>
+                    <div *ngIf="loginFormGroup.get('password')?.errors?.required && (loginFormGroup.get('password').dirty || loginFormGroup.get('password').touched)"
+                        class="alert alert-danger">
+                        Mật khẩu là bắt buộc
+                    </div>
+                    <div *ngIf="loginFormGroup.get('password')?.errors?.minlength && (loginFormGroup.get('password').dirty || loginFormGroup.get('password').touched)"
+                        class="alert alert-danger">
+                        Mật khẩu phải nhiều hơn 8 ký tự
+                    </div>
+                    <div class="row mb-4 rmber-area">
+                        <div class="col-6">
+                            <div class="custom-control custom-checkbox mr-sm-2">
+                                <input type="checkbox" class="custom-control-input" id="customControlAutosizing">
+                                <label class="custom-control-label" for="customControlAutosizing">Nhớ tài khoản</label>
+                            </div>
                         </div>
-                        <div *ngIf="loginFormGroup.get('password')?.errors?.minlength && (loginFormGroup.get('password').dirty || loginFormGroup.get('password').touched)"
-                            class="alert alert-danger">
-                            Mật khẩu phải nhiều hơn 8 ký tự
-                        </div> -->
-                  <div class="row mb-4 rmber-area">
-                      <div class="col-6">
-                          <div class="custom-control custom-checkbox mr-sm-2">
-                              <input type="checkbox" class="custom-control-input" id="customControlAutosizing">
-                              <label class="custom-control-label" for="customControlAutosizing">Nhớ tài khoản</label>
-                          </div>
-                      </div>
-                      <div class="col-6 text-right">
-                          <a href="#">Quên mật khẩu</a>
-                      </div>
-                  </div>
-                  <div class="submit-btn-area">
-                      <button id="form_submit" type="submit" [disabled]="loginFormGroup.invalid">Đăng nhập <i class="ti-arrow-right"></i></button>
-                  </div>
-                  <div class="form-footer text-center mt-5">
-                      <p class="text-muted">Chưa có tài khoản<a routerLink="/register">Đăng ký</a></p>
-                  </div>
-              </div>
-          </form>
-      </div>
-  </div>
+                        <div class="col-6 text-right">
+                            <a href="#">Quên mật khẩu</a>
+                        </div>
+                    </div>
+                    <div class="submit-btn-area">
+                        <button id="form_submit" type="submit" [disabled]="loginFormGroup.invalid">Đăng nhập <i
+                                class="ti-arrow-right"></i></button>
+                    </div>
+                    <div class="form-footer text-center mt-5">
+                        <p class="text-muted">Chưa có tài khoản<a routerLink="/register">Đăng ký</a></p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>

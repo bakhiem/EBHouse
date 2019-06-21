@@ -14,7 +14,7 @@ import { RoomTypeComponent } from './room-type/room-type.component';
 //material table
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatTableModule,MatFormFieldModule ,MatInputModule,MatSelectModule } from '@angular/material';
+import { MatTableModule,MatFormFieldModule ,MatInputModule,MatSelectModule,MatCheckboxModule } from '@angular/material';
 import { ImageUploadModule } from 'ng2-imageupload';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 @NgModule({
@@ -38,7 +38,8 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
     NgbModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    MatCheckboxModule
   ]
 })
 export class LandlordModule { }

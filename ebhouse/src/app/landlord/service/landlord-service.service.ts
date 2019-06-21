@@ -5,6 +5,7 @@ import {Landlord} from '../../models/landlord';
 import {BoardingHouse} from '../../models/bh';
 import {RoomType} from '../../models/room-type';
 import { Observable, throwError } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
 import { catchError, retry } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
@@ -20,7 +21,10 @@ const httpOptions = {
 })
 export class LandlordService {
   private baseUrl: string = environment.baseUrl;
-  constructor(private http: HttpClient) { }
+  currentBh: Subject<any>;
+  constructor(private http: HttpClient) { 
+    this.currentBh = new Subject();
+  }
 
   getAllBoardingHouses() : Observable<BoardingHouse[]> {
     return this.http.post<BoardingHouse[]>(`${this.baseUrl}/api/landlord/bh/all`, null, httpOptions);

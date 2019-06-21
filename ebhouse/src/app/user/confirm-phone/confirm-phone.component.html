@@ -1,4 +1,3 @@
-
 <div class="login-area">
   <div class="container">
     <div class="login-box ptb--100">
@@ -8,7 +7,7 @@
           <p>Mời nhập mã OTP vừa được gửi kèm qua tin nhắn đến số điện thoại đã đăng ký</p>
         </div>
         <div *ngIf="message" class="alert alert-danger" role="alert">
-          <a  class="alert-link">{{message}}</a>
+          {{message}}
         </div>
 
         <div class="login-form-body">
@@ -22,12 +21,12 @@
             <button class="btn btn-outline-secondary mb-3 mt-3" (click)="sendLoginCode()">Gửi mã OTP về điện
               thoại</button>
           </div>
-          <div *ngIf="windowRef.confirmationResult">
+          <div class='otpInput' >
             <div class="form-gp focused">
               <label for="exampleInputEmail1">Nhập mã OTP</label>
               <input type="text" class="form-control mt-3" formControlName="otpcode">
             </div>
-            <button class="btn btn-outline-secondary mb-3" (click)="verifyLoginCode()">Xác nhận</button>
+            <button class="btn btn-rounded btn-light mb-3" (click)="verifyLoginCode()">Xác nhận</button>
           </div>
         </div>
       </form>

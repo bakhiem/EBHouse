@@ -22,8 +22,8 @@ export class TenantProfileComponent implements OnInit {
   dataDistric: any[];
   dataWards: any[];
   phonePattern = "((09|03|07|08|05)+([0-9]{8}))";
-  imageFrontSrc: string;
-  imageBackSrc: string;
+  imageFrontSrc: string ;
+  imageBackSrc: string = 'https://ebhousetest.s3-ap-southeast-1.amazonaws.com/54-2-imgArnBack';;
   profileFormGroup: FormGroup;
 
   //resize image
@@ -40,6 +40,7 @@ export class TenantProfileComponent implements OnInit {
     private placeService: PlaceService) { }
 
   ngOnInit() {
+    setTimeout(() => {  this.imageFrontSrc = 'https://ebhousetest.s3-ap-southeast-1.amazonaws.com/id'; }, 3000);
     //get tinh/tp 
     this.placeService.getProvince().subscribe(response => {
       var arr = [];
@@ -48,9 +49,6 @@ export class TenantProfileComponent implements OnInit {
       }
       this.dataProvince = arr;
     });
-
-
-
     this.profileFormGroup = this.fb.group({
       fullname: this.fb.control('', Validators.compose([
         Validators.required
@@ -120,7 +118,7 @@ export class TenantProfileComponent implements OnInit {
   // }
   uploadFrontID(imageResult: ImageResult) {
     this.imageFrontSrc = imageResult.resized && imageResult.resized.dataURL || imageResult.dataURL;
-        console.log(this.imageFrontSrc);
+        console.log(imageResult);
   }
   uploadBackID(imageResult: ImageResult) {
    this.imageBackSrc = imageResult.resized

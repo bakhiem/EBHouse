@@ -22,7 +22,13 @@ export class AuthenticationService {
     public currentUser: Observable<any>;
 
     constructor(private http: HttpClient) {
-        this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
+        if(localStorage.getItem('currentUser')){
+            this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
+        }
+        else{
+            this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(sessionStorage.getItem('currentUser')));
+        }
+       
         this.currentUser = this.currentUserSubject.asObservable();
     }
 
@@ -31,7 +37,7 @@ export class AuthenticationService {
     }
  
 
-    login(u : User ) {
+    login(u : User,rememberPassword : Number ) {
         return this.http.post<any>(`${this.baseUrl}/api/login`, u ,httpOptions)
             .pipe(map(res => {
                 //login successful if there's a jwt token in the response
@@ -50,8 +56,13 @@ export class AuthenticationService {
                                 id : userLogin.id,
                                 role : resDataObject.role
                             };
-                            localStorage.setItem('currentUser', JSON.stringify(this.userStorage));
-                            console.log(this.userStorage);
+                            if(rememberPassword == 0){
+                                sessionStorage.setItem('currentUser', JSON.stringify(this.userStorage));
+                            }
+                            else{
+                                localStorage.setItem('currentUser', JSON.stringify(this.userStorage));
+                            }
+                           
                             this.currentUserSubject.next(this.userStorage);
                         }
                     }
@@ -65,8 +76,12 @@ export class AuthenticationService {
                                 id : userLogin.id,
                                 role : resDataObject.role
                             };
-                            localStorage.setItem('currentUser', JSON.stringify(this.userStorage));
-                            console.log(this.userStorage);
+                            if(rememberPassword == 0){
+                                sessionStorage.setItem('currentUser', JSON.stringify(this.userStorage));
+                            }
+                            else{
+                                localStorage.setItem('currentUser', JSON.stringify(this.userStorage));
+                            }
                             this.currentUserSubject.next(this.userStorage);
                         }
                     }
@@ -77,6 +92,7 @@ export class AuthenticationService {
     logout() {
         // remove user from local storage to log user out
         localStorage.removeItem('currentUser');
+        sessionStorage.removeItem('currentUser');
         this.currentUserSubject.next(null);
     }
   }

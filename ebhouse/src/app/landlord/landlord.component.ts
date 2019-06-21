@@ -4,29 +4,25 @@ import { LandlordService } from './service/landlord-service.service';
 
 import { Landlord } from '../models/landlord';
 import { BoardingHouse } from '../models/bh';
-import { Observable, throwError, BehaviorSubject } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import {RoomComponent} from './room/room.component';
 @Component({
   selector: 'app-landlord',
   templateUrl: './landlord.component.html',
-  styleUrls: ['./landlord.component.css']
+  styleUrls: ['./landlord.component.css'],
+  
 })
 
 export class LandlordComponent implements OnInit {
   bhList: BoardingHouse[];
+ 
   currentBh : BoardingHouse;
   constructor(
     private service: LandlordService 
-    ) { 
+    ) { this.getBoardingHouses() }
 
-      this.getBoardingHouses()
-    }
-
-  public get currentBhValue(){
-    return this.currentBh;
-    
-  }
+  
   ngOnInit() {
-    
   }
 
   getBoardingHouses() {
@@ -37,8 +33,8 @@ export class LandlordComponent implements OnInit {
           let data = JSON.parse(response.data);
           this.bhList = data.boardingHouse;
           if (this.bhList.length > 0 && this.currentBh == null) {
-           
-            this.currentBh = this.bhList[0];
+           this.currentBh = this.bhList[0];
+           this.service.currentBh.next(this.currentBh);
           }
         }
       }, err => {
@@ -48,5 +44,6 @@ export class LandlordComponent implements OnInit {
   }
   onChangeBh() {
     console.log(this.currentBh)
+    this.service.currentBh.next(this.currentBh);
   }
 }

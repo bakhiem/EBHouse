@@ -7,12 +7,14 @@
             Tạo nhà trọ
         </button>
     </div>
-    <div *ngIf="deleteSuccess && !deleteErr" class="alert alert-success" role="alert">
-        {{deleteSuccess}}
+    <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
+        {{message.content}}
     </div>
-    <div *ngIf="deleteErr && !deleteSuccess" class="alert alert-danger" role="alert">
-        {{deleteErr}}
-    </div>
+    <ng-template #errMess>
+        <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
+            {{message.content}}
+        </div>
+    </ng-template>
     <div class="modal fade bd-example-modal-lg show">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -26,12 +28,14 @@
 
                         <!-- alert -->
 
-                        <div *ngIf="successMess" class="alert alert-success" role="alert">
-                            {{successMess}}
+                        <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
+                            {{message.content}}
                         </div>
-                        <div *ngIf="errMess" class="alert alert-danger" role="alert">
-                            {{errMess}}
-                        </div>
+                        <ng-template #errMess>
+                            <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
+                                {{message.content}}
+                            </div>
+                        </ng-template>
                         <!-- Textual inputs start -->
 
                         <div class="form-group row">

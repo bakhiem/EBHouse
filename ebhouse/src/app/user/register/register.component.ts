@@ -4,7 +4,6 @@ import { UserService } from '../service/user.service';
 import { User } from '../models/user';
 import { DataService } from '../service/data.service';
 import { Router } from '@angular/router';
-
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -38,7 +37,6 @@ export class RegisterComponent implements OnInit {
         Validators.required,
         Validators.pattern(this.phonePattern)
       ])),
-
       fullname: this.fb.control('', Validators.required)
     });
   }
@@ -55,8 +53,8 @@ export class RegisterComponent implements OnInit {
           if (mess.type == 1) {
             this.message = mess.message;
             this.data.changeUser(toUser(this.userFormGroup.value));
-            console.log(toUser(this.userFormGroup.value))
-           this.router.navigate(['/verify']);
+           // this.confirmPhone.reset();
+            this.router.navigate(['/verify']);
           }
           if (mess.type == 0) {
             this.message = mess.message;

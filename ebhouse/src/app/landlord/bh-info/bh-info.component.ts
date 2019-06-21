@@ -8,13 +8,11 @@ import * as $AB from 'jquery';
 import * as bootstrap from "bootstrap";
 import { LandlordService } from '../service/landlord-service.service';
 
-import { Landlord } from '../../models/landlord';
 import { BoardingHouse } from '../../models/bh';
 import {LandlordComponent} from '../landlord.component';
 
-import { AuthenticationService } from '../../user/service/authentication.service';
 import { User } from '../../user/models/user';
-import { Message } from '../../models/message';
+import { CommonMessage, Message } from '../../models/message';
 
 @Component({
   selector: 'app-bh-info',
@@ -28,16 +26,14 @@ export class BhInfoComponent implements OnInit {
   arrAddress: any[];
   bhList: BoardingHouse[];
   createbhFormGroup: FormGroup;
-  currentUser: User;
   isEdit: number = 0;
   currentBh: BoardingHouse;
 
-  //Message
-  successMess: string;
-  errMess: string;
-  deleteSuccess: string;
-  deleteErr: string;
-
+//Message
+message  : Message = {
+  content : '',
+  type : 0
+}
   //paging
   perPage: number = 10;
   currentPage: number = 1;
@@ -51,13 +47,12 @@ export class BhInfoComponent implements OnInit {
     private placeService: PlaceService,
     public dialog: MatDialog,
     private service: LandlordService,
-    private authenticationService: AuthenticationService,
     private landlordComponent : LandlordComponent
   ) { }
   ngOnInit() {
-
     this.getBoardingHouses();
-    this.currentUser = this.authenticationService.currentUserValue;
+
+
     //get province from service
     this.placeService.getProvince().subscribe(response => {
       var arr = [];
@@ -67,6 +62,8 @@ export class BhInfoComponent implements OnInit {
       this.dataProvince = arr;
       this.dataWards = null;
     });
+
+
     //create form group
     this.createbhFormGroup = this.fb.group({
       name: this.fb.control('', Validators.compose([
@@ -76,7 +73,6 @@ export class BhInfoComponent implements OnInit {
       numberOfRoom: this.fb.control('', Validators.compose([
         Validators.required, Validators.pattern("[0-9]+")
       ])),
-
       province: this.fb.control('', Validators.compose([
         Validators.required
       ])),
@@ -98,19 +94,22 @@ export class BhInfoComponent implements OnInit {
     let page: any = {
       page: this.currentPage
     }
+    this.addLoading();
     this.service.getBoardingHouses(page).subscribe(
       res => {
+        this.removeLoading();
         let response = JSON.parse("" + res);
         if (response.type == 1) {
           let data = JSON.parse(response.data);
           this.bhList = data.boardingHouse;
-          console.log(response)
           this.totalPage = Math.ceil(data.totalPage / this.perPage);
           this.toArray(this.totalPage);
         }
       }, err => {
+        this.removeLoading();
+        this.message.content = CommonMessage.defaultErrMess;
+        this.message.type = 0;
         console.log(err);
-        // this.message = "Có lỗi xảy ra";
       })
   }
 
@@ -136,37 +135,22 @@ export class BhInfoComponent implements OnInit {
       }
 
       if (bh.address == this.currentBh.address && bh.name == this.currentBh.name && bh.numberOfRoom == this.currentBh.numberOfRoom && bh.description == this.currentBh.description) {
-        this.errMess = Message.notChangeMess;
+        this.message.content = CommonMessage.notChangeMess;
+        this.message.type = 0;
       }
       else {
         this.addLoading();
         this.service.editBh(bh).subscribe(
           res => {
-            console.log(res)
-            let resObject = JSON.parse("" + res);
-            if (resObject.type == 1) {
-              this.successMess = resObject.message;
-              this.currentBh = bh;
-            }
-            else {
-              this.errMess = resObject.message;
-              this.currentBh = null;
-            }
-            this.getBoardingHouses();
-            this.landlordComponent.getBoardingHouses();
-            this.removeLoading();
+            this.successRequestHandle(res)
           },
           err => {
-            this.errMess = Message.defaultErrMess;
-            console.log(err);
-            this.removeLoading();
+            this.errRequestHandle(err);
           }
         )
       }
     }
-
-
-    else if (this.isEdit == 0) {
+    else {
       let bh: BoardingHouse = {
         name: this.createbhFormGroup.value.name,
         numberOfRoom: this.createbhFormGroup.value.numberOfRoom,
@@ -176,25 +160,37 @@ export class BhInfoComponent implements OnInit {
       this.addLoading();
       this.service.createBh(bh).subscribe(
         res => {
-          let resObject = JSON.parse("" + res);
-          if (resObject.type == 1) {
-            this.successMess = resObject.message;
-          }
-          else {
-            this.errMess = resObject.message;
-            this.currentBh = null;
-          }
-          this.getBoardingHouses();
-          this.landlordComponent.getBoardingHouses();
-          this.removeLoading();
+          this.successRequestHandle(res);
         },
         err => {
-          this.errMess = Message.defaultErrMess;
-          console.log(err)
-          this.removeLoading();
+         this.errRequestHandle(err);
         }
       )
     }
+  }
+
+  successRequestHandle(res) {
+    let resObject = JSON.parse("" + res);
+    if (resObject.type == 1) {
+      this.message.type = 1;
+      this.message.content = resObject.message;
+      this.removeLoading();
+      this.currentBh = null;
+      $('.bd-example-modal-lg').modal('hide');
+      this.getBoardingHouses();
+      this.landlordComponent.getBoardingHouses();
+    }
+    else {
+      this.message.type = 0;
+      this.message.content = resObject.message;
+      this.removeLoading();
+    }
+  }
+  errRequestHandle(err) {
+    this.message.type = 0;
+    this.message.content = CommonMessage.defaultErrMess;
+    console.log(err);
+    this.removeLoading();
   }
   getProvinceOnEdit(provinceName: string) {
     for (let province of this.dataProvince) {
@@ -205,16 +201,7 @@ export class BhInfoComponent implements OnInit {
     }
     return '';
   }
-  // getDistricOnEdit(districName: string) {
-  //   for (let distric of this.dataDistric) {
-  //     if (districName == distric.name) {
-  //       this.createbhFormGroup.get('distric').setValue(distric);
-  //       this.onChangeDistric();
 
-  //     }
-  //   }
-  //   return '';
-  // }
   addLoading() {
     $('.customLoading').addClass('preloader');
     $('.customLoader').addClass('loader');
@@ -240,14 +227,13 @@ export class BhInfoComponent implements OnInit {
     this.resetMess();
   }
   resetMess() {
-    this.errMess = "";
-    this.successMess = "";
-    this.deleteErr = "";
-    this.deleteSuccess = "";
+    this.message.content = '';
+    this.message.type = 0;
   }
   deleteBh(obj) {
+    this.resetMess();
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '350px',
+      width: '400px',
       data: "Bạn chắc chắn muốn xóa nhà trọ không ?"
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -259,22 +245,11 @@ export class BhInfoComponent implements OnInit {
         this.addLoading();
         this.service.deleteBh(bh).subscribe(
           res => {
-            console.log(res)
-            this.removeLoading();
-            let resObject = JSON.parse("" + res);
-            if (resObject.type == 1) {
-              this.deleteSuccess = resObject.message;
-            }
-            else {
-              this.deleteErr = resObject.message;
-            }
-            this.getBoardingHouses()
+            this.successRequestHandle(res)
           },
           err => {
 
-            this.deleteErr = Message.defaultErrMess;
-            this.removeLoading();
-            console.log(err)
+            this.successRequestHandle(this.errRequestHandle)
           }
         )
       }
@@ -291,7 +266,6 @@ export class BhInfoComponent implements OnInit {
       this.dataDistric = arr;
     });
   };
-
   onChangeProvinceEdit() {
     this.placeService.getDistric(this.createbhFormGroup.value.province.code).subscribe(response => {
       var arr = [];
@@ -317,7 +291,6 @@ export class BhInfoComponent implements OnInit {
       this.dataWards = arr;
     });
   };
-
   onChangeDistric() {
     this.placeService.getWards(this.createbhFormGroup.value.distric.code).subscribe(response => {
       var arr = [];
@@ -330,17 +303,20 @@ export class BhInfoComponent implements OnInit {
   };
   //paging
   toArray = function (num: number) {
+    this.pageNumbers = []
     for (let i = 1; i <= num; i++) {
       this.pageNumbers[i - 1] = i;
     }
   }
   goToPage(page: any) { // without type info
     this.currentPage = page;
+    this.resetMess();
     this.getBoardingHouses();
   }
   prePage() {
     if (this.currentPage > 1) {
-      this.currentPage = this.currentPage - 1
+      this.currentPage = this.currentPage - 1;
+      this.resetMess();
       this.getBoardingHouses();
     }
   }
@@ -348,6 +324,7 @@ export class BhInfoComponent implements OnInit {
   nextPage() {
     if (this.currentPage < this.totalPage) {
       this.currentPage = this.currentPage + 1;
+      this.resetMess();
       this.getBoardingHouses();
     }
   }

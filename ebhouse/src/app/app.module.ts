@@ -15,7 +15,6 @@ import { ErrorInterceptor } from './helpers/error.interceptor';
 import { JwtInterceptor } from './helpers/jwt.interceptor';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
-
 //landlord routing
 import { LandlordRoutingModule } from './landlord/landlord-routing.module';
 
