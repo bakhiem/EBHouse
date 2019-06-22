@@ -7,6 +7,7 @@ app.get("/*", (req,res) =>{
     res.sendFile(path.join(__dirname + '/dist/ebhouse',"index.html"));
 });
 
+
 const port = process.env.PORT || 6969;
 
 app.listen(port, err => {
