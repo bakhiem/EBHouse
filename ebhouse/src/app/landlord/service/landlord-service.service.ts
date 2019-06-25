@@ -68,4 +68,13 @@ export class LandlordService {
   deleteRoom(room : any) {
     return this.http.post<any>(`${this.baseUrl}/api/landlord/room/delete`, room, httpOptions);
   }
+  getRoomsAvailable(data : any) : Observable<any[]> {
+    return this.http.post<any[]>(`${this.baseUrl}/api/landlord/room/available`, data, httpOptions);
+  }
+  searchTenantByPhone(data : any) : Observable<any[]> {
+    return this.http.post<any[]>(`${this.baseUrl}/api/landlord/contract/getTenant`, data, httpOptions);
+  }
+  addContract(data : any) : Observable<any[]> {
+    return this.http.post<any[]>(`${this.baseUrl}/api/landlord/contract/add`, data, httpOptions);
+  }
 }

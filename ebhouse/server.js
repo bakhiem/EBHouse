@@ -8,7 +8,7 @@ app.get("/*", (req,res) =>{
 });
 
 
-const port = process.env.PORT || 6969;
+const port = process.env.PORT || 4200;
 
 app.listen(port, err => {
   if (err) console.log(err);

@@ -9,6 +9,10 @@ import { Role } from '../user/models/role';
 import { BhInfoComponent } from './bh-info/bh-info.component';
 import { RoomTypeComponent } from './room-type/room-type.component';
 import { RoomComponent } from './room/room.component';
+
+import { ContractComponent } from './contract/contract.component';
+
+import { CreateContractComponent } from './contract/create-contract/create-contract.component';
 const LandlordChildRouters: Routes = [
   {
     path: 'landlord',
@@ -34,6 +38,14 @@ const LandlordChildRouters: Routes = [
       {
         path: 'room',
         component: RoomComponent
+      },
+      {
+        path: 'contract',
+        component: ContractComponent
+      },
+      {
+        path: 'contract-create',
+        component: CreateContractComponent
       }
     ]
   }

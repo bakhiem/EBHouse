@@ -88,13 +88,20 @@ export class RoomTypeComponent implements OnInit {
       }
       var $this = $(this);
       // Get the value.
-      var input = $this.val();
-      input = ("" + input).replace(/[\D\s\._\-]+/g, "");
-      input = input ? parseInt("" + input, 10) : 0;
+      let input = $this.val();
+      let removeComma = input.toString().replace(/[^0-9]/g,'');
+      let currency = removeComma.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
       $this.val(function () {
-        return (input === 0) ? "" : input.toLocaleString("en-US");
+        return (Number(currency) === 0) ? "" : currency;
       });
     });
+  }
+  formatCurrencyEdit(price : number) : string{
+    if(price === 0){
+      return "";  
+  }
+  let currency = price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+  return currency;
   }
 
   private getEquipment() {
@@ -181,7 +188,7 @@ export class RoomTypeComponent implements OnInit {
     return listEquipment;
   }
   onSubmit() {
-    let formatPrice = this.createRtFormGroup.value.price.split(',').join('');
+    let formatPrice = this.createRtFormGroup.value.price.split('.').join('');
     if (this.isEdit == 1) {
       let sendToServer = {
         roomType: [{
@@ -275,7 +282,7 @@ export class RoomTypeComponent implements OnInit {
     this.createRtFormGroup.get('name').setValue(obj.name);
     this.createRtFormGroup.get('area').setValue(obj.area);
     this.createRtFormGroup.get('description').setValue(obj.description);
-    this.createRtFormGroup.get('price').setValue(obj.price);
+    this.createRtFormGroup.get('price').setValue(this.formatCurrencyEdit(obj.price));
     this.createRtFormGroup.get('capacity').setValue(obj.capacity);
     this.createRtFormGroup.get('id').setValue(obj.id);
     this.createRtFormGroup.setControl('dataEquipment', this.fb.array(obj.checked || []));

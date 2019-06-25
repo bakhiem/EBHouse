@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { SelectionModel } from '@angular/cdk/collections';
 import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { MatDialog, MatCheckboxModule } from '@angular/material';
 import { MatTableDataSource } from '@angular/material/table';
@@ -18,11 +17,11 @@ import { CommonMessage, Message } from '../../models/message';
 import { Observable, throwError } from 'rxjs';
 import { ISubscription } from "rxjs/Subscription";
 @Component({
-  selector: 'app-room',
-  templateUrl: './room.component.html',
-  styleUrls: ['./room.component.css']
+  selector: 'app-contract',
+  templateUrl: './contract.component.html',
+  styleUrls: ['./contract.component.css']
 })
-export class RoomComponent implements OnInit, OnDestroy {
+export class ContractComponent implements OnInit, OnDestroy {
 
   private subscription: ISubscription;
   rtList: any[];
@@ -33,7 +32,6 @@ export class RoomComponent implements OnInit, OnDestroy {
   currentBh: BoardingHouse;
 
   currentRoom: any;
-
 
   //Message
   message: Message = {
@@ -51,32 +49,12 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['select', 'name', 'roomType', 'area', 'capacity', 'price', 'description', 'customColumn'];
 
-  selection = new SelectionModel<any>(true, []);
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.roomList.length;
-    return numSelected === numRows;
-  }
+ 
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.roomList.forEach(row => this.selection.select(row));
-  }
-
-  /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: any): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
-    }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
-  }
 
   constructor(private fb: FormBuilder,
     public dialog: MatDialog,
-    private service: LandlordService,
-    private authenticationService: AuthenticationService
+    private service: LandlordService
   ) { }
   ngOnDestroy() {
     this.subscription.unsubscribe();
@@ -84,8 +62,11 @@ export class RoomComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.service.currentBh.subscribe((data) => {
       this.currentBh = data;
-      $('.boarding-house').val(this.currentBh.name);
-      this.getRoomsFromCurrentBh();
+      if(data.id){
+        $('.boarding-house').val(this.currentBh.name);
+        this.getRoomsFromCurrentBh();
+      }
+     
     })
     this.getRoomType();
     this.createRoomFormGroup = this.fb.group({
@@ -127,7 +108,6 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   }
   getRoomsFromCurrentBh() {
-    this.selection.clear();
     let page: any = {
       boardingHouseID: this.currentBh.id,
       page: this.currentPage
@@ -334,8 +314,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         let rooms = {
-          roomID: [obj.id],
-          boardingHouseID : [this.currentBh.id]
+          roomID: [obj.id]
         }
         this.addLoading();
         this.service.deleteRoom(rooms).subscribe(
@@ -350,34 +329,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       }
     });
   }
-  deleteMultiRoom() {
-    this.resetMess();
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '400px',
-      data: "Bạn chắc chắn muốn xóa phòng trọ chứ ?"
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        let roomID = [];
-        for (let i = 0; i < this.selection.selected.length; i++) {
-          roomID.push(this.selection.selected[i].id);
-        }
-        let rooms = {
-          roomID: roomID,
-          boardingHouseID : [this.currentBh.id]
-        }
-        this.addLoading();
-        this.service.deleteRoom(rooms).subscribe(
-          res => {
-            this.successRequestHandle(res)
-          },
-          err => {
-            this.errRequestHandle(err)
-          }
-        )
-      }
-    });
-  }
+  
 
   //paging
   toArray = function (num: number) {
