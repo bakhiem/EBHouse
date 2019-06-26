@@ -127,22 +127,34 @@
                             <div class="col-sm-4">
                                 <label for="example-text-input" class="col-form-label required">Tháng bắt đầu</label>
                                 <div class="input-group">
-                                    <input type="month" class="form-control" id='month-begin' formControlName="begin">
+                                    <mat-form-field>
+                                        <input matInput [min]="minDate" [matDatepicker]="dp" placeholder=""
+                                            [formControl]="date" id='month-begin'>
+                                        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                                        <mat-datepicker #dp startView="multi-year"
+                                            (yearSelected)="chosenYearHandler($event)"
+                                            (monthSelected)="chosenMonthHandler($event, dp)"
+                                            panelClass="example-month-picker">
+                                        </mat-datepicker>
+                                    </mat-form-field>
                                 </div>
-                                <div *ngIf="createContractFormGroup.controls['begin'].hasError('required') && (createContractFormGroup.controls['begin'].dirty || createContractFormGroup.controls['begin'].touched)"
-                                    class="alert alert-danger">
-                                    Tháng bắt đầu là bắt buộc
-                                </div>
-
                             </div>
+
+
+
                             <div class="col-sm-4">
                                 <label for="example-text-input" class="col-form-label required">Tháng kết thúc</label>
                                 <div class="input-group">
-                                    <input type="month" class="form-control " id='month-end' formControlName="end">
-                                </div>
-                                <div *ngIf="createContractFormGroup.controls['end'].hasError('required') && (createContractFormGroup.controls['end'].dirty || createContractFormGroup.controls['end'].touched)"
-                                    class="alert alert-danger">
-                                    Tháng kết thúc là bắt buộc
+                                    <mat-form-field>
+                                        <input matInput [min]="minDate" [matDatepicker]="dp2" placeholder=""
+                                            [formControl]="endDate" id='month-end'>
+                                        <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+                                        <mat-datepicker #dp2 startView="multi-year"
+                                            (yearSelected)="chosenYearHandlerEnd($event)"
+                                            (monthSelected)="chosenMonthHandlerEnd($event, dp2)"
+                                            panelClass="example-month-picker">
+                                        </mat-datepicker>
+                                    </mat-form-field>
                                 </div>
                             </div>
 
@@ -178,11 +190,11 @@
                                     <label class="custom-control-label" for="increase">Tăng </label>
                                 </div>
                                 <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="decrease" name="customRadio2"
-                                        class="custom-control-input">
+                                    <input type="radio" id="decrease" name="customRadio2" class="custom-control-input">
                                     <label class="custom-control-label" for="decrease">Giảm</label>
                                 </div>
-                                <div class="custom-control custom-radio custom-control-inline">Số tiền này sẽ được thêm vào mục chi phí khác</div>
+                                <div class="custom-control custom-radio custom-control-inline">Số tiền này sẽ được thêm
+                                    vào mục chi phí khác</div>
                                 <div>
                                     <label for="example-text-input" class="col-form-label">Số tiền</label>
                                     <div class="input-group">
@@ -197,17 +209,7 @@
                         </div>
                         <!-- end extra fee -->
 
-                        <div class="form-group row">
-                            <div class="custom-file col-sm-5 ml-3">
-                                <input type="file" imageUpload accept="image/*" class="custom-file-input"
-                                    id="customFile" (imageSelected)="uploadImage($event)"
-                                    [resizeOptions]="resizeOptions" multiple>
-                                <label class="custom-file-label" for="customFile">Tải lên ảnh hợp đồng(Tối đa 5
-                                    ảnh)</label>
-                                <img [src]="imageFrontSrc" class="previewImg" alt="" data-toggle="modal"
-                                    data-target="#modal1">
-                            </div>
-                        </div>
+                       
 
 
 
@@ -228,8 +230,7 @@
 
 
                         <div class="mt-3 float-right col-sm-4 text-center">
-                            <input class="btn btn-info mb-3" type="submit" value="Lưu"
-                                 (click)="onSubmit()">
+                            <input class="btn btn-info mb-3" type="submit" value="Lưu" (click)="onSubmit()">
                         </div>
                         <!--  [disabled]="createContractFormGroup.invalid" -->
                     </div>
@@ -289,7 +290,8 @@
                 <img src="" alt="" id='imgArnBack'>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal" (click)='saveTenant()'>Lưu khách thuê</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" (click)='saveTenant()'>Lưu khách
+                    thuê</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
             </div>
         </div>

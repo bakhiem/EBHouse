@@ -20,18 +20,104 @@ import { Observable, throwError } from 'rxjs';
 import { ImageResult, ResizeOptions } from 'ng2-imageupload';
 
 import { ISubscription } from "rxjs/Subscription";
-export interface PeriodicElement {
-  name: string;
-  phone: string;
+//date picker angular
 
-}
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatDatepicker } from '@angular/material/datepicker';
+import * as _moment from 'moment';
+import 'moment-timezone';
+// tslint:disable-next-line:no-duplicate-imports
+import { default as _rollupMoment, Moment } from 'moment';
+
+const moment = _rollupMoment || _moment;
+
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'MM/YYYY',
+  },
+  display: {
+    dateInput: 'MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   selector: 'app-create-contract',
   templateUrl: './create-contract.component.html',
-  styleUrls: ['./create-contract.component.css']
+  styleUrls: ['./create-contract.component.css'],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'vi-vn' },
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+  ],
 })
 export class CreateContractComponent implements OnInit {
+
+  startDateStr : any;
+  endDateSrt : any;
+  minDate = new Date();
+  date = new FormControl(moment());
+  endDate = new FormControl(moment());
+
+  chosenYearHandler(normalizedYear: Moment) {
+    const ctrlValue = this.date.value;
+    ctrlValue.year(normalizedYear.year());
+    this.date.setValue(ctrlValue);
+  }
+
+  chosenMonthHandler(normalizedMonth: Moment, datepicker: MatDatepicker<Moment>) {
+    const ctrlValue = this.date.value;
+    ctrlValue.month(normalizedMonth.month());
+    this.date.setValue(ctrlValue);
+    datepicker.close();
+    let d = new Date(this.date.value.year(), this.date.value.month() , 1)
+    this.startDateStr = this.formatDate(d);
+    this.periodHandler();
+  }
+  chosenYearHandlerEnd(normalizedYear: Moment) {
+    const ctrlValue = this.endDate.value;
+    ctrlValue.year(normalizedYear.year());
+    this.endDate.setValue(ctrlValue);
+  }
+
+  chosenMonthHandlerEnd(normalizedMonth: Moment, datepicker: MatDatepicker<Moment>) {
+    const ctrlValue = this.endDate.value;
+    ctrlValue.month(normalizedMonth.month());
+    this.endDate.setValue(ctrlValue);
+    datepicker.close();
+    let d = new Date(this.endDate.value.year(), this.endDate.value.month() + 1, 0)
+    this.endDateSrt = this.formatDate(d);
+    this.periodHandler();
+  }
+  periodHandler(){
+    try{
+      let monthBegin = this.startDateStr.split('-');
+      let monthEnd = this.endDateSrt.split('-');
+      let month = (Number(monthEnd[0]) - Number(monthBegin[0])) * 12 + (Number(monthEnd[1]) - Number(monthBegin[1]));
+      this.createContractFormGroup.get('period').setValue(month + 1)
+    }
+    catch{
+      alert('asd')
+    }
+   
+  }
+  formatDate(date) {
+    var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+  }
+
+
   createContractFormGroup: FormGroup;
   roomList: any[] = [];
   currentBh: BoardingHouse;
@@ -77,23 +163,17 @@ export class CreateContractComponent implements OnInit {
         Validators.required
       ])),
       period: '',
-      begin: this.fb.control('', Validators.compose([
-        Validators.required
-      ])),
-      end: this.fb.control('', Validators.compose([
-        Validators.required
-      ])),
       description: ''
     });
   }
 
   ngOnInit() {
-    this.subscription = this.service.currentBh.subscribe((data) => {
-      this.currentBh = data;
-      if (data.id) {
-        this.getRoomsFromCurrentBh();
-      }
-    })
+    // this.subscription = this.service.currentBh.subscribe((data) => {
+    //   this.currentBh = data;
+    //   if (data.id) {
+    //     this.getRoomsFromCurrentBh();
+    //   }
+    // })
     this.formatCurrency();
     this.jqueryCode();
   }
@@ -108,6 +188,7 @@ export class CreateContractComponent implements OnInit {
     })
 
     $('#month-begin').on('change', () => {
+      console.log($('#month-begin').val())
       $('#month-end').val('');
       $('#month-end').attr('min', $('#month-begin').val().toString())
     })
@@ -133,6 +214,9 @@ export class CreateContractComponent implements OnInit {
       }
 
     });
+
+
+
 
   }
 
@@ -303,16 +387,16 @@ export class CreateContractComponent implements OnInit {
     return room ? room.name : undefined;
   }
   onSubmit() {
-    if (this.checkRoomValid()) {  
+    if (this.checkRoomValid()) {
       let listIdTenant = [];
       for (let i = 0; i < this.listTenant.length; i++) {
         listIdTenant.push(this.listTenant[i].id)
       }
       let formatRoomPrice = this.createContractFormGroup.value.price.toString().split('.').join('');
-      let roomPrice =Number(formatRoomPrice);
+      let roomPrice = Number(formatRoomPrice);
 
       let formatDeposit = this.createContractFormGroup.value.deposit.toString().split('.').join('');
-      let deposit =Number(formatDeposit);
+      let deposit = Number(formatDeposit);
       var extraFee = 0;
       if ($('#customCheck1').is(':checked')) {
         if ($('#extraFee').val()) {
@@ -327,25 +411,25 @@ export class CreateContractComponent implements OnInit {
       }
       let listImgSplit = []
       for (let index = 0; index < this.listImg.length; index++) {
-          let tmp = this.listImg[index].split(',');
-          listImgSplit.push(tmp[1]);
+        let tmp = this.listImg[index].split(',');
+        listImgSplit.push(tmp[1]);
       }
       let data = {
-        contract:[{
-          roomPrice : roomPrice,
-          deposit : deposit,
-          startDate : this.createContractFormGroup.value.begin +'-01',
-          endDate : this.createContractFormGroup.value.end + '-01'
+        contract: [{
+          roomPrice: roomPrice,
+          deposit: deposit,
+          startDate: this.createContractFormGroup.value.begin + '-01',
+          endDate: this.createContractFormGroup.value.end + '-01'
         }],
-        room : [{
-          id : this.createContractFormGroup.value.room.id
+        room: [{
+          id: this.createContractFormGroup.value.room.id
         }],
-        lstTenantID : listIdTenant,
-        owner:[this.createContractFormGroup.value.owner.id],
-        extraFee:[{
-          amount : extraFee
+        lstTenantID: listIdTenant,
+        owner: [this.createContractFormGroup.value.owner.id],
+        extraFee: [{
+          amount: extraFee
         }],
-        imgContract:listImgSplit
+        imgContract: listImgSplit
       }
       console.log(data)
 
@@ -359,7 +443,7 @@ export class CreateContractComponent implements OnInit {
             // let data = JSON.parse(response.data);
             // console.log(data)
           }
-          else{
+          else {
             console.log(res)
           }
         }, err => {

@@ -23,6 +23,7 @@ import { ImageUploadModule } from 'ng2-imageupload';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { CreateContractComponent } from './contract/create-contract/create-contract.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MatDatepickerModule, MatNativeDateModule } from '@angular/material';
 @NgModule({
   declarations: [
     LandlordComponent,
@@ -50,7 +51,9 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatInputModule,
     MatSelectModule,
     MatCheckboxModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ]
 })
 export class LandlordModule { }

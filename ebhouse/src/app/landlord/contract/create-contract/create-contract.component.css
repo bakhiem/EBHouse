@@ -23,3 +23,10 @@
   }
 .modal-dialog{text-align:center;}
 .modal-content{display:inline-block;}
+.example-month-picker .mat-calendar-period-button {
+  pointer-events: none;
+}
+
+.example-month-picker .mat-calendar-arrow {
+  display: none;
+}
