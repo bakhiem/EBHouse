@@ -76,5 +76,8 @@ export class LandlordService {
   }
   addContract(data : any) : Observable<any[]> {
     return this.http.post<any[]>(`${this.baseUrl}/api/landlord/contract/add`, data, httpOptions);
+  }  
+  getContract(data : any) : Observable<any[]> {
+    return this.http.post<any[]>(`${this.baseUrl}/api/landlord/contract/`, data, httpOptions);
   }
 }

@@ -32,9 +32,11 @@ import { MatDatepickerModule, MatNativeDateModule } from '@angular/material';
     BhInfoComponent,
     RoomTypeComponent,
     RoomComponent,
-    ContractComponent,
+    
     MaxLength,
     CurrencyFormat,
+    
+    ContractComponent,
     CreateContractComponent
   ],
   imports: [

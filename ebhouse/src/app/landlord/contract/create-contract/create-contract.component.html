@@ -231,7 +231,7 @@
                             </div>
                         </div>
                         <div class="mt-3 float-right col-sm-4 text-center">
-                            <input class="btn btn-info mb-3" type="submit" value="Tạo hợp đồng" (click)="onSubmit()" >
+                            <input class="btn btn-info mb-3" type="submit" value="Tạo hợp đồng" (click)="onSubmit()"  [disabled]="createContractFormGroup.invalid" >
                         </div>
                         <!--  [disabled]="createContractFormGroup.invalid" -->
                     </div>

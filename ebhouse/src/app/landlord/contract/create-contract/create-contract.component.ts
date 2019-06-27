@@ -30,16 +30,12 @@ import * as _moment from 'moment';
 import 'moment-timezone';
 // tslint:disable-next-line:no-duplicate-imports
 import { default as _rollupMoment, Moment } from 'moment';
+import { Router } from '@angular/router';
+import {CustomDateAdapter} from './customDate'
 
 const moment = _rollupMoment || _moment;
 
 
-class CustomDateAdapter extends NativeDateAdapter {
-  format(date: Date, displayFormat: Object): string {
-    var formatString = 'DD /MM /YYYY';
-    return moment(date).format(formatString);
-  }
-}
 @Component({
   selector: 'app-create-contract',
   templateUrl: './create-contract.component.html',
@@ -105,6 +101,7 @@ export class CreateContractComponent implements OnInit {
     return [year, month, day].join('-');
   }
 
+  isEdit : boolean = false;
   createContractFormGroup: FormGroup;
   roomList: any[] = [];
   currentBh: BoardingHouse;
@@ -131,7 +128,8 @@ export class CreateContractComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     public dialog: MatDialog,
-    private service: LandlordService) {
+    private service: LandlordService,
+    private router: Router) {
     this.createContractFormGroup = this.fb.group({
       room: this.fb.control('', Validators.compose([
         Validators.required
@@ -154,12 +152,21 @@ export class CreateContractComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.subscription = this.service.currentBh.subscribe((data) => {
-      this.currentBh = data;
-      if (data.id) {
-        this.getRoomsFromCurrentBh();
-      }
-    })
+
+    if(this.isEdit){
+      this.createContractFormGroup.controls['room'].disable();
+      this.createContractFormGroup.controls['owner'].disable();
+
+    }
+    else{
+      this.subscription = this.service.currentBh.subscribe((data) => {
+        this.currentBh = data;
+        if (data.id) {
+          this.getRoomsFromCurrentBh();
+        }
+      })
+    }
+    
     this.formatCurrency();
     this.jqueryCode();
 
@@ -249,7 +256,6 @@ export class CreateContractComponent implements OnInit {
       if (isDuplicate == 0) {
         this.listTenant.push(this.currentTenant);
         this.dataSource.data = this.listTenant;
-
       }
     }
     else {
@@ -294,12 +300,10 @@ export class CreateContractComponent implements OnInit {
             }
             $('#modal2').modal('show');
             this.currentTenant = data;
-             
           }
           else if (response.type == 2) {
             alert(CommonMessage.NoTenant)
           }
-
         }, err => {
           this.removeLoading();
           console.log(err);
@@ -362,13 +366,8 @@ export class CreateContractComponent implements OnInit {
       return;
     }
     if (this.checkRoomValid()) {
-      // let listIdTenant = [];
-      // for (let i = 0; i < this.listTenant.length; i++) {
-      //   listIdTenant.push(this.listTenant[i].id)
-      // }
       let formatRoomPrice = this.createContractFormGroup.value.price.toString().split('.').join('');
       let roomPrice = Number(formatRoomPrice);
-
       let formatDeposit = this.createContractFormGroup.value.deposit.toString().split('.').join('');
       let deposit = Number(formatDeposit);
       var extraFee = 0;
@@ -393,7 +392,8 @@ export class CreateContractComponent implements OnInit {
           roomPrice: roomPrice,
           deposit: deposit,
           startDate: this.startDateStr,
-          endDate: this.endDateSrt
+          endDate: this.endDateSrt,
+          description : this.createContractFormGroup.value.description ? this.createContractFormGroup.value.description : ''
         }],
         room: [{
           id: this.createContractFormGroup.value.room.id
@@ -404,32 +404,31 @@ export class CreateContractComponent implements OnInit {
           amount: extraFee
         }],
         imgContract: listImgSplit,
-        description : this.createContractFormGroup.value.description ? this.createContractFormGroup.value.description : ''
+       
       }
       console.log(data)
 
-      // this.addLoading();
-      // this.service.addContract(data).subscribe(
-      //   res => {
-      //     this.removeLoading();
-      //     let response = JSON.parse("" + res);
-      //     if (response.type == 1) {
-      //       console.log(res)
-      //       this.message.type = 1;
-      //       this.message.content = response.message;
-      //       // let data = JSON.parse(response.data);
-      //       // console.log(data)
-      //     }
-      //     else {
-      //       this.message.type = 0;
-      //       this.message.content = response.message;
-      //     }
-      //   }, err => {
-      //     this.removeLoading();
-      //     this.message.type = 0;
-      //       this.message.content =CommonMessage.defaultErrMess;
-      //     console.log(err);
-      //   })
+      this.addLoading();
+      this.service.addContract(data).subscribe(
+        res => {
+          this.removeLoading();
+          let response = JSON.parse("" + res);
+          if (response.type == 1) {
+            console.log(res)
+            this.message.type = 1;
+            this.message.content = response.message;
+            setTimeout(() => {   this.router.navigate(['/landlord/contract']) }, 1500);
+          }
+          else {
+            this.message.type = 0;
+            this.message.content = response.message;
+          }
+        }, err => {
+          this.removeLoading();
+          this.message.type = 0;
+            this.message.content =CommonMessage.defaultErrMess;
+          console.log(err);
+        })
     }
     else {
       alert(CommonMessage.NoExitstRoom)
