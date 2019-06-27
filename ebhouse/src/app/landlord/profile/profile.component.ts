@@ -6,8 +6,11 @@ import { PlaceService } from '../../service/place.service';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
+import { CommonMessage, Message } from '../../models/message';
+import { LandlordService} from '../service/landlord-service.service';
 import { AuthenticationService } from '../../user/service/authentication.service';
 import { User } from '../../user/models/user';
+import { Landlord } from '../../models/landlord';
 import * as $ from 'jquery';
 @Component({
   selector: 'app-profile',
@@ -16,136 +19,220 @@ import * as $ from 'jquery';
 })
 
 export class LandlordProfileComponent implements OnInit {
-  message: string = "";
   roleDefault: number = 1;
   dataProvince: any[];
   dataDistric: any[];
   dataWards: any[];
   phonePattern = "((09|03|07|08|05)+([0-9]{8}))";
   profileFormGroup: FormGroup;
-  currentUser: any;
+  landlord : Landlord;
+  user : User;
+  message  : Message = {
+    content : '',
+    type : 0
+  }
 
-  //for edit
-  arrAddress : any[];//store array address of user (['thon3','thach hoa',...])
-
-  constructor(private fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
     private data: DataService,
     private router: Router,
     private placeService: PlaceService,
-    private authenticationService: AuthenticationService, ) {}
+    private authenticationService: AuthenticationService,
+    private service: LandlordService
+    ) {}
 
   ngOnInit() {
-    //edit user
-    this.currentUser = this.authenticationService.currentUserValue;
-    console.log(this.currentUser)
-    if (this.currentUser && this.currentUser.user.address && this.currentUser.user.address) {
-      this.arrAddress = this.currentUser.address.split('-');
-    }
-    //get tinh/tp
-    this.placeService.getProvince().subscribe(response => {
-      var arr = [];
-      for (var key in response) {
-        arr.push(response[key])
-
-        //for edit
-        if(this.currentUser.address && response[key].name ==  this.arrAddress[3]){
-          this.profileFormGroup.get('province').setValue(response[key]);
-          this.onChangeProvince();
-        }
-      }
-      this.dataProvince = arr;
-      console.log(arr);
-    });
-
-
+    this.resetMess();
+    this.removeLoading();
+    this.getProvince();
+    this.getProfile();
     this.profileFormGroup = this.fb.group({
-      name: this.fb.control(this.currentUser ? this.currentUser.name : "", Validators.compose([
+      fullname: this.fb.control('', Validators.compose([
         Validators.required
       ])),
-      phone: this.fb.control(this.currentUser ? this.currentUser.phone : "", Validators.compose([
+      phone: this.fb.control('', Validators.compose([
         Validators.required,
         Validators.pattern(this.phonePattern)
       ])),
-
       date: this.fb.control('', Validators.compose([
         Validators.required
       ])),
-      sex: this.fb.control(this.currentUser.sex ? this.currentUser.sex : "male", Validators.compose([
+      sex: this.fb.control(0, Validators.compose([
         Validators.required
       ])),
-      province: this.fb.control("", Validators.compose([
+      province: this.fb.control('', Validators.compose([
         Validators.required
       ])),
-      distric: this.fb.control("", Validators.compose([
+      distric: this.fb.control('', Validators.compose([
         Validators.required
       ])),
-      wards: this.fb.control("", Validators.compose([
+      wards: this.fb.control('', Validators.compose([
         Validators.required
       ])),
-      address: this.fb.control(this.currentUser.address ? this.arrAddress[0] : "", Validators.compose([
+      address: this.fb.control('', Validators.compose([
         Validators.required
       ]))
-
     });
   }
+  getProfile(){
+    this.addLoading();
+    this.service.getProfile().subscribe(
+      res => {
+        this.removeLoading();
+        let response = JSON.parse("" + res);
+        if (response.type == 1) {
+          this.landlord = JSON.parse(response.data);
+          let arr = null;
+          if(this.landlord.user.address != ' '){
+            arr = this.landlord.user.address.split('-');
+          }
+          this.getAddress();
+          this.profileFormGroup.get('fullname').setValue(this.landlord.user.name != ' ' ? this.landlord.user.name.trim() : ' ');
+          this.profileFormGroup.get('phone').setValue(this.landlord.user.phone != ' ' ? this.landlord.user.phone.trim() : ' ');
+          this.profileFormGroup.controls['phone'].disable();
+          if(this.landlord.user.dateOfBirth != 'null'){
+            this.profileFormGroup.get('date').setValue(this.landlord.user.dateOfBirth);
+          }
+          this.profileFormGroup.get('sex').setValue(this.landlord.user.sex);
+        }else{
+          this.message = JSON.parse(response.message);
+        }
+      }, err => {
+        this.message = JSON.parse(err);
+      })
+  }
+
+  getAddress(){
+    let arr = null;
+    if(this.landlord.user.address != ' '){
+      arr = this.landlord.user.address.split('-');
+    }
+    for (let province of this.dataProvince) {
+      if (arr[3] == province.name) {
+        this.profileFormGroup.get('province').setValue(province);
+        let arrDistric= [];
+        this.placeService.getDistric(province.code).subscribe(response => {
+          for (let key in response) {
+            arrDistric.push(response[key])
+          }
+          this.dataDistric = arrDistric;
+          for (let distric of arrDistric) {
+            if (arr[2] == distric.name) {
+              this.profileFormGroup.get('distric').setValue(distric);
+              let arrWards = [];
+              this.placeService.getWards(distric.code).subscribe(response => {
+                for (let key in response) {
+                  arrWards.push(response[key])
+                }
+                this.dataWards = arrWards;
+                for (let wards of arrWards) {
+                  if (arr[1] == wards.name) {
+                    this.profileFormGroup.get('wards').setValue(wards);
+                    this.profileFormGroup.get('address').setValue(arr[0]);
+                    break;
+                  }
+                }
+              });
+              break;
+            }
+          }
+        });
+        break;
+      }
+    }
+  }
+
+  getProvince(){
+    this.placeService.getProvince().subscribe(response => {
+      let arr = [];
+      for (let key in response) {
+        arr.push(response[key])
+      }
+      this.dataProvince = arr;
+    });
+  }
+
+  getDistric(province:any): any[]{
+    let arr = [];
+    this.placeService.getDistric(province.code).subscribe(response => {
+      for (let key in response) {
+        arr.push(response[key])
+      }
+      this.dataDistric = arr;
+    });
+    return arr;
+  }
+
+  getWards(distric:any): any[]{
+    let arr = [];
+    this.placeService.getWards(distric.code).subscribe(response => {
+      for (let key in response) {
+        arr.push(response[key])
+      }
+      this.dataWards = arr;
+    });
+    return arr;
+  }
+
   onChangeProvince() {
     this.placeService.getDistric(this.profileFormGroup.value.province.code).subscribe(response => {
       var arr = [];
       for (var key in response) {
         arr.push(response[key])
-        //for edit
-        if(this.currentUser.address && response[key].name ==  this.arrAddress[2]){
-          this.profileFormGroup.get('distric').setValue(response[key]);
-          this.onChangeDistric();
-        }
       }
       this.dataDistric = arr;
+      this.profileFormGroup.get('distric').setValue(arr[0]);
+      this.onChangeDistric();
     });
   };
+
   onChangeDistric() {
     this.placeService.getWards(this.profileFormGroup.value.distric.code).subscribe(response => {
       var arr = [];
       for (var key in response) {
         arr.push(response[key])
-        //for edit
-        if(this.currentUser.address && response[key].name ==  this.arrAddress[1]){
-          this.profileFormGroup.get('wards').setValue(response[key]);
-        }
-
       }
       this.dataWards = arr;
+      this.profileFormGroup.get('wards').setValue(arr[0]);
     });
   };
-  onSubmit() {
-    //if edit, compare if have change then post to server
 
-    let fullAddress = this.profileFormGroup.value.address + "-" + this.profileFormGroup.value.wards.name + "-" + this.profileFormGroup.value.distric.name + "-" + this.profileFormGroup.value.province.name;
-    console.log(this.profileFormGroup.value)
+  onSubmit() {
+    if(!this.profileFormGroup.invalid){
+      this.addLoading();
+      this.landlord.user.name = this.profileFormGroup.value.fullname;
+      this.landlord.user.address = this.profileFormGroup.value.address + "-" + this.profileFormGroup.value.wards.name + "-" + this.profileFormGroup.value.distric.name + "-" + this.profileFormGroup.value.province.name;
+      this.landlord.user.sex = this.profileFormGroup.value.sex;
+      this.landlord.user.dateOfBirth = this.profileFormGroup.value.date;
+      this.service.updateProfile({"user": this.landlord.user, "landlord": this.landlord}).subscribe(
+        res => {
+          this.removeLoading();
+          let response = JSON.parse("" + res);
+          if (response.type == 1) {
+            this.message.type = 1;
+          }else{
+            this.message.type = 0;
+          }
+          this.message.content = response.message;
+        }, err => {
+          this.message.type = 0;
+          this.message.content = CommonMessage.defaultErrMess;
+        })
+    }
+
   }
 
+  addLoading() {
+    $('.customLoading').addClass('preloader');
+    $('.customLoader').addClass('loader');
+  }
+  removeLoading() {
+    $('.customLoading').removeClass('preloader');
+    $('.customLoader').removeClass('loader');
+  }
 
-  //for edit information
-  // onEditDistric() {
-  //   this.placeService.getWards(this.profileFormGroup.value.distric.code).subscribe(response => {
-  //     var arr = [];
-  //     for (var key in response) {
-  //       arr.push(response[key])
-  //     }
-  //     this.dataWards = arr;
-  //   });
-  // };
-
-
-  // get isMoreThanToday() {
-  //   let date = ;
-  //   let varDate = new Date(date); //dd-mm-YYYY
-  //   var today = new Date();
-  //   today.setHours(0, 0, 0, 0);
-
-  //   if (varDate >= today) {
-
-  //     alert("Working!");
-  //   }
-  //   return
-  // }
+  resetMess() {
+    this.message.content = '';
+    this.message.type = 0;
+  }
 }
