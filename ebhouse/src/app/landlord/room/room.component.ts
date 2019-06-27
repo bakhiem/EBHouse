@@ -83,6 +83,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
   ngOnInit() {
     this.subscription = this.service.currentBh.subscribe((data) => {
+      console.log('change')
       this.currentBh = data;
       $('.boarding-house').val(this.currentBh.name);
       this.getRoomsFromCurrentBh();

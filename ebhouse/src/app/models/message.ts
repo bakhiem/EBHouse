@@ -12,7 +12,8 @@ export enum CommonMessage {
   NoTenant = 'Không tìm thấy khách thuê',
   SelectRoomFirst = 'Bạn cần chọn phòng trước',
   DuplicateTenant = 'Khách thuê đã được chọn',
-  NoExitstRoom = 'Không tồn tại phòng trong nhà trọ, mời bạn chọn phòng trong danh sách'
+  NoExitstRoom = 'Không tồn tại phòng trong nhà trọ, mời bạn chọn phòng trong danh sách',
+  DateFormat = 'Vui lòng chọn tháng bắt đầu và tháng kết thúc hợp lệ',
   }
   export class Message {
     content : string;
