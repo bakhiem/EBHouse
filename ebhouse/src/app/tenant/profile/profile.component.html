@@ -1,16 +1,16 @@
 <div class="profile-area">
-  <div class="customLoading">
-    <div class="customLoader"></div>
-  </div>
+    <div class="customLoading">
+        <div class="customLoader"></div>
+    </div>
     <form [formGroup]="profileFormGroup" (ngSubmit)="onSubmit()">
-      <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
-        {{message.content}}
-      </div>
-      <ng-template #errMess>
-          <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
-              {{message.content}}
-          </div>
-      </ng-template>
+        <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
+            {{message.content}}
+        </div>
+        <ng-template #errMess>
+            <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
+                {{message.content}}
+            </div>
+        </ng-template>
         <div class="row">
             <!-- Textual inputs start -->
             <div class="col-12 mt-5">
@@ -45,7 +45,9 @@
                                 <label for="example-date-input" class="col-form-label">Ngày sinh</label>
                                 <input class="form-control" type="date" id="example-date-input" formControlName="date">
                             </div>
-
+                            <div *ngIf="profileFormGroup.controls['date'].hasError('required') && (profileFormGroup.controls['date'].dirty || profileFormGroup.controls['date'].touched)" class="alert alert-danger">
+                                Ngày sinh là bắt buộc
+                            </div>
                         </div>
                         <!-- begin radio -->
 

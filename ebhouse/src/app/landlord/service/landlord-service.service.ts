@@ -22,7 +22,7 @@ const httpOptions = {
 export class LandlordService {
   private baseUrl: string = environment.baseUrl;
   currentBh: BehaviorSubject<any>;
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient) {
     this.currentBh = new BehaviorSubject<any>({})
   }
 
@@ -67,5 +67,20 @@ export class LandlordService {
   }
   deleteRoom(room : any) {
     return this.http.post<any>(`${this.baseUrl}/api/landlord/room/delete`, room, httpOptions);
+  }
+  getRoomsAvailable(data : any) : Observable<any[]> {
+    return this.http.post<any[]>(`${this.baseUrl}/api/landlord/room/available`, data, httpOptions);
+  }
+  searchTenantByPhone(data : any) : Observable<any[]> {
+    return this.http.post<any[]>(`${this.baseUrl}/api/landlord/contract/getTenant`, data, httpOptions);
+  }
+  addContract(data : any) : Observable<any[]> {
+    return this.http.post<any[]>(`${this.baseUrl}/api/landlord/contract/add`, data, httpOptions);
+  }
+  getProfile() : Observable<Landlord>{
+    return this.http.post<Landlord>(`${this.baseUrl}/api/profile`, null, httpOptions);
+  }
+  updateProfile(t : any) : Observable<Landlord>{
+    return this.http.post<any>(`${this.baseUrl}/api/profile/update`, t, httpOptions);
   }
 }

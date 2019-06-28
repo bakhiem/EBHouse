@@ -4,10 +4,13 @@ html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 
-  button:disabled{
+  button:disabled,input:disabled{
     cursor:not-allowed;
   }
   label.required:after  {
     content:"*";
     color:red;
+  }
+  .header-title{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }

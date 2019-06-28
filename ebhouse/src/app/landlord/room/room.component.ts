@@ -84,7 +84,6 @@ export class RoomComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.service.currentBh.subscribe((data) => {
       this.currentBh = data;
-      console.log("data")
       $('.boarding-house').val(this.currentBh.name);
       this.getRoomsFromCurrentBh();
     })
@@ -115,7 +114,9 @@ export class RoomComponent implements OnInit, OnDestroy {
   getRoomType() {
     this.service.getAllRoomTypes().subscribe(
       res => {
+        
         let response = JSON.parse("" + res);
+      
         if (response.type == 1) {
           let data = JSON.parse(response.data);
           this.rtList = data.roomType;
@@ -131,11 +132,13 @@ export class RoomComponent implements OnInit, OnDestroy {
       boardingHouseID: this.currentBh.id,
       page: this.currentPage
     }
+    console.log(page)
     this.addLoading();
     this.service.getRooms(page).subscribe(
       res => {
         this.removeLoading();
         let response = JSON.parse("" + res);
+        console.log(response)
         if (response.type == 1) {
           let data = JSON.parse(response.data);
           this.roomList = data.room;
@@ -331,7 +334,8 @@ export class RoomComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         let rooms = {
-          roomID: [obj.id]
+          roomID: [obj.id],
+          boardingHouseID : [this.currentBh.id]
         }
         this.addLoading();
         this.service.deleteRoom(rooms).subscribe(
@@ -359,7 +363,8 @@ export class RoomComponent implements OnInit, OnDestroy {
           roomID.push(this.selection.selected[i].id);
         }
         let rooms = {
-          roomID: roomID
+          roomID: roomID,
+          boardingHouseID : [this.currentBh.id]
         }
         this.addLoading();
         this.service.deleteRoom(rooms).subscribe(
