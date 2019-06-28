@@ -24,6 +24,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { CreateContractComponent } from './contract/create-contract/create-contract.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { MatDatepickerModule, MatNativeDateModule } from '@angular/material';
+import { UpdateContractComponent } from './contract/update-contract/update-contract.component';
 @NgModule({
   declarations: [
     LandlordComponent,
@@ -37,7 +38,8 @@ import { MatDatepickerModule, MatNativeDateModule } from '@angular/material';
     CurrencyFormat,
     
     ContractComponent,
-    CreateContractComponent
+    CreateContractComponent,
+    UpdateContractComponent
   ],
   imports: [
     BrowserModule,

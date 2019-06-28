@@ -53,11 +53,11 @@
         </ng-container>
         <ng-container matColumnDef="customColumn">
             <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let row">
+            <td mat-cell *matCellDef="let row, let i = index">
                 <ul class="d-flex justify-content-center">
-                    <li class="mr-3"><a class="text-secondary" (click)="editContract(row)"><i class="fa fa-edit"></i></a>
+                    <li class="mr-3"><a class="text-secondary" (click)="editContract(i)"><i class="fa fa-edit"></i></a>
                     </li>
-                    <li><a class="text-danger" (click)="deleteContract(row)"><i class="ti-trash"></i></a></li>
+                    <li><a class="text-danger" (click)="deleteContract(i)"><i class="ti-trash"></i></a></li>
                 </ul>
             </td>
         </ng-container>

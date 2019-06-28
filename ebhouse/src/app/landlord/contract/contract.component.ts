@@ -33,7 +33,7 @@ export class ContractComponent implements OnInit, OnDestroy {
   pageNumbers: number[] = [];
   dataSource = new MatTableDataSource();
   listContract: Contract[];
-  listContractFormat: any[] = [];
+  listContractFormat: any[];
   displayedColumns: string[] = ['room', 'owner', 'period', 'start', 'end', 'price', 'deposit', 'customColumn'];
   //Message
   message: Message = {
@@ -68,9 +68,7 @@ export class ContractComponent implements OnInit, OnDestroy {
     this.addLoading();
     this.service.getContract(page).subscribe(
       res => {
-        this.removeLoading();
         let response = JSON.parse("" + res);
-        console.log(response)
         if (response.type == 1) {
           let data = JSON.parse(response.data);
           this.listContract  = data.contract;
@@ -79,6 +77,7 @@ export class ContractComponent implements OnInit, OnDestroy {
           this.toArray(this.totalPage);
           console.log(this.listContract);
         }
+        this.removeLoading();
       }, err => {
         this.errRequestHandle(err);
       })
@@ -87,6 +86,7 @@ export class ContractComponent implements OnInit, OnDestroy {
     this.router.navigate(['/landlord/contract-create']);
   }
   handleListContract(){
+    this.listContractFormat = [];
     let contract : any;
     this.listContract.forEach(element => {
       //add to contract
@@ -132,8 +132,9 @@ export class ContractComponent implements OnInit, OnDestroy {
 
   //edit and delete boarding-house :
   editContract(obj) {
-
-
+    console.log(obj)
+    this.service.changeCOntract(this.listContract[obj]);
+    this.router.navigate(['/landlord/contract-update']);
   }
   deleteContract(obj) {
     this.resetMess();
