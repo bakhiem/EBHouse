@@ -88,4 +88,10 @@ export class LandlordService {
   getContract(data : any) : Observable<any[]> {
     return this.http.post<any[]>(`${this.baseUrl}/api/landlord/contract/`, data, httpOptions);
   }
+  getProfile() : Observable<Landlord>{
+    return this.http.post<Landlord>(`${this.baseUrl}/api/profile`, null, httpOptions);
+  }
+  updateProfile(t : any) : Observable<Landlord>{
+    return this.http.post<any>(`${this.baseUrl}/api/profile/update`, t, httpOptions);
+  }
 }

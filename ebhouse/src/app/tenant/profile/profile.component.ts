@@ -48,9 +48,10 @@ export class TenantProfileComponent implements OnInit {
     private router: Router,
     private placeService: PlaceService,
     private authenticationService: AuthenticationService,
-    private service: TenantServiceService) { }
+    private service: TenantServiceService
+  ) { }
 
-    ngOnInit() {
+  ngOnInit() {
       this.resetMess();
       this.removeLoading();
       this.getProvince();
@@ -94,7 +95,6 @@ export class TenantProfileComponent implements OnInit {
     this.addLoading();
     this.service.getProfile().subscribe(
       res => {
-        this.removeLoading();
         let response = JSON.parse("" + res);
         if (response.type == 1) {
           this.tenant = JSON.parse(response.data);
@@ -105,6 +105,7 @@ export class TenantProfileComponent implements OnInit {
           this.getAddress();
           this.profileFormGroup.get('fullname').setValue(this.tenant.user.name != ' ' ? this.tenant.user.name.trim() : ' ');
           this.profileFormGroup.get('phone').setValue(this.tenant.user.phone != ' ' ? this.tenant.user.phone.trim() : ' ');
+          this.profileFormGroup.controls['phone'].disable();
           if(this.tenant.user.dateOfBirth != 'null'){
             this.profileFormGroup.get('date').setValue(this.tenant.user.dateOfBirth);
           }
@@ -114,8 +115,10 @@ export class TenantProfileComponent implements OnInit {
         }else{
           this.message = JSON.parse(response.message);
         }
+      this.removeLoading();
       }, err => {
         this.message = JSON.parse(err);
+        this.removeLoading();
       })
   }
 
@@ -215,7 +218,7 @@ export class TenantProfileComponent implements OnInit {
   };
 
   onSubmit() {
-    if(this.profileFormGroup.invalid){
+    if(!this.profileFormGroup.invalid){
       this.addLoading();
       this.tenant.user.name = this.profileFormGroup.value.fullname;
       this.tenant.user.address = this.profileFormGroup.value.address + "-" + this.profileFormGroup.value.wards.name + "-" + this.profileFormGroup.value.distric.name + "-" + this.profileFormGroup.value.province.name;

@@ -1,7 +1,16 @@
 <div class="profile-area">
-
+    <div class="customLoading">
+        <div class="customLoader"></div>
+    </div>
     <form [formGroup]="profileFormGroup" (ngSubmit)="onSubmit()">
-
+        <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
+            {{message.content}}
+        </div>
+        <ng-template #errMess>
+            <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
+                {{message.content}}
+            </div>
+        </ng-template>
         <div class="row">
             <!-- Textual inputs start -->
             <div class="col-12 mt-5">
@@ -12,8 +21,8 @@
                         <div class="form-group row">
                             <div class="col-sm-6">
                                 <label for="example-text-input" class="col-form-label">Họ tên</label>
-                                <input class="form-control" type="text" id="example-text-input" formControlName="name">
-                                <div *ngIf="profileFormGroup.controls['name'].hasError('required') && (profileFormGroup.controls['name'].dirty || profileFormGroup.controls['name'].touched)" class="alert alert-danger">
+                                <input class="form-control" type="text" id="example-text-input" formControlName="fullname">
+                                <div *ngIf="profileFormGroup.controls['fullname'].hasError('required') && (profileFormGroup.controls['fullname'].dirty || profileFormGroup.controls['fullname'].touched)" class="alert alert-danger">
                                     Họ tên là bắt buộc
                                 </div>
                             </div>
@@ -35,27 +44,24 @@
                             <div class="col-sm-6">
                                 <label for="example-date-input" class="col-form-label .col-required">Ngày sinh</label>
                                 <input class="form-control" type="date" id="example-date-input" formControlName="date">
-                                <div *ngIf="profileFormGroup.controls['date'].hasError('required') && (profileFormGroup.controls['date'].dirty || profileFormGroup.controls['date'].touched)" class="alert alert-danger">
-                                    Ngày sinh là bắt buộc
-                                </div>
-
-
                             </div>
-
+                            <div *ngIf="profileFormGroup.controls['date'].hasError('required') && (profileFormGroup.controls['date'].dirty || profileFormGroup.controls['date'].touched)" class="alert alert-danger">
+                                Ngày sinh là bắt buộc
+                            </div>
                         </div>
                         <!-- begin radio -->
 
                         <b class="text-muted mb-3 mt-4 d-block col-form-label">Giới tính :</b>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="customRadio1" class="custom-control-input" value="male" formControlName="sex">
+                            <input type="radio" id="customRadio1" class="custom-control-input" value="1" formControlName="sex">
                             <label class="custom-control-label" for="customRadio1">Nam</label>
                         </div>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="customRadio2" class="custom-control-input" value="female" formControlName="sex">
+                            <input type="radio" id="customRadio2" class="custom-control-input" value="2" formControlName="sex">
                             <label class="custom-control-label" for="customRadio2">Nữ</label>
                         </div>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="customRadio3" class="custom-control-input" value="other" formControlName="sex">
+                            <input type="radio" id="customRadio3" class="custom-control-input" value="0" formControlName="sex">
                             <label class="custom-control-label" for="customRadio3">Khác</label>
                         </div>
                         <!-- end radio -->
@@ -96,7 +102,7 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-6">
-                                <label for="example-tel-input">Thôn xóm/ Số nhà</label>
+                                <label for="example-tel-input" class="col-form-label">Thôn xóm/ Số nhà</label>
                                 <input class="form-control" type="tel" id="example-tel-input" formControlName="address">
                                 <div *ngIf="profileFormGroup.controls['address'].hasError('required') && (profileFormGroup.controls['address'].dirty || profileFormGroup.controls['address'].touched)" class="alert alert-danger">
                                     Thôn xóm/ số nhà không được để trống

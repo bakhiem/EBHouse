@@ -353,10 +353,11 @@ export class UpdateContractComponent implements OnInit {
       alert(CommonMessage.DateFormat);
       return;
     }
-    if (this.createContractFormGroup.invalid) {
+    else if (this.createContractFormGroup.value.period) {
       alert('Vui lòng điền đầy đủ thông tin')
       return;
     }
+    
 
     let formatRoomPrice = this.createContractFormGroup.value.price.toString().split('.').join('');
     let roomPrice = Number(formatRoomPrice);
