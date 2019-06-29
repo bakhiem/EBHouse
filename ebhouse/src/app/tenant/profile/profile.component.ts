@@ -18,28 +18,29 @@ import { ImageResult, ResizeOptions } from 'ng2-imageupload';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  styleUrls: ['./profile.component.css'],
 })
 export class TenantProfileComponent implements OnInit {
   roleDefault: number = 1;
   dataProvince: any[];
   dataDistric: any[];
   dataWards: any[];
-  phonePattern = "((09|03|07|08|05)+([0-9]{8}))";
-  imageFrontSrc: string;
-  imageBackSrc: string;
+  phonePattern = '((09|03|07|08|05)+([0-9]{8}))';
+  imgArnFront: string;
+  imgArnBack: string;
   profileFormGroup: FormGroup;
-  tenant : Tenant;
-  user : User;
-  message  : Message = {
-    content : '',
-    type : 0
-  }
+  tenant: Tenant;
+  check: number = 0;
+  user: User;
+  message: Message = {
+    content: '',
+    type: 0,
+  };
 
   //resize image
   resizeOptions: ResizeOptions = {
     resizeMaxHeight: 1000,
-    resizeMaxWidth: 1000
+    resizeMaxWidth: 1000,
   };
 
   constructor(
@@ -49,91 +50,72 @@ export class TenantProfileComponent implements OnInit {
     private placeService: PlaceService,
     private authenticationService: AuthenticationService,
     private service: TenantServiceService
-  ) { }
+  ) {}
 
   ngOnInit() {
-      this.resetMess();
-      this.removeLoading();
-      this.getProvince();
-      this.getProfile();
-      this.profileFormGroup = this.fb.group({
-        fullname: this.fb.control('', Validators.compose([
-          Validators.required
-        ])),
-        phone: this.fb.control('', Validators.compose([
-          Validators.required,
-          Validators.pattern(this.phonePattern)
-        ])),
-        date: this.fb.control('', Validators.compose([
-          Validators.required
-        ])),
-        sex: this.fb.control(0, Validators.compose([
-          Validators.required
-        ])),
-        province: this.fb.control('', Validators.compose([
-          Validators.required
-        ])),
-        distric: this.fb.control('', Validators.compose([
-          Validators.required
-        ])),
-        wards: this.fb.control('', Validators.compose([
-          Validators.required
-        ])),
-        address: this.fb.control('', Validators.compose([
-          Validators.required
-        ])),
-        frontID: this.fb.control('', Validators.compose([
-          Validators.required
-        ])),
-        backID: this.fb.control('', Validators.compose([
-          Validators.required
-        ])),
-      });
+    this.resetMess();
+    this.removeLoading();
+    this.getProvince();
+
+    this.profileFormGroup = this.fb.group({
+      name: this.fb.control('', Validators.compose([Validators.required])),
+      phone: this.fb.control('', Validators.compose([Validators.required, Validators.pattern(this.phonePattern)])),
+      date: this.fb.control('', Validators.compose([Validators.required])),
+      sex: this.fb.control(0, Validators.compose([Validators.required])),
+      province: this.fb.control('', Validators.compose([Validators.required])),
+      distric: this.fb.control('', Validators.compose([Validators.required])),
+      wards: this.fb.control('', Validators.compose([Validators.required])),
+      address: this.fb.control('', Validators.compose([Validators.required])),
+      imgArnFront: this.fb.control(''),
+      imgArnBack: this.fb.control(''),
+    });
   }
 
-  getProfile(){
+  getProfile() {
     this.addLoading();
     this.service.getProfile().subscribe(
       res => {
-        let response = JSON.parse("" + res);
+        let response = JSON.parse('' + res);
         if (response.type == 1) {
           this.tenant = JSON.parse(response.data);
           let arr = null;
-          if(this.tenant.user.address != ' '){
+          if (this.tenant.user.address != ' ') {
             arr = this.tenant.user.address.split('-');
           }
           this.getAddress();
-          this.profileFormGroup.get('fullname').setValue(this.tenant.user.name != ' ' ? this.tenant.user.name.trim() : ' ');
-          this.profileFormGroup.get('phone').setValue(this.tenant.user.phone != ' ' ? this.tenant.user.phone.trim() : ' ');
-          this.profileFormGroup.controls['phone'].disable();
-          if(this.tenant.user.dateOfBirth != 'null'){
+          this.profileFormGroup.get('name').setValue(this.tenant.user.name != ' ' ? this.tenant.user.name.trim() : ' ');
+          this.profileFormGroup .get('phone').setValue(this.tenant.user.phone != ' ' ? this.tenant.user.phone.trim() : ' ');
+          this.profileFormGroup.get('phone').disable();
+          if (this.tenant.user.dateOfBirth != 'null') {
             this.profileFormGroup.get('date').setValue(this.tenant.user.dateOfBirth);
           }
           this.profileFormGroup.get('sex').setValue(this.tenant.user.sex);
-          this.imageFrontSrc = this.tenant.imgArnFront != ' ' ? this.tenant.imgArnFront.trim() : '';
-          this.imageBackSrc = this.tenant.imgArnBack  != ' ' ? this.tenant.imgArnBack.trim() : '';
-        }else{
+          this.imgArnFront = this.tenant.imgArnFront != ' ' ? this.tenant.imgArnFront.trim()+ "?date=" + new Date().getTime() : '';
+          this.imgArnBack = this.tenant.imgArnBack != ' ' ? this.tenant.imgArnBack.trim()+ "?date=" + new Date().getTime() : '';
+        } else {
           this.message = JSON.parse(response.message);
         }
-      this.removeLoading();
-      }, err => {
+        this.removeLoading();
+      },
+      err => {
         this.message = JSON.parse(err);
         this.removeLoading();
-      })
+      }
+    );
   }
 
-  getAddress(){
+  getAddress() {
     let arr = null;
-    if(this.tenant.user.address != ' '){
+    if (this.tenant.user.address != ' ') {
       arr = this.tenant.user.address.split('-');
     }
     for (let province of this.dataProvince) {
       if (arr[3] == province.name) {
         this.profileFormGroup.get('province').setValue(province);
-        let arrDistric= [];
+        let arrDistric = [];
         this.placeService.getDistric(province.code).subscribe(response => {
           for (let key in response) {
-            arrDistric.push(response[key])
+            arrDistric.push(response[key]);
           }
           this.dataDistric = arrDistric;
           for (let distric of arrDistric) {
@@ -142,7 +124,7 @@ export class TenantProfileComponent implements OnInit {
               let arrWards = [];
               this.placeService.getWards(distric.code).subscribe(response => {
                 for (let key in response) {
-                  arrWards.push(response[key])
+                  arrWards.push(response[key]);
                 }
                 this.dataWards = arrWards;
                 for (let wards of arrWards) {
@@ -162,32 +144,33 @@ export class TenantProfileComponent implements OnInit {
     }
   }
 
-  getProvince(){
+  getProvince() {
     this.placeService.getProvince().subscribe(response => {
       let arr = [];
       for (let key in response) {
-        arr.push(response[key])
+        arr.push(response[key]);
       }
       this.dataProvince = arr;
+      this.getProfile();
     });
   }
 
-  getDistric(province:any): any[]{
+  getDistric(province: any): any[] {
     let arr = [];
     this.placeService.getDistric(province.code).subscribe(response => {
       for (let key in response) {
-        arr.push(response[key])
+        arr.push(response[key]);
       }
       this.dataDistric = arr;
     });
     return arr;
   }
 
-  getWards(distric:any): any[]{
+  getWards(distric: any): any[] {
     let arr = [];
     this.placeService.getWards(distric.code).subscribe(response => {
       for (let key in response) {
-        arr.push(response[key])
+        arr.push(response[key]);
       }
       this.dataWards = arr;
     });
@@ -198,59 +181,100 @@ export class TenantProfileComponent implements OnInit {
     this.placeService.getDistric(this.profileFormGroup.value.province.code).subscribe(response => {
       var arr = [];
       for (var key in response) {
-        arr.push(response[key])
+        arr.push(response[key]);
       }
       this.dataDistric = arr;
       this.profileFormGroup.get('distric').setValue(arr[0]);
       this.onChangeDistric();
     });
-  };
+  }
 
   onChangeDistric() {
     this.placeService.getWards(this.profileFormGroup.value.distric.code).subscribe(response => {
       var arr = [];
       for (var key in response) {
-        arr.push(response[key])
+        arr.push(response[key]);
       }
       this.dataWards = arr;
       this.profileFormGroup.get('wards').setValue(arr[0]);
     });
-  };
+  }
 
   onSubmit() {
-    if(!this.profileFormGroup.invalid){
-      this.addLoading();
-      this.tenant.user.name = this.profileFormGroup.value.fullname;
-      this.tenant.user.address = this.profileFormGroup.value.address + "-" + this.profileFormGroup.value.wards.name + "-" + this.profileFormGroup.value.distric.name + "-" + this.profileFormGroup.value.province.name;
-      this.tenant.user.sex = this.profileFormGroup.value.sex;
-      this.tenant.user.dateOfBirth = this.profileFormGroup.value.date;
-      this.tenant.imgArnFront = this.profileFormGroup.value.frontID != "" ? this.imageFrontSrc.split(',')[1] : "" ;
-      this.tenant.imgArnBack = this.profileFormGroup.value.backID != "" ? this.imageBackSrc.split(',')[1] : "" ;
-      this.service.updateProfile({"user": this.tenant.user, "tenant": this.tenant}).subscribe(
-        res => {
-          this.removeLoading();
-          let response = JSON.parse("" + res);
-          if (response.type == 1) {
-            this.message.type = 1;
-          }else{
+    console.log(this.profileFormGroup.value)
+    if (!this.profileFormGroup.invalid) {
+      this.checkChangeData();
+      if (this.check == 1) {
+        this.addLoading();
+        this.service.updateProfile({ user: this.tenant.user, tenant: this.tenant }).subscribe(
+          res => {
+            this.removeLoading();
+            let response = JSON.parse('' + res);
+            if (response.type == 1) {
+              this.message.type = 1;
+            } else {
+              this.message.type = 0;
+            }
+            this.message.content = response.message;
+          },
+          err => {
             this.message.type = 0;
+            this.message.content = CommonMessage.defaultErrMess;
           }
-          this.message.content = response.message;
-        }, err => {
-          this.message.type = 0;
-          this.message.content = CommonMessage.defaultErrMess;
-        })
+        );
+      } else {
+        this.message.type = 0;
+        this.message.content = 'Vui lòng thay đổi thông tin nếu bạn muốn cập nhật thông tin!';
+      }
+    } else {
+      this.message.type = 0;
+      this.message.content = 'Vui lòng kiểm tra lại!';
     }
   }
 
-  checkChangeData(){
+  checkChangeData() {
+    let address =
+      this.profileFormGroup.value.address +
+      '-' +
+      this.profileFormGroup.value.wards.name +
+      '-' +
+      this.profileFormGroup.value.distric.name +
+      '-' +
+      this.profileFormGroup.value.province.name;
+    if (this.tenant.user.name != this.profileFormGroup.value.name) {
+      this.tenant.user.name = this.profileFormGroup.value.name
+      this.check = 1;
+    } else if (this.tenant.user.sex != this.profileFormGroup.value.sex) {
+      this.tenant.user.sex = this.profileFormGroup.value.sex
+      this.check = 1;
+    } else if (this.tenant.user.dateOfBirth != this.profileFormGroup.value.date) {
+      this.tenant.user.dateOfBirth = this.profileFormGroup.value.date
+      this.check = 1;
+    }else if(this.tenant.user.address != address){
+      this.tenant.user.address = address
+      this.check = 1;
+    }
+    if(this.profileFormGroup.value.imgArnFront != ''){
+      this.tenant.imgArnFront = this.imgArnFront.split(',')[1];
+      this.check = 1;
+    }else{
+      this.tenant.imgArnFront = '';
+    }
+
+    if(this.profileFormGroup.value.imgArnBack != ''){
+      this.tenant.imgArnBack = this.imgArnBack.split(',')[1];
+      this.check = 1;
+    }else{
+      this.tenant.imgArnBack = '';
+    }
+
   }
 
   uploadFrontID(imageResult: ImageResult) {
-    this.imageFrontSrc = imageResult.resized && imageResult.resized.dataURL || imageResult.dataURL;
+    this.imgArnFront = (imageResult.resized && imageResult.resized.dataURL) || imageResult.dataURL;
   }
   uploadBackID(imageResult: ImageResult) {
-    this.imageBackSrc = imageResult.resized && imageResult.resized.dataURL || imageResult.dataURL;
+    this.imgArnBack = (imageResult.resized && imageResult.resized.dataURL) || imageResult.dataURL;
   }
 
   addLoading() {

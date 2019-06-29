@@ -21,8 +21,8 @@
                         <div class="form-group row">
                             <div class="col-sm-6">
                                 <label for="example-text-input" class="col-form-label">Họ tên</label>
-                                <input class="form-control" type="text" id="example-text-input" formControlName="fullname">
-                                <div *ngIf="profileFormGroup.controls['fullname'].hasError('required') && (profileFormGroup.controls['fullname'].dirty || profileFormGroup.controls['fullname'].touched)" class="alert alert-danger">
+                                <input class="form-control" type="text" id="example-text-input" formControlName="name">
+                                <div *ngIf="profileFormGroup.controls['name'].hasError('required') && (profileFormGroup.controls['name'].dirty || profileFormGroup.controls['name'].touched)" class="alert alert-danger">
                                     Họ tên là bắt buộc
                                 </div>
                             </div>
