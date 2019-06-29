@@ -8,6 +8,7 @@ import { Observable, throwError,BehaviorSubject } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 import { catchError, retry } from 'rxjs/operators';
 
+import {Contract} from '../../models/contract';
 import { environment } from '../../../environments/environment';
 const httpOptions = {
   headers: new HttpHeaders({
@@ -22,10 +23,14 @@ const httpOptions = {
 export class LandlordService {
   private baseUrl: string = environment.baseUrl;
   currentBh: BehaviorSubject<any>;
+  currentContract: BehaviorSubject<Contract>;
   constructor(private http: HttpClient) {
     this.currentBh = new BehaviorSubject<any>({})
+    this.currentContract = new BehaviorSubject<any>(null)
   }
-
+  changeCOntract(contract) {
+    this.currentContract.next(contract);
+  }
   getAllBoardingHouses() : Observable<BoardingHouse[]> {
     return this.http.post<BoardingHouse[]>(`${this.baseUrl}/api/landlord/bh/all`, null, httpOptions);
   }
@@ -76,6 +81,12 @@ export class LandlordService {
   }
   addContract(data : any) : Observable<any[]> {
     return this.http.post<any[]>(`${this.baseUrl}/api/landlord/contract/add`, data, httpOptions);
+  }
+  updateContract(data : any) : Observable<any[]> {
+    return this.http.post<any[]>(`${this.baseUrl}/api/landlord/contract/update`, data, httpOptions);
+  }
+  getContract(data : any) : Observable<any[]> {
+    return this.http.post<any[]>(`${this.baseUrl}/api/landlord/contract/`, data, httpOptions);
   }
   getProfile() : Observable<Landlord>{
     return this.http.post<Landlord>(`${this.baseUrl}/api/profile`, null, httpOptions);

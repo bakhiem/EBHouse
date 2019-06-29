@@ -3,8 +3,7 @@ import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl, Valid
 import { MatDialog, MatCheckboxModule } from '@angular/material';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
-import * as $AB from 'jquery';
-import * as bootstrap from "bootstrap";
+
 import { LandlordService } from '../../service/landlord-service.service';
 
 import { map, startWith } from 'rxjs/operators';
@@ -27,23 +26,25 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { Router } from '@angular/router';
-import {CustomDateAdapter} from '../customDate'
+import { CustomDateAdapter } from '../customDate';
 
+import { Contract, Tenant, ContractTenant, User } from '../../../models/contract';
 
 @Component({
-  selector: 'app-create-contract',
-  templateUrl: './create-contract.component.html',
-  styleUrls: ['./create-contract.component.css'],
+  selector: 'app-update-contract',
+  templateUrl: './update-contract.component.html',
+  styleUrls: ['./update-contract.component.css'],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'vi-vn' },
     { provide: DateAdapter, useClass: CustomDateAdapter }
   ],
 })
-export class CreateContractComponent implements OnInit {
+export class UpdateContractComponent implements OnInit {
   @ViewChild(MatDatepicker) picker;
   startDateStr: any;
   endDateSrt: any;
   minDate = new Date();
+  capacity: number;
   //Message
   monthStartSelected(params, datepicker) {
     params.setDate(1)
@@ -96,18 +97,21 @@ export class CreateContractComponent implements OnInit {
   }
 
   createContractFormGroup: FormGroup;
-  roomList: any[] = [];
+
   currentBh: BoardingHouse;
   currentTenant: any;
   phonePattern = '((09|03|07|08|05)+([0-9]{8}))';
   listImg = [];
+  currentContract: Contract;
   //Message
   message: Message = {
     content: '',
     type: 0
   }
-  capacity: number;
+  currentOwner : Tenant;
+  contractLog : any[];
   isExtraFee = 0;
+  displayedColumnsContractLog: string[] = ['cDate', 'content'];
   displayedColumns: string[] = ['name', 'phone', 'customColumn'];
   listTenant = [];
   dataSource = new MatTableDataSource()
@@ -117,7 +121,6 @@ export class CreateContractComponent implements OnInit {
     resizeMaxWidth: 1000
   };
   private subscription: ISubscription;
-  filteredOptions: Observable<any[]>;
 
   constructor(private fb: FormBuilder,
     public dialog: MatDialog,
@@ -143,33 +146,69 @@ export class CreateContractComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.service.currentContract.subscribe(contract => {
+      this.currentContract = contract;
+
+    });
+    if (this.currentContract == null) {
+      this.router.navigate(['/landlord/contract']);
+    }
+    else{
+      this.setValueForm();
+      this.formatCurrency();
+      this.jqueryCode();
+    }
+   
+  }
+  setValueForm() {
+    console.log(this.currentContract.contractImg);
+    this.listTenant = [];
+    this.createContractFormGroup.get('room').setValue(this.currentContract.room.name);
+    this.createContractFormGroup.get('description').setValue(this.currentContract.description);
+
+    let depositFormat = this.currentContract.deposit.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+    this.createContractFormGroup.get('deposit').setValue(depositFormat);
+
+    //set price
+    this.capacity = Number(this.currentContract.room.roomType.capacity);
+    let currency = this.currentContract.roomPrice.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+    this.createContractFormGroup.get('price').setValue(currency);
+
+    // this.listTenant = this.currentContract.lstContractTenant.
+    this.createContractFormGroup.controls['room'].disable();
+    this.createContractFormGroup.controls['owner'].disable();
+    
+    this.currentContract.lstContractTenant.forEach(element => {
+      this.listTenant.push(element.tenant);
+      if(element.isOwner == 1){
+        this.currentOwner = element.tenant;
+        this.createContractFormGroup.get('owner').setValue(element.tenant);
+      }
+    });
+
+    this.dataSource.data = this.listTenant;
+    let startDate = this.formatDateFromServer(this.currentContract.startDate);
+    let endDate = this.formatDateFromServer(this.currentContract.endDate)
+    this.endDateSrt = this.formatDate(endDate);
+    this.startDateStr = this.formatDate(startDate);
+    this.periodHandler();
+    this.createContractFormGroup.get('beginDate').setValue(startDate);
+    this.createContractFormGroup.get('endDate').setValue(endDate);
+    this.listImg = this.currentContract.contractImg ? this.currentContract.contractImg.split(',') : [];
 
     
-      this.subscription = this.service.currentBh.subscribe((data) => {
-        this.currentBh = data;
-        if (data.id) {
-          this.getRoomsFromCurrentBh();
-        }
-      })
-    
-    
-    this.formatCurrency();
-    this.jqueryCode();
-
+    this.contractLog = this.currentContract.lstContractLog;
   }
 
+
+  formatDateFromServer(inputDate){
+    let d = inputDate.split(' ');
+    let d2 = d[0].split('-');
+    let date = new Date(d2[0],d2[1]-1,d2[2]);
+    return date;
+  }
   jqueryCode() {
-    $("#room-name").focusout(() => {
-      this.roomList.forEach(element => {
-        if (element.name == this.createContractFormGroup.value.room) {
-          this.onChooseRoom(element)
-        }
-      });
-    })
-
-
     //extra fee
-
     $('#customCheck1').change(() => {
       if (this.isExtraFee == 0) {
         $('#mycollapse').collapse('show');
@@ -183,48 +222,7 @@ export class CreateContractComponent implements OnInit {
 
   }
 
-  getRoomsFromCurrentBh() {
-    this.capacity = 0;
-    this.resetMess();
-    this.createContractFormGroup.reset();
-    let data: any = {
-      boardingHouseID: this.currentBh.id
-    }
-    this.addLoading();
-    this.service.getRoomsAvailable(data).subscribe(
-      res => {
-        this.removeLoading();
-        let response = JSON.parse("" + res);
-        if (response.type == 1) {
-          let data = JSON.parse(response.data);
-          console.log(data)
-          this.roomList = data;
-          if (this.roomList.length == 0) {
-            this.message.content = CommonMessage.BhHaveNoRoom;
-            this.message.type = 0;
-          }
-          this.filteredOptions = this.createContractFormGroup.get('room').valueChanges
-            .pipe(
-              startWith(''),
-              map(value => {
-                if (value) {
-                  if (typeof (value) === 'string') {
-                    return value
-                  }
-                  else {
-                    return value.name
-                  }
-                }
-              }),
-              map(name => name ? this._filter(name) : this.roomList.slice())
-            );
-        }
 
-      }, err => {
-        this.removeLoading();
-        console.log(err);
-      })
-  }
   resetMess() {
     this.message.content = '';
     this.message.type = 0;
@@ -324,7 +322,18 @@ export class CreateContractComponent implements OnInit {
     this.createContractFormGroup.get('price').setValue(currency);
   }
   deleteImage(src) {
-    this.listImg.splice(src, 1);
+    this.resetMess();
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '400px',
+      data: "Bạn chắc chắn muốn xóa ảnh hợp đồng không ?"
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.listImg.splice(src, 1);
+      }
+      
+    });
+    
   }
   viewImg(src) {
     console.log(src)
@@ -339,9 +348,6 @@ export class CreateContractComponent implements OnInit {
     $('.customLoading').removeClass('preloader');
     $('.customLoader').removeClass('loader');
   }
-  displayFn(room?: any): string | undefined {
-    return room ? room.name : undefined;
-  }
   onSubmit() {
     if (!this.createContractFormGroup.value.period || this.createContractFormGroup.value.period == '') {
       alert(CommonMessage.DateFormat);
@@ -351,87 +357,79 @@ export class CreateContractComponent implements OnInit {
       alert('Vui lòng điền đầy đủ thông tin')
       return;
     }
-    if (this.checkRoomValid()) {
-      let formatRoomPrice = this.createContractFormGroup.value.price.toString().split('.').join('');
-      let roomPrice = Number(formatRoomPrice);
-      let formatDeposit = this.createContractFormGroup.value.deposit.toString().split('.').join('');
-      let deposit = Number(formatDeposit);
-      var extraFee = 0;
-      if ($('#customCheck1').is(':checked')) {
-        if ($('#extraFee').val()) {
-          let formatPrice = $('#extraFee').val().toString().split('.').join('');
-          if ($('#increase').is(':checked')) {
-            extraFee = Number(formatPrice);
-          }
-          else if ($('#decrease').is(':checked')) {
-            extraFee = Number(formatPrice) * -1;
-          }
+
+    let formatRoomPrice = this.createContractFormGroup.value.price.toString().split('.').join('');
+    let roomPrice = Number(formatRoomPrice);
+    let formatDeposit = this.createContractFormGroup.value.deposit.toString().split('.').join('');
+    let deposit = Number(formatDeposit);
+    var extraFee = 0;
+    if ($('#customCheck1').is(':checked')) {
+      if ($('#extraFee').val()) {
+        let formatPrice = $('#extraFee').val().toString().split('.').join('');
+        if ($('#increase').is(':checked')) {
+          extraFee = Number(formatPrice);
+        }
+        else if ($('#decrease').is(':checked')) {
+          extraFee = Number(formatPrice) * -1;
         }
       }
-      let listImgSplit = []
-      for (let index = 0; index < this.listImg.length; index++) {
+    }
+    let listImgSplit = []
+    for (let index = 0; index < this.listImg.length; index++) {
+      if(this.listImg[index].includes(',')){
         let tmp = this.listImg[index].split(',');
         listImgSplit.push(tmp[1]);
       }
-      let data = {
-        contract: [{
-          roomPrice: roomPrice,
-          deposit: deposit,
-          startDate: this.startDateStr,
-          endDate: this.endDateSrt,
-          description : this.createContractFormGroup.value.description ? this.createContractFormGroup.value.description : ''
-        }],
-        room: [{
-          id: this.createContractFormGroup.value.room.id
-        }],
-        lstTenant: this.listTenant,
-        owner: [this.createContractFormGroup.value.owner.id],
-        extraFee: [{
-          amount: extraFee
-        }],
-        imgContract: listImgSplit,
-       
+      else{
+        listImgSplit.push(this.listImg[index])
       }
-      console.log(data)
+    }
+    let data = {
+      contract: [{
+        id : this.currentContract.id,
+        contractImg : this.currentContract.contractImg,
+        roomPrice: roomPrice,
+        deposit: deposit,
+        startDate: this.startDateStr,
+        endDate: this.endDateSrt,
+        description: this.createContractFormGroup.value.description ? this.createContractFormGroup.value.description : ''
+      }],
+      room: [{
+        id: this.currentContract.room.id
+      }],
+      lstTenant: this.listTenant,
+      owner: [this.currentOwner.id],
+      imgContract: listImgSplit,
 
-      this.addLoading();
-      this.service.addContract(data).subscribe(
-        res => {
-          this.removeLoading();
-          let response = JSON.parse("" + res);
-          if (response.type == 1) {
-            console.log(res)
-            this.message.type = 1;
-            this.message.content = response.message;
-            setTimeout(() => {   this.router.navigate(['/landlord/contract']) }, 1500);
-          }
-          else {
-            this.message.type = 0;
-            this.message.content = response.message;
-          }
-        }, err => {
-          this.removeLoading();
+    }
+    console.log(data)
+
+    this.addLoading();
+    this.service.updateContract(data).subscribe(
+      res => {
+        this.removeLoading();
+        let response = JSON.parse("" + res);
+        if (response.type == 1) {
+          console.log(res)
+          this.message.type = 1;
+          this.message.content = response.message;
+          // setTimeout(() => { this.router.navigate(['/landlord/contract']) }, 1500);
+        }
+        else {
           this.message.type = 0;
-            this.message.content =CommonMessage.defaultErrMess;
-          console.log(err);
-        })
-    }
-    else {
-      alert(CommonMessage.NoExitstRoom)
-    }
+          this.message.content = response.message;
+        }
+      }, err => {
+        this.removeLoading();
+        this.message.type = 0;
+        this.message.content = CommonMessage.defaultErrMess;
+        console.log(err);
+      })
 
 
-  }
-  checkRoomValid() {
-    for (let i = 0; i < this.roomList.length; i++) {
-      if (this.roomList[i].name == $('#room-name').val().toString().trim()) {
-        this.createContractFormGroup.get('room').setValue(this.roomList[i])
-        return true;
-      }
-    }
-    return false;
 
   }
+
   uploadImage(imageResult: ImageResult) {
     if (this.listImg.length < 5) {
       this.listImg.push(imageResult.resized && imageResult.resized.dataURL || imageResult.dataURL);
@@ -439,9 +437,6 @@ export class CreateContractComponent implements OnInit {
 
   }
 
-  private _filter(name: string): any[] {
-    const filterValue = name.toLowerCase();
-    return this.roomList.filter(roomList => roomList.name.toLowerCase().indexOf(filterValue) === 0);
-  }
+
 
 }

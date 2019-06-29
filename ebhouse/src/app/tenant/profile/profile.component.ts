@@ -241,7 +241,9 @@ export class TenantProfileComponent implements OnInit {
           this.message.content = CommonMessage.defaultErrMess;
         })
     }
+  }
 
+  checkChangeData(){
   }
 
   uploadFrontID(imageResult: ImageResult) {

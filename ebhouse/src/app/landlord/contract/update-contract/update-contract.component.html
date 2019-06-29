@@ -10,7 +10,7 @@
             <div class="col-12 mt-5">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="header-title">Tạo hợp đồng</h4>
+                        <h4 class="header-title">Cập nhật thông tin hợp đồng</h4>
                         <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success"
                             role="alert">
                             {{message.content}}
@@ -22,21 +22,9 @@
                         </ng-template>
                         <div class="row">
                             <div class="col-sm-6">
-                                <label class="col-form-label required">Chọn phòng ký hợp đồng</label>
-                                <mat-form-field class="example-full-width">
-                                    <input type="text" id='room-name' placeholder="Điền tên phòng" aria-label="Assignee"
-                                        matInput [matAutocomplete]="auto" formControlName="room">
-                                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
-                                        (optionSelected)="onChooseRoom($event.option.value)">
-                                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                                            {{option.name}}
-                                        </mat-option>
-                                    </mat-autocomplete>
-                                </mat-form-field>
-                                <div *ngIf="createContractFormGroup.controls['room'].hasError('required') && (createContractFormGroup.controls['room'].dirty || createContractFormGroup.controls['room'].touched)"
-                                    class="alert alert-danger">
-                                    Tên phòng là bắt buộc
-                                </div>
+                                <label class="col-form-label required">Phòng ký hợp đồng</label>
+                                <input class="form-control mr-3 col-sm-6" type="text" id='room-name'
+                                    formControlName="room">
                             </div>
                         </div>
                         <div class="row">
@@ -70,8 +58,8 @@
                                         <th mat-header-cell *matHeaderCellDef></th>
                                         <td mat-cell *matCellDef="let row">
                                             <ul class="d-flex justify-content-center">
-                                                <li><a class="text-danger" (click)="deleteRoom(row)"><i
-                                                            class="ti-trash"></i></a></li>
+                                                <li *ngIf="row.id != currentOwner.id" ><a class="text-danger" (click)="deleteRoom(row)">
+                                                    <i class="ti-trash"></i></a></li>
                                             </ul>
                                         </td>
                                     </ng-container>
@@ -116,6 +104,7 @@
                                         <span class="input-group-text">Đồng</span>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                         <div class="form-group row">
@@ -123,28 +112,29 @@
                                 <label for="example-text-input" class="col-form-label required">Tháng bắt đầu</label>
                                 <div class="input-group">
                                     <mat-form-field>
-                                        <input matInput [min]="minDate" formControlName="beginDate" placeholder="Bấm để chọn"
-                                            [matDatepicker]="picker" >
+                                        <input matInput [min]="minDate" formControlName="beginDate"
+                                            placeholder="Bấm để chọn" [matDatepicker]="picker">
                                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                         <mat-datepicker #picker (monthSelected)="monthStartSelected($event,picker)"
                                             startView="multi-year" disabled="false"></mat-datepicker>
                                     </mat-form-field>
+
                                 </div>
                             </div>
 
 
 
                             <div class="col-sm-4">
-                                <label for="example-text-input"class="col-form-label required">Tháng kết thúc</label>
+                                <label for="example-text-input" class="col-form-label required">Tháng kết thúc</label>
                                 <div class="input-group">
                                     <mat-form-field>
-                                        <input matInput  [min]="minDate"  [matDatepicker]="picker2" placeholder="Bấm để chọn"
-                                        formControlName="endDate" >
+                                        <input matInput [min]="minDate" [matDatepicker]="picker2"
+                                            placeholder="Bấm để chọn" formControlName="endDate">
                                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                                         <mat-datepicker #picker2 (monthSelected)="monthEndSelected($event,picker2)"
                                             startView="multi-year" disabled="false"></mat-datepicker>
                                     </mat-form-field>
-                                 
+
                                 </div>
                             </div>
 
@@ -162,48 +152,31 @@
 
                             </div>
                         </div>
-                        <!-- extra fee   -->
                         <div class="form-group row">
-                            <div class="col-sm-4">
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                    <label class="custom-control-label" for="customCheck1">Tăng / giảm tiền phòng tháng
-                                        đầu tiên </label>
-                                </div>
+                            <div class="col-sm-12 mb-3">
+                                <label class="col-form-label">Lịch sử cập nhật</label>
+                                <table mat-table [dataSource]="contractLog" class="mat-elevation-z8">
+                                    <ng-container matColumnDef="cDate">
+                                        <th mat-header-cell *matHeaderCellDef>Ngày thực hiện</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.cDate}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="content" class="text-center">
+                                        <th mat-header-cell *matHeaderCellDef>Nội dung</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.content}} </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumnsContractLog"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumnsContractLog;"></tr>
+                                </table>
+
                             </div>
                         </div>
-                        <div class="form-group row collapse" id="mycollapse">
-                            <div class="col-sm-6 ">
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" checked="" id="increase" name="customRadio2"
-                                        class="custom-control-input">
-                                    <label class="custom-control-label" for="increase">Tăng </label>
-                                </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="decrease" name="customRadio2" class="custom-control-input">
-                                    <label class="custom-control-label" for="decrease">Giảm</label>
-                                </div>
-                                <div class="custom-control custom-radio custom-control-inline">Số tiền này sẽ được thêm
-                                    vào mục chi phí khác</div>
-                                <div>
-                                    <label for="example-text-input" class="col-form-label">Số tiền</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control input-price" id='extraFee'>
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">Đồng</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <!-- end extra fee -->
-
-                        <div class="custom-file col-sm-5 ml-2">
+                        <div class=" form-group row ml-1">
+                        <div class="custom-file col-sm-5">
                             <input type="file" imageUpload accept="image/*" class="custom-file-input" id="customFile"
                                 (imageSelected)="uploadImage($event)" [resizeOptions]="resizeOptions" multiple>
                             <label class="custom-file-label" for="customFile">Tải lên ảnh hợp đồng(Tối đa 5 ảnh)</label>
 
+                        </div>
                         </div>
                         <!-- view image -->
                         <div class="row">
@@ -226,8 +199,12 @@
                                 <textarea class="form-control" rows="3" formControlName="description"></textarea>
                             </div>
                         </div>
-                        <div class="mt-3 float-right col-sm-4 text-center">
-                            <input class="btn btn-info mb-3" type="submit" value="Tạo hợp đồng" (click)="onSubmit()"  [disabled]="createContractFormGroup.invalid" >
+
+                        <div class="mt-3 float-right col-sm-6 text-center">
+                            <input routerLink="/landlord/contract" class="btn btn-secondary mb-3 mr-3" type="submit"
+                                value="Trở về">
+                            <input class="btn btn-info mb-3" type="submit" value="Cập nhật hợp đồng"
+                                (click)="onSubmit()" [disabled]="createContractFormGroup.invalid">
                         </div>
                         <!--  [disabled]="createContractFormGroup.invalid" -->
                     </div>

@@ -83,6 +83,8 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
   ngOnInit() {
     this.subscription = this.service.currentBh.subscribe((data) => {
+      this.pageNumbers = [];
+      this.currentPage = 1;
       this.currentBh = data;
       $('.boarding-house').val(this.currentBh.name);
       this.getRoomsFromCurrentBh();
@@ -114,7 +116,6 @@ export class RoomComponent implements OnInit, OnDestroy {
   getRoomType() {
     this.service.getAllRoomTypes().subscribe(
       res => {
-        
         let response = JSON.parse("" + res);
       
         if (response.type == 1) {
@@ -124,7 +125,6 @@ export class RoomComponent implements OnInit, OnDestroy {
       }, err => {
         console.log(err);
       })
-
   }
   getRoomsFromCurrentBh() {
     this.selection.clear();

@@ -30,6 +30,10 @@
 .example-month-picker .mat-calendar-arrow {
   display: none;
 }
+
 .mat-datepicker-toggle{
   font-size: 2rem
+}
+th.mat-header-cell{
+  text-align: center;
 }
