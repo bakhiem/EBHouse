@@ -28,6 +28,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
 
 import {MatDialogModule} from '@angular/material/dialog';
+import { NotificationComponent } from './notification/notification.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +38,8 @@ import {MatDialogModule} from '@angular/material/dialog';
     ConfirmPhoneComponent,
     NotFoundComponent,
     ConfirmationDialogComponent,
-    LogoutComponent
+    LogoutComponent,
+    NotificationComponent
   ],
   imports: [
     ReactiveFormsModule,
