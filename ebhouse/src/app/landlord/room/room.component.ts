@@ -117,7 +117,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.service.getAllRoomTypes().subscribe(
       res => {
         let response = JSON.parse("" + res);
-      
         if (response.type == 1) {
           let data = JSON.parse(response.data);
           this.rtList = data.roomType;
@@ -128,6 +127,9 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
   getRoomsFromCurrentBh() {
     this.selection.clear();
+    if(!this.currentBh.id){
+      return;
+    }
     let page: any = {
       boardingHouseID: this.currentBh.id,
       page: this.currentPage

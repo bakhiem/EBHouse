@@ -15,6 +15,8 @@ import { ContractComponent } from './contract/contract.component';
 import { CreateContractComponent } from './contract/create-contract/create-contract.component';
 
 import { UpdateContractComponent } from './contract/update-contract/update-contract.component';
+
+import { UtilityComponent } from './utility/utility.component';
 const LandlordChildRouters: Routes = [
   {
     path: 'landlord',
@@ -52,6 +54,10 @@ const LandlordChildRouters: Routes = [
       {
         path: 'contract-update',
         component: UpdateContractComponent
+      },
+      {
+        path: 'utility',
+        component: UtilityComponent
       }
     ]
   }

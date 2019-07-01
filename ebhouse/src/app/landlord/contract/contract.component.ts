@@ -72,7 +72,7 @@ export class ContractComponent implements OnInit, OnDestroy {
       this.currentBh = data;
       this.getContract();
       this.getRoomsFromCurrentBh();
-      this.pageNumbers = [];
+      
     })
     
   }
@@ -86,6 +86,9 @@ export class ContractComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
   getContract() {
+   if(!this.currentBh.id){
+    return;
+   }
     let page: any = {
       status: Number(this.contractStatus),
       boardingHouseID: this.currentBh.id,
@@ -125,13 +128,14 @@ export class ContractComponent implements OnInit, OnDestroy {
   // search contract by room
   getRoomsFromCurrentBh() {
     this.resetMess();
+    if(!this.currentBh.id){
+      return;
+    }
     let data: any = {
       boardingHouseID: this.currentBh.id
     }
-    this.addLoading();
     this.service.getRoomsAvailable(data).subscribe(
       res => {
-        this.removeLoading();
         console.log(res)
         try {
           let response = JSON.parse("" + res);
@@ -165,11 +169,8 @@ export class ContractComponent implements OnInit, OnDestroy {
               );
           }
         } catch (error) {
-
         }
-
       }, err => {
-        this.removeLoading();
         console.log(err);
       })
   }
@@ -185,6 +186,8 @@ export class ContractComponent implements OnInit, OnDestroy {
     let isValid = 0;
     if(!this.roomControl.value){
       this.roomControl.setValue(this.roomList[0]);
+      this.pageNumbers = [];
+      this.currentPage = 1;
       this.getContract();
       return;
     }
@@ -192,6 +195,8 @@ export class ContractComponent implements OnInit, OnDestroy {
       if (element.name == this.roomControl.value || element.name == this.roomControl.value.name) {
         this.roomControl.setValue(element);
         isValid = 1;
+        this.pageNumbers = [];
+        this.currentPage = 1;
         this.getContract();
         return;
       }

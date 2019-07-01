@@ -1,0 +1,32 @@
+<div class="customLoading">
+  <div class="customLoader"></div>
+</div>
+<div class="utility mt-3">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Tên dịch vụ</th>
+        <th scope="col">Đơn giá</th>
+        <th scope="col">Quy tắc tính tiền</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let utility of listUtility">
+        <th scope="row">{{utility.name}}</th>
+        <td><input type="text" class='form-control input-price'></td>
+        <td><select class="form-control" id="exampleFormControlSelect1">
+            <option *ngFor="let calculating of utility.calculating">{{calculating.name}}</option>
+          </select></td>
+      </tr>
+
+
+    </tbody>
+  </table>
+
+  <div class="row">
+      <div class="col-sm-9 col-md-10"></div>
+        <div class="col-sm-2 text-center">
+            <input class="btn btn-info mb-3" type="submit" value="Lưu tiện ích">
+          </div>
+    </div>
+</div>

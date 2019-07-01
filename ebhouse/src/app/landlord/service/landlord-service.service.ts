@@ -92,6 +92,9 @@ export class LandlordService {
   getContractByRoom(data : any) : Observable<any[]> {
     return this.http.post<any[]>(`${this.baseUrl}/api/landlord/contract/getContractByRoomID`, data, httpOptions);
   }
+  getUtility(data : any) : Observable<any[]> {
+    return this.http.post<any[]>(`${this.baseUrl}/api/landlord/utility/`, data, httpOptions);
+  }
   getProfile() : Observable<Landlord>{
     return this.http.post<Landlord>(`${this.baseUrl}/api/profile`, null, httpOptions);
   }

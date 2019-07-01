@@ -255,12 +255,10 @@ export class CreateContractComponent implements OnInit {
     this.addLoading();
     this.service.getRoomsAvailable(data).subscribe(
       res => {
-        console.log(typeof res);
         this.removeLoading();
         let response = JSON.parse("" + res);
         if (response.type == 1) {
           let data = response.data;
-          console.log(data)
           this.roomList = data;
           if (this.roomList.length == 0) {
             this.message.content = CommonMessage.BhHaveNoRoom;
@@ -414,7 +412,6 @@ export class CreateContractComponent implements OnInit {
     this.service.getContractByRoom(data).subscribe(
       res => {
         this.removeLoading();
-        console.log(res)
         let response = JSON.parse("" + res);
         if (response.type == 1) {
           this.listContract = response.data;
@@ -538,7 +535,6 @@ export class CreateContractComponent implements OnInit {
           this.removeLoading();
           let response = JSON.parse("" + res);
           if (response.type == 1) {
-            console.log(res)
             this.message.type = 1;
             this.message.content = response.message;
             setTimeout(() => { this.router.navigate(['/landlord/contract']) }, 1500);

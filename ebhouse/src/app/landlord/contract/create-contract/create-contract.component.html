@@ -231,7 +231,9 @@
                                 <textarea class="form-control" rows="3" formControlName="description"></textarea>
                             </div>
                         </div>
-                        <div class="mt-3 float-right col-sm-4 text-center">
+                        <div class="mt-3 float-right col-sm-4 text-center"> 
+                                <input routerLink="/landlord/contract" class="btn btn-secondary mb-3 mr-3" type="submit"
+                                value="Trở về">
                             <input class="btn btn-info mb-3" type="submit" value="Tạo hợp đồng" (click)="onSubmit()"  [disabled]="createContractFormGroup.invalid" >
                         </div>
                         <!--  [disabled]="createContractFormGroup.invalid" -->
