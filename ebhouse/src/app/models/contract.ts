@@ -9,6 +9,7 @@ export class Contract{
     lstContractTenant?: ContractTenant[];
     room ?:any;
     roomPrice ?:string;
+    status ?: string;
   }
   export class Tenant{
     imgArnBack  ?: string;

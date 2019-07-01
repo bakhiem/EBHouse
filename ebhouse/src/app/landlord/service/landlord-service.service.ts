@@ -74,7 +74,7 @@ export class LandlordService {
     return this.http.post<any>(`${this.baseUrl}/api/landlord/room/delete`, room, httpOptions);
   }
   getRoomsAvailable(data : any) : Observable<any[]> {
-    return this.http.post<any[]>(`${this.baseUrl}/api/landlord/room/available`, data, httpOptions);
+    return this.http.post<any[]>(`${this.baseUrl}/api/landlord/room/all`, data, httpOptions);
   }
   searchTenantByPhone(data : any) : Observable<any[]> {
     return this.http.post<any[]>(`${this.baseUrl}/api/landlord/contract/getTenant`, data, httpOptions);
@@ -87,6 +87,10 @@ export class LandlordService {
   }  
   getContract(data : any) : Observable<any[]> {
     return this.http.post<any[]>(`${this.baseUrl}/api/landlord/contract/`, data, httpOptions);
+  } 
+
+  getContractByRoom(data : any) : Observable<any[]> {
+    return this.http.post<any[]>(`${this.baseUrl}/api/landlord/contract/getContractByRoomID`, data, httpOptions);
   }
   getProfile() : Observable<Landlord>{
     return this.http.post<Landlord>(`${this.baseUrl}/api/profile`, null, httpOptions);

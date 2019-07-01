@@ -200,7 +200,11 @@ export class LandlordProfileComponent implements OnInit {
   };
 
   onSubmit() {
-    if(!this.profileFormGroup.invalid){
+    console.log(this.profileFormGroup.invalid)
+    if(this.profileFormGroup.invalid){
+      alert('Vui lòng điền đầy đủ thông tin');
+    }
+    else {
       this.addLoading();
       this.landlord.user.name = this.profileFormGroup.value.fullname;
       this.landlord.user.address = this.profileFormGroup.value.address + "-" + this.profileFormGroup.value.wards.name + "-" + this.profileFormGroup.value.distric.name + "-" + this.profileFormGroup.value.province.name;

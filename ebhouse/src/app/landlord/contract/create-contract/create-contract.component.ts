@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { MatDialog, MatCheckboxModule } from '@angular/material';
 import { MatTableDataSource } from '@angular/material/table';
@@ -6,7 +6,7 @@ import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog
 import * as $AB from 'jquery';
 import * as bootstrap from "bootstrap";
 import { LandlordService } from '../../service/landlord-service.service';
-
+import { InformationDialogComponent } from '../../../shared/info-dialog/information-dialog.component';
 import { map, startWith } from 'rxjs/operators';
 import { Landlord } from '../../../models/landlord';
 import { BoardingHouse } from '../../../models/bh';
@@ -15,6 +15,7 @@ import { LandlordComponent } from '../../landlord.component';
 import { CommonMessage, Message } from '../../../models/message';
 import { Observable, throwError } from 'rxjs';
 
+import { Contract, Tenant, ContractTenant, User } from '../../../models/contract';
 
 //image
 import { ImageResult, ResizeOptions } from 'ng2-imageupload';
@@ -27,7 +28,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { Router } from '@angular/router';
-import {CustomDateAdapter} from '../customDate'
+import { CustomDateAdapter } from '../customDate'
 
 
 @Component({
@@ -40,29 +41,79 @@ import {CustomDateAdapter} from '../customDate'
   ],
 })
 export class CreateContractComponent implements OnInit {
-  @ViewChild(MatDatepicker) picker;
   startDateStr: any;
   endDateSrt: any;
   minDate = new Date();
   //Message
   monthStartSelected(params, datepicker) {
-    params.setDate(1)
-    this.createContractFormGroup.get('beginDate').setValue(params);
-    this.startDateStr = this.formatDate(params);
+    params.setDate(1);
+    if (this.checkValidDate(params,0)) {
+      this.createContractFormGroup.get('beginDate').setValue(params);
+      this.startDateStr = this.formatDate(params);
+      this.periodHandler();
+    }
+    else {
+      this.createContractFormGroup.get('beginDate').setValue('');
+      this.createContractFormGroup.get('period').setValue('');
+    }
     datepicker.close();
-    this.periodHandler();
   }
 
   monthEndSelected(params, datepicker) {
     var d = new Date(params.getFullYear(), params.getMonth() + 1, 0);
     params.setDate(d.getDate())
-    this.endDateSrt = this.formatDate(params);
-    this.createContractFormGroup.get('endDate').setValue(params);
-    console.log(this.createContractFormGroup.get('endDate').value);
+    if (this.checkValidDate(params,1)) {
+      this.endDateSrt = this.formatDate(params);
+      this.createContractFormGroup.get('endDate').setValue(params);
+      this.periodHandler();
+    }
+    else {
+      this.createContractFormGroup.get('endDate').setValue('');
+      this.createContractFormGroup.get('period').setValue('');
+    }
     datepicker.close();
-    this.periodHandler();
   }
 
+  checkValidDate(d: Date, type : number): boolean {
+    if (!this.listContract) {
+      this.displayDialog(CommonMessage.SelectRoomFirst)
+      return false;
+    }
+    else if (this.listContract.length == 0) {
+      return true;
+    }
+    else {
+      for (let index = 0; index < this.listContract.length; index++) {
+        let startdate = new Date(this.listContract[index].startDate);
+        let enddate = new Date(this.listContract[index].endDate);
+        if (d >= startdate && d <= enddate) {
+          this.displayDialog(CommonMessage.HaveContractInDate)
+          
+          return false;
+        }
+        if(type == 0){
+          if(this.createContractFormGroup.get('endDate').value){
+            if (d <= startdate && this.createContractFormGroup.get('endDate').value >= enddate) {
+              this.displayDialog( CommonMessage.HaveContractInDate)
+              
+              return false;
+            }
+          }
+        }
+        if(type == 1){
+          if(this.createContractFormGroup.get('beginDate').value){
+            if (this.createContractFormGroup.get('beginDate').value <= startdate && d >= enddate  ) {
+              this.displayDialog( CommonMessage.HaveContractInDate)
+              
+              return false;
+            }
+          }
+        }
+        
+      }
+    }
+    return true;
+  }
   periodHandler() {
     if (this.startDateStr && this.endDateSrt) {
       let monthBegin = this.startDateStr.split('-');
@@ -73,14 +124,13 @@ export class CreateContractComponent implements OnInit {
           this.createContractFormGroup.get('period').setValue(month + 1)
         }
         else {
-          alert('Tháng kết thúc phải lớn hơn tháng bắt đầu');
+          this.displayDialog(CommonMessage.DateFormat);
           this.createContractFormGroup.get('period').setValue('')
         }
       }
       else {
         this.createContractFormGroup.get('period').setValue('')
       }
-
     }
   }
   formatDate(date) {
@@ -93,6 +143,17 @@ export class CreateContractComponent implements OnInit {
     if (day.length < 2) day = '0' + day;
 
     return [year, month, day].join('-');
+  }
+  formatDateDisplay(date) {
+    var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [day, month, year].join('-');
   }
 
   createContractFormGroup: FormGroup;
@@ -117,9 +178,12 @@ export class CreateContractComponent implements OnInit {
     resizeMaxWidth: 1000
   };
   private subscription: ISubscription;
+  listContractDisplay: string[] = [];
+  listContract: Contract[];
   filteredOptions: Observable<any[]>;
 
-  constructor(private fb: FormBuilder,
+  constructor(private zone:NgZone,
+    private fb: FormBuilder,
     public dialog: MatDialog,
     private service: LandlordService,
     private router: Router) {
@@ -143,21 +207,21 @@ export class CreateContractComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    
-      this.subscription = this.service.currentBh.subscribe((data) => {
-        this.currentBh = data;
-        if (data.id) {
-          this.getRoomsFromCurrentBh();
-        }
-      })
-    
-    
+    this.subscription = this.service.currentBh.subscribe((data) => {
+      this.currentBh = data;
+      if (data.id) {
+        this.getRoomsFromCurrentBh();
+      }
+    })
     this.formatCurrency();
     this.jqueryCode();
-
   }
-
+  displayDialog(message : string){
+    this.dialog.open(InformationDialogComponent, {
+      width: '400px',
+      data: message
+    });
+  }
   jqueryCode() {
     $("#room-name").focusout(() => {
       this.roomList.forEach(element => {
@@ -166,7 +230,6 @@ export class CreateContractComponent implements OnInit {
         }
       });
     })
-
 
     //extra fee
 
@@ -180,7 +243,6 @@ export class CreateContractComponent implements OnInit {
         this.isExtraFee = 0;
       }
     });
-
   }
 
   getRoomsFromCurrentBh() {
@@ -193,10 +255,11 @@ export class CreateContractComponent implements OnInit {
     this.addLoading();
     this.service.getRoomsAvailable(data).subscribe(
       res => {
+        console.log(typeof res);
         this.removeLoading();
         let response = JSON.parse("" + res);
         if (response.type == 1) {
-          let data = JSON.parse(response.data);
+          let data = response.data;
           console.log(data)
           this.roomList = data;
           if (this.roomList.length == 0) {
@@ -234,7 +297,7 @@ export class CreateContractComponent implements OnInit {
     if (this.listTenant.length < this.capacity) {
       this.listTenant.forEach(element => {
         if (this.currentTenant.id == element.id) {
-          alert(CommonMessage.DuplicateTenant)
+          this.displayDialog(CommonMessage.DuplicateTenant)
           isDuplicate = 1;
           return false;
         }
@@ -245,21 +308,31 @@ export class CreateContractComponent implements OnInit {
       }
     }
     else {
-      alert(CommonMessage.OverCapacity);
+      this.displayDialog(CommonMessage.OverCapacity)
+      
     }
   }
   deleteRoom(obj) {
-    for (let i = 0; i < this.listTenant.length; i++) {
-      if (obj.id == this.listTenant[i].id) {
-        this.listTenant.splice(i, 1);
-        this.dataSource.data = this.listTenant
-        return false;
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '400px',
+      data: 'Bạn chắc chắn muốn xóa khách thuê không ?'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        for (let i = 0; i < this.listTenant.length; i++) {
+          if (obj.id == this.listTenant[i].id) {
+            this.listTenant.splice(i, 1);
+            this.dataSource.data = this.listTenant
+            return false;
+          }
+        }
       }
-    }
+    });
+
   }
   searchByPhone() {
     if (!this.capacity) {
-      alert(CommonMessage.SelectRoomFirst);
+      this.displayDialog(CommonMessage.SelectRoomFirst)
       return;
     }
     this.currentTenant = '';
@@ -288,7 +361,7 @@ export class CreateContractComponent implements OnInit {
             this.currentTenant = data;
           }
           else if (response.type == 2) {
-            alert(CommonMessage.NoTenant)
+            this.displayDialog(CommonMessage.NoTenant);
           }
         }, err => {
           this.removeLoading();
@@ -319,15 +392,75 @@ export class CreateContractComponent implements OnInit {
     });
   }
   onChooseRoom(value) {
-    this.capacity = Number(value.roomType.capacity);
-    let currency = value.roomType.price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+    //reset form
+    this.createContractFormGroup.reset();
+    this.listImg = [];
+    $('#extraFee').val('');
+    $('#customCheck1').prop('checked',false);
+    $('#mycollapse').collapse('hide');
+    this.isExtraFee = 0;
+    this.listTenant = [];
+    // set capacity and room price, format room price
+     this.createContractFormGroup.get('room').setValue(value);
+    this.capacity = Number(value.capacity);
+    let currency = value.price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
     this.createContractFormGroup.get('price').setValue(currency);
+    this.listContractDisplay =[]
+    // print alert start date and end date of contract in room
+    let data = {
+      id: value.id
+    }
+    this.addLoading()
+    this.service.getContractByRoom(data).subscribe(
+      res => {
+        this.removeLoading();
+        console.log(res)
+        let response = JSON.parse("" + res);
+        if (response.type == 1) {
+          this.listContract = response.data;
+          let display = []
+          if (this.listContract.length > 0) {
+            this.listContract.forEach(element => {
+              let startDate = new Date(element.startDate);
+              let endDate = new Date(element.endDate);
+
+              display.push('Phòng đang tồn tại hợp đồng từ ngày ' + this.formatDateDisplay(startDate) + ' đến ngày ' + this.formatDateDisplay(endDate));
+              
+            });
+          }
+          
+          
+          this.zone.run(() => { // <== added
+              this.listContractDisplay = display;
+          });
+          console.log(this.listContractDisplay)
+        }
+        else {
+          this.message.type = 0;
+          this.message.content = response.message;
+        }
+      }, err => {
+        this.removeLoading();
+        this.message.type = 0;
+        this.message.content = CommonMessage.defaultErrMess;
+        console.log(err);
+      })
   }
+
+
   deleteImage(src) {
-    this.listImg.splice(src, 1);
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '400px',
+      data: 'Bạn chắc chắn muốn xóa ảnh hợp đồng không ?'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.listImg.splice(src, 1);
+      }
+    });
+
   }
   viewImg(src) {
-    console.log(src)
     $(".modalImg").attr("src", src);
     $('#modal1').modal('show');
   }
@@ -344,18 +477,23 @@ export class CreateContractComponent implements OnInit {
   }
   onSubmit() {
     if (!this.createContractFormGroup.value.period || this.createContractFormGroup.value.period == '') {
-      alert(CommonMessage.DateFormat);
+      this.displayDialog(CommonMessage.DateFormat)
       return;
     }
     if (this.createContractFormGroup.invalid) {
-      alert('Vui lòng điền đầy đủ thông tin')
+      this.displayDialog(CommonMessage.inputAllFiel)
       return;
     }
+
     if (this.checkRoomValid()) {
       let formatRoomPrice = this.createContractFormGroup.value.price.toString().split('.').join('');
       let roomPrice = Number(formatRoomPrice);
-      let formatDeposit = this.createContractFormGroup.value.deposit.toString().split('.').join('');
-      let deposit = Number(formatDeposit);
+      let deposit = 0;
+      if (this.createContractFormGroup.value.deposit) {
+        let formatDeposit = this.createContractFormGroup.value.deposit.toString().split('.').join('');
+        deposit = Number(formatDeposit);
+      }
+
       var extraFee = 0;
       if ($('#customCheck1').is(':checked')) {
         if ($('#extraFee').val()) {
@@ -379,7 +517,7 @@ export class CreateContractComponent implements OnInit {
           deposit: deposit,
           startDate: this.startDateStr,
           endDate: this.endDateSrt,
-          description : this.createContractFormGroup.value.description ? this.createContractFormGroup.value.description : ''
+          description: this.createContractFormGroup.value.description ? this.createContractFormGroup.value.description : ''
         }],
         room: [{
           id: this.createContractFormGroup.value.room.id
@@ -390,7 +528,7 @@ export class CreateContractComponent implements OnInit {
           amount: extraFee
         }],
         imgContract: listImgSplit,
-       
+
       }
       console.log(data)
 
@@ -403,7 +541,7 @@ export class CreateContractComponent implements OnInit {
             console.log(res)
             this.message.type = 1;
             this.message.content = response.message;
-            setTimeout(() => {   this.router.navigate(['/landlord/contract']) }, 1500);
+            setTimeout(() => { this.router.navigate(['/landlord/contract']) }, 1500);
           }
           else {
             this.message.type = 0;
@@ -412,12 +550,12 @@ export class CreateContractComponent implements OnInit {
         }, err => {
           this.removeLoading();
           this.message.type = 0;
-            this.message.content =CommonMessage.defaultErrMess;
+          this.message.content = CommonMessage.defaultErrMess;
           console.log(err);
         })
     }
     else {
-      alert(CommonMessage.NoExitstRoom)
+      this.displayDialog(CommonMessage.NoExitstRoom)
     }
 
 
@@ -430,7 +568,6 @@ export class CreateContractComponent implements OnInit {
       }
     }
     return false;
-
   }
   uploadImage(imageResult: ImageResult) {
     if (this.listImg.length < 5) {

@@ -26,7 +26,7 @@ import { TenantModule } from './tenant/tenant.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
-
+import { InformationDialogComponent } from './shared/info-dialog/information-dialog.component';
 import {MatDialogModule} from '@angular/material/dialog';
 @NgModule({
   declarations: [
@@ -37,6 +37,7 @@ import {MatDialogModule} from '@angular/material/dialog';
     ConfirmPhoneComponent,
     NotFoundComponent,
     ConfirmationDialogComponent,
+    InformationDialogComponent,
     LogoutComponent
   ],
   imports: [
@@ -56,7 +57,8 @@ import {MatDialogModule} from '@angular/material/dialog';
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     UserService],
   entryComponents: [
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    InformationDialogComponent
   ],
   bootstrap: [AppComponent]
 })

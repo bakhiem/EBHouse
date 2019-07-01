@@ -37,3 +37,9 @@
 th.mat-header-cell{
   text-align: center;
 }
+
+ .card img{
+  margin: 0 auto;
+  max-height: 300px;
+  display: block;
+}
