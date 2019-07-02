@@ -3,10 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient,HttpErrorResponse,HttpHeaders } from '@angular/common/http';
 import {Landlord} from '../../models/landlord';
 import {BoardingHouse} from '../../models/bh';
-import {RoomType} from '../../models/room-type';
 import { Observable, throwError,BehaviorSubject } from 'rxjs';
-import { Subject } from 'rxjs/Subject';
-import { catchError, retry } from 'rxjs/operators';
 
 import {Contract} from '../../models/contract';
 import { environment } from '../../../environments/environment';

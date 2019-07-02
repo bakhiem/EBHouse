@@ -20,22 +20,29 @@ export class AuthenticationService {
     private baseUrl: string = environment.baseUrl;
     private currentUserSubject: BehaviorSubject<any>;
     public currentUser: Observable<any>;
-
+    private loggedIn :  BehaviorSubject<boolean>;
     constructor(private http: HttpClient) {
         if(localStorage.getItem('currentUser')){
             this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
+            this.loggedIn = new BehaviorSubject<boolean>(true)
+        }
+        else if(sessionStorage.getItem('currentUser')){
+            this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(sessionStorage.getItem('currentUser')));
+            this.loggedIn = new BehaviorSubject<boolean>(true)
         }
         else{
-            this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(sessionStorage.getItem('currentUser')));
+            this.currentUserSubject = new BehaviorSubject<User>({});
+            this.loggedIn = new BehaviorSubject<boolean>(false)
         }
-       
         this.currentUser = this.currentUserSubject.asObservable();
     }
 
     public get currentUserValue(): any {
         return this.currentUserSubject.value;
     }
- 
+    public get isLoggedIn() {
+        return this.loggedIn.asObservable(); 
+     }
 
     login(u : User,rememberPassword : Number ) {
         return this.http.post<any>(`${this.baseUrl}/api/login`, u ,httpOptions)
@@ -62,6 +69,7 @@ export class AuthenticationService {
                             }
                            
                             this.currentUserSubject.next(this.userStorage);
+                            this.loggedIn.next(true);
                         }
                     }
                     else if(resDataObject.role == Role.Tenant){
@@ -80,6 +88,7 @@ export class AuthenticationService {
                                 localStorage.setItem('currentUser', JSON.stringify(this.userStorage));
                             }
                             this.currentUserSubject.next(this.userStorage);
+                            this.loggedIn.next(true);
                         }
                     }
                 }

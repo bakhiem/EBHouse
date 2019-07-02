@@ -4,16 +4,15 @@ import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from
 import { MatDialog } from '@angular/material';
 import { PlaceService } from '../../service/place.service';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
-import * as $AB from 'jquery';
-import * as bootstrap from "bootstrap";
+
 import { LandlordService } from '../service/landlord-service.service';
 
 import { BoardingHouse } from '../../models/bh';
 import {LandlordComponent} from '../landlord.component';
 
-import { User } from '../../user/models/user';
 import { CommonMessage, Message } from '../../models/message';
 
+import { SharedServiceService } from '../../service/shared-service.service';
 @Component({
   selector: 'app-bh-info',
   templateUrl: './bh-info.component.html',
@@ -47,11 +46,11 @@ message  : Message = {
     private placeService: PlaceService,
     public dialog: MatDialog,
     private service: LandlordService,
+    private shareService : SharedServiceService,
     private landlordComponent : LandlordComponent
   ) { }
   ngOnInit() {
     this.getBoardingHouses();
-
     //get province from service
     this.placeService.getProvince().subscribe(response => {
       var arr = [];
@@ -178,8 +177,9 @@ message  : Message = {
       this.currentBh = null;
       $('.bd-example-modal-lg').modal('hide');
       this.getBoardingHouses();
-      this.landlordComponent.getBoardingHouses();
-      this.landlordComponent.currentBh = null;
+      this.shareService.currentBh.next(null);
+      this.shareService.getAllBoardingHouses().subscribe();
+      
     }
     else {
       this.message.type = 0;
@@ -249,7 +249,7 @@ message  : Message = {
             this.successRequestHandle(res)
           },
           err => {
-            this.successRequestHandle(this.errRequestHandle)
+            this.errRequestHandle(this.errRequestHandle)
           }
         )
       }

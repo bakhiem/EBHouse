@@ -28,6 +28,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
 import { InformationDialogComponent } from './shared/info-dialog/information-dialog.component';
 import {MatDialogModule} from '@angular/material/dialog';
+import { NavbarComponent } from './navbar/navbar.component';
+import { HeaderComponent } from './header/header.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,7 +40,9 @@ import {MatDialogModule} from '@angular/material/dialog';
     NotFoundComponent,
     ConfirmationDialogComponent,
     InformationDialogComponent,
-    LogoutComponent
+    LogoutComponent,
+    NavbarComponent,
+    HeaderComponent
   ],
   imports: [
     ReactiveFormsModule,

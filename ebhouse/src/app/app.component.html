@@ -1,2 +1,29 @@
-
-<router-outlet></router-outlet>
+<!-- <div id="preloader">
+    <div class="loader"></div>
+</div> -->
+<!-- preloader area end -->
+<!-- page container area start -->
+<div class="page-container" [ngClass]="{'no-padding': (isLoggedIn$ | async) == false}">
+        <!-- sidebar menu area start -->
+        <app-navbar></app-navbar>
+        <!-- sidebar menu area end -->
+        <!-- main content area start -->
+        <div class="main-content">
+            <!-- header area start -->
+            <app-header></app-header>
+            <!-- page title area end -->
+            <div class="main-content-inner">
+                <router-outlet></router-outlet>
+            </div>
+    
+            <!-- main content area end -->
+            <!-- footer area start-->
+            <footer>
+                <div class="footer-area">
+                    <p>Template được sử dụng của <a href="https://colorlib.com/wp/">Colorlib</a>.</p>
+                    <p>Bản quyền phần mềm <a href="https://facebook.com/bakhiem1997">EBHouse</a>.</p>
+                </div>
+            </footer>
+            <!-- footer area end-->
+        </div>
+        <!-- page container area end -->

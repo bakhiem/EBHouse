@@ -30,6 +30,7 @@ import { MatDatepicker } from '@angular/material/datepicker';
 import { Router } from '@angular/router';
 import { CustomDateAdapter } from '../customDate'
 
+import { SharedServiceService } from '../../../service/shared-service.service';
 
 @Component({
   selector: 'app-create-contract',
@@ -182,7 +183,9 @@ export class CreateContractComponent implements OnInit {
   listContract: Contract[];
   filteredOptions: Observable<any[]>;
 
-  constructor(private zone:NgZone,
+  constructor(
+    private shareService :SharedServiceService,
+    private zone:NgZone,
     private fb: FormBuilder,
     public dialog: MatDialog,
     private service: LandlordService,
@@ -207,7 +210,7 @@ export class CreateContractComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.subscription = this.service.currentBh.subscribe((data) => {
+    this.subscription = this.shareService.currentBh.subscribe((data) => {
       this.currentBh = data;
       if (data.id) {
         this.getRoomsFromCurrentBh();

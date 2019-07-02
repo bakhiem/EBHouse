@@ -30,6 +30,7 @@ import { CustomDateAdapter } from '../customDate';
 
 import { Contract, Tenant, ContractTenant, User } from '../../../models/contract';
 
+import { SharedServiceService } from '../../../service/shared-service.service';
 @Component({
   selector: 'app-update-contract',
   templateUrl: './update-contract.component.html',
@@ -154,8 +155,6 @@ export class UpdateContractComponent implements OnInit {
     return [day, month, year].join('-');
   }
   createContractFormGroup: FormGroup;
-
-  currentBh: BoardingHouse;
   currentTenant: any;
   phonePattern = '((09|03|07|08|05)+([0-9]{8}))';
   listImg = [];
@@ -181,6 +180,7 @@ export class UpdateContractComponent implements OnInit {
   listContractDisplay: string[] = [];
   listContract: Contract[];
   constructor(
+    private shareService: SharedServiceService,
     private zone: NgZone,
     private fb: FormBuilder,
     public dialog: MatDialog,

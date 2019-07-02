@@ -20,6 +20,7 @@ import { Router } from '@angular/router';
 
 import { map, startWith } from 'rxjs/operators';
 
+import { SharedServiceService } from '../../service/shared-service.service';
 import { InformationDialogComponent } from '../../shared/info-dialog/information-dialog.component';
 @Component({
   selector: 'app-contract',
@@ -52,6 +53,7 @@ export class ContractComponent implements OnInit, OnDestroy {
   roomControl = new FormControl();
   filteredOptions: Observable<any[]>;
   constructor(
+    private shareService: SharedServiceService,
     private fb: FormBuilder,
     public dialog: MatDialog,
     private service: LandlordService,
@@ -68,7 +70,7 @@ export class ContractComponent implements OnInit, OnDestroy {
     }
   }
   ngOnInit() {
-    this.subscription = this.service.currentBh.subscribe((data) => {
+    this.subscription = this.shareService.currentBh.subscribe((data) => {
       this.currentBh = data;
       this.getContract();
       this.getRoomsFromCurrentBh();
@@ -86,7 +88,7 @@ export class ContractComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
   getContract() {
-   if(!this.currentBh.id){
+   if(!this.currentBh || !this.currentBh.id){
     return;
    }
     let page: any = {
@@ -128,7 +130,7 @@ export class ContractComponent implements OnInit, OnDestroy {
   // search contract by room
   getRoomsFromCurrentBh() {
     this.resetMess();
-    if(!this.currentBh.id){
+    if(!this.currentBh || !this.currentBh.id){
       return;
     }
     let data: any = {
