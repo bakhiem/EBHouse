@@ -1,7 +1,7 @@
 export enum CommonMessage {
   defaultErrMess  = "Có lỗi xảy ra, vui lòng thử lại sau",
   notChangeMess  = "Dữ liệu chưa được sửa đổi",
-  inputAllFiel  = "Điền đủ các trường vào phần nhập phòng bắt đầu và kết thúc",
+  inputAllFiel  = "Bạn cần điền đủ các trường cần thiết",
   toSmallerThanFrom = "Phòng bắt đầu phải nhỏ hơn phòng kết thúc",
   vaildatorInputProfile = "Vui lòng kiểm tra lại các thông tin cá nhân",
   errGetProfile = "Có lỗi xảy ra, không thể lấy được thông tin cá nhân",
@@ -14,8 +14,9 @@ export enum CommonMessage {
   DuplicateTenant = 'Khách thuê đã được chọn',
   NoExitstRoom = 'Không tồn tại phòng trong nhà trọ, mời bạn chọn phòng trong danh sách',
   DateFormat = 'Vui lòng chọn tháng bắt đầu và tháng kết thúc hợp lệ',
+  HaveContractInDate = 'Đã tồn tại hợp đồng trong thời gian này'
   }
   export class Message {
     content : string;
-    type : Number
+    type : number;
   }

@@ -7,9 +7,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FromNotificationComponent implements OnInit {
 
+  notifiList: any[];
+
   constructor() { }
 
   ngOnInit() {
   }
 
+  prePage(){
+
+  }
+
+  addLoading() {
+    $('.customLoading').addClass('preloader');
+    $('.customLoader').addClass('loader');
+  }
+  removeLoading() {
+    $('.customLoading').removeClass('preloader');
+    $('.customLoader').removeClass('loader');
+  }
 }

@@ -30,7 +30,11 @@
 
                 <form [formGroup]="createRoomFormGroup" (ngSubmit)="onSubmit()">
                     <div class="modal-header">
-                        <h5 class="modal-title">Tạo phòng trọ</h5>
+                        <h5 *ngIf="isEdit == 0; else edit"  class="modal-title">Tạo phòng trọ</h5>
+                        <ng-template #edit>
+                            <h5 *ngIf="isEdit == 1" class="modal-title">Sửa thông tin phòng trọ</h5>
+                        </ng-template>
+                       
                         <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
                     </div>
                     <div class="modal-body">

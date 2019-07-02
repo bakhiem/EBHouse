@@ -7,9 +7,7 @@ table {
     color: black;
   }
   .create-bh{
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
+    justify-content:space-between;
     
   }
   .form-group.row{
@@ -32,4 +30,10 @@ a.page-link.disabled{
 }
 .mat-column-select {
   overflow: initial;
+}
+.example-full-width {
+  width: 100%;
+}
+.mat-form-field-infix{
+  border-top: 0!important;
 }

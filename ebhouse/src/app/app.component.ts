@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 
+import { Observable } from 'rxjs/Observable';
+import { AuthenticationService } from './user/service/authentication.service';
 // import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 
 // import { map, filter, scan } from 'rxjs/operators';
@@ -12,25 +14,14 @@ import { Component } from '@angular/core';
 })
 export class AppComponent  {
   title = 'ebhouse';
-
+  isLoggedIn$: Observable<boolean>;
   constructor(
-    // private router: Router,
-    // private activatedRoute: ActivatedRoute
-) { }
-  // ngOnInit() {
+    private authService: AuthenticationService
+    ) { }
 
-  //   this.router.events.pipe(
-  //     filter(event =>  event instanceof NavigationEnd),
-  //     map(() => this.activatedRoute)
-  //   )
-  //     .subscribe((event) =>  {
-  //       $.getScript('../assets/js/scripts.js'),
-  //       $.getScript('../assets/js/metisMenu.min.js')
-  //     });
-
-
-  // }
-  // ngAfterViewInit() { $("#menu").metisMenu(); }
-
+  ngOnInit() {
+    this.isLoggedIn$ = this.authService.isLoggedIn;
+  }
+  
 
 }

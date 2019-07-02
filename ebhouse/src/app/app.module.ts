@@ -26,9 +26,11 @@ import {TenantModule }from './tenant/tenant.module';
 import {BrowserAnimationsModule }from '@angular/platform-browser/animations';
 
 import {ConfirmationDialogComponent }from './shared/confirmation-dialog/confirmation-dialog.component';
-
+import {InformationDialogComponent }from './shared/info-dialog/information-dialog.component';
 import {MatDialogModule}from '@angular/material/dialog';
-import {NotificationModule }from './notification/notification.module';
+import {NavbarComponent }from './navbar/navbar.component';
+import {HeaderComponent }from './header/header.component';
+import {NotifiModule }from './notifi/notifi.module';
 @NgModule( {
   declarations:[
     AppComponent,
@@ -38,7 +40,10 @@ import {NotificationModule }from './notification/notification.module';
     ConfirmPhoneComponent,
     NotFoundComponent,
     ConfirmationDialogComponent,
+    InformationDialogComponent,
     LogoutComponent,
+    NavbarComponent,
+    HeaderComponent
   ],
   imports:[
     ReactiveFormsModule,
@@ -51,12 +56,13 @@ import {NotificationModule }from './notification/notification.module';
     AppRoutingModule,
     MatDialogModule,
     NgbModule,
-    NotificationModule
+    NotifiModule
   ],
   providers:[ {provide:HTTP_INTERCEPTORS, useClass:JwtInterceptor, multi:true },  {provide:HTTP_INTERCEPTORS, useClass:ErrorInterceptor, multi:true },
     UserService],
   entryComponents:[
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    InformationDialogComponent
   ],
   bootstrap:[AppComponent]
 })

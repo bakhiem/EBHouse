@@ -28,7 +28,6 @@ export class DashboardComponent implements OnInit {
     this.authenticationService.logout();
   }
   ngOnInit() {
-   
     if (this.isLandlord) {
       if (this.currentUser.user.status == this.statusUpdateProfile) {
         this.router.navigate(['/landlord/profile']);
@@ -44,7 +43,6 @@ export class DashboardComponent implements OnInit {
       else {
         this.router.navigate(['/tenant/dashboard']);
       }
-
     }
     else {
       console.log("delete")
@@ -52,5 +50,4 @@ export class DashboardComponent implements OnInit {
       this.router.navigate(['/login']);
     }
   }
-
 }

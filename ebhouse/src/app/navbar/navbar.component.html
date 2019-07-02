@@ -1,0 +1,66 @@
+<div class="sidebar-menu" [ngClass]="{'hide': role == ''}">
+    <div class="sidebar-header">
+        <div class="logo">
+            <a routerLink="/landlord/dashboard"><img src="assets/images/logo/logo_transparent_white.png" alt="logo"></a>
+        </div>
+    </div>
+    <div class="main-menu">
+        <div class="menu-inner">
+            <nav>
+                <ul class="metismenu" id="menu">
+                    <li>
+                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-dashboard"></i><span>Quản lý
+                                chung</span></a>
+                    </li>
+                    <li routerLink="/landlord/bh-info" routerLinkActive="active">
+                        <a href="javascript:void(0)" aria-expanded="true"><i
+                                class="ti-layout-sidebar-left"></i><span>Thông tin nhà trọ
+                            </span></a>
+
+                    </li>
+                    <li routerLink="/landlord/room-type" routerLinkActive="active">
+                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-pie-chart"></i><span>Quản lý
+                                loại phòng</span></a>
+                    </li>
+                    <li routerLinkActive="active">
+                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-palette"></i><span>Quản lý phòng</span></a>
+                        <ul class="collapse">
+                            <li routerLink="/landlord/room" routerLinkActive="active"><a href="javascript:void(0)" aria-expanded="true">Thông tin phòng</a></li>
+                            <li><a href="javascript:void(0)">Hoạt động phòng</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-slice"></i><span>Quản lý hợp
+                                đồng</span></a>
+                        <ul class="collapse">
+                            <li routerLink="/landlord/contract" routerLinkActive="active"><a href="javascript:void(0)">Xem hợp đồng</a></li>
+                            <li routerLink="/landlord/contract-create" routerLinkActive="active"><a href="javascript:void(0)">Tạo hợp đồng</a></li>
+                        </ul>
+                    </li>
+                    <li routerLink="/landlord/utility" routerLinkActive="active">
+                        <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-table"></i>
+                            <span>Tiện ích</span></a>
+                    </li>
+                    <li><a href="javascript:void(0)"><i class="ti-map-alt"></i> <span>Chỉ số điện</span></a></li>
+                    <li><a href="javascript:void(0)"><i class="ti-receipt"></i> <span>Quản lý thông báo</span></a>
+                        <ul class="collapse">
+                            <li routerLink="/notification/from" routerLinkActive="active"><a href="javascript:void(0)">Quản lý thông báo đến</a></li>
+                            <li routerLink="/notification/to" routerLinkActive="active"><a href="javascript:void(0)">Quản lý thông báo đã gửi</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-layers-alt"></i> <span>Quản
+                                lý tài chính</span></a>
+
+                    </li>
+                    <li routerLink="/landlord/profile" [routerLinkActive]="['active']">
+                        <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-user"></i>
+                            <span>Thông tin cá nhân</span></a>
+                    </li>
+
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

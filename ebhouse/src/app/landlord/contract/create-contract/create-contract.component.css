@@ -33,3 +33,9 @@
 .mat-datepicker-toggle{
   font-size: 2rem
 }
+
+.card img{
+  margin: 0 auto;
+  max-height: 300px;
+  display: block;
+}

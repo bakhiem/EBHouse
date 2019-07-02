@@ -77,7 +77,11 @@ export class LoginComponent implements OnInit {
             this.messageErr = mess.message;
           }
           if (res[1]) {
-            window.location.reload();
+            // window.location.reload();
+            this.removeLoading();
+            console.log('asdasdasd')
+           
+            this.router.navigate(['/']);  
           }
         },
         err => {

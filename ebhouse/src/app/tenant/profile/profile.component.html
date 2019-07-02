@@ -1,197 +1,179 @@
 <div class="profile-area">
-  <div class="customLoading">
-    <div class="customLoader"></div>
-  </div>
-  <form [formGroup]="profileFormGroup" (ngSubmit)="onSubmit()">
-    <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
-      {{message.content}}
+    <div class="customLoading">
+        <div class="customLoader"></div>
     </div>
-    <ng-template #errMess>
-      <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
-        {{message.content}}
-      </div>
-    </ng-template>
-    <div class="row">
-      <!-- Textual inputs start -->
-      <div class="col-12 mt-5">
-        <div class="card">
-          <div class="card-body">
-            <h4 class="header-title">Thông tin cá nhân</h4>
-            <p class="text-muted font-14 mb-4">Bạn vui lòng điền đầy đủ thông tin cá nhân</p>
-            <div class="form-group row">
-              <div class="col-sm-6">
-                <label for="example-text-input" class="col-form-label">Họ tên</label>
-                <input class="form-control" type="text" id="example-text-input" formControlName="name">
-                <div
-                  *ngIf="profileFormGroup.controls['name'].hasError('required') && (profileFormGroup.controls['name'].dirty || profileFormGroup.controls['name'].touched)"
-                  class="alert alert-danger">
-                  Họ tên là bắt buộc
-                </div>
-              </div>
+    <form [formGroup]="profileFormGroup" (ngSubmit)="onSubmit()">
+        <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
+            {{message.content}}
+        </div>
+        <ng-template #errMess>
+            <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
+                {{message.content}}
             </div>
-            <div class="form-group row">
-              <div class="col-sm-6">
-                <label for="example-tel-input" class="col-form-label">Số điện thoại</label>
-                <input class="form-control" type="tel" id="example-tel-input" formControlName="phone">
-                <div
-                  *ngIf="profileFormGroup.controls['phone'].hasError('required') && (profileFormGroup.controls['phone'].dirty || profileFormGroup.controls['phone'].touched)"
-                  class="alert alert-danger">
-                  Số điện thoại là bắt buộc
-                </div>
-                <div
-                  *ngIf="profileFormGroup.controls['phone'].hasError('required') && (profileFormGroup.controls['phone'].dirty || profileFormGroup.controls['phone'].touched)"
-                  class="alert alert-danger">
-                  Số điện thoại không đúng định dạng
-                </div>
-              </div>
+        </ng-template>
+        <div class="row">
+            <!-- Textual inputs start -->
+            <div class="col-12 mt-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="header-title">Thông tin cá nhân</h4>
+                        <p class="text-muted font-14 mb-4">Bạn vui lòng điền đầy đủ thông tin cá nhân</p>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="example-text-input" class="col-form-label">Họ tên</label>
+                                <input class="form-control" type="text" id="example-text-input" formControlName="name">
+                                <div *ngIf="profileFormGroup.controls['name'].hasError('required') && (profileFormGroup.controls['name'].dirty || profileFormGroup.controls['name'].touched)" class="alert alert-danger">
+                                    Họ tên là bắt buộc
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="example-tel-input" class="col-form-label">Số điện thoại</label>
+                                <input class="form-control" type="tel" id="example-tel-input" formControlName="phone">
+                                <div *ngIf="profileFormGroup.controls['phone'].hasError('required') && (profileFormGroup.controls['phone'].dirty || profileFormGroup.controls['phone'].touched)" class="alert alert-danger">
+                                    Số điện thoại là bắt buộc
+                                </div>
+                                <div *ngIf="profileFormGroup.controls['phone'].hasError('required') && (profileFormGroup.controls['phone'].dirty || profileFormGroup.controls['phone'].touched)" class="alert alert-danger">
+                                    Số điện thoại không đúng định dạng
+                                </div>
+                            </div>
 
-            </div>
-            <div class="form-group row">
-              <div class="col-sm-6">
-                <label for="example-date-input" class="col-form-label">Ngày sinh</label>
-                <input class="form-control" type="date" id="example-date-input" formControlName="date">
-              </div>
-              <div
-                *ngIf="profileFormGroup.controls['date'].hasError('required') && (profileFormGroup.controls['date'].dirty || profileFormGroup.controls['date'].touched)"
-                class="alert alert-danger">
-                Ngày sinh là bắt buộc
-              </div>
-            </div>
-            <!-- begin radio -->
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="example-date-input" class="col-form-label">Ngày sinh</label>
+                                <input class="form-control" type="date" id="example-date-input" formControlName="date">
+                            </div>
+                            <div *ngIf="profileFormGroup.controls['date'].hasError('required') && (profileFormGroup.controls['date'].dirty || profileFormGroup.controls['date'].touched)" class="alert alert-danger">
+                                Ngày sinh là bắt buộc
+                            </div>
+                        </div>
+                        <!-- begin radio -->
 
-            <b class="text-muted mb-3 mt-4 d-block">Giới tính :</b>
-            <div class="custom-control custom-radio custom-control-inline">
-              <input type="radio" id="customRadio1" class="custom-control-input" value="1" formControlName="sex">
-              <label class="custom-control-label" for="customRadio1">Nam</label>
-            </div>
-            <div class="custom-control custom-radio custom-control-inline">
-              <input type="radio" id="customRadio2" class="custom-control-input" value="2" formControlName="sex">
-              <label class="custom-control-label" for="customRadio2">Nữ</label>
-            </div>
-            <div class="custom-control custom-radio custom-control-inline">
-              <input type="radio" id="customRadio3" class="custom-control-input" value="0" formControlName="sex">
-              <label class="custom-control-label" for="customRadio3">Khác</label>
-            </div>
-            <!-- end radio -->
-            <div class="form-group row">
-              <div class="col-sm-3">
-                <label class="col-form-label">Tỉnh / Thành phố </label>
-                <select class="custom-select" formControlName="province" required (change)="onChangeProvince()">
+                        <b class="text-muted mb-3 mt-4 d-block">Giới tính :</b>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="customRadio1" class="custom-control-input" value="1" formControlName="sex">
+                            <label class="custom-control-label" for="customRadio1">Nam</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="customRadio2" class="custom-control-input" value="2" formControlName="sex">
+                            <label class="custom-control-label" for="customRadio2">Nữ</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="customRadio3" class="custom-control-input" value="0" formControlName="sex">
+                            <label class="custom-control-label" for="customRadio3">Khác</label>
+                        </div>
+                        <!-- end radio -->
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Tỉnh / Thành phố </label>
+                                <select class="custom-select" formControlName="province" required (change)="onChangeProvince()">
                   <option *ngFor="let aprovince of dataProvince" [selected]="aprovince.code  == 01"
                     [ngValue]="aprovince">
                     {{aprovince.name}}
                   </option>
                 </select>
-                <div
-                  *ngIf="profileFormGroup.controls['province'].hasError('required') && (profileFormGroup.controls['province'].dirty || profileFormGroup.controls['province'].touched)"
-                  class="alert alert-danger">
-                  Tỉnh / Thành phố là bắt buộc
-                </div>
-              </div>
-              <div class="col-sm-3">
-                <label class="col-form-label">Quận / Huyện</label>
-                <select class="custom-select" formControlName="distric" (change)="onChangeDistric()">
+                                <div *ngIf="profileFormGroup.controls['province'].hasError('required') && (profileFormGroup.controls['province'].dirty || profileFormGroup.controls['province'].touched)" class="alert alert-danger">
+                                    Tỉnh / Thành phố là bắt buộc
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Quận / Huyện</label>
+                                <select class="custom-select" formControlName="distric" (change)="onChangeDistric()">
                   <option *ngFor="let adistric of dataDistric" [ngValue]="adistric">
                     {{adistric.name}}
                   </option>
                 </select>
-                <div
-                  *ngIf="profileFormGroup.controls['distric'].hasError('required') && (profileFormGroup.controls['distric'].dirty || profileFormGroup.controls['distric'].touched)"
-                  class="alert alert-danger">
-                  Quận / Huyện là bắt buộc
-                </div>
-              </div>
-              <div class="col-sm-3">
-                <label class="col-form-label">Xã / Phường</label>
-                <select class="custom-select" formControlName="wards">
+                                <div *ngIf="profileFormGroup.controls['distric'].hasError('required') && (profileFormGroup.controls['distric'].dirty || profileFormGroup.controls['distric'].touched)" class="alert alert-danger">
+                                    Quận / Huyện là bắt buộc
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Xã / Phường</label>
+                                <select class="custom-select" formControlName="wards">
                   <option *ngFor="let awards of dataWards" [ngValue]="awards">
                     {{awards.name}}
                   </option>
                 </select>
-                <div
-                  *ngIf="profileFormGroup.controls['wards'].hasError('required') && (profileFormGroup.controls['wards'].dirty || profileFormGroup.controls['wards'].touched)"
-                  class="alert alert-danger">
-                  Xã / Phường là bắt buộc
-                </div>
-              </div>
-            </div>
-            <div class="form-group row">
-              <div class="col-sm-6">
-                <label for="example-tel-input" class="col-form-label">Thôn xóm/ Số nhà</label>
-                <input class="form-control" type="tel" id="example-tel-input" formControlName="address">
-                <div
-                  *ngIf="profileFormGroup.controls['address'].hasError('required') && (profileFormGroup.controls['address'].dirty || profileFormGroup.controls['address'].touched)"
-                  class="alert alert-danger">
-                  Thôn xóm/ số nhà không được để trống
-                </div>
-              </div>
-            </div>
-            <!-- begin upload and preview image -->
-            <div class="row ml-1">
-              <div class="custom-file col-sm-5 mr-3 image-container">
-                <input type="file" imageUpload accept="image/*" class="custom-file-input" id="customFile"
-                  (imageSelected)="uploadFrontID($event)" formControlName="imgArnFront" [resizeOptions]="resizeOptions">
-                <label class="custom-file-label" for="customFile">Ảnh chứng minh thư mặt trước</label>
-                <img [src]="imgArnFront" class="previewImg" alt="" data-toggle="modal" data-target="#modal1">
-              </div>
-              <div class="custom-file col-sm-5 mr-3 image-container">
-                <input type="file" imageUpload accept="image/*" class="custom-file-input" id="customFile2"
-                  (imageSelected)="uploadBackID($event)" formControlName="imgArnBack" [resizeOptions]="resizeOptions">
-                <label class="custom-file-label" for="customFile2">Ảnh chứng minh thư mặt sau</label>
-                <img [src]="imgArnBack" class="previewImg" alt="" data-toggle="modal" data-target="#modal2">
-              </div>
-              <!-- <div class="custom-file col-sm-5 image-container">
+                                <div *ngIf="profileFormGroup.controls['wards'].hasError('required') && (profileFormGroup.controls['wards'].dirty || profileFormGroup.controls['wards'].touched)" class="alert alert-danger">
+                                    Xã / Phường là bắt buộc
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="example-tel-input" class="col-form-label">Thôn xóm/ Số nhà</label>
+                                <input class="form-control" type="tel" id="example-tel-input" formControlName="address">
+                                <div *ngIf="profileFormGroup.controls['address'].hasError('required') && (profileFormGroup.controls['address'].dirty || profileFormGroup.controls['address'].touched)" class="alert alert-danger">
+                                    Thôn xóm/ số nhà không được để trống
+                                </div>
+                            </div>
+                        </div>
+                        <!-- begin upload and preview image -->
+                        <div class="row ml-1">
+                            <div class="custom-file col-sm-5 mr-3 image-container">
+                                <input type="file" imageUpload accept="image/*" class="custom-file-input" id="customFile" (imageSelected)="uploadFrontID($event)" formControlName="imgArnFront" [resizeOptions]="resizeOptions">
+                                <label class="custom-file-label" for="customFile">Ảnh chứng minh thư mặt trước</label>
+                                <img [src]="imgArnFront" class="previewImg" alt="" data-toggle="modal" data-target="#modal1">
+                            </div>
+                            <div class="custom-file col-sm-5 mr-3 image-container">
+                                <input type="file" imageUpload accept="image/*" class="custom-file-input" id="customFile2" (imageSelected)="uploadBackID($event)" formControlName="imgArnBack" [resizeOptions]="resizeOptions">
+                                <label class="custom-file-label" for="customFile2">Ảnh chứng minh thư mặt sau</label>
+                                <img [src]="imgArnBack" class="previewImg" alt="" data-toggle="modal" data-target="#modal2">
+                            </div>
+                            <!-- <div class="custom-file col-sm-5 image-container">
                                 <input type="file" imageUpload class="custom-file-input" id="customFile" (imageSelected)="uploadBackID($event)" formControlName="backID" [resizeOptions]="resizeOptions">
 
                                 <label class="custom-file-label text-left" for="customFile">Ảnh chứng minh thư mặt sau</label>
                                 <img [src]="imageBackSrc" [hidden]="!imageBackSrc" class="previewImg" alt="" data-toggle="modal" data-target="#modal2">
                             </div> -->
 
+                        </div>
+
+
+                        <!-- end upload and preview image -->
+                        <div class="mt-3 float-right col-sm-4 text-center">
+                            <input class="btn btn-info mb-3" type="submit" value="Lưu">
+                        </div>
+                        <!-- [disabled]="profileFormGroup.invalid" -->
+                    </div>
+
+                </div>
+
             </div>
-
-
-            <!-- end upload and preview image -->
-            <div class="mt-3 float-right col-sm-4 text-center">
-              <input class="btn btn-info mb-3" type="submit" value="Lưu">
-            </div>
-            <!-- [disabled]="profileFormGroup.invalid" -->
-          </div>
-
+            <!-- Textual inputs end -->
         </div>
 
-      </div>
-      <!-- Textual inputs end -->
-    </div>
-
-  </form>
+    </form>
 
 </div>
 <!-- login area end -->
 
 <!-- modal -->
 <div class="modal fade bd-example-modal-lg show" id="modal1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-body">
-        <img [src]="imgArnFront" [hidden]="!imgArnFront" class="modalImg" alt="">
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-      </div>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img [src]="imgArnFront" [hidden]="!imgArnFront" class="modalImg" alt="">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <!-- modal back ID image -->
 <div class="modal fade bd-example-modal-lg show" id="modal2">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-body">
-        <img [src]="imgArnBack" [hidden]="!imgArnBack" class="modalImg" alt="">
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-      </div>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img [src]="imgArnBack" [hidden]="!imgArnBack" class="modalImg" alt="">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

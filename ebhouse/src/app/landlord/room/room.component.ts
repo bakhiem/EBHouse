@@ -17,6 +17,8 @@ import { User } from '../../user/models/user';
 import { CommonMessage, Message } from '../../models/message';
 import { Observable, throwError } from 'rxjs';
 import { ISubscription } from "rxjs/Subscription";
+
+import { SharedServiceService } from '../../service/shared-service.service';
 @Component({
   selector: 'app-room',
   templateUrl: './room.component.html',
@@ -76,13 +78,14 @@ export class RoomComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
     public dialog: MatDialog,
     private service: LandlordService,
+    private shareService : SharedServiceService,
     private authenticationService: AuthenticationService
   ) { }
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
   ngOnInit() {
-    this.subscription = this.service.currentBh.subscribe((data) => {
+    this.subscription = this.shareService.currentBh.subscribe((data) => {
       this.pageNumbers = [];
       this.currentPage = 1;
       this.currentBh = data;
@@ -117,7 +120,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.service.getAllRoomTypes().subscribe(
       res => {
         let response = JSON.parse("" + res);
-      
         if (response.type == 1) {
           let data = JSON.parse(response.data);
           this.rtList = data.roomType;
@@ -128,6 +130,9 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
   getRoomsFromCurrentBh() {
     this.selection.clear();
+    if(!this.currentBh.id){
+      return;
+    }
     let page: any = {
       boardingHouseID: this.currentBh.id,
       page: this.currentPage
