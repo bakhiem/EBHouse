@@ -20,8 +20,11 @@ export class AppComponent  {
     ) { }
 
   ngOnInit() {
+   
+  }
+  ngAfterViewInit() {
     this.isLoggedIn$ = this.authService.isLoggedIn;
   }
-  
+
 
 }

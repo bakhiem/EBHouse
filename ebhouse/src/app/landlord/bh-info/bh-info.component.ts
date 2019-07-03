@@ -96,7 +96,6 @@ message  : Message = {
     this.service.getBoardingHouses(page).subscribe(
       res => {
         this.removeLoading();
-       
         let response = JSON.parse("" + res);
         if (response.type == 1) {
           let data = JSON.parse(response.data);

@@ -34,7 +34,6 @@ export class HeaderComponent implements OnInit {
       this.currentUser = data;
       this.getRole();
       if (this.role == 'landlord') {
-        console.log('asasdas')
         this.getBoardingHouses();
       }
     });

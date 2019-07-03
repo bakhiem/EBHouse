@@ -1,0 +1,58 @@
+<div class="customLoading">
+  <div class="customLoader"></div>
+</div>
+<div class="electric mt-3">
+    <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
+        {{message.content}}
+    </div>
+    <ng-template #errMess>
+        <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
+            {{message.content}}
+        </div>
+    </ng-template>
+  <div class="row input-date">
+    <div class="col-sm-8"></div>
+    <div class="col-sm-4">
+      <label for="example-text-input" class="col-form-label">Chọn tháng</label>
+      <div class="input-group">
+          <mat-form-field>
+              <input matInput [max]='maxDate' [matDatepicker]="picker2"
+                  [formControl]="month">
+              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker #picker2 (monthSelected)="chooseMonth($event,picker2)"
+                  startView="multi-year" disabled="false"></mat-datepicker>
+          </mat-form-field>
+
+      </div>
+  </div>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Phòng</th>
+        <th scope="col" id='lastMonth'>Số điện tháng</th>
+        <th scope="col" id='presentMonth'>Số điện tháng</th>
+        <th scope="col">Sử dụng</th>
+        <th scope="col">Thành tiền</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let electric of list,let i = index">
+        <th scope="row">{{electric.roomName}}</th>
+        <td><input type="number" inputmode="numeric"  onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))"   pattern="[0-9]*" class='form-control' id="last-{{electric.id}}" [value]='electric.eBefore' [disabled]='electric.disabledBefore'></td>
+        <td><input type="number" inputmode="numeric"  (focusout)="focusoutFunction(electric.id)" onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))"  pattern="[0-9]*" class='form-control' id="present-{{electric.id}}" [value]='electric.eNow' [disabled]='electric.disabledNow'></td>
+        <td  id="usage-{{electric.id}}">{{electric.usage}}</td>
+        <td  id="amount-{{electric.id}}">{{electric.amount | currency}}</td>
+      </tr>
+
+
+    </tbody>
+  </table>
+
+  <div class="row">
+      <div class="col-sm-9 col-md-10"></div>
+        <div class="col-sm-2 text-center">
+            <input class="btn btn-info mb-3" type="submit" value="Lưu số điện" (click)="save()">
+          </div>
+    </div>
+</div>

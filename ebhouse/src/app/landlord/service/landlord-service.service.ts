@@ -19,17 +19,12 @@ const httpOptions = {
 })
 export class LandlordService {
   private baseUrl: string = environment.baseUrl;
-  currentBh: BehaviorSubject<any>;
   currentContract: BehaviorSubject<Contract>;
   constructor(private http: HttpClient) { 
-    this.currentBh = new BehaviorSubject<any>({})
     this.currentContract = new BehaviorSubject<any>(null)
   }
   changeCOntract(contract) {
     this.currentContract.next(contract);
-  }
-  getAllBoardingHouses() : Observable<BoardingHouse[]> {
-    return this.http.post<BoardingHouse[]>(`${this.baseUrl}/api/landlord/bh/all`, null, httpOptions);
   }
   getBoardingHouses(page : any) : Observable<BoardingHouse[]> {
     return this.http.post<BoardingHouse[]>(`${this.baseUrl}/api/landlord/bh/`, page, httpOptions);
@@ -97,5 +92,14 @@ export class LandlordService {
   }
   updateProfile(t : any) : Observable<Landlord>{
     return this.http.post<any>(`${this.baseUrl}/api/profile/update`, t, httpOptions);
+  }
+
+  updateUtility(data : any) : Observable<Landlord>{
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/utility/add`, data, httpOptions);
+  }
+
+  //electric
+  getElectric(data : any) : Observable<Landlord>{
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/electricity/`, data, httpOptions);
   }
 }

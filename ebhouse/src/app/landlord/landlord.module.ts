@@ -26,6 +26,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { MatDatepickerModule, MatNativeDateModule } from '@angular/material';
 import { UpdateContractComponent } from './contract/update-contract/update-contract.component';
 import { UtilityComponent } from './utility/utility.component';
+import { ElectricComponent } from './electric/electric.component';
 @NgModule({
   declarations: [
     LandlordComponent,
@@ -34,13 +35,13 @@ import { UtilityComponent } from './utility/utility.component';
     BhInfoComponent,
     RoomTypeComponent,
     RoomComponent,
-    
     MaxLength,
     CurrencyFormat,
     ContractComponent,
     CreateContractComponent,
     UpdateContractComponent,
-    UtilityComponent
+    UtilityComponent,
+    ElectricComponent
   ],
   imports: [
     BrowserModule,
