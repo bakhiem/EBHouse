@@ -102,4 +102,7 @@ export class LandlordService {
   getElectric(data : any) : Observable<Landlord>{
     return this.http.post<any>(`${this.baseUrl}/api/landlord/electricity/`, data, httpOptions);
   }
+  updateElectric(data : any) : Observable<Landlord>{
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/electricity/update`, data, httpOptions);
+  }
 }

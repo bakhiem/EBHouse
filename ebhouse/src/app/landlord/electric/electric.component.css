@@ -1,7 +1,16 @@
 .electric{
     background: white;
-    padding: 1.25rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
 }
 .mat-datepicker-toggle{
     font-size: 2rem
   }
+  .my-custom-scrollbar {
+    position: relative;
+    max-height: 1200px;
+    overflow: auto;
+    }
+    .table-wrapper-scroll-y {
+    display: block;
+    }

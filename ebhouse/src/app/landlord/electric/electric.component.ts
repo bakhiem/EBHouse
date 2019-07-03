@@ -70,6 +70,12 @@ export class ElectricComponent implements OnInit {
       date: this.formatDate() + '-01'
     }
     console.log(data)
+    if(this.maxDate.getMonth() == this.month.value.getMonth() && this.maxDate.getFullYear() == this.month.value.getFullYear() ){
+      $("input[type=submit]").removeAttr("disabled");
+    }
+    else{
+      $("input[type=submit]").attr("disabled", "disabled");
+    }
     this.addLoading();
     this.service.getElectric(data).subscribe(
       res => {
@@ -112,27 +118,27 @@ export class ElectricComponent implements OnInit {
 
 
   focusoutFunction(id) {
-    if(Number($('#present-'+id).val()) < Number($('#last-'+id).val())){
-      $('#present-'+id).val($('#last-'+id).val());
-      $('#usage-'+id).val(0);
-     this.displayDialog(CommonMessage.Electric);
+    if (Number($('#present-' + id).val()) < Number($('#last-' + id).val())) {
+      $('#present-' + id).val($('#last-' + id).val());
+      $('#usage-' + id).val(0);
+      this.displayDialog(CommonMessage.Electric);
     }
-    else{
-      let usage = Number($('#present-'+id).val()) - Number($('#last-'+id).val());
-      $('#usage-'+id).html(''+usage);
+    else {
+      let usage = Number($('#present-' + id).val()) - Number($('#last-' + id).val());
+      $('#usage-' + id).html('' + usage);
       let amount = usage * Number(this.list[1].value);
       let currency = amount.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
-      $('#amount-'+id).html(currency);
+      $('#amount-' + id).html(currency);
     }
-    
+
   }
   resetForm() {
     $("input[type=number]").val('');
-    $("input[type=submit]").attr("disabled", "disabled");
+    // $("input[type=submit]").attr("disabled", "disabled");
   }
   ngAfterViewInit() {
     this.formatCurrency();
-    this.jqueryCode();
+    // this.jqueryCode();
   }
 
 
@@ -192,6 +198,17 @@ export class ElectricComponent implements OnInit {
     });
     return notempty;
   }
+  formatDateFull(date) {
+    var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+  }
   save() {
     this.resetMess();
     if (this.checkEmpty() == false) {
@@ -199,14 +216,37 @@ export class ElectricComponent implements OnInit {
       return;
     }
     let listSendServer = []
+    for (let index = 0; index < this.list.length; index++) {
+
+      if (this.list[index].statusBefore == 2) {
+        let electricBefore = {
+          id: 0,
+          room: { id: this.list[index].roomID },
+          total: Number($('#last-' + this.list[index].id).val()),
+          status: 2,
+          cDate: this.formatDateFull(this.list[index].cDateBefore)
+        }
+        listSendServer.push(electricBefore);
+      }
+      if (this.list[index].statusNow == 2){
+        let electricNow = {
+          id: this.list[index].id,
+          room: { id: this.list[index].roomID },
+          total: Number($('#present-' + this.list[index].id).val()),
+          status: this.list[index].statusNow,
+          cDate:this.formatDateFull(this.list[index].cDate)
+        }
+        listSendServer.push(electricNow);
+      }
+     
+    }
     let data = {
       data: listSendServer
     }
     console.log(data);
     this.addLoading();
-    this.service.updateUtility(data).subscribe(
+    this.service.updateElectric(data).subscribe(
       res => {
-
         let response = JSON.parse("" + res);
         if (response.type == 1) {
           this.message.type = 1;

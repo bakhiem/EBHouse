@@ -99,7 +99,8 @@ export class AuthenticationService {
         // remove user from local storage to log user out
         localStorage.removeItem('currentUser');
         sessionStorage.removeItem('currentUser');
-        this.currentUserSubject.next(null);
         this.loggedIn.next(false);
+        this.currentUserSubject.next(null);
+        
     }
   }
