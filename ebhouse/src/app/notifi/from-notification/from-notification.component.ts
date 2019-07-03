@@ -49,7 +49,8 @@ export class FromNotificationComponent implements OnInit {
       res => {
         let response = JSON.parse('' + res);
         if (response.type == 1) {
-          let arr = new Array(response.data);
+          let data = JSON.parse(response.data);
+          this.notifiList = data.listNotification;
         } else {
           this.message = JSON.parse(response.message);
         }
@@ -64,7 +65,7 @@ export class FromNotificationComponent implements OnInit {
   }
 
   formatData(data: any[]) {
-    for (var element in data) {
+    data.forEach(element => {
       let notifi = new Notification();
       notifi.userTo = element.userTo;
       notifi.subject = element.subject;
@@ -72,7 +73,7 @@ export class FromNotificationComponent implements OnInit {
       notifi.cDate = element.cDate;
       notifi.status = element.status;
       this.notifiList.push(notifi);
-    }
+    });
   }
 
   prePage() {}

@@ -1,4 +1,4 @@
-<div class="sidebar-menu"  [ngClass]="{'hide': role == '' || role == 'tenant'}" >
+<div class="sidebar-menu" [ngClass]="{'hide': role == '' || role == 'tenant'}">
     <div class="sidebar-header">
         <div class="logo">
             <a routerLink="/landlord/dashboard"><img src="assets/images/logo/logo_transparent_white.png" alt="logo"></a>
@@ -42,7 +42,13 @@
                             <span>Tiện ích</span></a>
                     </li>
                     <li routerLink="/landlord/electric" routerLinkActive="active"><a href="javascript:void(0)"><i class="ti-pencil-alt"></i> <span>Chỉ số điện</span></a></li>
-                    <li><a href="javascript:void(0)"><i class="ti-email"></i> <span>Quản lý thông báo</span></a></li>
+                    <li>
+                        <a href="/notification/to"><i class="ti-email"></i> <span>Quản lý thông báo</span></a>
+                        <ul class="collapse">
+                            <li routerLink="/notification/from" routerLinkActive="active"><a href="javascript:void(0)">Thông báo đã gửi</a></li>
+                            <li routerLink="/notification/to" routerLinkActive="active"><a href="javascript:void(0)">Thông báo đã nhận</a></li>
+                        </ul>
+                    </li>
                     <li>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-money"></i> <span>Quản
                                 lý tài chính</span></a>
@@ -59,11 +65,10 @@
     </div>
 </div>
 
-<div class="sidebar-menu"  [ngClass]="{'hide': role == '' || role == 'landlord'} " >
+<div class="sidebar-menu" [ngClass]="{'hide': role == '' || role == 'landlord'} ">
     <div class="sidebar-header">
         <div class="logo">
-            <a routerLink="/landlord/dashboard"><img src="assets/images/logo/logo_transparent_white.png"
-                    alt="logo"></a>
+            <a routerLink="/landlord/dashboard"><img src="assets/images/logo/logo_transparent_white.png" alt="logo"></a>
         </div>
     </div>
     <div class="main-menu">
