@@ -53,10 +53,10 @@ import {NotifiModule }from './notifi/notifi.module';
     LandlordModule,
     TenantModule,
     BrowserAnimationsModule,
-    AppRoutingModule,
     MatDialogModule,
     NgbModule,
-    NotifiModule
+    NotifiModule,
+    AppRoutingModule
   ],
   providers:[ {provide:HTTP_INTERCEPTORS, useClass:JwtInterceptor, multi:true },  {provide:HTTP_INTERCEPTORS, useClass:ErrorInterceptor, multi:true },
     UserService],

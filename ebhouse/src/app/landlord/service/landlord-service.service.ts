@@ -29,73 +29,73 @@ export class LandlordService {
     this.currentContract.next(contract);
   }
   getAllBoardingHouses():Observable < BoardingHouse[] >  {
-    return this.http.post < BoardingHouse[] > (`$ {this.baseUrl}/api/landlord/bh/all`, null, httpOptions);
+    return this.http.post < BoardingHouse[] > (`${this.baseUrl}/api/landlord/bh/all`, null, httpOptions);
   }
   getBoardingHouses(page:any):Observable < BoardingHouse[] >  {
-    return this.http.post < BoardingHouse[] > (`$ {this.baseUrl}/api/landlord/bh/`, page, httpOptions);
+    return this.http.post < BoardingHouse[] > (`${this.baseUrl}/api/landlord/bh/`, page, httpOptions);
   }
   createBh(bh:BoardingHouse):Observable < BoardingHouse >  {
-    return this.http.post < BoardingHouse > (`$ {this.baseUrl}/api/landlord/bh/create`, bh, httpOptions);
+    return this.http.post < BoardingHouse > (`${this.baseUrl}/api/landlord/bh/create`, bh, httpOptions);
   }
   editBh(bh:BoardingHouse):Observable < BoardingHouse >  {
-    return this.http.post < BoardingHouse > (`$ {this.baseUrl}/api/landlord/bh/update`, bh, httpOptions);
+    return this.http.post < BoardingHouse > (`${this.baseUrl}/api/landlord/bh/update`, bh, httpOptions);
   }
   deleteBh(bh:BoardingHouse) {
-    return this.http.post < BoardingHouse > (`$ {this.baseUrl}/api/landlord/bh/delete`, bh, httpOptions);
+    return this.http.post < BoardingHouse > (`${this.baseUrl}/api/landlord/bh/delete`, bh, httpOptions);
   }
   getRoomTypes(page:any):Observable < any[] >  {
-    return this.http.post < any[] > (`$ {this.baseUrl}/api/landlord/rt/`, page, httpOptions);
+    return this.http.post < any[] > (`${this.baseUrl}/api/landlord/rt/`, page, httpOptions);
   }
   getAllRoomTypes():Observable < BoardingHouse[] >  {
-    return this.http.post < any[] > (`$ {this.baseUrl}/api/landlord/rt/all`, null, httpOptions);
+    return this.http.post < any[] > (`${this.baseUrl}/api/landlord/rt/all`, null, httpOptions);
   }
   createRt(rt:any):Observable < any >  {
-    return this.http.post < any > (`$ {this.baseUrl}/api/landlord/rt/add`, rt, httpOptions);
+    return this.http.post < any > (`${this.baseUrl}/api/landlord/rt/add`, rt, httpOptions);
   }
   editRt(rt:any):Observable < any >  {
-    return this.http.post < any > (`$ {this.baseUrl}/api/landlord/rt/update`, rt, httpOptions);
+    return this.http.post < any > (`${this.baseUrl}/api/landlord/rt/update`, rt, httpOptions);
   }
   deleteRt(rt:any) {
-    return this.http.post < any > (`$ {this.baseUrl}/api/landlord/rt/delete`, rt, httpOptions);
+    return this.http.post < any > (`${this.baseUrl}/api/landlord/rt/delete`, rt, httpOptions);
   }
   getRooms(page:any):Observable < any[] >  {
-    return this.http.post < any[] > (`$ {this.baseUrl}/api/landlord/room/`, page, httpOptions);
+    return this.http.post < any[] > (`${this.baseUrl}/api/landlord/room/`, page, httpOptions);
   }
   createRoom(room:any):Observable < any >  {
-    return this.http.post < any > (`$ {this.baseUrl}/api/landlord/room/create`, room, httpOptions);
+    return this.http.post < any > (`${this.baseUrl}/api/landlord/room/create`, room, httpOptions);
   }
   editRoom(room:any):Observable < any >  {
-    return this.http.post < any > (`$ {this.baseUrl}/api/landlord/room/update`, room, httpOptions);
+    return this.http.post < any > (`${this.baseUrl}/api/landlord/room/update`, room, httpOptions);
   }
   deleteRoom(room:any) {
-    return this.http.post < any > (`$ {this.baseUrl}/api/landlord/room/delete`, room, httpOptions);
+    return this.http.post < any > (`${this.baseUrl}/api/landlord/room/delete`, room, httpOptions);
   }
   getRoomsAvailable(data:any):Observable < any[] >  {
-    return this.http.post < any[] > (`$ {this.baseUrl}/api/landlord/room/all`, data, httpOptions);
+    return this.http.post < any[] > (`${this.baseUrl}/api/landlord/room/all`, data, httpOptions);
   }
   searchTenantByPhone(data:any):Observable < any[] >  {
-    return this.http.post < any[] > (`$ {this.baseUrl}/api/landlord/contract/getTenant`, data, httpOptions);
+    return this.http.post < any[] > (`${this.baseUrl}/api/landlord/contract/getTenant`, data, httpOptions);
   }
   addContract(data:any):Observable < any[] >  {
-    return this.http.post < any[] > (`$ {this.baseUrl}/api/landlord/contract/add`, data, httpOptions);
+    return this.http.post < any[] > (`${this.baseUrl}/api/landlord/contract/add`, data, httpOptions);
   }
   updateContract(data:any):Observable < any[] >  {
-    return this.http.post < any[] > (`$ {this.baseUrl}/api/landlord/contract/update`, data, httpOptions);
+    return this.http.post < any[] > (`${this.baseUrl}/api/landlord/contract/update`, data, httpOptions);
   }
   getContract(data:any):Observable < any[] >  {
-    return this.http.post < any[] > (`$ {this.baseUrl}/api/landlord/contract/`, data, httpOptions);
+    return this.http.post < any[] > (`${this.baseUrl}/api/landlord/contract/`, data, httpOptions);
   }
 
   getContractByRoom(data:any):Observable < any[] >  {
-    return this.http.post < any[] > (`$ {this.baseUrl}/api/landlord/contract/getContractByRoomID`, data, httpOptions);
+    return this.http.post < any[] > (`${this.baseUrl}/api/landlord/contract/getContractByRoomID`, data, httpOptions);
   }
   getUtility(data:any):Observable < any[] >  {
-    return this.http.post < any[] > (`$ {this.baseUrl}/api/landlord/utility/`, data, httpOptions);
+    return this.http.post < any[] > (`${this.baseUrl}/api/landlord/utility/`, data, httpOptions);
   }
   getProfile():Observable < Landlord >  {
-    return this.http.post < Landlord > (`$ {this.baseUrl}/api/profile`, null, httpOptions);
+    return this.http.post < Landlord > (`${this.baseUrl}/api/profile`, null, httpOptions);
   }
   updateProfile(t:any):Observable < Landlord >  {
-    return this.http.post < any > (`$ {this.baseUrl}/api/profile/update`, t, httpOptions);
+    return this.http.post < any > (`${this.baseUrl}/api/profile/update`, t, httpOptions);
   }
 }

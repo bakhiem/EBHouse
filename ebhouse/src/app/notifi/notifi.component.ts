@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Message } from '../models/message';
 import { Notification } from '../models/notification';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { PlaceService } from '../service/place.service';
+import { AuthenticationService } from '../user/service/authentication.service';
+import { NotifiService } from './service/notifi.service';
 
 @Component({
   selector: 'app-notifi',
@@ -17,9 +21,21 @@ export class NotifiComponent implements OnInit {
   createNotifiFormGroup: FormGroup;
   newNotifi: Notification;
 
-  constructor() { }
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private placeService: PlaceService,
+    private authenticationService: AuthenticationService,
+    private service: NotifiService
+  ) { }
 
   ngOnInit() {
+    this.resetMess();
+    this.createNotifiFormGroup = this.fb.group({
+      userTo: this.fb.control('', Validators.compose([Validators.required])),
+      subject: this.fb.control('', Validators.compose([Validators.required])),
+      content: this.fb.control('', Validators.compose([Validators.required]))
+    });
   }
 
   creatNotification(){
@@ -35,5 +51,10 @@ export class NotifiComponent implements OnInit {
   removeLoading() {
     $('.customLoading').removeClass('preloader');
     $('.customLoader').removeClass('loader');
+  }
+
+  resetMess() {
+    this.message.content = '';
+    this.message.type = 0;
   }
 }

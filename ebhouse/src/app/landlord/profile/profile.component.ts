@@ -85,7 +85,9 @@ export class LandlordProfileComponent implements OnInit {
         }
       },
       err => {
-        this.message = JSON.parse(err);
+        this.message.type = 0;
+        this.message.content = CommonMessage.defaultErrMess;
+        this.removeLoading();
       }
     );
   }
@@ -139,7 +141,7 @@ export class LandlordProfileComponent implements OnInit {
       this.dataProvince = arr;
       this.getProfile();
     });
-    
+
   }
 
   getDistric(province: any): any[] {
