@@ -14,7 +14,9 @@ export enum CommonMessage {
   DuplicateTenant = 'Khách thuê đã được chọn',
   NoExitstRoom = 'Không tồn tại phòng trong nhà trọ, mời bạn chọn phòng trong danh sách',
   DateFormat = 'Vui lòng chọn tháng bắt đầu và tháng kết thúc hợp lệ',
-  HaveContractInDate = 'Đã tồn tại hợp đồng trong thời gian này'
+  HaveContractInDate = 'Đã tồn tại hợp đồng trong thời gian này',
+  Utility_InputAllField = 'Vui lòng điền vào tất cả các trường, trường nào không có có thể nhập giá trị 0',
+  Electric = 'Số điện tháng sau lớn hơn hoặc bằng số điện tháng trước'
   }
   export class Message {
     content : string;

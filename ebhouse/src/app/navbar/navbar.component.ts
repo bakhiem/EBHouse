@@ -26,6 +26,9 @@ export class NavbarComponent implements OnInit {
     else if(this.currentUser && this.currentUser.role === Role.Tenant){
       this.role = 'tenant';
     }
+    else{
+      this.role = ''
+    }
     
   }
   deleteDataInLocal() {

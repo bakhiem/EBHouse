@@ -7,20 +7,22 @@ import { ISubscription } from "rxjs/Subscription";
 import { SharedServiceService } from '../../service/shared-service.service';
 import { MatDialog, MatCheckboxModule } from '@angular/material';
 import { CommonMessage, Message } from '../../models/message';
-
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { InformationDialogComponent } from '../../shared/info-dialog/information-dialog.component';
+import { CustomDateAdapterMonth } from '../contract/customDate';
+
+import { FormControl } from '@angular/forms';
 @Component({
-  selector: 'app-utility',
-  templateUrl: './utility.component.html',
-  styleUrls: ['./utility.component.css']
-})
-export class UtilityComponent implements OnInit {
-  listUtility: Utility[] = [
-    { id: 1, name: 'Điện', calculating: [{ id: 3, name: "Theo số" }] },
-    { id: 2, name: 'Nước', calculating: [{ id: 1, name: "Theo phòng" }, { id: 2, name: "Theo người" }] },
-    { id: 3, name: 'Internet', calculating: [{ id: 1, name: "Theo phòng" }, { id: 2, name: "Theo người" }] },
-    { id: 4, name: 'Vệ sinh', calculating: [{ id: 1, name: "Theo phòng" }, { id: 2, name: "Theo người" }] }
+  selector: 'app-electric',
+  templateUrl: './electric.component.html',
+  styleUrls: ['./electric.component.css'],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'vi-vn' },
+    { provide: DateAdapter, useClass: CustomDateAdapterMonth }
   ]
+})
+export class ElectricComponent implements OnInit {
+
   //Message
   message: Message = {
     content: '',
@@ -33,65 +35,106 @@ export class UtilityComponent implements OnInit {
   constructor(private service: LandlordService,
     private shareService: SharedServiceService,
     public dialog: MatDialog) { }
-
+  maxDate = new Date();
+  month: FormControl;
   ngOnInit() {
+    this.month = new FormControl({ value: new Date(), disabled: true });
     this.subscription = this.shareService.currentBh.subscribe((data) => {
       this.currentBh = data;
-      this.getUtility();
+      this.getElectric();
     })
   }
-  displayDialog(message : string){
+  chooseMonth(params, datepicker) {
+    params.setDate(1);
+    this.month.setValue(params)
+    this.getElectric();
+    datepicker.close();
+  }
+  displayDialog(message: string) {
     this.dialog.open(InformationDialogComponent, {
       width: '400px',
       data: message
     });
   }
-  private getUtility() {
+  formatDate(): string {
+    let month = this.month.value.getMonth() + 1;
+    let year = this.month.value.getFullYear();
+    return year + '-' + month
+  }
+  private getElectric() {
     if (!this.currentBh || !this.currentBh.id) {
       return;
     }
     let data: any = {
-      id: this.currentBh.id
+      boardingHouseID: this.currentBh.id,
+      date: this.formatDate() + '-01'
     }
+    console.log(data)
     this.addLoading();
-    this.service.getUtility(data).subscribe(
+    this.service.getElectric(data).subscribe(
       res => {
         this.removeLoading();
         console.log(res)
         let response = JSON.parse("" + res);
         if (response.type == 1) {
-          console.log(response.data)
-          let resData = JSON.parse(response.data);
+          let resData = response.data;
           console.log(resData)
           this.list = resData;
-          //if have list utility
+          console.log(this.maxDate.getMonth())
+          console.log(this.month.value.getMonth())
+          $('#lastMonth').html("Số điện tháng " + this.month.value.getMonth());
+          $('#presentMonth').html("Số điện tháng " + (this.month.value.getMonth() + 1));
           if (this.list.length > 0) {
             for (let index = 0; index < this.list.length; index++) {
-              let currency = this.list[index].value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
-              $('#price-' + this.list[index].utility).val(currency);
-              $("#select-" + this.list[index].utility).val(this.list[index].calculatingMethod);
+              let usage = Number(this.list[index].eNow) - Number(this.list[index].eBefore)
+              this.list[index].usage = usage;
+              this.list[index].amount = usage * this.list[index].value;
+
+              if (this.list[index].statusBefore == 1) {
+                this.list[index].disabledBefore = true;
+              }
+              if (this.list[index].statusNow == 1) {
+                this.list[index].disabledNow = true;
+              }
             }
-            $("input[type=submit]").attr("disabled", "disabled");
+            // $("input[type=submit]").attr("disabled", "disabled");
           }
-          
-          //if bh didn't have list utility
-          else{
-            this.resetForm();
-          }
+          // //if bh didn't have list utility
+          // else{
+          //   this.resetForm();
+          // }
         }
       }, err => {
         this.removeLoading();
         console.log(err);
       })
   }
-  resetForm(){
-    $("input[type=text]").val('');
+
+
+  focusoutFunction(id) {
+    if(Number($('#present-'+id).val()) < Number($('#last-'+id).val())){
+      $('#present-'+id).val($('#last-'+id).val());
+      $('#usage-'+id).val(0);
+     this.displayDialog(CommonMessage.Electric);
+    }
+    else{
+      let usage = Number($('#present-'+id).val()) - Number($('#last-'+id).val());
+      $('#usage-'+id).html(''+usage);
+      let amount = usage * Number(this.list[1].value);
+      let currency = amount.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+      $('#amount-'+id).html(currency);
+    }
+    
+  }
+  resetForm() {
+    $("input[type=number]").val('');
     $("input[type=submit]").attr("disabled", "disabled");
   }
   ngAfterViewInit() {
     this.formatCurrency();
     this.jqueryCode();
   }
+
 
   jqueryCode() {
     $("input[type=submit]").attr("disabled", "disabled");
@@ -101,7 +144,10 @@ export class UtilityComponent implements OnInit {
     $("input").keypress(function () {
       $("input[type=submit]").removeAttr("disabled");
     });
+
   }
+
+
   addLoading() {
     $('.customLoading').addClass('preloader');
     $('.customLoader').addClass('loader');
@@ -110,6 +156,7 @@ export class UtilityComponent implements OnInit {
     $('.customLoading').removeClass('preloader');
     $('.customLoader').removeClass('loader');
   }
+
   formatCurrency() {
     console.log($(".input-price"))
     var $input = $(".input-price");
@@ -123,6 +170,7 @@ export class UtilityComponent implements OnInit {
       if ($.inArray(event.keyCode, [38, 40, 37, 39]) !== -1) {
         return;
       }
+
       var $this = $(this);
       // Get the value.
       let input = $this.val();
@@ -151,35 +199,6 @@ export class UtilityComponent implements OnInit {
       return;
     }
     let listSendServer = []
-    if (this.list.length == 0) {
-      for (let index = 0; index < this.listUtility.length; index++) {
-        let formatPrice = $('#price-' + this.listUtility[index].id).val().toString().split('.').join('');
-        let utility = {
-          utility: { id: this.listUtility[index].id },
-          boardingHouse: { id: this.currentBh.id },
-          value: Number(formatPrice),
-          calculatingMethod: Number($('#select-' + this.listUtility[index].id).children("option:selected").val())
-        }
-        listSendServer.push(utility);
-      }
-    }
-    else {
-      for (let index = 0; index < this.list.length; index++) {
-        let formatPrice = $('#price-' + this.list[index].utility).val().toString().split('.').join('');
-        let utility = {
-          id: this.list[index].id,
-          utility: { id: this.list[index].utility },
-          boardingHouse: { id: this.currentBh.id },
-          value: Number(formatPrice),
-          calculatingMethod: Number($('#select-' + this.list[index].utility).children("option:selected").val()),
-          cDate: this.list[index].cDate
-        }
-        listSendServer.push(utility);
-      }
-    }
-
-
-
     let data = {
       data: listSendServer
     }
@@ -187,14 +206,14 @@ export class UtilityComponent implements OnInit {
     this.addLoading();
     this.service.updateUtility(data).subscribe(
       res => {
-        
+
         let response = JSON.parse("" + res);
         if (response.type == 1) {
           this.message.type = 1;
           this.message.content = response.message;
-          this.getUtility();
+          this.getElectric();
         }
-        else{
+        else {
           this.removeLoading();
           this.message.type = 0;
           this.message.content = response.message;
@@ -206,7 +225,7 @@ export class UtilityComponent implements OnInit {
         console.log(err);
       })
   }
-  
+
   resetMess() {
     this.message.content = '';
     this.message.type = 0;

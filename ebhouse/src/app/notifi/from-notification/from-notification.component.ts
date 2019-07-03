@@ -9,6 +9,7 @@ import { CommonMessage, Message } from '../../models/message';
 import { AuthenticationService } from '../../user/service/authentication.service';
 import * as $ from 'jquery';
 import { NotifiService } from '../service/notifi.service';
+import { Notification } from 'src/app/models/notification';
 
 @Component({
   selector: 'app-from-notification',
@@ -44,12 +45,11 @@ export class FromNotificationComponent implements OnInit {
 
   getAllFrom() {
     this.addLoading();
-    this.service.getAllFromNotification({ page: this.currentPage }).subscribe(
+    this.service.getAllFromNotification({ page: this.currentPage - 1 }).subscribe(
       res => {
         let response = JSON.parse('' + res);
-        console.log(response);
         if (response.type == 1) {
-          this.notifiList = response.data;
+          let arr = new Array(response.data);
         } else {
           this.message = JSON.parse(response.message);
         }
@@ -61,6 +61,18 @@ export class FromNotificationComponent implements OnInit {
         this.removeLoading();
       }
     );
+  }
+
+  formatData(data: any[]) {
+    for (var element in data) {
+      let notifi = new Notification();
+      notifi.userTo = element.userTo;
+      notifi.subject = element.subject;
+      notifi.content = element.content;
+      notifi.cDate = element.cDate;
+      notifi.status = element.status;
+      this.notifiList.push(notifi);
+    }
   }
 
   prePage() {}

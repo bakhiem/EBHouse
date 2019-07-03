@@ -103,11 +103,12 @@ export class ContractComponent implements OnInit, OnDestroy {
     else{
       this.isSelectAllStatus = 0;
     }
-    console.log(page);
     this.addLoading();
     this.service.getContract(page).subscribe(
       res => {
         let response = JSON.parse("" + res);
+        
+        console.log(response);
         console.log(response)
         if (response.type == 1) {
           try {

@@ -12,3 +12,9 @@ export class CustomDateAdapter extends NativeDateAdapter {
       return moment(date).format(formatString);
     }
   }
+  export class CustomDateAdapterMonth extends NativeDateAdapter {
+    format(date: Date, displayFormat: Object): string {
+      var formatString = 'MM /YYYY';
+      return moment(date).format(formatString);
+    }
+  }
