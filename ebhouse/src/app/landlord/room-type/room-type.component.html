@@ -10,7 +10,6 @@
            So sánh tiện ích
         </button>
     </div>
-       
     <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
         {{message.content}}
     </div>
@@ -169,7 +168,6 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-
     <div class="modal fade bd-example-modal-lg modal-xl" id="modalEquipment">
         <div class="modal-dialog modal-lg modal-xl">
             <div class="modal-content">
@@ -218,7 +216,6 @@
             </div>
         </div>
     </div>
-
     <nav class="page mt-3">
         <ul class="pagination">
             <li class="page-item">

@@ -1,0 +1,74 @@
+<div class="customLoading">
+    <div class="customLoader"></div>
+</div>
+<div class="row">
+    <div class="create-bh mt-3">
+        <button type="button" class="btn btn-primary mr-3" (click)="creatNotification()">
+          Tạo thông báo
+      </button>
+    </div>
+    <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
+        {{message.content}}
+    </div>
+    <ng-template #errMess>
+        <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
+            {{message.content}}
+        </div>
+    </ng-template>
+    <div class="modal fade bd-example-modal-lg" id="modalNotification">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form [formGroup]="createNotifiFormGroup" (ngSubmit)="onSubmit()">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Gửi Thông Báo</h5>
+                        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- alert -->
+                        <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
+                            {{message.content}}
+                        </div>
+                        <ng-template #errMess>
+                            <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
+                                {{message.content}}
+                            </div>
+                        </ng-template>
+                        <!-- Textual inputs start -->
+                        <div class="form-group row">
+                            <div class="col-sm-7">
+                                <label for="example-text-input" class="col-form-label required">Người Nhận: </label>
+                                <input class="form-control" type="text" id="example-text-input" formControlName="userTo">
+                                <div *ngIf="createNotifiFormGroup.controls['userTo'].hasError('required') && (createNotifiFormGroup.controls['userTo'].dirty || createNotifiFormGroup.controls['userTo'].touched)" class="alert alert-danger">
+                                    Người Nhận không được để trống!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label for="example-number-input" class="col-form-label required">Tiêu Đề</label>
+                                <input class="form-control" type="number" id="example-number-input" formControlName="subject">
+                                <div *ngIf="createNotifiFormGroup.controls['subject'].hasError('required') && (createNotifiFormGroup.controls['subject'].dirty || createNotifiFormGroup.controls['subject'].touched)" class="alert alert-danger">
+                                    Tiêu đề không được để trống
+                                </div>
+                            </div>
+                            <div class="col-sm-7">
+                                <label for="input-content" class="col-form-label required">Content</label>
+                                <textarea class="form-control" id="input-content" formControlName="content" rows="3"></textarea>
+                                <div *ngIf="createNotifiFormGroup.controls['content'].hasError('required') && (createNotifiFormGroup.controls['content'].dirty || createNotifiFormGroup.controls['content'].touched)" class="alert alert-danger">
+                                    Nội dung Không được để trống
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Textual inputs end -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Trở về</button>
+                        <button class="btn btn-info mb-3" type="submit" id="myButton" [disabled]="createNotifiFormGroup.invalid">Gửi</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+</div>
+<router-outlet></router-outlet>

@@ -20,5 +20,5 @@ export enum CommonMessage {
   }
   export class Message {
     content : string;
-    type : Number
+    type : number;
   }

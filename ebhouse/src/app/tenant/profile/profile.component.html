@@ -21,8 +21,8 @@
                         <div class="form-group row">
                             <div class="col-sm-6">
                                 <label for="example-text-input" class="col-form-label">Họ tên</label>
-                                <input class="form-control" type="text" id="example-text-input" formControlName="fullname">
-                                <div *ngIf="profileFormGroup.controls['fullname'].hasError('required') && (profileFormGroup.controls['fullname'].dirty || profileFormGroup.controls['fullname'].touched)" class="alert alert-danger">
+                                <input class="form-control" type="text" id="example-text-input" formControlName="name">
+                                <div *ngIf="profileFormGroup.controls['name'].hasError('required') && (profileFormGroup.controls['name'].dirty || profileFormGroup.controls['name'].touched)" class="alert alert-danger">
                                     Họ tên là bắt buộc
                                 </div>
                             </div>
@@ -34,7 +34,7 @@
                                 <div *ngIf="profileFormGroup.controls['phone'].hasError('required') && (profileFormGroup.controls['phone'].dirty || profileFormGroup.controls['phone'].touched)" class="alert alert-danger">
                                     Số điện thoại là bắt buộc
                                 </div>
-                                <div *ngIf="profileFormGroup.controls['phone'].hasError('pattern') && (profileFormGroup.controls['phone'].dirty || profileFormGroup.controls['phone'].touched)" class="alert alert-danger">
+                                <div *ngIf="profileFormGroup.controls['phone'].hasError('required') && (profileFormGroup.controls['phone'].dirty || profileFormGroup.controls['phone'].touched)" class="alert alert-danger">
                                     Số điện thoại không đúng định dạng
                                 </div>
                             </div>
@@ -69,11 +69,11 @@
                             <div class="col-sm-3">
                                 <label class="col-form-label">Tỉnh / Thành phố </label>
                                 <select class="custom-select" formControlName="province" required (change)="onChangeProvince()">
-                                    <option *ngFor="let aprovince of dataProvince" [selected]="aprovince.code  == 01"
-                                        [ngValue]="aprovince">
-                                        {{aprovince.name}}
-                                    </option>
-                                </select>
+                  <option *ngFor="let aprovince of dataProvince" [selected]="aprovince.code  == 01"
+                    [ngValue]="aprovince">
+                    {{aprovince.name}}
+                  </option>
+                </select>
                                 <div *ngIf="profileFormGroup.controls['province'].hasError('required') && (profileFormGroup.controls['province'].dirty || profileFormGroup.controls['province'].touched)" class="alert alert-danger">
                                     Tỉnh / Thành phố là bắt buộc
                                 </div>
@@ -81,10 +81,10 @@
                             <div class="col-sm-3">
                                 <label class="col-form-label">Quận / Huyện</label>
                                 <select class="custom-select" formControlName="distric" (change)="onChangeDistric()">
-                                    <option *ngFor="let adistric of dataDistric" [ngValue]="adistric">
-                                        {{adistric.name}}
-                                    </option>
-                                </select>
+                  <option *ngFor="let adistric of dataDistric" [ngValue]="adistric">
+                    {{adistric.name}}
+                  </option>
+                </select>
                                 <div *ngIf="profileFormGroup.controls['distric'].hasError('required') && (profileFormGroup.controls['distric'].dirty || profileFormGroup.controls['distric'].touched)" class="alert alert-danger">
                                     Quận / Huyện là bắt buộc
                                 </div>
@@ -92,10 +92,10 @@
                             <div class="col-sm-3">
                                 <label class="col-form-label">Xã / Phường</label>
                                 <select class="custom-select" formControlName="wards">
-                                    <option *ngFor="let awards of dataWards" [ngValue]="awards">
-                                        {{awards.name}}
-                                    </option>
-                                </select>
+                  <option *ngFor="let awards of dataWards" [ngValue]="awards">
+                    {{awards.name}}
+                  </option>
+                </select>
                                 <div *ngIf="profileFormGroup.controls['wards'].hasError('required') && (profileFormGroup.controls['wards'].dirty || profileFormGroup.controls['wards'].touched)" class="alert alert-danger">
                                     Xã / Phường là bắt buộc
                                 </div>
@@ -113,14 +113,14 @@
                         <!-- begin upload and preview image -->
                         <div class="row ml-1">
                             <div class="custom-file col-sm-5 mr-3 image-container">
-                                <input type="file" imageUpload accept="image/*" class="custom-file-input" id="customFile" (imageSelected)="uploadFrontID($event)" formControlName="frontID" [resizeOptions]="resizeOptions">
+                                <input type="file" imageUpload accept="image/*" class="custom-file-input" id="customFile" (imageSelected)="uploadFrontID($event)" formControlName="imgArnFront" [resizeOptions]="resizeOptions">
                                 <label class="custom-file-label" for="customFile">Ảnh chứng minh thư mặt trước</label>
-                                <img [src]="imageFrontSrc" class="previewImg" alt="" data-toggle="modal" data-target="#modal1">
+                                <img [src]="imgArnFront" class="previewImg" alt="" data-toggle="modal" data-target="#modal1">
                             </div>
                             <div class="custom-file col-sm-5 mr-3 image-container">
-                                <input type="file" imageUpload accept="image/*" class="custom-file-input" id="customFile2" (imageSelected)="uploadBackID($event)" formControlName="backID" [resizeOptions]="resizeOptions">
+                                <input type="file" imageUpload accept="image/*" class="custom-file-input" id="customFile2" (imageSelected)="uploadBackID($event)" formControlName="imgArnBack" [resizeOptions]="resizeOptions">
                                 <label class="custom-file-label" for="customFile2">Ảnh chứng minh thư mặt sau</label>
-                                <img [src]="imageBackSrc" class="previewImg" alt="" data-toggle="modal" data-target="#modal2">
+                                <img [src]="imgArnBack" class="previewImg" alt="" data-toggle="modal" data-target="#modal2">
                             </div>
                             <!-- <div class="custom-file col-sm-5 image-container">
                                 <input type="file" imageUpload class="custom-file-input" id="customFile" (imageSelected)="uploadBackID($event)" formControlName="backID" [resizeOptions]="resizeOptions">
@@ -155,7 +155,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-body">
-                <img [src]="imageFrontSrc" [hidden]="!imageFrontSrc" class="modalImg" alt="">
+                <img [src]="imgArnFront" [hidden]="!imgArnFront" class="modalImg" alt="">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
@@ -169,7 +169,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-body">
-                <img [src]="imageBackSrc" [hidden]="!imageBackSrc" class="modalImg" alt="">
+                <img [src]="imgArnBack" [hidden]="!imgArnBack" class="modalImg" alt="">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>

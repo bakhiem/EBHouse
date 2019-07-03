@@ -1,0 +1,41 @@
+table.mat-elevation-z8 {
+    width: 100%;
+    margin-top: 20px;
+}
+
+table.mat-elevation-z8 th {
+    font-size: 1.1rem;
+    color: black;
+}
+
+.single-table th {
+    font-size: 13px;
+    text-transform: none;
+}
+
+
+
+
+
+.form-group.row {
+    margin-bottom: 0;
+}
+
+
+
+.text-secondary {
+    cursor: pointer;
+}
+
+.page .pagination {
+    justify-content: center;
+}
+
+a.page-link.disabled {
+    background: #007bff;
+    color: white;
+}
+
+.page {
+    margin: 0 auto;
+}
