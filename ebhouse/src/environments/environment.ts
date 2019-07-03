@@ -5,10 +5,10 @@
 export const environment = {
   production: false,
 //  baseUrl : "http://ec2-54-255-244-234.ap-southeast-1.compute.amazonaws.com:8888/ebhouse"
-  baseUrl : "http://localhost:8080/CapstoneProject"
+  // baseUrl : "http://localhost:8080/CapstoneProject"
   // baseUrl : "http://ebhouse-backup.kilatiron.com/eb"
   // baseUrl : "http://54.255.165.53:8080/ebhouse"
-    // baseUrl : "http://ebhouse-backup.cloudjiffy.net/eb",
+    baseUrl : "http://ebhouse-backup.cloudjiffy.net/eb",
 };
 
 /*

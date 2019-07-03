@@ -46,7 +46,8 @@ export class ElectricComponent implements OnInit {
   }
   chooseMonth(params, datepicker) {
     params.setDate(1);
-    this.month.setValue(params)
+    this.month.setValue(params);
+    this.resetMess();
     this.getElectric();
     datepicker.close();
   }
@@ -120,7 +121,8 @@ export class ElectricComponent implements OnInit {
   focusoutFunction(id) {
     if (Number($('#present-' + id).val()) < Number($('#last-' + id).val())) {
       $('#present-' + id).val($('#last-' + id).val());
-      $('#usage-' + id).val(0);
+      $('#usage-' + id).html(''+0);
+      $('#amount-' + id).html(''+0);
       this.displayDialog(CommonMessage.Electric);
     }
     else {
@@ -131,6 +133,15 @@ export class ElectricComponent implements OnInit {
       $('#amount-' + id).html(currency);
     }
 
+  }
+  //check if eNow > ebefore
+  checkValidBeforeSubmit() : boolean{
+    for (let index = 0; index < this.list.length; index++) {
+      if((Number($('#present-' + this.list[index].id).val()) < Number($('#last-' + this.list[index].id).val()))){
+          return false;
+      }
+    }
+    return true;
   }
   resetForm() {
     $("input[type=number]").val('');
@@ -188,16 +199,7 @@ export class ElectricComponent implements OnInit {
       });
     });
   }
-  checkEmpty(): boolean {
-    var notempty = true;
-    $('input[type="text"]').each(function () {
-      if ($(this).val() == "") {
-        notempty = false;
-        return notempty;
-      }
-    });
-    return notempty;
-  }
+
   formatDateFull(date) {
     var d = new Date(date),
       month = '' + (d.getMonth() + 1),
@@ -211,16 +213,16 @@ export class ElectricComponent implements OnInit {
   }
   save() {
     this.resetMess();
-    if (this.checkEmpty() == false) {
-      this.displayDialog(CommonMessage.Utility_InputAllField);
-      return;
-    }
+    // if (this.checkValidBeforeSubmit() == false) {
+    //   this.displayDialog(CommonMessage.Electric);
+    //   return;
+    // }
     let listSendServer = []
     for (let index = 0; index < this.list.length; index++) {
 
       if (this.list[index].statusBefore == 2) {
         let electricBefore = {
-          id: 0,
+          id: this.list[index].idBefore ? this.list[index].idBefore : 0,
           room: { id: this.list[index].roomID },
           total: Number($('#last-' + this.list[index].id).val()),
           status: 2,

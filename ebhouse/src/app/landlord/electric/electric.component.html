@@ -2,14 +2,8 @@
   <div class="customLoader"></div>
 </div>
 <div class="electric mt-3">
-  <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
-    {{message.content}}
-  </div>
-  <ng-template #errMess>
-    <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
-      {{message.content}}
-    </div>
-  </ng-template>
+ 
+ 
   <div class="row input-date">
     <div class="col-sm-8"></div>
     <div class="col-sm-4">
@@ -25,6 +19,14 @@
       </div>
     </div>
   </div>
+  <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
+      {{message.content}}
+    </div>
+    <ng-template #errMess>
+      <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
+        {{message.content}}
+      </div>
+    </ng-template>
   <div class="table-wrapper-scroll-y my-custom-scrollbar">
     <table class="table table-bordered mb-3">
       <thead>
@@ -39,7 +41,7 @@
       <tbody>
         <tr *ngFor="let electric of list,let i = index">
           <th scope="row">{{electric.roomName}}</th>
-          <td><input type="number" inputmode="numeric"
+          <td><input type="number" inputmode="numeric" (focusout)="focusoutFunction(electric.id)"
               onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))"
               pattern="[0-9]*" class='form-control' id="last-{{electric.id}}" [value]='electric.eBefore'
               [disabled]='electric.disabledBefore'></td>
