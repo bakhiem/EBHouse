@@ -51,6 +51,8 @@ export class FromNotificationComponent implements OnInit {
         if (response.type == 1) {
           let data = JSON.parse(response.data);
           this.notifiList = data.listNotification;
+          this.totalPage = Math.ceil(data.totalPage / this.perPage);
+          this.toArray(this.totalPage);
         } else {
           this.message = JSON.parse(response.message);
         }
@@ -62,6 +64,10 @@ export class FromNotificationComponent implements OnInit {
         this.removeLoading();
       }
     );
+  }
+
+  notificationDetail(index : number){
+    console.log(this.notifiList[index]);
   }
 
   formatData(data: any[]) {
@@ -76,11 +82,42 @@ export class FromNotificationComponent implements OnInit {
     });
   }
 
-  prePage() {}
+  show(){
+    if($('.showDetails').hasClass('in') == true){
+      $('.showDetails').removeClass('in');
+      $('.showDetail').attr('aria-expanded', 0);
+    }else{
+      $('.showDetails').addClass('in');
+      $('.showDetail').attr('aria-expanded', 1);
+    }
+  }
 
-  nextPage() {}
-
-  goToPage(pageNumber) {}
+ //paging
+ toArray = function (num: number) {
+    this.pageNumbers = [];
+    for (let i = 1; i <= num; i++) {
+      this.pageNumbers[i - 1] = i;
+    }
+  }
+  goToPage(page: any) { // without type info
+    this.currentPage = page;
+    this.resetMess();
+    this.getAllFrom();
+  }
+  prePage() {
+    if (this.currentPage > 1) {
+      this.currentPage = this.currentPage - 1
+      this.resetMess();
+      this.getAllFrom();
+    }
+  }
+  nextPage() {
+    if (this.currentPage < this.totalPage) {
+      this.currentPage = this.currentPage + 1;
+      this.resetMess();
+      this.getAllFrom();
+    }
+  }
 
   addLoading() {
     $('.customLoading').addClass('preloader');
