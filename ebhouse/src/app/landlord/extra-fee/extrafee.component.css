@@ -1,0 +1,12 @@
+
+.mat-datepicker-toggle{
+    font-size: 2rem
+  }
+  table {
+    width: 100%;
+    margin-top: 20px;
+  }
+  table th{
+    font-size: 1.1rem;
+    color: black;
+  }

@@ -9,15 +9,12 @@ import {Role }from '../user/models/role';
 import {BhInfoComponent }from './bh-info/bh-info.component';
 import {RoomTypeComponent }from './room-type/room-type.component';
 import {RoomComponent }from './room/room.component';
-
 import {ContractComponent }from './contract/contract.component';
-
 import {CreateContractComponent }from './contract/create-contract/create-contract.component';
-
 import { UpdateContractComponent } from './contract/update-contract/update-contract.component';
 import { ElectricComponent } from './electric/electric.component';
-
 import {UtilityComponent }from './utility/utility.component';
+import { ExtraFeeComponent } from './extra-fee/extrafee.component';
 const LandlordChildRouters:Routes = [ {
     path:'landlord',
     component:LandlordComponent,
@@ -54,6 +51,10 @@ const LandlordChildRouters:Routes = [ {
       {
         path: 'electric',
         component: ElectricComponent
+      },
+      {
+        path: 'extrafee',
+        component: ExtraFeeComponent
       }
     ]
   }

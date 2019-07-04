@@ -1,0 +1,52 @@
+<div class="customLoading">
+  <div class="customLoader"></div>
+</div>
+<div class="extrafee">
+  <div class="row input-date">
+    
+    <div class="col-sm-4">
+      <label for="example-text-input" class="col-form-label mr-3">Tháng</label>
+      
+        <mat-form-field>
+          <input matInput [max]='maxDate' [matDatepicker]="picker2" [formControl]="month">
+          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+          <mat-datepicker #picker2 (monthSelected)="chooseMonth($event,picker2)" startView="multi-year"
+            disabled="false"></mat-datepicker>
+        </mat-form-field>
+
+    </div>
+    <div class="col-sm-3 col-md-6"> </div>
+    <div class="col-sm-2"><input class="btn btn-primary mt-3" type="submit" value="Tạo chi phí khác" (click)="createExtrafee()"> </div>
+  </div>
+  <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
+      {{message.content}}
+    </div>
+    <ng-template #errMess>
+      <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
+        {{message.content}}
+      </div>
+    </ng-template>
+    <table mat-table [dataSource]="listExtrafee" class="mat-elevation-z8">
+      <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Phòng</th>
+          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+      <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef>Số tiền</th>
+          <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+      </ng-container>
+      <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>Ghi chú</th>
+          <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+      </ng-container>
+      <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>Ngày</th>
+          <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" ></tr>
+  </table>
+  
+
+  
+</div>

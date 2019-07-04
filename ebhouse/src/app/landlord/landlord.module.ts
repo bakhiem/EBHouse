@@ -27,6 +27,7 @@ import { MatDatepickerModule, MatNativeDateModule } from '@angular/material';
 import { UpdateContractComponent } from './contract/update-contract/update-contract.component';
 import { UtilityComponent } from './utility/utility.component';
 import { ElectricComponent } from './electric/electric.component';
+import { ExtraFeeComponent } from './extra-fee/extrafee.component';
 @NgModule({
   declarations: [
     LandlordComponent,
@@ -41,7 +42,8 @@ import { ElectricComponent } from './electric/electric.component';
     CreateContractComponent,
     UpdateContractComponent,
     UtilityComponent,
-    ElectricComponent
+    ElectricComponent,
+    ExtraFeeComponent
   ],
   imports:[
     BrowserModule,

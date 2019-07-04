@@ -64,7 +64,7 @@ export class RoomTypeComponent implements OnInit {
         Validators.required, Validators.pattern("[0-9]+")
       ])),
       area: this.fb.control('', Validators.compose([
-        Validators.required
+        Validators.required, Validators.pattern("([0-9]*[.])?[0-9]+")
       ])),
       description: '',
       dataEquipment: new FormArray([])

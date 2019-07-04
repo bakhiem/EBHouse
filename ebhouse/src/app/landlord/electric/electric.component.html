@@ -1,25 +1,23 @@
 <div class="customLoading">
   <div class="customLoader"></div>
 </div>
-<div class="electric mt-3">
- 
- 
+<div class="electric">
   <div class="row input-date">
     <div class="col-sm-8"></div>
     <div class="col-sm-4">
-      <label for="example-text-input" class="col-form-label">Chọn tháng</label>
-      <div class="input-group">
-        <mat-form-field>
-          <input matInput [max]='maxDate' [matDatepicker]="picker2" [formControl]="month">
-          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-          <mat-datepicker #picker2 (monthSelected)="chooseMonth($event,picker2)" startView="multi-year"
-            disabled="false"></mat-datepicker>
-        </mat-form-field>
+      <label for="example-text-input" class="col-form-label mr-3">Tháng</label>
 
-      </div>
+      <mat-form-field>
+        <input matInput [max]='maxDate' [matDatepicker]="picker2" [formControl]="month">
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2 (monthSelected)="chooseMonth($event,picker2)" startView="multi-year" disabled="false">
+        </mat-datepicker>
+      </mat-form-field>
+
     </div>
   </div>
-  <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
+  <div class="row">
+    <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
       {{message.content}}
     </div>
     <ng-template #errMess>
@@ -27,7 +25,8 @@
         {{message.content}}
       </div>
     </ng-template>
-  <div class="table-wrapper-scroll-y my-custom-scrollbar">
+  </div>
+  <div class="table-wrapper-scroll-y my-custom-scrollbar mb-3">
     <table class="table table-bordered mb-3">
       <thead>
         <tr>

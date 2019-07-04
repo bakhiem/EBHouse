@@ -95,12 +95,14 @@ export class AuthenticationService {
                  return [res,this.userStorage];
             }));
     }
+
     logout() {
         // remove user from local storage to log user out
         localStorage.removeItem('currentUser');
         sessionStorage.removeItem('currentUser');
         this.loggedIn.next(false);
         this.currentUserSubject.next(null);
+        return this.http.post<String>(`${this.baseUrl}/api/logout`, null, httpOptions)
         
     }
   }
