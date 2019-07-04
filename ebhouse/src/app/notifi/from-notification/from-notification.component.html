@@ -1,11 +1,47 @@
-<table mat-table [dataSource]="notifiList" class="mat-elevation-z8">
+<!-- <div class="main-content-inner">
+    <div class="row"> -->
+<!-- nav tab start -->
+<div class="col-lg-12 mt-5">
+    <div class="card">
+        <div class="card-body">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="false">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active show" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="true">Contact</a>
+                </li>
+            </ul>
+            <div class="tab-content mt-3" id="myTabContent">
+                <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dicta soluta doloribus, ullam, ut obcaecati laboriosam eos, officia dolores voluptatum quas impedit placeat cumque animi quos odio quibusdam voluptatibus magnam minima facilis
+                        necessitatibus libero! Error velit veritatis veniam ipsa? Reiciendis quas qui neque atque repudiandae quidem incidunt, a consectetur ipsam impedit.</p>
+                </div>
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dicta soluta doloribus, ullam, ut obcaecati laboriosam eos, officia dolores voluptatum quas impedit placeat cumque animi quos odio quibusdam voluptatibus magnam minima facilis
+                        necessitatibus libero! Error velit veritatis veniam ipsa? Reiciendis quas qui neque atque repudiandae quidem incidunt, a consectetur ipsam impedit.</p>
+                </div>
+                <div class="tab-pane fade active show" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dicta soluta doloribus, ullam, ut obcaecati laboriosam eos, officia dolores voluptatum quas impedit placeat cumque animi quos odio quibusdam voluptatibus magnam minima facilis
+                        necessitatibus libero! Error velit veritatis veniam ipsa? Reiciendis quas qui neque atque repudiandae quidem incidunt, a consectetur ipsam impedit.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- </div>
+</div> -->
+<!-- <table mat-table [dataSource]="notifiList" class="mat-elevation-z8">
     <ng-container matColumnDef="userTo">
         <th mat-header-cell *matHeaderCellDef>Người Nhận</th>
         <td mat-cell *matCellDef="let element"> {{element.userTo.name}} </td>
     </ng-container>
     <ng-container matColumnDef="subject">
         <th mat-header-cell *matHeaderCellDef>Tiêu Đề</th>
-        <td mat-cell *matCellDef="let element"> {{element.subject}} </td>
+        <td mat-cell *matCellDef="let element;let i = index;" (click)="notificationDetail(i)"> {{element.subject}} </td>
     </ng-container>
     <ng-container matColumnDef="cDate">
         <th mat-header-cell *matHeaderCellDef>Ngày Gửi</th>
@@ -17,7 +53,6 @@
             <div *ngSwitchCase="element.status == 0">Đã gửi</div>
             <div *ngSwitchCase="element.status == 1">Đã xem</div>
             <div *ngSwitchCase="element.status == 2">Đã trả lời</div>
-            <!-- <div *ngSwitchDefault>Third</div> -->
         </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -43,4 +78,4 @@
             </a>
         </li>
     </ul>
-</nav>
+</nav> -->
