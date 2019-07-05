@@ -23,4 +23,11 @@ export class NotifiService {
     return this.http.post <Notification[]> (`${this.baseUrl}/api/notification/from`, t, httpOptions);
   }
 
+  getAllToNotification(t : any):Observable <Notification[]>{
+    return this.http.post <Notification[]> (`${this.baseUrl}/api/notification/to`, t, httpOptions);
+  }
+
+  updateStatus(t : any):Observable <Notification[]>{
+    return this.http.post <Notification[]> (`${this.baseUrl}/api/notification/update`, t, httpOptions);
+  }
 }

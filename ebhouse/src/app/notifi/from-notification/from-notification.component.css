@@ -33,19 +33,3 @@ a.page-link.disabled {
 .page {
     margin: 0 auto;
 }
-
-
-/*==Reset CSS==*/
-
-* {
-    margin: 0;
-    padding: 0;
-}
-
-
-/*==Style cơ bản cho website==*/
-
-body {
-    font-family: sans-serif;
-    color: #333;
-}
