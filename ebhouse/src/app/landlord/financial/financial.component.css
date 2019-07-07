@@ -1,0 +1,74 @@
+
+.mat-datepicker-toggle{
+    font-size: 2rem
+  }
+  table {
+    width: 100%;
+    margin-top: 20px;
+  }
+  table th{
+    font-size: 1.1rem;
+    color: black;
+  }
+  .example-full-width {
+    width: 100%;
+  }
+ 
+  small{
+    color: midnightblue;
+  }
+
+  .text-secondary{
+    cursor: pointer;
+  }
+  .page .pagination{
+    justify-content: center;
+}
+a.page-link.disabled{
+    background: #007bff;
+    color: white;
+}
+.page{
+   margin: 0 auto;
+   
+}
+.bd-example-modal-lg{
+  margin: 0 auto;
+}
+.can-click{
+  cursor: pointer;
+}
+.collapse, .collapsing{
+  width: 100%;
+}
+.collapse table, .collapsing table{
+  width: 50%;
+  margin: 0 auto;
+}
+#accordionExtraFee table{
+  width: 70%;
+}
+@media only screen and (min-width: 1300px) {
+  .col-form-label.ml-3{
+    min-width: 90px;
+  }
+}
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}

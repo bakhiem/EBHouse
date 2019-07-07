@@ -109,4 +109,18 @@ export class LandlordService {
   getExtrafee(data : any) : Observable<Landlord>{
     return this.http.post<any>(`${this.baseUrl}/api/landlord/extraFee/`, data, httpOptions);
   }
+  addExtrafee(data : any) : Observable<Landlord>{
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/extraFee/data`, data, httpOptions);
+  }
+  //financial
+  getFinancial(data : any) : Observable<Landlord>{
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/financial/`, data, httpOptions);
+  }
+  updateFinancial(data : any) : Observable<Landlord>{
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/financial/update`, data, httpOptions);
+  }
+  getOneFinancial(data : any) : Observable<Landlord>{
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/financial/get`, data, httpOptions);
+  }
+
 }

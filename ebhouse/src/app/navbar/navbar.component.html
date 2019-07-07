@@ -7,7 +7,9 @@
     <div class="main-menu">
         <div class="menu-inner">
             <nav>
-                <ul class="metismenu" id="menu">
+                <ul class="metismenu" *ngIf='role == "landlord"' id="menu">
+                   
+                   
                     <li>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-dashboard"></i><span>Quản lý
                                 chung</span></a>
@@ -47,6 +49,11 @@
                         <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-table"></i>
                             <span>Chi phí khác</span></a>
                     </li>
+                    <li routerLink="/landlord/financial" routerLinkActive="active">
+                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-money"></i> <span>Quản
+                                lý tài chính</span></a>
+
+                    </li>
                     <li>
                         <a href="/notification/to"><i class="ti-email"></i> <span>Quản lý thông báo</span></a>
                         <ul class="collapse">
@@ -54,23 +61,21 @@
                             <li routerLink="/notification/to" routerLinkActive="active"><a href="javascript:void(0)">Thông báo đã nhận</a></li>
                         </ul>
                     </li>
-                    <li>
-                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-money"></i> <span>Quản
-                                lý tài chính</span></a>
-
-                    </li>
+                   
                     <li routerLink="/landlord/profile" [routerLinkActive]="['active']">
                         <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-user"></i>
                             <span>Thông tin cá nhân</span></a>
                     </li>
 
                 </ul>
+
+
             </nav>
         </div>
     </div>
 </div>
 
-<div class="sidebar-menu" [ngClass]="{'hide': role == '' || role == 'landlord'} ">
+<div class="sidebar-menu" [ngClass]="{'hide': role == '' || role == 'landlord'}">
     <div class="sidebar-header">
         <div class="logo">
             <a routerLink="/landlord/dashboard"><img src="assets/images/logo/logo_transparent_white.png" alt="logo"></a>

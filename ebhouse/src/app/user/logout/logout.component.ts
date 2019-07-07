@@ -8,12 +8,21 @@ import { Router } from '@angular/router';
 })
 export class LogoutComponent implements OnInit {
 
-  constructor(private service : AuthenticationService,
-    private router : Router) { }
+  constructor(private service: AuthenticationService,
+    private router: Router) { }
 
   ngOnInit() {
-    this.service.logout().subscribe();
-    this.router.navigate(['/login']);
+    if (this.service.currentUserValue) {
+      this.service.logout().subscribe(res => {
+        this.router.navigate(['/login'])
+      }, err => {
+        this.router.navigate(['/login'])
+      });
+    } else {
+      this.router.navigate(['/login'])
+    }
+
+
     // location.reload(true);
   }
 

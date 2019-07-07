@@ -25,7 +25,8 @@ export class DashboardComponent implements OnInit {
     return (this.currentUser && this.currentUser.role === Role.Tenant);
   }
   deleteDataInLocal() {
-    this.authenticationService.logout();
+    this.authenticationService.removeLocalUser();
+    this.router.navigate(['/login'])
   }
   ngOnInit() {
     if (this.isLandlord) {
@@ -45,9 +46,8 @@ export class DashboardComponent implements OnInit {
       }
     }
     else {
-      console.log("delete")
+      console.log("delete in dashboard")
       this.deleteDataInLocal();
-      this.router.navigate(['/login']);
     }
   }
 }

@@ -15,6 +15,7 @@ import { UpdateContractComponent } from './contract/update-contract/update-contr
 import { ElectricComponent } from './electric/electric.component';
 import {UtilityComponent }from './utility/utility.component';
 import { ExtraFeeComponent } from './extra-fee/extrafee.component';
+import { FinancialComponent } from './financial/financial.component';
 const LandlordChildRouters:Routes = [ {
     path:'landlord',
     component:LandlordComponent,
@@ -55,6 +56,10 @@ const LandlordChildRouters:Routes = [ {
       {
         path: 'extrafee',
         component: ExtraFeeComponent
+      },
+      {
+        path: 'financial',
+        component: FinancialComponent
       }
     ]
   }

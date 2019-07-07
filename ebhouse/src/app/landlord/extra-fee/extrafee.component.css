@@ -10,3 +10,25 @@
     font-size: 1.1rem;
     color: black;
   }
+  .example-full-width {
+    width: 100%;
+  }
+ 
+  small{
+    color: midnightblue;
+  }
+
+  .text-secondary{
+    cursor: pointer;
+  }
+  .page .pagination{
+    justify-content: center;
+}
+a.page-link.disabled{
+    background: #007bff;
+    color: white;
+}
+.page{
+   margin: 0 auto;
+   
+}

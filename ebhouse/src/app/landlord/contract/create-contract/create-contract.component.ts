@@ -493,7 +493,6 @@ export class CreateContractComponent implements OnInit {
         let formatDeposit = this.createContractFormGroup.value.deposit.toString().split('.').join('');
         deposit = Number(formatDeposit);
       }
-
       var extraFee = 0;
       if ($('#customCheck1').is(':checked')) {
         if ($('#extraFee').val()) {

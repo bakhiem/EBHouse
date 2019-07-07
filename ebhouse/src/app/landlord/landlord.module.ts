@@ -28,6 +28,7 @@ import { UpdateContractComponent } from './contract/update-contract/update-contr
 import { UtilityComponent } from './utility/utility.component';
 import { ElectricComponent } from './electric/electric.component';
 import { ExtraFeeComponent } from './extra-fee/extrafee.component';
+import { FinancialComponent } from './financial/financial.component';
 @NgModule({
   declarations: [
     LandlordComponent,
@@ -43,7 +44,8 @@ import { ExtraFeeComponent } from './extra-fee/extrafee.component';
     UpdateContractComponent,
     UtilityComponent,
     ElectricComponent,
-    ExtraFeeComponent
+    ExtraFeeComponent,
+    FinancialComponent
   ],
   imports:[
     BrowserModule,
