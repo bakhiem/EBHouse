@@ -20,6 +20,7 @@ export class NotifiComponent implements OnInit {
   };
   createNotifiFormGroup: FormGroup;
   newNotifi: Notification;
+  listUser: any[];
 
   constructor(
     private fb: FormBuilder,
@@ -39,10 +40,38 @@ export class NotifiComponent implements OnInit {
   }
 
   creatNotification(){
-    $('#modalNotification').modal('show');
+    this.service.getUserSend().subscribe(
+      res => {
+        let response = JSON.parse('' + res);
+        if (response.type == 1) {
+          let data = JSON.parse(response.data);
+          this.listUser = data.listUser;
+          console.log(this.listUser);
+
+          $('#modalNotification').modal('show');
+        } else {
+          this.message.content = response.message;
+          this.message.type = 0;
+        }
+        this.removeLoading();
+      },
+      err => {
+        this.message.content = 'Lỗi';
+        this.message.type = 0;
+        this.removeLoading();
+      }
+    );
+  }
+
+  myFunction() {
+    $('#myDropdown').toggleClass('show-s');
   }
 
   onSubmit(){}
+
+  disabledClick(){
+    return false;
+  }
 
   addLoading() {
     $('.customLoading').addClass('preloader');

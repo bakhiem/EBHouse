@@ -4,6 +4,7 @@ import {Observable, throwError, BehaviorSubject }from 'rxjs';
 
 import {environment }from '../../../environments/environment';
 import { Notification } from 'src/app/models/notification';
+import { User } from 'src/app/user/models/user';
 const httpOptions =  {
   headers:new HttpHeaders( {
     'Content-Type':'application/json',
@@ -29,5 +30,9 @@ export class NotifiService {
 
   updateStatus(t : any):Observable <Notification[]>{
     return this.http.post <Notification[]> (`${this.baseUrl}/api/notification/update`, t, httpOptions);
+  }
+
+  getUserSend():Observable <User[]>{
+    return this.http.post <User[]> (`${this.baseUrl}/api/notification/user`, null, httpOptions);
   }
 }
