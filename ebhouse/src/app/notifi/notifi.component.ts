@@ -20,7 +20,9 @@ export class NotifiComponent implements OnInit {
   };
   createNotifiFormGroup: FormGroup;
   newNotifi: Notification;
-  listUser: any[];
+  listUser: any[] = [];
+  listBH: any[]= [];
+  listRoom: any[]= [];
 
   constructor(
     private fb: FormBuilder,
@@ -44,10 +46,15 @@ export class NotifiComponent implements OnInit {
       res => {
         let response = JSON.parse('' + res);
         if (response.type == 1) {
+          console.log(response.data);
           let data = JSON.parse(response.data);
           this.listUser = data.listUser;
-          console.log(this.listUser);
-
+          if(data.listBoardingHouse != 'undefined'){
+            this.listBH = data.listBoardingHouse
+          }
+          if(data.listRoom != 'undefined'){
+            this.listRoom = data.listRoom
+          }
           $('#modalNotification').modal('show');
         } else {
           this.message.content = response.message;
@@ -67,9 +74,27 @@ export class NotifiComponent implements OnInit {
     $('#myDropdown').toggleClass('show-s');
   }
 
+  filterFunction() {
+    var input, filter, ul, li, a, i, div,txtValue;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    div = document.getElementById("myDropdown");
+    a = div.getElementsByTagName("a");
+    for (i = 0; i < a.length; i++) {
+      txtValue = a[i].textContent || a[i].innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        a[i].style.display = "";
+      } else {
+        a[i].style.display = "none";
+      }
+    }
+  }
   onSubmit(){}
 
   disabledClick(){
+    if($(this).hasClass('send-user')){
+
+    }
     return false;
   }
 

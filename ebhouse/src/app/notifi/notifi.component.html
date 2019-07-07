@@ -1,175 +1,89 @@
 <div class="customLoading">
-  <div class="customLoader"></div>
+    <div class="customLoader"></div>
 </div>
 <div class="row">
-  <div class="create-bh mt-3">
-    <button type="button" class="btn btn-primary mr-3" (click)="creatNotification()">
+    <div class="create-bh mt-3">
+        <button type="button" class="btn btn-primary mr-3" (click)="creatNotification()">
       Tạo thông báo
     </button>
-  </div>
-  <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
-    {{message.content}}
-  </div>
-  <ng-template #errMess>
-    <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
-      {{message.content}}
     </div>
-  </ng-template>
-  <div class="modal fade bd-example-modal-lg" id="modalNotification">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <form [formGroup]="createNotifiFormGroup" (ngSubmit)="onSubmit()">
-          <div class="modal-header">
-            <h5 class="modal-title">Gửi Thông Báo</h5>
-            <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
-          </div>
-          <div class="modal-body">
-            <!-- alert -->
-            <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
-              {{message.content}}
-            </div>
-            <ng-template #errMess>
-              <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
-                {{message.content}}
-              </div>
-            </ng-template>
-            <!-- Textual inputs start -->
-            <div class="form-group row">
-              <div class="col-sm-7">
-
-
-                <script>
-                  /* When the user clicks on the button,
-                                  toggle between hiding and showing the dropdown content */
-                  function myFunction() {
-                    document.getElementById("myDropdown").classList.toggle("show-s");
-                  }
-
-                  function filterFunction() {
-                    var input, filter, ul, li, a, i;
-                    input = document.getElementById("myInput");
-                    filter = input.value.toUpperCase();
-                    div = document.getElementById("myDropdown");
-                    a = div.getElementsByTagName("a");
-                    for (i = 0; i < a.length; i++) {
-                      txtValue = a[i].textContent || a[i].innerText;
-                      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        a[i].style.display = "";
-                      } else {
-                        a[i].style.display = "none";
-                      }
-                    }
-                  }
-
-                </script>
-                <label for="example-text-input" class="col-form-label required">Người Nhận: </label>
-                <!-- <input class="form-control" type="text" id="example-text-input" formControlName="userTo"> -->
-                <input class="form-control" formControlName="userTo" type="text" placeholder="Search.." id="myInput"
-                  (click)="myFunction()" onkeyup="filterFunction()">
-                <div id="angular" class="example example_angular" ng-app="AngularExample"
-                  ng-controller="CityTagsInputController">
-                  <h3>AngularJS support</h3>
-                  <p>
-                    Include <code>bootstrap-tagsinput-angular.js</code> and register the 'bootstrap-tagsinput' in your
-                    Angular JS application to use the bootstrap-tagsinput directive.
-                  </p>
-                  <div class="bs-example">
-                    <bootstrap-tagsinput ng-model="cities" typeahead-source="queryCities" tagclass="getTagClass"
-                      itemvalue="value" itemtext="text">
-                    </bootstrap-tagsinput>
-                  </div>
-                  <div class="accordion">
-                    <div class="accordion-group">
-                      <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" href="#example_angular">
-                          Show code
-                        </a>
-                      </div>
-                      <div id="example_angular" class="accordion-body collapse">
-                        <div class="accordion-inner">
-                          <pre><code data-language="html">&lt;bootstrap-tagsinput
-                              ng-model="cities"
-                              typeahead-source="queryCities"
-                              tagclass="getTagClass"
-                              itemvalue="value"
-                              itemtext="text"&gt;
-                            &lt;/bootstrap-tagsinput&gt;
-                            &lt;script&gt;
-                            angular.module('AngularExample', ['bootstrap-tagsinput'])
-                              .controller('CityTagsInputController',
-                                function CityTagsInputController($scope) {
-                                  // Init with some cities
-                                  $scope.cities = [
-                                    { "value": 1 , "text": "Amsterdam"   , "continent": "Europe"    },
-                                    { "value": 4 , "text": "Washington"  , "continent": "America"   },
-                                    { "value": 7 , "text": "Sydney"      , "continent": "Australia" },
-                                    { "value": 10, "text": "Beijing"     , "continent": "Asia"      },
-                                    { "value": 13, "text": "Cairo"       , "continent": "Africa"    }
-                                  ];
-                                  $scope.queryCities = function(query) {
-                                    return $http.get('cities.json');
-                                  };
-                                  $scope.getTagClass = function(city) {
-                                    switch (city.continent) {
-                                      case 'Europe'   : return 'badge badge-info';
-                                      case 'America'  : return 'label label-important';
-                                      case 'Australia': return 'badge badge-success';
-                                      case 'Africa'   : return 'label label-inverse';
-                                      case 'Asia'     : return 'badge badge-warning';
-                                    }
-                                  };
-                                }
-                              );
-                            &lt;/script&gt;</code></pre>
-                        </div>
-                      </div>
+    <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
+        {{message.content}}
+    </div>
+    <ng-template #errMess>
+        <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
+            {{message.content}}
+        </div>
+    </ng-template>
+    <div class="modal fade bd-example-modal-lg" id="modalNotification">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form [formGroup]="createNotifiFormGroup" (ngSubmit)="onSubmit()">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Gửi Thông Báo</h5>
+                        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
                     </div>
-                  </div>
-                </div>
-                <div class="dropdown">
-                  <!-- <button (click)="myFunction()" class="dropbtn">Dropdown</button> -->
-                  <div id="myDropdown" class="dropdown-content" *ngFor="let item of listUser; let i = index">
-                    <a href="{{ item.id }}" (click)="disabledClick()">{{ item.name }}</a>
-                  </div>
-                </div>
-                <div
-                  *ngIf="createNotifiFormGroup.controls['userTo'].hasError('required') && (createNotifiFormGroup.controls['userTo'].dirty || createNotifiFormGroup.controls['userTo'].touched)"
-                  class="alert alert-danger">
-                  Người Nhận không được để trống!
-                </div>
-              </div>
+                    <div class="modal-body">
+                        <!-- alert -->
+                        <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
+                            {{message.content}}
+                        </div>
+                        <ng-template #errMess>
+                            <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
+                                {{message.content}}
+                            </div>
+                        </ng-template>
+                        <!-- Textual inputs start -->
+                        <div class="form-group row">
+                            <div class="col-sm-7">
+                                <label for="example-text-input" class="col-form-label required">Người Nhận: </label>
+                                <!-- <input class="form-control" type="text" id="example-text-input" formControlName="userTo"> -->
+                                <input class="form-control" formControlName="userTo" type="text" placeholder="Search.." id="myInput" (click)="myFunction()" (keyup)="filterFunction()">
+                                <div class="dropdown">
+                                    <!-- <button (click)="myFunction()" class="dropbtn">Dropdown</button> -->
+                                    <div id="myDropdown" class="dropdown-content">
+                                        <div *ngFor="let item of listBH; let i = index">
+                                            <a href="{{ item.id }}" (click)="disabledClick()" class="send-bh">{{ item.name }}</a>
+                                        </div>
+                                        <div *ngFor="let item of listRoom; let i = index">
+                                            <a href="{{ item.id }}" (click)="disabledClick()" class="send-room">{{ item.bh_name + ' - ' + item.name }}</a>
+                                        </div>
+                                        <div *ngFor="let item of listUser; let i = index">
+                                            <a href="{{ item.id }}" (click)="disabledClick()" class="send-user">{{ item.name }}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="createNotifiFormGroup.controls['userTo'].hasError('required') && (createNotifiFormGroup.controls['userTo'].dirty || createNotifiFormGroup.controls['userTo'].touched)" class="alert alert-danger">
+                                    Người Nhận không được để trống!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label for="example-number-input" class="col-form-label required">Tiêu Đề</label>
+                                <input class="form-control" type="number" id="example-number-input" formControlName="subject">
+                                <div *ngIf="createNotifiFormGroup.controls['subject'].hasError('required') && (createNotifiFormGroup.controls['subject'].dirty || createNotifiFormGroup.controls['subject'].touched)" class="alert alert-danger">
+                                    Tiêu đề không được để trống
+                                </div>
+                            </div>
+                            <div class="col-sm-7">
+                                <label for="input-content" class="col-form-label required">Content</label>
+                                <textarea class="form-control" id="input-content" formControlName="content" rows="3"></textarea>
+                                <div *ngIf="createNotifiFormGroup.controls['content'].hasError('required') && (createNotifiFormGroup.controls['content'].dirty || createNotifiFormGroup.controls['content'].touched)" class="alert alert-danger">
+                                    Nội dung Không được để trống
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Textual inputs end -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Trở về</button>
+                        <button class="btn btn-info mb-3" type="submit" id="myButton" [disabled]="createNotifiFormGroup.invalid">Gửi</button>
+                    </div>
+                </form>
             </div>
-            <div class="form-group row">
-              <div class="col-sm-4">
-                <label for="example-number-input" class="col-form-label required">Tiêu Đề</label>
-                <input class="form-control" type="number" id="example-number-input" formControlName="subject">
-                <div
-                  *ngIf="createNotifiFormGroup.controls['subject'].hasError('required') && (createNotifiFormGroup.controls['subject'].dirty || createNotifiFormGroup.controls['subject'].touched)"
-                  class="alert alert-danger">
-                  Tiêu đề không được để trống
-                </div>
-              </div>
-              <div class="col-sm-7">
-                <label for="input-content" class="col-form-label required">Content</label>
-                <textarea class="form-control" id="input-content" formControlName="content" rows="3"></textarea>
-                <div
-                  *ngIf="createNotifiFormGroup.controls['content'].hasError('required') && (createNotifiFormGroup.controls['content'].dirty || createNotifiFormGroup.controls['content'].touched)"
-                  class="alert alert-danger">
-                  Nội dung Không được để trống
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Textual inputs end -->
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Trở về</button>
-            <button class="btn btn-info mb-3" type="submit" id="myButton"
-              [disabled]="createNotifiFormGroup.invalid">Gửi</button>
-          </div>
-        </form>
-      </div>
+        </div>
     </div>
-  </div>
 
 </div>
 <router-outlet></router-outlet>
