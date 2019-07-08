@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Message } from '../models/message';
+import { CommonMessage, Message } from '../models/message';
 import { Notification } from '../models/notification';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -23,6 +23,8 @@ export class NotifiComponent implements OnInit {
   listUser: any[] = [];
   listBH: any[]= [];
   listRoom: any[]= [];
+  option_send: String;
+
 
   constructor(
     private fb: FormBuilder,
@@ -35,6 +37,7 @@ export class NotifiComponent implements OnInit {
   ngOnInit() {
     this.resetMess();
     this.createNotifiFormGroup = this.fb.group({
+      userToText: this.fb.control('', Validators.compose([Validators.required])),
       userTo: this.fb.control('', Validators.compose([Validators.required])),
       subject: this.fb.control('', Validators.compose([Validators.required])),
       content: this.fb.control('', Validators.compose([Validators.required]))
@@ -46,7 +49,6 @@ export class NotifiComponent implements OnInit {
       res => {
         let response = JSON.parse('' + res);
         if (response.type == 1) {
-          console.log(response.data);
           let data = JSON.parse(response.data);
           this.listUser = data.listUser;
           if(data.listBoardingHouse != 'undefined'){
@@ -55,6 +57,15 @@ export class NotifiComponent implements OnInit {
           if(data.listRoom != 'undefined'){
             this.listRoom = data.listRoom
           }
+
+          this.listBH.forEach(bh => {
+            this.listRoom.forEach(room => {
+              if(room.boardinghouse_id == bh.id){
+                room['bh_name'] = bh.name;
+              }
+            });
+          });
+
           $('#modalNotification').modal('show');
         } else {
           this.message.content = response.message;
@@ -74,27 +85,37 @@ export class NotifiComponent implements OnInit {
     $('#myDropdown').toggleClass('show-s');
   }
 
-  filterFunction() {
-    var input, filter, ul, li, a, i, div,txtValue;
-    input = document.getElementById("myInput");
-    filter = input.value.toUpperCase();
-    div = document.getElementById("myDropdown");
-    a = div.getElementsByTagName("a");
-    for (i = 0; i < a.length; i++) {
-      txtValue = a[i].textContent || a[i].innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        a[i].style.display = "";
-      } else {
-        a[i].style.display = "none";
-      }
+  onSubmit(){
+    if (!this.createNotifiFormGroup.invalid) {
+        this.addLoading();
+        this.newNotifi.userTo = this.createNotifiFormGroup.value.userTo;
+        this.newNotifi.subject = this.createNotifiFormGroup.value.subject;
+        this.newNotifi.content = this.createNotifiFormGroup.value.content;
+
+        this.service.sendNotification({ notification: this.newNotifi, flag: this.option_send }).subscribe(
+          res => {
+            this.removeLoading();
+            let response = JSON.parse('' + res);
+            if (response.type == 1) {
+              this.message.type = 1;
+            } else {
+              this.message.type = 0;
+            }
+            this.message.content = response.message;
+          },
+          err => {
+            this.message.type = 0;
+            this.message.content = CommonMessage.defaultErrMess;
+          }
+        );
     }
   }
-  onSubmit(){}
 
-  disabledClick(){
-    if($(this).hasClass('send-user')){
-
-    }
+  disabledClick(t : String, event : any){
+    this.option_send = t;
+    $("#myInput").val(event.target.text);
+    this.createNotifiFormGroup.get('userTo').setValue(event.target.rel);
+    $('#myDropdown').removeClass('show-s');
     return false;
   }
 

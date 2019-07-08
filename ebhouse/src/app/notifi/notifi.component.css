@@ -43,6 +43,8 @@
   overflow: auto;
   border: 1px solid #ddd;
   z-index: 1;
+  overflow-y: auto;
+  max-height: 400px;
 }
 
 .dropdown-content a {

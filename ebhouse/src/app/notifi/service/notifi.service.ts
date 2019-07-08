@@ -35,4 +35,8 @@ export class NotifiService {
   getUserSend():Observable <User[]>{
     return this.http.post <User[]> (`${this.baseUrl}/api/notification/user`, null, httpOptions);
   }
+
+  sendNotification(t : any):Observable <Notification[]>{
+    return this.http.post <Notification[]> (`${this.baseUrl}/api/notification/send`, t, httpOptions);
+  }
 }

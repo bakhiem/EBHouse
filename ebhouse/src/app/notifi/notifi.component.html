@@ -18,7 +18,7 @@
     <div class="modal fade bd-example-modal-lg" id="modalNotification">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form [formGroup]="createNotifiFormGroup" (ngSubmit)="onSubmit()">
+                <form [formGroup]="createNotifiFormGroup" autocomplete="off" (ngSubmit)="onSubmit()">
                     <div class="modal-header">
                         <h5 class="modal-title">Gửi Thông Báo</h5>
                         <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
@@ -38,22 +38,23 @@
                             <div class="col-sm-7">
                                 <label for="example-text-input" class="col-form-label required">Người Nhận: </label>
                                 <!-- <input class="form-control" type="text" id="example-text-input" formControlName="userTo"> -->
-                                <input class="form-control" formControlName="userTo" type="text" placeholder="Search.." id="myInput" (click)="myFunction()" (keyup)="filterFunction()">
+                                <input class="form-control" formControlName="userToText" type="text" placeholder="Search.." id="myInput" (click)="myFunction()" (keyup)="filterFunction()">
+                                <input type="hidden" formControlName="userTo">
                                 <div class="dropdown">
                                     <!-- <button (click)="myFunction()" class="dropbtn">Dropdown</button> -->
                                     <div id="myDropdown" class="dropdown-content">
                                         <div *ngFor="let item of listBH; let i = index">
-                                            <a href="{{ item.id }}" (click)="disabledClick()" class="send-bh">{{ item.name }}</a>
+                                            <a rel="{{ item.id }}" (click)="disabledClick('bh', $event)" class="send-bh">{{ item.name }}</a>
                                         </div>
                                         <div *ngFor="let item of listRoom; let i = index">
-                                            <a href="{{ item.id }}" (click)="disabledClick()" class="send-room">{{ item.bh_name + ' - ' + item.name }}</a>
+                                            <a rel="{{ item.id }}" (click)="disabledClick('room', $event)" class="send-room">{{ item.bh_name + ' - ' + item.name }}</a>
                                         </div>
                                         <div *ngFor="let item of listUser; let i = index">
-                                            <a href="{{ item.id }}" (click)="disabledClick()" class="send-user">{{ item.name }}</a>
+                                            <a rel="{{ item.id }}" (click)="disabledClick('user', $event)" class="send-user">{{ item.name }}</a>
                                         </div>
                                     </div>
                                 </div>
-                                <div *ngIf="createNotifiFormGroup.controls['userTo'].hasError('required') && (createNotifiFormGroup.controls['userTo'].dirty || createNotifiFormGroup.controls['userTo'].touched)" class="alert alert-danger">
+                                <div *ngIf="createNotifiFormGroup.controls['userToText'].hasError('required') && (createNotifiFormGroup.controls['userToText'].dirty || createNotifiFormGroup.controls['userToText'].touched)" class="alert alert-danger">
                                     Người Nhận không được để trống!
                                 </div>
                             </div>
@@ -61,7 +62,7 @@
                         <div class="form-group row">
                             <div class="col-sm-4">
                                 <label for="example-number-input" class="col-form-label required">Tiêu Đề</label>
-                                <input class="form-control" type="number" id="example-number-input" formControlName="subject">
+                                <input class="form-control" type="text" id="example-number-input" formControlName="subject">
                                 <div *ngIf="createNotifiFormGroup.controls['subject'].hasError('required') && (createNotifiFormGroup.controls['subject'].dirty || createNotifiFormGroup.controls['subject'].touched)" class="alert alert-danger">
                                     Tiêu đề không được để trống
                                 </div>
