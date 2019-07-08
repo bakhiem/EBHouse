@@ -25,12 +25,12 @@
                     </div>
                     <div class="modal-body">
                         <!-- alert -->
-                        <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
-                            {{message.content}}
+                        <div *ngIf="messages && messages.type == 1; else errMess" class="alert alert-success" role="alert">
+                            {{messages.content}}
                         </div>
                         <ng-template #errMess>
-                            <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
-                                {{message.content}}
+                            <div *ngIf="messages && messages.content != ''" class="alert alert-danger" role="alert">
+                                {{messages.content}}
                             </div>
                         </ng-template>
                         <!-- Textual inputs start -->
@@ -38,7 +38,7 @@
                             <div class="col-sm-7">
                                 <label for="example-text-input" class="col-form-label required">Người Nhận: </label>
                                 <!-- <input class="form-control" type="text" id="example-text-input" formControlName="userTo"> -->
-                                <input class="form-control" formControlName="userToText" type="text" placeholder="Search.." id="myInput" (click)="myFunction()" (keyup)="filterFunction()">
+                                <input class="form-control" formControlName="userToText" type="text" placeholder="Search.." id="myInput" (click)="myFunction()" (keyup)="filterFunction()" (change)="checkChange()">
                                 <input type="hidden" formControlName="userTo">
                                 <div class="dropdown">
                                     <!-- <button (click)="myFunction()" class="dropbtn">Dropdown</button> -->
@@ -55,6 +55,9 @@
                                     </div>
                                 </div>
                                 <div *ngIf="createNotifiFormGroup.controls['userToText'].hasError('required') && (createNotifiFormGroup.controls['userToText'].dirty || createNotifiFormGroup.controls['userToText'].touched)" class="alert alert-danger">
+                                    Người Nhận không được để trống!
+                                </div>
+                                <div *ngIf="createNotifiFormGroup.controls['userTo'].hasError('required') && (createNotifiFormGroup.controls['userTo'].dirty || createNotifiFormGroup.controls['userTo'].touched)" class="alert alert-danger">
                                     Người Nhận không được để trống!
                                 </div>
                             </div>

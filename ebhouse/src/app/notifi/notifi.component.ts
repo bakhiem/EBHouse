@@ -18,6 +18,11 @@ export class NotifiComponent implements OnInit {
     content: '',
     type: 0,
   };
+
+  messages: Message = {
+    content: '',
+    type: 0,
+  };
   createNotifiFormGroup: FormGroup;
   newNotifi: Notification;
   listUser: any[] = [];
@@ -45,6 +50,7 @@ export class NotifiComponent implements OnInit {
   }
 
   creatNotification(){
+    this.resetMessage();
     this.service.getUserSend().subscribe(
       res => {
         let response = JSON.parse('' + res);
@@ -66,6 +72,10 @@ export class NotifiComponent implements OnInit {
             });
           });
 
+          this.createNotifiFormGroup.get('userTo').setValue(null);
+          this.createNotifiFormGroup.get('userToText').setValue(null);
+          this.createNotifiFormGroup.get('subject').setValue(null);
+          this.createNotifiFormGroup.get('content').setValue(null);
           $('#modalNotification').modal('show');
         } else {
           this.message.content = response.message;
@@ -85,38 +95,68 @@ export class NotifiComponent implements OnInit {
     $('#myDropdown').toggleClass('show-s');
   }
 
+  checkChange(){
+    this.createNotifiFormGroup.get('userTo').setValue(null);
+  }
+
   onSubmit(){
+    this.resetMessage();
     if (!this.createNotifiFormGroup.invalid) {
         this.addLoading();
-        this.newNotifi.userTo = this.createNotifiFormGroup.value.userTo;
+        // this.newNotifi.userTo.id = this.createNotifiFormGroup.value.userTo;
         this.newNotifi.subject = this.createNotifiFormGroup.value.subject;
         this.newNotifi.content = this.createNotifiFormGroup.value.content;
 
-        this.service.sendNotification({ notification: this.newNotifi, flag: this.option_send }).subscribe(
+        this.service.sendNotification({ notification: this.newNotifi,id: this.createNotifiFormGroup.value.userTo, flag: this.option_send }).subscribe(
           res => {
             this.removeLoading();
             let response = JSON.parse('' + res);
             if (response.type == 1) {
-              this.message.type = 1;
+              this.messages.type = 1;
             } else {
-              this.message.type = 0;
+              this.messages.type = 0;
             }
-            this.message.content = response.message;
+            this.messages.content = response.message;
           },
           err => {
-            this.message.type = 0;
-            this.message.content = CommonMessage.defaultErrMess;
+            this.messages.type = 0;
+            this.messages.content = CommonMessage.defaultErrMess;
           }
         );
+    }else{
+      this.message.content = 'Vui lòng điền đầy đủ thông tin';
+      this.message.type = 0;
     }
   }
 
   disabledClick(t : String, event : any){
     this.option_send = t;
-    $("#myInput").val(event.target.text);
+    this.createNotifiFormGroup.get('userToText').setValue(event.target.text);
     this.createNotifiFormGroup.get('userTo').setValue(event.target.rel);
     $('#myDropdown').removeClass('show-s');
     return false;
+  }
+
+  // hidesearch(){
+  //   $('#myDropdown').removeClass('show-s');
+  // }
+
+  // forcus(){}
+
+  filterFunction() {
+    var input, filter, ul, li, a, i, div ,txtValue;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    div = document.getElementById("myDropdown");
+    a = div.getElementsByTagName("a");
+    for (i = 0; i < a.length; i++) {
+      txtValue = a[i].textContent || a[i].innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        a[i].style.display = "";
+      } else {
+        a[i].style.display = "none";
+      }
+    }
   }
 
   addLoading() {
@@ -131,5 +171,10 @@ export class NotifiComponent implements OnInit {
   resetMess() {
     this.message.content = '';
     this.message.type = 0;
+  }
+
+  resetMessage() {
+    this.messages.content = '';
+    this.messages.type = 0;
   }
 }
