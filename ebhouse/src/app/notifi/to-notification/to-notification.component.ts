@@ -46,6 +46,7 @@ export class ToNotificationComponent implements OnInit {
   dataSourceAnswered = new MatTableDataSource();
 
   displayedColumns: string[] = ['userTo', 'subject', 'cDate', 'status'];
+  displayedColumns2: string[] = ['userTo', 'subject', 'cDate', 'mDate', 'status'];
 
   constructor(
     private fb: FormBuilder,
@@ -60,7 +61,7 @@ export class ToNotificationComponent implements OnInit {
     this.getAllFrom();
   }
 
-  getAllFrom() {
+  public getAllFrom() {
     this.getNotificationByStatus(0, this.currentPageSent);
     this.getNotificationByStatus(1, this.currentPageSeen);
     this.getNotificationByStatus(2, this.currentPageAnswered);

@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { PlaceService } from '../service/place.service';
 import { AuthenticationService } from '../user/service/authentication.service';
 import { NotifiService } from './service/notifi.service';
+import { FromNotificationComponent } from './from-notification/from-notification.component';
+import { ToNotificationComponent } from './to-notification/to-notification.component';
 
 @Component({
   selector: 'app-notifi',
@@ -24,12 +26,13 @@ export class NotifiComponent implements OnInit {
     type: 0,
   };
   createNotifiFormGroup: FormGroup;
-  newNotifi: Notification;
+  newNotifi: Notification = new Notification();
   listUser: any[] = [];
   listBH: any[]= [];
   listRoom: any[]= [];
   option_send: String;
-
+  fromC : FromNotificationComponent;
+  toC : ToNotificationComponent;
 
   constructor(
     private fb: FormBuilder,
@@ -103,11 +106,10 @@ export class NotifiComponent implements OnInit {
     this.resetMessage();
     if (!this.createNotifiFormGroup.invalid) {
         this.addLoading();
-        // this.newNotifi.userTo.id = this.createNotifiFormGroup.value.userTo;
         this.newNotifi.subject = this.createNotifiFormGroup.value.subject;
         this.newNotifi.content = this.createNotifiFormGroup.value.content;
 
-        this.service.sendNotification({ notification: this.newNotifi,id: this.createNotifiFormGroup.value.userTo, flag: this.option_send }).subscribe(
+        this.service.sendNotification({ notification: this.newNotifi, id: this.createNotifiFormGroup.value.userTo, flag: this.option_send }).subscribe(
           res => {
             this.removeLoading();
             let response = JSON.parse('' + res);

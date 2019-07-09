@@ -45,7 +45,7 @@ export class FromNotificationComponent implements OnInit {
   dataSourceAnswered = new MatTableDataSource();
 
   displayedColumns: string[] = ['userTo', 'subject', 'cDate', 'status'];
-
+  displayedColumns2: string[] = ['userTo', 'subject', 'cDate', 'mDate', 'status'];
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -59,7 +59,7 @@ export class FromNotificationComponent implements OnInit {
     this.getAllFrom();
   }
 
-  getAllFrom() {
+  public getAllFrom() {
     this.getNotificationByStatus(0, this.currentPageSent);
     this.getNotificationByStatus(1, this.currentPageSeen);
     this.getNotificationByStatus(2, this.currentPageAnswered);
@@ -70,6 +70,7 @@ export class FromNotificationComponent implements OnInit {
     this.service.getAllFromNotification({ page: currentPage-1, status : status}).subscribe(
       res => {
         let response = JSON.parse('' + res);
+        console.log(response);
         if (response.type == 1) {
           let data = JSON.parse(response.data);
           switch(status){
