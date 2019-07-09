@@ -119,14 +119,17 @@ export class ElectricComponent implements OnInit {
 
 
   focusoutFunction(id) {
+
     if (Number($('#present-' + id).val()) < Number($('#last-' + id).val())) {
-      $('#present-' + id).val($('#last-' + id).val());
+      $('#present-' + id).val(Number($('#last-' + id).val()));
       $('#usage-' + id).html(''+0);
       $('#amount-' + id).html(''+0);
       this.displayDialog(CommonMessage.Electric);
     }
     else {
       let usage = Number($('#present-' + id).val()) - Number($('#last-' + id).val());
+      $('#present-' + id).val(Number($('#present-' + id).val()));
+      $('#last-' + id).val(Number($('#last-' + id).val()));
       $('#usage-' + id).html('' + usage);
       let amount = usage * Number(this.list[1].value);
       let currency = amount.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
@@ -154,12 +157,9 @@ export class ElectricComponent implements OnInit {
 
 
   jqueryCode() {
-    $("input[type=submit]").attr("disabled", "disabled");
-    $("select").change(() => {
-      $("input[type=submit]").removeAttr("disabled");
-    });
-    $("input").keypress(function () {
-      $("input[type=submit]").removeAttr("disabled");
+   
+    $("input[type=submit]").keypress(function () {
+     console.log(this)
     });
 
   }

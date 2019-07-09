@@ -12,7 +12,7 @@ import { Role } from '../user/models/role';
 export class HeaderComponent implements OnInit {
   constructor(private service: SharedServiceService,
     private authService: AuthenticationService) {
-    // this.getBoardingHouses() 
+    // this.getBoardingHouses()
   }
   role: string = '';
   currentUser: any;

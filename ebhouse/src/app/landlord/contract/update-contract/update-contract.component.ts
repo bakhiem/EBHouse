@@ -223,6 +223,7 @@ export class UpdateContractComponent implements OnInit {
           this.removeLoading();
           let response = JSON.parse("" + res);
           if (response.type == 1) {
+            console.log(response.data)
             this.listContract = response.data;
             let display = []
             if (this.listContract.length > 0) {

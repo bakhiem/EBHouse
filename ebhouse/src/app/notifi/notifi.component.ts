@@ -6,8 +6,6 @@ import { Router } from '@angular/router';
 import { PlaceService } from '../service/place.service';
 import { AuthenticationService } from '../user/service/authentication.service';
 import { NotifiService } from './service/notifi.service';
-import { FromNotificationComponent } from './from-notification/from-notification.component';
-import { ToNotificationComponent } from './to-notification/to-notification.component';
 
 @Component({
   selector: 'app-notifi',
@@ -25,14 +23,14 @@ export class NotifiComponent implements OnInit {
     content: '',
     type: 0,
   };
-  createNotifiFormGroup: FormGroup;
+  public createNotifiFormGroup: FormGroup;
+  public flag: any = 0;
   newNotifi: Notification = new Notification();
   listUser: any[] = [];
   listBH: any[]= [];
   listRoom: any[]= [];
-  option_send: String;
-  fromC : FromNotificationComponent;
-  toC : ToNotificationComponent;
+  option_send: String = "user";
+  public currentNotifi: Notification;
 
   constructor(
     private fb: FormBuilder,
@@ -102,10 +100,11 @@ export class NotifiComponent implements OnInit {
     this.createNotifiFormGroup.get('userTo').setValue(null);
   }
 
-  onSubmit(){
+  public onSubmit(){
     this.resetMessage();
     if (!this.createNotifiFormGroup.invalid) {
         this.addLoading();
+
         this.newNotifi.subject = this.createNotifiFormGroup.value.subject;
         this.newNotifi.content = this.createNotifiFormGroup.value.content;
 
@@ -119,6 +118,22 @@ export class NotifiComponent implements OnInit {
               this.messages.type = 0;
             }
             this.messages.content = response.message;
+            this.service.listNotification.next(1);
+            if(this.flag == 1){
+              this.service.updateStatus({ id:  this.currentNotifi.id, status :  this.currentNotifi.status+1}).subscribe(
+                res => {
+                  let response = JSON.parse('' + res);
+                  if (response.type == 1) {
+                    this.service.listNotification.next(1);
+                  }
+                },
+                err => {
+                  this.message.content = 'Lỗi';
+                  this.message.type = 0;
+                  this.removeLoading();
+                }
+              );
+            }
           },
           err => {
             this.messages.type = 0;

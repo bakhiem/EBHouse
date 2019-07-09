@@ -64,7 +64,7 @@ export class RoomTypeComponent implements OnInit {
         Validators.required, Validators.pattern("[0-9]+")
       ])),
       area: this.fb.control('', Validators.compose([
-        Validators.required
+        Validators.required, Validators.pattern("([0-9]*[.])?[0-9]+")
       ])),
       description: '',
       dataEquipment: new FormArray([])
@@ -75,7 +75,7 @@ export class RoomTypeComponent implements OnInit {
 
   }
   formatCurrency() {
-    var $input = $("#input-price");
+    var $input = $(".input-price");
     $input.on("keyup", function (event) {
       // When user select text in the document, also abort.
       var selection = window.getSelection().toString();
@@ -89,13 +89,15 @@ export class RoomTypeComponent implements OnInit {
       var $this = $(this);
       // Get the value.
       let input = $this.val();
-      let removeComma = input.toString().replace(/[^0-9]/g,'');
+      let removeComma = input.toString().replace(/[^0-9]/g, '');
       let currency = removeComma.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
       $this.val(function () {
         return (Number(currency) === 0) ? "" : currency;
       });
     });
   }
+
+  //add . to price
   formatCurrencyEdit(price : number) : string{
     if(price === 0){
       return "";  

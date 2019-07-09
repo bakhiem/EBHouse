@@ -11,6 +11,8 @@ import { AuthenticationService } from '../../user/service/authentication.service
 import { NotifiService } from '../service/notifi.service';
 import { Notification } from 'src/app/models/notification';
 
+import { ISubscription } from "rxjs/Subscription";
+
 @Component({
   selector: 'app-from-notification',
   templateUrl: './from-notification.component.html',
@@ -21,6 +23,7 @@ export class FromNotificationComponent implements OnInit {
     content: '',
     type: 0,
   };
+  listNotification: any = 1;
   notifiListSent: any[] = [];
   notifiListSeen: any[] = [];
   notifiListAnswered: any[] = [];
@@ -46,6 +49,9 @@ export class FromNotificationComponent implements OnInit {
 
   displayedColumns: string[] = ['userTo', 'subject', 'cDate', 'status'];
   displayedColumns2: string[] = ['userTo', 'subject', 'cDate', 'mDate', 'status'];
+
+  private subscription: ISubscription;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -56,7 +62,10 @@ export class FromNotificationComponent implements OnInit {
 
   ngOnInit() {
     this.resetMess();
-    this.getAllFrom();
+    // this.getAllFrom();
+    this.subscription = this.service.listNotification.subscribe((data) => {
+      this.getAllFrom();
+    })
   }
 
   public getAllFrom() {

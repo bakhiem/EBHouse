@@ -3,8 +3,7 @@ import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl, Valid
 import { MatDialog, MatCheckboxModule } from '@angular/material';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
-import * as $AB from 'jquery';
-import * as bootstrap from "bootstrap";
+
 import { LandlordService } from '../service/landlord-service.service';
 
 import { Landlord } from '../../models/landlord';
@@ -107,8 +106,6 @@ export class ContractComponent implements OnInit, OnDestroy {
     this.service.getContract(page).subscribe(
       res => {
         let response = JSON.parse("" + res);
-        
-        console.log(response);
         console.log(response)
         if (response.type == 1) {
           try {

@@ -18,7 +18,14 @@ const httpOptions =  {
 
 export class NotifiService {
   private baseUrl:string = environment.baseUrl;
-  constructor(private http:HttpClient) {}
+
+  listNotification: BehaviorSubject<any>;
+  update: BehaviorSubject<any>;
+
+  constructor(private http:HttpClient) {
+    this.listNotification = new BehaviorSubject<any>(null);
+    this.update = new BehaviorSubject<any>(null);
+  }
 
   getAllFromNotification(t : any):Observable <Notification[]>{
     return this.http.post <Notification[]> (`${this.baseUrl}/api/notification/from`, t, httpOptions);

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient,HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -7,31 +7,31 @@ import { User } from '../models/user';
 import { environment } from '../../../environments/environment';
 import { Role } from '../models/role';
 const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type': 'application/json',
-  }),
-  withCredentials: true,
-  responseType: 'text' as 'json'
+    headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+    }),
+    withCredentials: true,
+    responseType: 'text' as 'json'
 };
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
-    userStorage : any;
+    userStorage: any;
     private baseUrl: string = environment.baseUrl;
     private currentUserSubject: BehaviorSubject<any>;
     public currentUser: Observable<any>;
-    private loggedIn :  BehaviorSubject<boolean>;
+    private loggedIn: BehaviorSubject<boolean>;
     constructor(private http: HttpClient) {
-        if(localStorage.getItem('currentUser')){
+        if (localStorage.getItem('currentUser')) {
             this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
             this.loggedIn = new BehaviorSubject<boolean>(true)
         }
-        else if(sessionStorage.getItem('currentUser')){
+        else if (sessionStorage.getItem('currentUser')) {
             this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(sessionStorage.getItem('currentUser')));
             this.loggedIn = new BehaviorSubject<boolean>(true)
         }
-        else{
-            this.currentUserSubject = new BehaviorSubject<User>({});
+        else {
+            this.currentUserSubject = new BehaviorSubject<User>(null);
             this.loggedIn = new BehaviorSubject<boolean>(false)
         }
         this.currentUser = this.currentUserSubject.asObservable();
@@ -41,50 +41,50 @@ export class AuthenticationService {
         return this.currentUserSubject.value;
     }
     public get isLoggedIn() {
-        return this.loggedIn.asObservable(); 
-     }
+        return this.loggedIn.asObservable();
+    }
 
-    login(u : User,rememberPassword : Number ) {
-        return this.http.post<any>(`${this.baseUrl}/api/login`, u ,httpOptions)
+    login(u: User, rememberPassword: Number) {
+        return this.http.post<any>(`${this.baseUrl}/api/login`, u, httpOptions)
             .pipe(map(res => {
                 //login successful if there's a jwt token in the response
                 let resObject = JSON.parse(res);
-                if(resObject && resObject.data){
+                if (resObject && resObject.data) {
                     let resDataObject = resObject.data.map;
-                   
-                    if(resDataObject.role == Role.Lanlord){
+
+                    if (resDataObject.role == Role.Lanlord) {
                         let userLogin = JSON.parse(resObject.data.map.landlord);
                         if (resDataObject && userLogin.user.token) {
                             // store user details and jwt token in local storage to keep user logged in between page refreshes
-                             this.userStorage  = {
-                                user : userLogin.user,
-                                id : userLogin.id,
-                                role : resDataObject.role
+                            this.userStorage = {
+                                user: userLogin.user,
+                                id: userLogin.id,
+                                role: resDataObject.role
                             };
-                            if(rememberPassword == 0){
+                            if (rememberPassword == 0) {
                                 sessionStorage.setItem('currentUser', JSON.stringify(this.userStorage));
                             }
-                            else{
+                            else {
                                 localStorage.setItem('currentUser', JSON.stringify(this.userStorage));
                             }
-                           
+
                             this.currentUserSubject.next(this.userStorage);
                             this.loggedIn.next(true);
                         }
                     }
-                    else if(resDataObject.role == Role.Tenant){
+                    else if (resDataObject.role == Role.Tenant) {
                         let userLogin = JSON.parse(resObject.data.map.tenant);
                         if (resDataObject && userLogin.user.token) {
                             // store user details and jwt token in local storage to keep user logged in between page refreshes
-                             this.userStorage  = {
-                                user : userLogin.user,
-                                id : userLogin.id,
-                                role : resDataObject.role
+                            this.userStorage = {
+                                user: userLogin.user,
+                                id: userLogin.id,
+                                role: resDataObject.role
                             };
-                            if(rememberPassword == 0){
+                            if (rememberPassword == 0) {
                                 sessionStorage.setItem('currentUser', JSON.stringify(this.userStorage));
                             }
-                            else{
+                            else {
                                 localStorage.setItem('currentUser', JSON.stringify(this.userStorage));
                             }
                             this.currentUserSubject.next(this.userStorage);
@@ -92,15 +92,26 @@ export class AuthenticationService {
                         }
                     }
                 }
-                 return [res,this.userStorage];
+                return [res, this.userStorage];
             }));
     }
-    logout() {
-        // remove user from local storage to log user out
+    removeLocalUser() {
         localStorage.removeItem('currentUser');
         sessionStorage.removeItem('currentUser');
         this.loggedIn.next(false);
         this.currentUserSubject.next(null);
-        
     }
-  }
+    logout() {
+        return this.http.post<any>(`${this.baseUrl}/api/logout`, null, httpOptions).pipe(map(res => {
+            console.log(res)
+            this.removeLocalUser()
+        }, err => {
+            this.removeLocalUser()
+        }))
+    }
+
+
+    // remove user from local storage to log user out
+
+
+}

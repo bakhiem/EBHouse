@@ -1,4 +1,8 @@
-table {
+
+.mat-datepicker-toggle{
+    font-size: 2rem
+  }
+  table {
     width: 100%;
     margin-top: 20px;
   }
@@ -6,14 +10,12 @@ table {
     font-size: 1.1rem;
     color: black;
   }
-  .create-bh{
-    display: flex;
-    justify-content: flex-end;
+  .example-full-width {
     width: 100%;
-    
   }
-  .form-group.row{
-    margin-bottom: 0;
+ 
+  small{
+    color: midnightblue;
   }
 
   .text-secondary{

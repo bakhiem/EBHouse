@@ -11,6 +11,10 @@ import { AuthenticationService } from '../../user/service/authentication.service
 import { NotifiService } from '../service/notifi.service';
 import { Notification } from 'src/app/models/notification';
 
+import { NotifiComponent } from '../notifi.component';
+
+import { ISubscription } from "rxjs/Subscription";
+
 @Component({
   selector: 'app-to-notification',
   templateUrl: './to-notification.component.html',
@@ -27,6 +31,7 @@ export class ToNotificationComponent implements OnInit {
   notifiListAnswered: any[] = [];
   notifiList: any[];
   currentNotifi: any;
+  currentIndex: any;
   //paging
   perPage: number = 10;
 
@@ -46,19 +51,24 @@ export class ToNotificationComponent implements OnInit {
   dataSourceAnswered = new MatTableDataSource();
 
   displayedColumns: string[] = ['userTo', 'subject', 'cDate', 'status'];
-  displayedColumns2: string[] = ['userTo', 'subject', 'cDate', 'status', ' '];
+  displayedColumns2: string[] = ['userTo', 'subject', 'cDate', 'status', 'action'];
+
+  private subscription: ISubscription;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private placeService: PlaceService,
     private authenticationService: AuthenticationService,
-    private service: NotifiService
+    private service: NotifiService,
+    private parent: NotifiComponent
   ) { }
 
   ngOnInit() {
     this.resetMess();
-    this.getAllFrom();
+    this.subscription = this.service.listNotification.subscribe((data) => {
+      this.getAllFrom();
+    })
   }
 
   public getAllFrom() {
@@ -115,7 +125,7 @@ export class ToNotificationComponent implements OnInit {
           let response = JSON.parse('' + res);
           if (response.type == 1) {
                 this.notifiListSent[index].status = 1;
-                this.notifiListSeen.push(this.notifiListSent[index]);
+                this.notifiListSeen.unshift(this.notifiListSent[index]);
                 this.notifiListSent.splice(index,1);
                 this.totalPageSent = Math.ceil(this.notifiListSent.length / this.perPage);
                 this.toArray(this.totalPageSent, status);
@@ -280,5 +290,54 @@ export class ToNotificationComponent implements OnInit {
     this.message.content = '';
     this.message.type = 0;
   }
+
+  creatNotifications(e : any, i: any){
+    this.currentNotifi = e;
+    this.currentIndex = i;
+
+    this.parent.flag = 1;
+    this.parent.currentNotifi = e;
+    this.parent.createNotifiFormGroup.get('userTo').setValue(e.userFrom.id);
+    this.parent.createNotifiFormGroup.get('userToText').setValue(e.userFrom.name);
+    this.parent.createNotifiFormGroup.get('subject').setValue(null);
+    this.parent.createNotifiFormGroup.get('content').setValue(null);
+    $("#myInput").attr('disabled','disabled');
+    $('#modalNotification').modal('show');
+
+  }
+
+  public updateStatus(){
+    this.service.updateStatus({ id:  this.currentNotifi.id, status :  this.currentNotifi.status+1}).subscribe(
+      res => {
+        let response = JSON.parse('' + res);
+        if (response.type == 1) {
+          console.log(3);
+          this.notifiListSeen[this.currentIndex].status = 2;
+          this.notifiListAnswered.unshift(this.notifiListSeen[this.currentIndex]);
+          this.notifiListSeen.splice(this.currentIndex,1);
+          this.totalPageSent = Math.ceil(this.notifiListSent.length / this.perPage);
+          this.toArray(this.totalPageSeen, this.currentNotifi.status);
+          this.totalPageSeen = Math.ceil(this.notifiListSeen.length / this.perPage);
+          this.toArray(this.totalPageAnswered, this.currentNotifi.status+1);
+        }
+
+        this.dataSourceSent.data = this.notifiListSent;
+        this.dataSourceSeen.data = this.notifiListSeen;
+        this.dataSourceAnswered.data = this.notifiListAnswered;
+
+      },
+      err => {
+        this.message.content = 'Lỗi';
+        this.message.type = 0;
+        this.removeLoading();
+      }
+    );
+  }
+
+  // test(){
+  //   this.subscription = this.service.update.subscribe((data) => {
+  //     this.updateStatus();
+  //   })
+  // }
 
 }
