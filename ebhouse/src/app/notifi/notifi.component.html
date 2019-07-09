@@ -25,10 +25,10 @@
                     </div>
                     <div class="modal-body">
                         <!-- alert -->
-                        <div *ngIf="messages && messages.type == 1; else errMess" class="alert alert-success" role="alert">
+                        <div *ngIf="messages && messages.type == 1; else errMessage" class="alert alert-success" role="alert">
                             {{messages.content}}
                         </div>
-                        <ng-template #errMess>
+                        <ng-template #errMessage>
                             <div *ngIf="messages && messages.content != ''" class="alert alert-danger" role="alert">
                                 {{messages.content}}
                             </div>

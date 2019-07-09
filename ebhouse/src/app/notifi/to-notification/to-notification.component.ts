@@ -46,7 +46,7 @@ export class ToNotificationComponent implements OnInit {
   dataSourceAnswered = new MatTableDataSource();
 
   displayedColumns: string[] = ['userTo', 'subject', 'cDate', 'status'];
-  displayedColumns2: string[] = ['userTo', 'subject', 'cDate', 'mDate', 'status'];
+  displayedColumns2: string[] = ['userTo', 'subject', 'cDate', 'status', ' '];
 
   constructor(
     private fb: FormBuilder,

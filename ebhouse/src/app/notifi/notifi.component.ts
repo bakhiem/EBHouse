@@ -126,8 +126,8 @@ export class NotifiComponent implements OnInit {
           }
         );
     }else{
-      this.message.content = 'Vui lòng điền đầy đủ thông tin';
-      this.message.type = 0;
+      this.messages.content = 'Vui lòng điền đầy đủ thông tin';
+      this.messages.type = 0;
     }
   }
 
