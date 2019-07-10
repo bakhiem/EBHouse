@@ -41,8 +41,12 @@ export class ElectricComponent implements OnInit {
     this.month = new FormControl({ value: new Date(), disabled: true });
     this.subscription = this.shareService.currentBh.subscribe((data) => {
       this.currentBh = data;
-      this.getElectric();
+      if (this.currentBh  && this.currentBh.id) {
+        this.getElectric();
+      }
+      
     })
+    this.scrollTop();
   }
   chooseMonth(params, datepicker) {
     params.setDate(1);
@@ -57,15 +61,17 @@ export class ElectricComponent implements OnInit {
       data: message
     });
   }
+  scrollTop(){
+    //  $('.electric').animate({scrollTop: '200px'}, 0);
+    var elmnt = document.getElementsByClassName("electric");
+    elmnt[0].scrollIntoView({behavior:"smooth"});
+  }
   formatDate(): string {
     let month = this.month.value.getMonth() + 1;
     let year = this.month.value.getFullYear();
     return year + '-' + month
   }
   private getElectric() {
-    if (!this.currentBh || !this.currentBh.id) {
-      return;
-    }
     let data: any = {
       boardingHouseID: this.currentBh.id,
       date: this.formatDate() + '-01'
@@ -87,10 +93,9 @@ export class ElectricComponent implements OnInit {
           let resData = response.data;
           console.log(resData)
           this.list = resData;
-          console.log(this.maxDate.getMonth())
-          console.log(this.month.value.getMonth())
-          $('#lastMonth').html("Số điện tháng " + this.month.value.getMonth());
-          $('#presentMonth').html("Số điện tháng " + (this.month.value.getMonth() + 1));
+        
+          $('#lastMonth').html("Công tơ điện tháng " + this.month.value.getMonth());
+          $('#presentMonth').html("Công tơ điện tháng " + (this.month.value.getMonth() + 1));
           if (this.list.length > 0) {
             for (let index = 0; index < this.list.length; index++) {
               let usage = Number(this.list[index].eNow) - Number(this.list[index].eBefore)

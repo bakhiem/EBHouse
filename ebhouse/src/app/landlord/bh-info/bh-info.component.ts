@@ -8,7 +8,7 @@ import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/co
 import { LandlordService } from '../service/landlord-service.service';
 
 import { BoardingHouse } from '../../models/bh';
-import {LandlordComponent} from '../landlord.component';
+import { LandlordComponent } from '../landlord.component';
 
 import { CommonMessage, Message } from '../../models/message';
 
@@ -27,12 +27,12 @@ export class BhInfoComponent implements OnInit {
   createbhFormGroup: FormGroup;
   isEdit: number = 0;
   currentBh: BoardingHouse;
-
-//Message
-message  : Message = {
-  content : '',
-  type : 0
-}
+  totalPageString: string;
+  //Message
+  message: Message = {
+    content: '',
+    type: 0
+  }
   //paging
   perPage: number = 10;
   currentPage: number = 1;
@@ -46,8 +46,8 @@ message  : Message = {
     private placeService: PlaceService,
     public dialog: MatDialog,
     private service: LandlordService,
-    private shareService : SharedServiceService,
-    private landlordComponent : LandlordComponent
+    private shareService: SharedServiceService,
+    private landlordComponent: LandlordComponent
   ) { }
   ngOnInit() {
     this.getBoardingHouses();
@@ -101,6 +101,7 @@ message  : Message = {
           let data = JSON.parse(response.data);
           this.bhList = data.boardingHouse;
           this.totalPage = Math.ceil(data.totalPage / this.perPage);
+          this.totalPageString = 'Tổng số nhà trọ: ' + data.totalPage
           this.toArray(this.totalPage);
         }
       }, err => {
@@ -118,6 +119,8 @@ message  : Message = {
     this.isEdit = 0;
     this.currentBh = null;
     this.resetMess();
+    this.dataDistric = [];
+    this.dataWards = [];
     $('.bd-example-modal-lg').modal('show');
   }
   onSubmit() {
@@ -161,7 +164,7 @@ message  : Message = {
           this.successRequestHandle(res);
         },
         err => {
-         this.errRequestHandle(err);
+          this.errRequestHandle(err);
         }
       )
     }
@@ -178,7 +181,7 @@ message  : Message = {
       this.getBoardingHouses();
       this.shareService.currentBh.next(null);
       this.shareService.getAllBoardingHouses().subscribe();
-      
+
     }
     else {
       this.message.type = 0;
@@ -210,7 +213,17 @@ message  : Message = {
     $('.customLoading').removeClass('preloader');
     $('.customLoader').removeClass('loader');
   }
+  jqueryCode() {
+    if (this.isEdit == 1) {
+      $("select").change(() => {
+        $("#myButton").removeAttr("disabled");
+      });
+      $("input").keypress(function () {
+        $("#myButton").removeAttr("disabled");
+      });
+    }
 
+  }
 
   //edit and delete boarding-house :
   editBh(obj) {
@@ -221,6 +234,7 @@ message  : Message = {
     this.createbhFormGroup.get('description').setValue(obj.description);
     this.createbhFormGroup.get('id').setValue(obj.id);
     this.arrAddress = obj.address.split('-');
+    $("#myButton").attr("disabled", "disabled");
     this.getProvinceOnEdit(this.arrAddress[3]);
     this.createbhFormGroup.get('address').setValue(this.arrAddress[0]);
     $('.bd-example-modal-lg').modal('show');

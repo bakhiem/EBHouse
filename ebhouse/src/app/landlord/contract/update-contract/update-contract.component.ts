@@ -75,11 +75,7 @@ export class UpdateContractComponent implements OnInit {
     datepicker.close()
   }
   checkValidDate(d: Date, type : number): boolean {
-    if (!this.listContract) {
-      this.displayDialog(CommonMessage.SelectRoomFirst);
-      return false;
-    }
-    else if (this.listContract.length == 0) {
+    if (this.listContract.length == 0) {
       return true;
     }
     else {
@@ -227,7 +223,8 @@ export class UpdateContractComponent implements OnInit {
             this.listContract = response.data;
             let display = []
             if (this.listContract.length > 0) {
-              this.listContract.forEach(element => {
+              for (let index = 0; index < this.listContract.length; index++) {
+                const element = this.listContract[index];
                 if (element.id != this.currentContract.id) {
                   let startDate = new Date(element.startDate);
                   let endDate = new Date(element.endDate);
@@ -236,13 +233,14 @@ export class UpdateContractComponent implements OnInit {
 
                 // xóa bỏ hợp đồng mà edit trong list
                 else {
-                  var index = this.listContract.indexOf(element);
-                  if (index > -1) {
                     this.listContract.splice(index, 1);
-                  }
+                  
                 }
+              }
+              // this.listContract.forEach(element => {
+                
 
-              });
+              // });
             }
             this.zone.run(() => { // <== added
               this.listContractDisplay = display;
@@ -303,10 +301,15 @@ export class UpdateContractComponent implements OnInit {
   }
 
   formatDateFromServer(inputDate) {
-    let d = inputDate.split(' ');
-    let d2 = d[0].split('-');
-    let date = new Date(d2[0], d2[1] - 1, d2[2]);
-    return date;
+    var d = new Date(inputDate),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
   }
   jqueryCode() {
     
@@ -447,6 +450,24 @@ export class UpdateContractComponent implements OnInit {
     $('.customLoading').removeClass('preloader');
     $('.customLoader').removeClass('loader');
   }
+  // don't update startDate if contract is running
+  checkStartDateValid() : boolean{
+    let startDate = new Date(this.currentContract.startDate);
+    let startDateInput =  new Date(this.startDateStr);
+    let today = new Date();
+    if(!this.compareDate(startDate,startDateInput)){
+      if(today > startDate){
+        return false;
+      }
+    }
+    else{
+      return true;
+    }
+    
+  }
+  compareDate(date1,date2){
+    return (date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate())
+  }
   onSubmit() {
     console.log(this.createContractFormGroup.value)
     if (!this.createContractFormGroup.value.period || this.createContractFormGroup.value.period == '') {
@@ -458,7 +479,11 @@ export class UpdateContractComponent implements OnInit {
       this.displayDialog(CommonMessage.inputAllFiel)
       return;
     }
-
+    if(!this.checkStartDateValid()){
+      this.displayDialog('Không thể sửa thời gian bắt đầu của hợp đồng đã được bắt đầu.');
+      this.createContractFormGroup.get('beginDate').setValue(this.formatDateFromServer(this.currentContract.startDate));
+      return;
+    }
 
     let formatRoomPrice = this.createContractFormGroup.value.price.toString().split('.').join('');
     let roomPrice = Number(formatRoomPrice);
@@ -496,7 +521,7 @@ export class UpdateContractComponent implements OnInit {
       imgContract: listImgSplit,
 
     }
-    console.log(data)
+    console.log(JSON.stringify(data))
     this.addLoading();
     this.service.updateContract(data).subscribe(
       res => {

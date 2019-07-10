@@ -32,20 +32,16 @@ a.page-link.disabled{
    margin: 0 auto;
    
 }
-.searchBox{
-  margin-top: 20px;
+.bd-example-modal-lg{
+  margin: 0 auto;
 }
-@media only screen and (max-width: 600px) {
-  table td{
-    font-size: 0.6rem;
+.can-click{
+  cursor: pointer;
+}
+
+
+@media only screen and (min-width: 1300px) {
+  .col-form-label.ml-3{
+    min-width: 90px;
   }
-  table th{
-    font-size: 0.8rem;
-  }
-  .example-full-width {
-    width: 50%;
-  }
-  .searchBox{
-    margin-top: 5px;
-  }
-} 
+}

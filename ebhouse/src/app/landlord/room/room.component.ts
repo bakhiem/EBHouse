@@ -89,8 +89,11 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.pageNumbers = [];
       this.currentPage = 1;
       this.currentBh = data;
-      $('.boarding-house').val(this.currentBh.name);
-      this.getRoomsFromCurrentBh();
+      if(this.currentBh && this.currentBh.id){
+        $('.boarding-house').val(this.currentBh.name);
+        this.getRoomsFromCurrentBh();
+      }
+     
     })
     this.getRoomType();
     this.createRoomFormGroup = this.fb.group({
@@ -334,7 +337,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.resetMess();
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '400px',
-      data: "Bạn chắc chắn muốn xóa phòng trọ chứ ?"
+      data: "Bạn chắc chắn muốn xóa phòng trọ không ?"
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -359,7 +362,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.resetMess();
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '400px',
-      data: "Bạn chắc chắn muốn xóa phòng trọ chứ ?"
+      data: "Bạn chắc chắn muốn xóa phòng trọ không ?"
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {

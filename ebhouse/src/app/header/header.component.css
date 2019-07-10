@@ -3,3 +3,17 @@
     top: -9999px;
     left: -9999px;
  }
+ .hidden-choose{
+    visibility: hidden;
+ }
+ @media only screen and (max-width: 600px) {
+    .header-area{
+        padding: 7px 14px;
+    }
+    .notification-area li{
+        margin: 0 10px;
+    }
+    .page-title-area{
+        padding: 0;
+    }
+ } 

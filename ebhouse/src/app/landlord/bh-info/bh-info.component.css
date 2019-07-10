@@ -19,14 +19,19 @@ table {
   .text-secondary{
     cursor: pointer;
   }
-  .page .pagination{
-    justify-content: center;
-}
 a.page-link.disabled{
     background: #007bff;
     color: white;
 }
-.page{
-   margin: 0 auto;
-   
+#dataTable3_info{
+  font-size: 1.1rem;
+  font-weight: 600;
 }
+@media only screen and (max-width: 600px) {
+  table td{
+    font-size: 0.6rem;
+  }
+  table th{
+    font-size: 0.8rem;
+  }
+} 

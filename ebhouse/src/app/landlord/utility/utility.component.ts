@@ -57,10 +57,8 @@ export class UtilityComponent implements OnInit {
     this.service.getUtility(data).subscribe(
       res => {
         this.removeLoading();
-        console.log(res)
         let response = JSON.parse("" + res);
         if (response.type == 1) {
-          console.log(response.data)
           let resData = JSON.parse(response.data);
           console.log(resData)
           this.list = resData;
@@ -111,7 +109,6 @@ export class UtilityComponent implements OnInit {
     $('.customLoader').removeClass('loader');
   }
   formatCurrency() {
-    console.log($(".input-price"))
     var $input = $(".input-price");
     $input.on("keyup", function (event) {
       // When user select text in the document, also abort.

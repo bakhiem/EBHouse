@@ -220,7 +220,13 @@
             </div>
         </div>
     </div>
-    <nav class="page mt-3">
+</div>
+
+<div class="row">
+    <div class="col-sm-12 col-md-5 mt-3">
+        <div class="dataTables_info" id="dataTable3_info" role="status" aria-live="polite">{{totalPageString}}</div>
+    </div>
+    <nav class="page mt-3 col-sm-12 col-md-7">
         <ul class="pagination">
             <li class="page-item">
                 <a class="page-link" (click)="prePage()" aria-label="Previous">
@@ -229,7 +235,7 @@
                 </a>
             </li>
 
-            <li class="page-item" *ngFor="let pageNumber of pageNumbers">
+            <li class="page-item" *ngFor="let pageNumber of pageNumbers ">
                 <a *ngIf="pageNumber == currentPage,else inActive" class="page-link disabled ">{{pageNumber}}</a>
                 <ng-template #inActive><a class="page-link" (click)="goToPage(pageNumber)">{{pageNumber}}</a>
                 </ng-template>

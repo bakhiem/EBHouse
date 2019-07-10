@@ -79,7 +79,6 @@ export class LoginComponent implements OnInit {
           if (res[1]) {
             // window.location.reload();
             this.removeLoading();
-            console.log('asdasdasd')
            
             this.router.navigate(['/']);  
           }
