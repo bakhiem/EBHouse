@@ -225,17 +225,17 @@ export class ElectricComponent implements OnInit {
     let listSendServer = []
     for (let index = 0; index < this.list.length; index++) {
 
-      if (this.list[index].statusBefore == 2) {
+      if (this.list[index].statusBefore != 1) {
         let electricBefore = {
           id: this.list[index].idBefore ? this.list[index].idBefore : 0,
           room: { id: this.list[index].roomID },
           total: Number($('#last-' + this.list[index].id).val()),
-          status: 2,
+          status: this.list[index].statusBefore,
           cDate: this.formatDateFull(this.list[index].cDateBefore)
         }
         listSendServer.push(electricBefore);
       }
-      if (this.list[index].statusNow == 2){
+      if (this.list[index].statusNow != 1){
         let electricNow = {
           id: this.list[index].id,
           room: { id: this.list[index].roomID },

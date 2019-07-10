@@ -17,7 +17,7 @@ export class HeaderComponent implements OnInit {
   isLoggedIn$: Observable<boolean>;
   bhList: BoardingHouse[];
   currentBh: BoardingHouse;
-  listUrlHidden = ['/landlord/bh-info','/landlord/room-type']
+  listUrlHidden = ['/landlord/bh-info','/landlord/room-type','/notification/from','/notification/to']
   constructor(private service: SharedServiceService,
     private authService: AuthenticationService,
     private _router: Router) {
@@ -34,7 +34,6 @@ export class HeaderComponent implements OnInit {
     else{
       this.role = '';
     }
-
   }
   ngOnInit() {
     this.isLoggedIn$ = this.authService.isLoggedIn;

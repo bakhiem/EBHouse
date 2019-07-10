@@ -300,7 +300,37 @@ export class ContractComponent implements OnInit, OnDestroy {
         this.addLoading();
         this.service.deleteContract(data).subscribe(
           res => {
-            this.successRequestHandle(res)
+            let resObject = JSON.parse("" + res);
+            if (resObject.type == 1) {
+              this.message.type = 1;
+              this.message.content = resObject.message;
+              this.removeLoading();
+              this.getContract();
+            }
+            else if (resObject.type == 2){
+              this.removeLoading();
+              const dialogRefElectric = this.dialog.open(RedirectDialogComponent, {
+                width: '400px',
+                data: CommonMessage.InputElectricBefore
+              });
+              dialogRefElectric.afterClosed().subscribe(result => {
+                if (result) {
+                  this.router.navigate(['/landlord/electric']);
+                }
+              })
+            }
+            else if (resObject.type == 3){
+              this.removeLoading();
+              const dialogRefFinancial = this.dialog.open(RedirectDialogComponent, {
+                width: '400px',
+                data: resObject.message
+              });
+              dialogRefFinancial.afterClosed().subscribe(result => {
+                if (result) {
+                  this.router.navigate(['/landlord/financial']);
+                }
+              })
+            }
           },
           err => {
             this.errRequestHandle(err)
