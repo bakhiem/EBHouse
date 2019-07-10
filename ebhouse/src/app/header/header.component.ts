@@ -17,7 +17,7 @@ export class HeaderComponent implements OnInit {
   isLoggedIn$: Observable<boolean>;
   bhList: BoardingHouse[];
   currentBh: BoardingHouse;
-  listUrlHidden = ['/landlord/bh-info','/landlord/room-type','/notification/from','/notification/to']
+  listUrlHidden = ['/landlord/bh-info','/landlord/room-type','/notification/from','/notification/to','/landlord/profile']
   constructor(private service: SharedServiceService,
     private authService: AuthenticationService,
     private _router: Router) {
