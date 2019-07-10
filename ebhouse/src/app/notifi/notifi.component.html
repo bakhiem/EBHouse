@@ -38,16 +38,19 @@
                             <div class="col-sm-7">
                                 <label for="example-text-input" class="col-form-label required">Người Nhận: </label>
                                 <!-- <input class="form-control" type="text" id="example-text-input" formControlName="userTo"> -->
-                                <input class="form-control" formControlName="userToText" type="text" placeholder="Search.." id="myInput" (click)="myFunction()" (keyup)="filterFunction()" (change)="checkChange()">
+                                <input class="form-control" formControlName="userToText" type="text" placeholder="Bạn có thể chọn một người hoặc nhiều người" id="myInput" (click)="myFunction()" (keyup)="filterFunction()" (change)="checkChange()">
                                 <input type="hidden" formControlName="userTo">
                                 <div class="dropdown">
                                     <!-- <button (click)="myFunction()" class="dropbtn">Dropdown</button> -->
                                     <div id="myDropdown" class="dropdown-content">
+                                        <div *ngIf="role != 'admin'">
+                                            <a rel="0" (click)="disabledClick('admin', $event)" class="send-admin">Admin</a>
+                                        </div>
                                         <div *ngFor="let item of listBH; let i = index">
-                                            <a rel="{{ item.id }}" (click)="disabledClick('bh', $event)" class="send-bh">{{ item.name }}</a>
+                                            <a rel="{{ item.id }}" (click)="disabledClick('bh', $event)" class="send-bh">Gửi cho thành viên của {{ item.name }}</a>
                                         </div>
                                         <div *ngFor="let item of listRoom; let i = index">
-                                            <a rel="{{ item.id }}" (click)="disabledClick('room', $event)" class="send-room">{{ item.bh_name + ' - ' + item.name }}</a>
+                                            <a rel="{{ item.id }}" (click)="disabledClick('room', $event)" class="send-room">Gửi cho thành viên của {{ item.bh_name + ' - ' + item.name }}</a>
                                         </div>
                                         <div *ngFor="let item of listUser; let i = index">
                                             <a rel="{{ item.id }}" (click)="disabledClick('user', $event)" class="send-user">{{ item.name }}</a>
@@ -71,7 +74,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-7">
-                                <label for="input-content" class="col-form-label required">Content</label>
+                                <label for="input-content" class="col-form-label required">Nội Dung</label>
                                 <textarea class="form-control" id="input-content" formControlName="content" rows="3"></textarea>
                                 <div *ngIf="createNotifiFormGroup.controls['content'].hasError('required') && (createNotifiFormGroup.controls['content'].dirty || createNotifiFormGroup.controls['content'].touched)" class="alert alert-danger">
                                     Nội dung Không được để trống

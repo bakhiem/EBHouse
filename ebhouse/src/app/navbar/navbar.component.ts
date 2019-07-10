@@ -16,7 +16,7 @@ export class NavbarComponent implements OnInit {
     private router: Router,
     private authenticationService: AuthenticationService
   ) {
-    
+
   }
 
   getRole(){
@@ -29,7 +29,7 @@ export class NavbarComponent implements OnInit {
     else{
       this.role = ''
     }
-    
+
   }
   deleteDataInLocal() {
     this.authenticationService.logout();
@@ -38,10 +38,9 @@ export class NavbarComponent implements OnInit {
     this.authenticationService.currentUser.subscribe(data => {
       this.currentUser = data;
       this.getRole();
-      console.log(this.role)
     });
-    
-   
+
+
     // if (this.isLandlord) {
     //   if (this.currentUser.user.status == this.statusUpdateProfile) {
     //     this.router.navigate(['/landlord/profile']);

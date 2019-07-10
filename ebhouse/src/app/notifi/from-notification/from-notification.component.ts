@@ -117,33 +117,6 @@ export class FromNotificationComponent implements OnInit {
   }
 
   notificationDetail( status : number, index : number, row : any){
-    if(status == 0){
-      this.service.updateStatus({ id: row.id, status : status+1}).subscribe(
-        res => {
-          let response = JSON.parse('' + res);
-          if (response.type == 1) {
-                this.notifiListSent[index].status = 1;
-                this.notifiListSeen.push(this.notifiListSent[index]);
-                this.notifiListSent.splice(index,1);
-                this.totalPageSent = Math.ceil(this.notifiListSent.length / this.perPage);
-                this.toArray(this.totalPageSent, status);
-                this.totalPageSeen = Math.ceil(this.notifiListSeen.length / this.perPage);
-                this.toArray(this.totalPageSeen, status+1);
-          }
-
-          this.dataSourceSent.data = this.notifiListSent;
-          this.dataSourceSeen.data = this.notifiListSeen;
-          this.dataSourceAnswered.data = this.notifiListAnswered;
-
-        },
-        err => {
-          this.message.content = 'Lỗi';
-          this.message.type = 0;
-          this.removeLoading();
-        }
-      );
-    }
-
     let noti = null;
     switch(status){
       case 0:

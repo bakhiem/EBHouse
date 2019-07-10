@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { PlaceService } from '../service/place.service';
 import { AuthenticationService } from '../user/service/authentication.service';
 import { NotifiService } from './service/notifi.service';
+import { Role } from '../user/models/role';
 
 @Component({
   selector: 'app-notifi',
@@ -31,6 +32,8 @@ export class NotifiComponent implements OnInit {
   listRoom: any[]= [];
   option_send: String = "user";
   public currentNotifi: Notification;
+  role : string = '';
+  currentUser: any;
 
   constructor(
     private fb: FormBuilder,
@@ -42,12 +45,29 @@ export class NotifiComponent implements OnInit {
 
   ngOnInit() {
     this.resetMess();
+    this.authenticationService.currentUser.subscribe(data => {
+      this.currentUser = data;
+      this.getRole();
+    });
     this.createNotifiFormGroup = this.fb.group({
       userToText: this.fb.control('', Validators.compose([Validators.required])),
       userTo: this.fb.control('', Validators.compose([Validators.required])),
       subject: this.fb.control('', Validators.compose([Validators.required])),
       content: this.fb.control('', Validators.compose([Validators.required]))
     });
+  }
+
+  getRole(){
+    if(this.currentUser && this.currentUser.role === Role.Lanlord){
+      this.role = 'landlord';
+    }
+    else if(this.currentUser && this.currentUser.role === Role.Tenant){
+      this.role = 'tenant';
+    }
+    else{
+      this.role = ''
+    }
+
   }
 
   creatNotification(){
@@ -58,20 +78,24 @@ export class NotifiComponent implements OnInit {
         if (response.type == 1) {
           let data = JSON.parse(response.data);
           this.listUser = data.listUser;
-          if(data.listBoardingHouse != 'undefined'){
-            this.listBH = data.listBoardingHouse
+          if(data.listBoardingHouse != undefined){
+            console.log(1);
+            this.listBH = data.listBoardingHouse;
+
           }
-          if(data.listRoom != 'undefined'){
-            this.listRoom = data.listRoom
+          if(data.listRoom != undefined){
+            this.listRoom = data.listRoom;
           }
 
-          this.listBH.forEach(bh => {
-            this.listRoom.forEach(room => {
-              if(room.boardinghouse_id == bh.id){
-                room['bh_name'] = bh.name;
-              }
+          if(data.listBoardingHouse != undefined && data.listRoom != undefined){
+            this.listBH.forEach(bh => {
+              this.listRoom.forEach(room => {
+                if(room.boardinghouse_id == bh.id){
+                  room['bh_name'] = bh.name;
+                }
+              });
             });
-          });
+          }
 
           this.createNotifiFormGroup.get('userTo').setValue(null);
           this.createNotifiFormGroup.get('userToText').setValue(null);
