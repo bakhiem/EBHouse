@@ -75,12 +75,14 @@ export class FinancialComponent implements OnInit {
       description: '',
     });
   }
+
   chooseMonth(params, datepicker) {
     params.setDate(1);
     this.month.setValue(params);
     this.getFinancial();
     datepicker.close();
   }
+
   displayDialog(message: string) {
     this.dialog.open(InformationDialogComponent, {
       width: '400px',
@@ -121,7 +123,6 @@ export class FinancialComponent implements OnInit {
         this.removeLoading();
         let response = JSON.parse("" + res);
         if (response.type == 1) {
-          console.log(response.data)
           let resData = JSON.parse("" + response.data)
           this.listFinancial = resData.financial;
           this.totalPage = Math.ceil(resData.totalPage / this.perPage);
@@ -133,10 +134,10 @@ export class FinancialComponent implements OnInit {
               this.listFinancial[index].paymentDate = ''
             }
             if (element.payment == 0) {
-              this.listFinancial[index].status = 'Chưa thanh toán'
+              this.listFinancial[index].statusStr = 'Chưa thanh toán'
               this.listFinancial[index].debt = ''
             } else {
-              this.listFinancial[index].status = 'Đã thanh toán'
+              this.listFinancial[index].statusStr = 'Đã thanh toán'
               this.listFinancial[index].debt = element.total - element.payment
             }
             let roomObj = this.getRoomName(element.room);
@@ -167,7 +168,8 @@ export class FinancialComponent implements OnInit {
       return;
     }
     let data: any = {
-      boardingHouseID: this.currentBh.id
+      boardingHouseID: this.currentBh.id,
+      date: this.formatDate() + '-01',
     }
     this.addLoading();
     this.service.getRoomsAvailable(data).subscribe(
@@ -215,6 +217,7 @@ export class FinancialComponent implements OnInit {
   }
 
   searchByRoom() {
+
     this.resetMess();
     let isValid = 0;
     if (!this.roomControl.value) {
@@ -224,6 +227,7 @@ export class FinancialComponent implements OnInit {
       this.getFinancial();
       return;
     }
+
     this.roomList.forEach(element => {
       if (element.name == this.roomControl.value || element.name == this.roomControl.value.name) {
         this.roomControl.setValue(element);
@@ -270,13 +274,15 @@ export class FinancialComponent implements OnInit {
       if ($.inArray(event.keyCode, [38, 40, 37, 39]) !== -1) {
         return;
       }
+      $('#myButton').prop('disabled', false);
       var $this = $(this);
       // Get the value.
       let input = $this.val();
-      let removeComma = input.toString().replace(/[^0-9]/g, '');
+      let removeZero = input.toString().replace(/^0+/, '');
+      let removeComma = removeZero.replace(/[^0-9]/g, '');
       let currency = removeComma.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
       $this.val(function () {
-        return (Number(currency) === 0) ? "" : currency;
+        return (Number(currency) === 0) ? "0" : currency;
       });
     });
   }
@@ -297,12 +303,20 @@ export class FinancialComponent implements OnInit {
   createExtrafee(data, obj) {
     this.createEFFormGroup.reset();
     this.resetMess();
+    if(obj.status == 1){
+      $('#myButton').prop('disabled', true);
+      this.createEFFormGroup.get('payment').disable()
+    }
+    else{
+      this.createEFFormGroup.get('payment').enable()
+    }
     this.createEFFormGroup.get('cDate').setValue(obj.cDate);
     this.createEFFormGroup.get('id').setValue(obj.id);
     this.createEFFormGroup.get('room').setValue(obj.room);
     this.currentRoom = obj.roomObj;
     let financialNew = JSON.parse(data.financialNew);
     $('.bd-example-modal-lg').modal('show');
+    $('#myButton').prop('disabled', true);
     let electricFee = ((Number(data.electricityNew) - Number(data.electricityOld)) * Number(data.valuePerElectricity));
     let utilityFee = Number(data.InternetFee) + Number(data.WaterFee) + Number(data.CleaningFee);
     let lstExtraFee = JSON.parse(data.lstExtraFee);
@@ -325,13 +339,13 @@ export class FinancialComponent implements OnInit {
     }
     this.createEFFormGroup.get('total').setValue(this.convertCurrency(financialNew.total));
     this.createEFFormGroup.get('oldDebt').setValue(this.convertCurrency(oldDebt));
-    this.createEFFormGroup.get('money').setValue(this.convertCurrency(Number(financialNew.total) - Number(oldDebt)));
+    this.createEFFormGroup.get('money').setValue(this.convertCurrency(Number(financialNew.total) + Number(oldDebt)));
     //edit payment
     if (Number(financialNew.payment) > 0) {
       this.isEdit = 1;
       this.createEFFormGroup.get('createDate').setValue(this.formatDateFull(new Date(financialNew.paymentDate), 1));
       this.createEFFormGroup.get('payment').setValue(this.convertCurrency(financialNew.payment));
-      this.createEFFormGroup.get('newDebt').setValue(this.convertCurrency(Number(financialNew.payment) - Number(financialNew.total) - Number(oldDebt)));
+      this.createEFFormGroup.get('newDebt').setValue(this.convertCurrency(Number(financialNew.total) - Number(financialNew.payment) + Number(oldDebt)));
     }
     else {
       this.isEdit = 0;
@@ -343,7 +357,7 @@ export class FinancialComponent implements OnInit {
       if (isNaN(Number(removeComma)) == false) {
         let money = this.createEFFormGroup.get('money').value;
         let removeCommaMoney = money.toString().replace(/[^0-9]/g, '');
-        this.createEFFormGroup.get('newDebt').setValue(this.convertCurrency(Number(removeComma) - Number(removeCommaMoney)));
+        this.createEFFormGroup.get('newDebt').setValue(this.convertCurrency( Number(removeCommaMoney) - Number(removeComma)));
       }
     })
     let isCollapShow = 0;

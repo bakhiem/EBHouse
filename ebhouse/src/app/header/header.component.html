@@ -2,7 +2,7 @@
   <div class="header-area">
     <div class="row align-items-center">
       <!-- nav and search button -->
-      <div class="col-md-6 col-sm-8 clearfix">
+      <div class="col-md-5 col-sm-1 col-1 clearfix">
         <div class="nav-btn pull-left">
           <span></span>
           <span></span>
@@ -11,21 +11,21 @@
 
       </div>
       <!-- profile info & task notification -->
-      <div class="col-md-6 col-sm-4 clearfix">
-        <ul class="notification-area pull-right">
-          <button class="btn btn-info" routerLink="/logout">Đăng xuất</button>
+      <div class="col-md-7 col-sm-9 col-11 clearfix">
+         
+        <ul class="notification-area col-12 col-xl-9 pull-right">
+            <select [ngClass]="{'hidden-choose': !isHiddenChooseBh()}"  class="custom-select  col-sm-9 col-7" [(ngModel)]="currentBh" (change)="onChangeBh()">
+                <option *ngFor="let bh of bhList" [ngValue]="bh">
+                  {{bh.name}}
+                </option>
+              </select>
           <li id="full-view"><i class="ti-fullscreen"></i></li>
           <li id="full-view-exit"><i class="ti-zoom-out"></i></li>
           <li class="dropdown">
-            <i class="ti-bell dropdown-toggle" data-toggle="dropdown">
-              <span>2</span>
+            <i class="fa fa-sign-out" routerLink="/logout">
             </i>
-            <div class="dropdown-menu bell-notify-box notify-box">
-              <span class="notify-title">You have 3 new notifications <a href="#">view all</a></span>
-              <div class="nofity-list">
-              </div>
-            </div>
-          </li>
+            
+        </li>
         </ul>
       </div>
     </div>
@@ -39,11 +39,7 @@
       </div>
       <div class="col-sm-4 clearfix">
         <div class="form-group">
-          <select class="custom-select" [(ngModel)]="currentBh" (change)="onChangeBh()">
-            <option *ngFor="let bh of bhList" [ngValue]="bh">
-              {{bh.name}}
-            </option>
-          </select>
+        
           <!-- <select class="form-control" id="exampleFormControlSelect1">
                         <option>Khu trọ 1</option>
                         <option>Khu trọ 2</option>

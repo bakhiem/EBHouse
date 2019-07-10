@@ -1,0 +1,176 @@
+<div class="customLoading">
+  <div class="customLoader"></div>
+</div>
+<div class="extrafee">
+  <div class="row input-date">
+    <div class="col-sm-4">
+      <label class="col-form-label mr-3">Chọn tháng</label>
+      <div class="input-group">
+        <mat-form-field>
+          <input matInput [max]='maxDate' [matDatepicker]="picker2" [formControl]="month">
+          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+          <mat-datepicker #picker2 (monthSelected)="chooseMonth($event,picker2)" startView="multi-year"
+            disabled="false">
+          </mat-datepicker>
+        </mat-form-field>
+      </div>
+
+
+    </div>
+    <div class="col-sm-3">
+      <label class="col-form-label">Chọn phòng</label>
+      <mat-form-field class="example-full-width">
+        <input type="text" placeholder="Điền tên phòng" aria-label="Assignee" matInput [matAutocomplete]="auto"
+          [formControl]="roomControl">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+            {{option.name}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+    <div class="col sm-3 mt-4">
+      <button type="button" class="btn btn-secondary" (click)="searchByRoom()">
+        <span _ngcontent-fdu-c2="" class="ti-search"></span> Tìm kiếm
+      </button>
+    </div>
+  </div>
+
+  <div class="row input-date">
+
+
+
+
+  </div>
+  <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
+    {{message.content}}
+  </div>
+  <ng-template #errMess>
+    <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
+      {{message.content}}
+    </div>
+  </ng-template>
+  <div class="card">
+    <div class="card-body">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active show" id="extrafee-tab" data-toggle="tab" href="#extrafee" role="tab"
+            aria-controls="extrafee" aria-selected="true">Chi phí phát sinh</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="electric-tab" data-toggle="tab" href="#electric" role="tab" aria-controls="electric"
+            aria-selected="false">Số điện</a>
+        </li>
+
+      </ul>
+      <div class="tab-content mt-3" id="myTabContent">
+        <div class="tab-pane fade active show" id="extrafee" role="tabpanel" aria-labelledby="extrafee-tab">
+          <table mat-table [dataSource]="listOtherExtrafee" class="mat-elevation-z8">
+            <ng-container matColumnDef="room">
+              <th mat-header-cell *matHeaderCellDef>Phòng</th>
+              <td mat-cell *matCellDef="let element"> {{element.roomObj.name}} </td>
+            </ng-container>
+            <ng-container matColumnDef="amount">
+              <th mat-header-cell *matHeaderCellDef>Số tiền</th>
+              <td mat-cell *matCellDef="let element"> {{element.amount | currency}} </td>
+            </ng-container>
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef>Ghi chú</th>
+              <td mat-cell *matCellDef="let element"> {{element.description | maxLength : 15}} </td>
+            </ng-container>
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef>Ngày</th>
+              <td mat-cell *matCellDef="let element"> {{element.cDate | date:"dd/MM/yyyy" }} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsExtraFee"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsExtraFee;">
+
+            </tr>
+          </table>
+          <nav class="page mt-3">
+            <ul class="pagination">
+              <li class="page-item">
+                <a class="page-link" (click)="prePage()" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                  <span class="sr-only">Previous</span>
+                </a>
+              </li>
+
+              <li class="page-item" *ngFor="let pageNumber of pageNumbers ">
+                <a *ngIf="pageNumber == currentPage,else inActive" class="page-link disabled ">{{pageNumber}}</a>
+                <ng-template #inActive><a class="page-link" (click)="goToPage(pageNumber)">{{pageNumber}}</a>
+                </ng-template>
+              </li>
+
+              <li class="page-item">
+                <a class="page-link" (click)="nextPage()" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div class="tab-pane fade" id="electric" role="tabpanel" aria-labelledby="electric-tab">
+          <table mat-table [dataSource]="listOtherElectric" class="mat-elevation-z8">
+            <ng-container matColumnDef="room">
+              <th mat-header-cell *matHeaderCellDef>Phòng</th>
+              <td mat-cell *matCellDef="let element"> {{element.roomObj.name}} </td>
+            </ng-container>
+            <ng-container matColumnDef="eLast">
+              <th mat-header-cell *matHeaderCellDef>Công tơ điện tháng {{eMonth}}</th>
+              <td mat-cell *matCellDef="let element"> {{element.eLast}} </td>
+            </ng-container>
+            <ng-container matColumnDef="ePresent">
+              <th mat-header-cell *matHeaderCellDef>Công tơ điện tháng {{pMonth}}</th>
+              <td mat-cell *matCellDef="let element"> {{element.ePresent}} </td>
+            </ng-container>
+            <ng-container matColumnDef="usage">
+              <th mat-header-cell *matHeaderCellDef>Sử dụng</th>
+              <td mat-cell *matCellDef="let element"> {{element.usage}} </td>
+            </ng-container>
+            <ng-container matColumnDef="amount">
+              <th mat-header-cell *matHeaderCellDef>Thành tiền</th>
+              <td mat-cell *matCellDef="let element"> {{element.amount | currency}} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsElectric"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsElectric;">
+
+            </tr>
+          </table>
+          <nav class="page mt-3">
+            <ul class="pagination">
+              <li class="page-item">
+                <a class="page-link" (click)="prePageElectric()" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                  <span class="sr-only">Previous</span>
+                </a>
+              </li>
+
+              <li class="page-item" *ngFor="let pageNumber of pageNumbersElectric ">
+                <a *ngIf="pageNumber == currentPageElectric,else inActiveElectric"
+                  class="page-link disabled ">{{pageNumber}}</a>
+                <ng-template #inActiveElectric><a class="page-link"
+                    (click)="goToPageElectric(pageNumber)">{{pageNumber}}</a>
+                </ng-template>
+              </li>
+
+              <li class="page-item">
+                <a class="page-link" (click)="nextPageElectric()" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+</div>

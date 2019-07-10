@@ -68,6 +68,12 @@ export class LandlordService {
   getRoomsAvailable(data:any):Observable < any[] >  {
     return this.http.post < any[] > (`${this.baseUrl}/api/landlord/room/all`, data, httpOptions);
   }
+  getRoomsNoContract(data:any):Observable < any[] >  {
+    return this.http.post < any[] > (`${this.baseUrl}/api/landlord/room/available`, data, httpOptions);
+  } 
+  getRoomsExitsContract(data:any):Observable < any[] >  {
+    return this.http.post < any[] > (`${this.baseUrl}/api/landlord/room/existContract`, data, httpOptions);
+  }
   searchTenantByPhone(data:any):Observable < any[] >  {
     return this.http.post < any[] > (`${this.baseUrl}/api/landlord/contract/getTenant`, data, httpOptions);
   }
@@ -83,6 +89,9 @@ export class LandlordService {
 
   getContractByRoom(data:any):Observable < any[] >  {
     return this.http.post < any[] > (`${this.baseUrl}/api/landlord/contract/getContractByRoomID`, data, httpOptions);
+  }
+  deleteContract(data:any):Observable < any[] >  {
+    return this.http.post < any[] > (`${this.baseUrl}/api/landlord/contract/deActive`, data, httpOptions);
   }
   getUtility(data:any):Observable < any[] >  {
     return this.http.post < any[] > (`${this.baseUrl}/api/landlord/utility/`, data, httpOptions);
@@ -105,6 +114,10 @@ export class LandlordService {
   updateElectric(data : any) : Observable<Landlord>{
     return this.http.post<any>(`${this.baseUrl}/api/landlord/electricity/update`, data, httpOptions);
   }
+  getOtherElectric(data : any) : Observable<Landlord>{
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/electricity/getOther`, data, httpOptions);
+  }
+
   // extra fee
   getExtrafee(data : any) : Observable<Landlord>{
     return this.http.post<any>(`${this.baseUrl}/api/landlord/extraFee/`, data, httpOptions);
@@ -112,9 +125,18 @@ export class LandlordService {
   addExtrafee(data : any) : Observable<Landlord>{
     return this.http.post<any>(`${this.baseUrl}/api/landlord/extraFee/data`, data, httpOptions);
   }
+  deleteExtrafee(bh:BoardingHouse) {
+    return this.http.post < BoardingHouse > (`${this.baseUrl}/api/landlord/extraFee/delete`, bh, httpOptions);
+  }
+  getOtherExtrafee(data : any) : Observable<Landlord>{
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/extraFee/getOther`, data, httpOptions);
+  }
   //financial
   getFinancial(data : any) : Observable<Landlord>{
     return this.http.post<any>(`${this.baseUrl}/api/landlord/financial/`, data, httpOptions);
+  }
+  geOthertFinancial(data : any) : Observable<Landlord>{
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/financial/getOther`, data, httpOptions);
   }
   updateFinancial(data : any) : Observable<Landlord>{
     return this.http.post<any>(`${this.baseUrl}/api/landlord/financial/update`, data, httpOptions);

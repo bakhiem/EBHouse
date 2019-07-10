@@ -12,6 +12,7 @@ import { InformationDialogComponent } from '../../shared/info-dialog/information
 import { CustomDateAdapterMonth } from '../contract/customDate';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 @Component({
   selector: 'app-extrafee',
   templateUrl: './extrafee.component.html',
@@ -50,7 +51,6 @@ export class ExtraFeeComponent implements OnInit {
     private shareService: SharedServiceService,
     public dialog: MatDialog,
     private fb: FormBuilder) { }
-  maxDate = new Date();
   month: FormControl;
 
   displayedColumns: string[] = ['room', 'amount', 'description', 'date', 'customColumn'];
@@ -59,7 +59,10 @@ export class ExtraFeeComponent implements OnInit {
     this.month = new FormControl({ value: new Date(), disabled: true });
     this.subscription = this.shareService.currentBh.subscribe((data) => {
       this.currentBh = data;
-      this.getRoomsFromCurrentBh();
+      if (this.currentBh && this.currentBh.id) {
+        this.getRoomsFromCurrentBh();
+      }
+      
     })
     this.createEFFormGroup = this.fb.group({
       price: this.fb.control('', Validators.compose([
@@ -100,9 +103,7 @@ export class ExtraFeeComponent implements OnInit {
   }
 
   private getExtrafee() {
-    if (!this.currentBh || !this.currentBh.id) {
-      return;
-    }
+   
     let data: any = {
       boardingHouseID: this.currentBh.id,
       date: this.formatDate() + '-01',
@@ -145,9 +146,7 @@ export class ExtraFeeComponent implements OnInit {
 
   //search room
   getRoomsFromCurrentBh() {
-    if (!this.currentBh || !this.currentBh.id) {
-      return;
-    }
+   
     let data: any = {
       boardingHouseID: this.currentBh.id
     }
@@ -364,7 +363,7 @@ export class ExtraFeeComponent implements OnInit {
           cDate: this.createEFFormGroup.value.cDate
         }
       }
-      else if(this.isEdit == 0){
+      else if (this.isEdit == 0) {
         data = {
           id: 0,
           room: { id: this.roomControlCreate.value.id },
@@ -376,25 +375,9 @@ export class ExtraFeeComponent implements OnInit {
       this.addLoading();
       this.service.addExtrafee(data).subscribe(
         res => {
-          this.removeLoading();
-          console.log(res)
-          let response = JSON.parse("" + res);
-          if (response.type == 1) {
-            this.message.content = response.message;
-            this.message.type = 1;
-            $('.bd-example-modal-lg').modal('hide');
-            this.isEdit = 0;;
-            this.getExtrafee();
-          }
-          else if (response.type == 2) {
-            this.message.content = response.message;
-            this.message.type = 0;
-          }
+          this.successRequestHandle(res);
         }, err => {
-          this.removeLoading();
-          this.message.content = CommonMessage.defaultErrMess;
-          this.message.type = 0;
-          console.log(err);
+          this.errRequestHandle(err);
         })
     }
     else {
@@ -402,6 +385,58 @@ export class ExtraFeeComponent implements OnInit {
     }
   }
 
+  successRequestHandle(res) {
+    this.removeLoading();
+    let resObject = JSON.parse("" + res);
+    if (resObject.type == 1) {
+      this.message.type = 1;
+      this.message.content = resObject.message;
+      this.isEdit = 0;;
+      $('.bd-example-modal-lg').modal('hide');
+      this.getExtrafee();
+    }
+    else {
+      this.message.type = 0;
+      this.message.content = resObject.message;
+    }
+  }
+  errRequestHandle(err) {
+    this.message.type = 0;
+    this.message.content = CommonMessage.defaultErrMess;
+    console.log(err);
+    this.removeLoading();
+  }
+  deleteEF(index) {
+    this.resetMess();
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '400px',
+      data: "Bạn chắc chắn muốn xóa chi phí khác không ?"
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+        this.resetMess();
+        let element = this.listExtrafee[index];
+        let data = {
+          amount: element.amount,
+          description: element.description,
+          cDate: element.cDate,
+          id: element.id,
+          status: element.status,
+          room: { id: element.room }
+        }
+        console.log(data)
+        this.addLoading();
+        this.service.deleteExtrafee(data).subscribe(
+          res => {
+            this.successRequestHandle(res);
+          }, err => {
+            this.errRequestHandle(err);
+          }
+        )
+      }
+    });
+  }
   resetMess() {
     this.message.content = '';
     this.message.type = 0;

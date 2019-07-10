@@ -21,7 +21,7 @@
 
                 <form [formGroup]="createbhFormGroup" (ngSubmit)="onSubmit()">
                     <div class="modal-header">
-                        <h5 *ngIf="isEdit == 0; else edit"  class="modal-title">Tạo nhà trọ</h5>
+                        <h5 *ngIf="isEdit == 0; else edit" class="modal-title">Tạo nhà trọ</h5>
                         <ng-template #edit>
                             <h5 *ngIf="isEdit == 1" class="modal-title">Sửa thông tin nhà trọ</h5>
                         </ng-template>
@@ -31,7 +31,8 @@
 
                         <!-- alert -->
 
-                        <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
+                        <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success"
+                            role="alert">
                             {{message.content}}
                         </div>
                         <ng-template #errMess>
@@ -53,7 +54,7 @@
                             <div class="col-sm-3">
                                 <label for="example-number-input" class="col-form-label required">Số lượng phòng</label>
                                 <input class="form-control" type="number" id="example-number-input"
-                                onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))"
+                                    onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))"
                                     formControlName="numberOfRoom">
                                 <div *ngIf="createbhFormGroup.controls['numberOfRoom'].hasError('required') && (createbhFormGroup.controls['numberOfRoom'].dirty || createbhFormGroup.controls['numberOfRoom'].touched)"
                                     class="alert alert-danger">
@@ -70,10 +71,8 @@
                         <div class="form-group row">
                             <div class="col-sm-3">
                                 <label class="col-form-label">Tỉnh / Thành phố </label>
-                                <select class="custom-select" formControlName="province" 
-                                    (change)="onChangeProvince()">
-                                    <option *ngFor="let aprovince of dataProvince" 
-                                        [ngValue]="aprovince">
+                                <select class="custom-select" formControlName="province" (change)="onChangeProvince()">
+                                    <option *ngFor="let aprovince of dataProvince" [ngValue]="aprovince">
                                         {{aprovince.name}}
                                     </option>
                                 </select>
@@ -110,7 +109,8 @@
                         <div class="form-group row">
                             <div class="col-sm-6">
                                 <label for="example-tel-input" class="col-form-label required">Thôn xóm/ Số nhà</label>
-                                <input class="form-control" type="text" id="example-tel-input" formControlName="address">
+                                <input class="form-control" type="text" id="example-tel-input"
+                                    formControlName="address">
                                 <div *ngIf="createbhFormGroup.controls['address'].hasError('required') && (createbhFormGroup.controls['address'].dirty || createbhFormGroup.controls['address'].touched)"
                                     class="alert alert-danger">
                                     Thôn xóm/ số nhà không được để trống
@@ -128,7 +128,8 @@
                     <!-- Textual inputs end -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Trở về</button>
-                        <button class="btn btn-info mb-3" type="submit" id="myButton" [disabled]="createbhFormGroup.invalid"> Lưu</button>
+                        <button class="btn btn-info mb-3" type="submit" id="myButton"
+                            [disabled]="createbhFormGroup.invalid"> Lưu</button>
                     </div>
 
                 </form>
@@ -162,9 +163,17 @@
             </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" ></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-    <nav class="page mt-3">
+    
+
+
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-5 mt-3">
+        <div class="dataTables_info" id="dataTable3_info" role="status" aria-live="polite">{{totalPageString}}</div>
+    </div>
+    <nav class="page mt-3 col-sm-12 col-md-7">
         <ul class="pagination">
             <li class="page-item">
                 <a class="page-link" (click)="prePage()" aria-label="Previous">

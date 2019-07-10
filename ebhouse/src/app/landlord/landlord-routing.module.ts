@@ -16,6 +16,7 @@ import { ElectricComponent } from './electric/electric.component';
 import {UtilityComponent }from './utility/utility.component';
 import { ExtraFeeComponent } from './extra-fee/extrafee.component';
 import { FinancialComponent } from './financial/financial.component';
+import { OtherFinancialComponent } from './financial/other-financial/other-financial.component';
 const LandlordChildRouters:Routes = [ {
     path:'landlord',
     component:LandlordComponent,
@@ -60,6 +61,10 @@ const LandlordChildRouters:Routes = [ {
       {
         path: 'financial',
         component: FinancialComponent
+      },
+      {
+        path: 'other-financial',
+        component: OtherFinancialComponent
       }
     ]
   }

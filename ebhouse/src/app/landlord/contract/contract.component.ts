@@ -6,21 +6,21 @@ import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/co
 
 import { LandlordService } from '../service/landlord-service.service';
 
-import { Landlord } from '../../models/landlord';
 import { BoardingHouse } from '../../models/bh';
-import { LandlordComponent } from '../landlord.component';
 
 import { AuthenticationService } from '../../user/service/authentication.service';
 import { CommonMessage, Message } from '../../models/message';
 import { Observable, throwError } from 'rxjs';
 import { ISubscription } from "rxjs/Subscription";
-import { Contract, Tenant, ContractTenant, User } from '../../models/contract';
+import { Contract} from '../../models/contract';
 import { Router } from '@angular/router';
 
 import { map, startWith } from 'rxjs/operators';
 
 import { SharedServiceService } from '../../service/shared-service.service';
 import { InformationDialogComponent } from '../../shared/info-dialog/information-dialog.component';
+
+import { RedirectDialogComponent } from '../../shared/redirect-dialog/redirect-dialog.component';
 @Component({
   selector: 'app-contract',
   templateUrl: './contract.component.html',
@@ -96,7 +96,7 @@ export class ContractComponent implements OnInit, OnDestroy {
       page: this.currentPage,
       roomID : this.roomControl.value ? this.roomControl.value.id : 0
     }
-    if(this.contractStatus == 4){
+    if(this.contractStatus == 5){
       this.isSelectAllStatus = 1;
     }
     else{
@@ -189,6 +189,7 @@ export class ContractComponent implements OnInit, OnDestroy {
       this.pageNumbers = [];
       this.currentPage = 1;
       this.getContract();
+      this.resetMess();
       return;
     }
     this.roomList.forEach(element => {
@@ -198,6 +199,7 @@ export class ContractComponent implements OnInit, OnDestroy {
         this.pageNumbers = [];
         this.currentPage = 1;
         this.getContract();
+        this.resetMess();
         return;
       }
     });
@@ -230,6 +232,9 @@ export class ContractComponent implements OnInit, OnDestroy {
       }
       else if(element.status == '3'){
         contract.status = 'Chờ xử lý'
+      }
+      else if(element.status == '4'){
+        contract.status = 'Đã hủy'
       }
       element.lstContractTenant.forEach(element2 => {
         if (element2.isOwner == 1) {
@@ -276,21 +281,32 @@ export class ContractComponent implements OnInit, OnDestroy {
       data: "Bạn chắc chắn muốn xóa hợp đồng không ?"
     });
     dialogRef.afterClosed().subscribe(result => {
-      // if (result) {
-      //   let rooms = {
-      //     roomID: [obj.id],
-      //     boardingHouseID: [this.currentBh.id]
-      //   }
-      //   this.addLoading();
-      //   this.service.deleteRoom(rooms).subscribe(
-      //     res => {
-      //       this.successRequestHandle(res)
-      //     },
-      //     err => {
-      //       this.errRequestHandle(err)
-      //     }
-      //   )
-      // }
+      console.log(this.listContract[obj])
+      if (result) {
+        let data = {
+          contract : [
+            {
+              room : {id : Number(this.listContract[obj].room.id)},
+              id : this.listContract[obj].id,
+              roomPrice : this.listContract[obj].roomPrice,
+              deposit : this.listContract[obj].deposit,
+              description : this.listContract[obj].description,
+              startDate : this.listContract[obj].startDate,
+              endDate : this.listContract[obj].endDate,
+            }
+          ]
+        }
+        console.log(JSON.stringify(data))
+        this.addLoading();
+        this.service.deleteContract(data).subscribe(
+          res => {
+            this.successRequestHandle(res)
+          },
+          err => {
+            this.errRequestHandle(err)
+          }
+        )
+      }
     });
   }
   successRequestHandle(res) {

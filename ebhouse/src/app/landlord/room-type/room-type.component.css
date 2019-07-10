@@ -14,14 +14,6 @@ table.mat-elevation-z8 {
   #modalEquipment{
     margin: 0 auto;
   }
-
-
-
-
-
-
-
-
   .create-bh{
     display: flex;
     justify-content: flex-end;
@@ -38,14 +30,11 @@ table.mat-elevation-z8 {
   .text-secondary{
     cursor: pointer;
   }
-  .page .pagination{
-    justify-content: center;
-}
+  #dataTable3_info{
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
 a.page-link.disabled{
     background: #007bff;
     color: white;
-}
-.page{
-   margin: 0 auto;
-   
 }

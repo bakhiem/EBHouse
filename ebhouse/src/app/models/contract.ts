@@ -3,6 +3,7 @@ export class Contract{
     deposit?: string;
     description?: string;
     endDate?: string;
+    cDate?: string;
     startDate?: string;
     id?: number;
     lstContractLog ?: [];

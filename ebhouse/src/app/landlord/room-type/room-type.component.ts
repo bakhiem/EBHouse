@@ -41,6 +41,8 @@ export class RoomTypeComponent implements OnInit {
   currentPage: number = 1;
   totalPage: number;
   pageNumbers: number[] = [];
+  
+  totalPageString : string;
   displayedColumns: string[] = ['name', 'area', 'capacity', 'price', 'description', 'equipment', 'customColumn'];
 
 
@@ -70,12 +72,12 @@ export class RoomTypeComponent implements OnInit {
       dataEquipment: new FormArray([])
     });
     this.getEquipment();
-    this.getRoomTypes();
+    
     this.formatCurrency();
 
   }
   formatCurrency() {
-    var $input = $(".input-price");
+    var $input = $("#input-price");
     $input.on("keyup", function (event) {
       // When user select text in the document, also abort.
       var selection = window.getSelection().toString();
@@ -114,6 +116,7 @@ export class RoomTypeComponent implements OnInit {
       }
       this.dataEquipment = arr;
       this.addCheckboxes();
+      this.getRoomTypes();
     });
   }
   private addCheckboxes() {
@@ -137,6 +140,7 @@ export class RoomTypeComponent implements OnInit {
           this.rtList = resData.roomType;
           this.getChecked();
           this.totalPage = Math.ceil(resData.totalPage / this.perPage);
+          this.totalPageString = 'Tổng số loại phòng: ' + resData.totalPage;
           this.toArray(this.totalPage);
         }
       }, err => {
