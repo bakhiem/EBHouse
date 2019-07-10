@@ -109,9 +109,13 @@
                             <li><a href="javascript:void(0)">Hoạt động phòng</a></li>
                         </ul>
                     </li>
-                    <li><a href="javascript:void(0)"><i class="ti-email"></i> <span>Quản lý thông báo</span></a></li>
-                    
-                    
+                    <li>
+                        <a href="javascript:void(0)"><i class="ti-email"></i> <span>Quản lý thông báo</span></a>
+                        <ul class="collapse">
+                            <li routerLink="/notification/from" routerLinkActive="active"><a href="javascript:void(0)">Thông báo đã gửi</a></li>
+                            <li routerLink="/notification/to" routerLinkActive="active"><a href="javascript:void(0)">Thông báo đã nhận</a></li>
+                        </ul>
+                    </li>
                     <li>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-money"></i> <span>Quản
                                 lý tài chính</span></a>
