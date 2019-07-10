@@ -54,7 +54,6 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     this.authenticationService.currentUser.subscribe(data => {
       this.currentUser = data;
       this.getRole();
-      console.log(this.role)
     });
 
 
