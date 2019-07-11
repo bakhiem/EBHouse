@@ -8,11 +8,11 @@ export const environment = {
   // baseUrl : "http://localhost:8080/CapstoneProject"
   // baseUrl : "http://localhost:8084/CapstoneProject"
   // baseUrl : "http://localhost:8888/CapstoneProject"
-  baseUrl : "http://localhost:8080/ebhouse"
+  // baseUrl : "http://localhost:8080/ebhouse"
   // baseUrl : "http://ebhouse-backup.kilatiron.com/eb"
   // baseUrl : "http://54.255.165.53:8080/ebhouse"
   // baseUrl : "http://ebhouse-backup.cloudjiffy.net/eb",
-  // baseUrl : "http://52.196.206.109:8080/ebhouse"
+  baseUrl : "http://52.196.206.109:8080/ebhouse"
 };
 
 /*
