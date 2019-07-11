@@ -12,7 +12,7 @@ export const environment = {
   // baseUrl : "http://ebhouse-backup.kilatiron.com/eb"
   // baseUrl : "http://54.255.165.53:8080/ebhouse"
   // baseUrl : "http://ebhouse-backup.cloudjiffy.net/eb",
-  baseUrl : "http://ebhouse.ml:8080/ebhouse"
+  baseUrl : "https://ebhouse.ml:8080/ebhouse"
 };
 
 /*
