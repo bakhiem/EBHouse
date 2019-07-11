@@ -16,7 +16,8 @@ export enum CommonMessage {
   DateFormat = 'Vui lòng chọn tháng bắt đầu và tháng kết thúc hợp lệ',
   HaveContractInDate = 'Đã tồn tại hợp đồng trong thời gian này',
   Utility_InputAllField = 'Vui lòng điền vào tất cả các trường, trường nào không có có thể nhập giá trị 0',
-  Electric = 'Số điện tháng sau lớn hơn hoặc bằng số điện tháng trước'
+  Electric = 'Số điện tháng sau lớn hơn hoặc bằng số điện tháng trước',
+  InputElectricBefore = 'Bạn cần chốt số điện trước khi hủy hợp đồng'
   }
   export class Message {
     content : string;

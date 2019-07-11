@@ -4,7 +4,7 @@ import { TenantDashboardComponent } from './dashboard/dashboard.component';
 import { TenantProfileComponent } from './profile/profile.component';
 import { TenantComponent } from './tenant.component';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from '../guard/auth.guard';
+import { AuthGuard } from '../guard/authRole.guard';
 import { Role } from '../user/models/role';
 const TenantChildRouters: Routes = [
   {

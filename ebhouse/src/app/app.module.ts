@@ -65,7 +65,8 @@ import {NotifiModule }from './notifi/notifi.module';
     UserService],
   entryComponents:[
     ConfirmationDialogComponent,
-    InformationDialogComponent
+    InformationDialogComponent,
+    RedirectDialogComponent
   ],
   bootstrap:[AppComponent]
 })
