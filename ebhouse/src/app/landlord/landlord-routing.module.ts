@@ -4,7 +4,7 @@ import {LandlordDashboardComponent }from './dashboard/dashboard.component';
 import {LandlordProfileComponent }from './profile/profile.component';
 import {LandlordComponent }from './landlord.component';
 import {Routes, RouterModule }from '@angular/router';
-import {AuthGuard }from '../guard/auth.guard';
+import {AuthGuard }from '../guard/authRole.guard';
 import {Role }from '../user/models/role';
 import {BhInfoComponent }from './bh-info/bh-info.component';
 import {RoomTypeComponent }from './room-type/room-type.component';

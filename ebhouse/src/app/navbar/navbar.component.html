@@ -16,13 +16,12 @@
                         <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-building-o"></i><span>Thông
                                 tin nhà trọ
                             </span></a>
-
                     </li>
                     <li routerLink="/landlord/room-type" routerLinkActive="active" class='custom-expand-menu'>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-home"></i><span>Quản lý
                                 loại phòng</span></a>
                     </li>
-                    <li routerLinkActive="active">
+                    <li>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-home"></i><span>Quản lý
                                 phòng</span></a>
                         <ul class="collapse">
@@ -42,14 +41,14 @@
                         <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-table"></i>
                             <span>Tiện ích</span></a>
                     </li>
-                    <li routerLinkActive="active">
+                    <li>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-pencil-alt"></i><span> Nhập chỉ số</span></a>
                         <ul class="collapse">
                             <li routerLink="/landlord/electric" routerLinkActive="active" class='custom-expand-menu'><a href="javascript:void(0)">Chỉ số điện </a></li>
                             <li routerLink="/landlord/extrafee" routerLinkActive="active" class='custom-expand-menu'><a href="javascript:void(0)">Chi phí phát sinh</a></li>
                         </ul>
                     </li>
-                    <li routerLinkActive="active">
+                    <li>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-money"></i><span>Quản lý
                                 tài chính</span></a>
                         <ul class="collapse">
@@ -67,7 +66,7 @@
                             <li routerLink="/notification/to" routerLinkActive="active" class='custom-expand-menu'><a href="javascript:void(0)">Thông báo đã nhận</a></li>
                         </ul>
                     </li>
-                    <li routerLink="/landlord/profile" [routerLinkActive]="['active']" class='custom-expand-menu'>
+                    <li routerLink="/landlord/profile" routerLinkActive='active' class='custom-expand-menu'>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-user"></i>
                             <span>Thông tin cá nhân</span></a>
                     </li>
@@ -97,12 +96,12 @@
                                 tin nhà trọ
                             </span></a>
                     </li>
-                    <li routerLinkActive="active" class='custom-expand-menu'>
+                    <li routerLinkActive="active">
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-home"></i><span>Quản lý
                                 phòng</span></a>
                         <ul class="collapse">
-                            <li><a href="javascript:void(0)" aria-expanded="true">Thông tin phòng</a></li>
-                            <li><a href="javascript:void(0)">Hoạt động phòng</a></li>
+                            <li class='custom-expand-menu'><a href="javascript:void(0)" aria-expanded="true">Thông tin phòng</a></li>
+                            <li class='custom-expand-menu'><a href="javascript:void(0)">Hoạt động phòng</a></li>
                         </ul>
                     </li>
                     <li>
@@ -117,7 +116,7 @@
                                 lý tài chính</span></a>
 
                     </li>
-                    <li routerLink="/tenant/profile" [routerLinkActive]="['active']" class='custom-expand-menu'>
+                    <li routerLink="/tenant/profile" routerLinkActive='active' class='custom-expand-menu'>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-user"></i>
                             <span>Thông tin cá nhân</span></a>
                     </li>

@@ -212,12 +212,23 @@ export class CreateContractComponent implements OnInit {
   ngOnInit() {
     this.subscription = this.shareService.currentBh.subscribe((data) => {
       this.currentBh = data;
-      if (data.id) {
+      if (this.currentBh && this.currentBh.id) {
         this.getRoomsFromCurrentBh();
+        this.resetFormChangeBh();
       }
     })
     this.formatCurrency();
     this.jqueryCode();
+  }
+  resetFormChangeBh(){
+    this.listImg = [];
+    this.listTenant = [];
+    this.dataSource.data = [];
+    $("#customCheck1"). prop("checked", false);
+    $('#mycollapse').collapse('hide');
+    $('#extraFee').val('');
+    this.isExtraFee = 0;
+    this.listContractDisplay = [];
   }
   displayDialog(message : string){
     this.dialog.open(InformationDialogComponent, {
