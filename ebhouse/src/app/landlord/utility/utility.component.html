@@ -2,14 +2,7 @@
   <div class="customLoader"></div>
 </div>
 <div class="utility mt-3">
-    <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
-        {{message.content}}
-    </div>
-    <ng-template #errMess>
-        <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
-            {{message.content}}
-        </div>
-    </ng-template>
+
   <table class="table">
     <thead>
       <tr>

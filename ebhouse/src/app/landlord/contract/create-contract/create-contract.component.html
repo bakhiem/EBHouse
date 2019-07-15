@@ -11,15 +11,6 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="header-title">Tạo hợp đồng</h4>
-                        <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success"
-                            role="alert">
-                            {{message.content}}
-                        </div>
-                        <ng-template #errMess>
-                            <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
-                                {{message.content}}
-                            </div>
-                        </ng-template>
                         <div class="row">
                             <div class="col-sm-6">
                                 <label class="col-form-label required">Chọn phòng ký hợp đồng</label>

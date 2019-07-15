@@ -3,16 +3,14 @@ import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl, Valid
 import { MatDialog, MatCheckboxModule } from '@angular/material';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
-import * as $AB from 'jquery';
-import * as bootstrap from "bootstrap";
+
 import { LandlordService } from '../../service/landlord-service.service';
 import { InformationDialogComponent } from '../../../shared/info-dialog/information-dialog.component';
 import { map, startWith } from 'rxjs/operators';
-import { Landlord } from '../../../models/landlord';
 import { BoardingHouse } from '../../../models/bh';
-import { LandlordComponent } from '../../landlord.component';
 
-import { CommonMessage, Message } from '../../../models/message';
+import { ToastrService } from 'ngx-toastr';
+import { CommonMessage } from '../../../models/message';
 import { Observable, throwError } from 'rxjs';
 
 import { Contract, Tenant, ContractTenant, User } from '../../../models/contract';
@@ -23,10 +21,7 @@ import { ImageResult, ResizeOptions } from 'ng2-imageupload';
 import { ISubscription } from "rxjs/Subscription";
 //date picker angular
 
-import { NativeDateAdapter } from '@angular/material';
-import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MatDatepicker } from '@angular/material/datepicker';
+import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { Router } from '@angular/router';
 import { CustomDateAdapter } from '../customDate'
 
@@ -41,7 +36,7 @@ import { SharedServiceService } from '../../../service/shared-service.service';
     { provide: DateAdapter, useClass: CustomDateAdapter }
   ],
 })
-export class CreateContractComponent implements OnInit {
+export class CreateContractComponent implements OnInit,OnDestroy {
   startDateStr: any;
   endDateSrt: any;
   minDate = new Date();
@@ -115,6 +110,7 @@ export class CreateContractComponent implements OnInit {
     }
     return true;
   }
+  
   periodHandler() {
     if (this.startDateStr && this.endDateSrt) {
       let monthBegin = this.startDateStr.split('-');
@@ -163,11 +159,8 @@ export class CreateContractComponent implements OnInit {
   currentTenant: any;
   phonePattern = '((09|03|07|08|05)+([0-9]{8}))';
   listImg = [];
-  //Message
-  message: Message = {
-    content: '',
-    type: 0
-  }
+  
+
   capacity: number;
   isExtraFee = 0;
   displayedColumns: string[] = ['name', 'phone', 'customColumn'];
@@ -189,7 +182,8 @@ export class CreateContractComponent implements OnInit {
     private fb: FormBuilder,
     public dialog: MatDialog,
     private service: LandlordService,
-    private router: Router) {
+    private router: Router,
+    private toastr: ToastrService) {
     this.createContractFormGroup = this.fb.group({
       room: this.fb.control('', Validators.compose([
         Validators.required
@@ -219,6 +213,15 @@ export class CreateContractComponent implements OnInit {
     })
     this.formatCurrency();
     this.jqueryCode();
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+  showSuccess(mess) {
+    this.toastr.success(mess, 'Thành công');
+  }
+  showErr(mess) {
+    this.toastr.error(mess, 'Lỗi !');
   }
   resetFormChangeBh(){
     this.listImg = [];
@@ -261,7 +264,6 @@ export class CreateContractComponent implements OnInit {
 
   getRoomsFromCurrentBh() {
     this.capacity = 0;
-    this.resetMess();
     this.createContractFormGroup.reset();
     let data: any = {
       boardingHouseID: this.currentBh.id
@@ -275,8 +277,7 @@ export class CreateContractComponent implements OnInit {
           let data = response.data;
           this.roomList = data;
           if (this.roomList.length == 0) {
-            this.message.content = CommonMessage.BhHaveNoRoom;
-            this.message.type = 0;
+            this.showErr(CommonMessage.BhHaveNoRoom);
           }
           this.filteredOptions = this.createContractFormGroup.get('room').valueChanges
             .pipe(
@@ -300,10 +301,7 @@ export class CreateContractComponent implements OnInit {
         console.log(err);
       })
   }
-  resetMess() {
-    this.message.content = '';
-    this.message.type = 0;
-  }
+
   saveTenant() {
     let isDuplicate = 0;
     if (this.listTenant.length < this.capacity) {
@@ -439,21 +437,17 @@ export class CreateContractComponent implements OnInit {
               
             });
           }
-          
-          
           this.zone.run(() => { // <== added
               this.listContractDisplay = display;
           });
           console.log(this.listContractDisplay)
         }
         else {
-          this.message.type = 0;
-          this.message.content = response.message;
+          this.showErr(response.message);
         }
       }, err => {
         this.removeLoading();
-        this.message.type = 0;
-        this.message.content = CommonMessage.defaultErrMess;
+        this.showErr(CommonMessage.defaultErrMess);
         console.log(err);
       })
   }
@@ -548,18 +542,15 @@ export class CreateContractComponent implements OnInit {
           this.removeLoading();
           let response = JSON.parse("" + res);
           if (response.type == 1) {
-            this.message.type = 1;
-            this.message.content = response.message;
+            this.showSuccess(response.message);
             setTimeout(() => { this.router.navigate(['/landlord/contract']) }, 1500);
           }
           else {
-            this.message.type = 0;
-            this.message.content = response.message;
+            this.showErr(response.message);
           }
         }, err => {
           this.removeLoading();
-          this.message.type = 0;
-          this.message.content = CommonMessage.defaultErrMess;
+          this.showErr(CommonMessage.defaultErrMess);
           console.log(err);
         })
     }

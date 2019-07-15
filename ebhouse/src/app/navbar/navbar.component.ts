@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit,ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { User } from '../user/models/user';
 import { AuthenticationService } from '../user/service/authentication.service';
@@ -9,6 +9,14 @@ import { Role } from '../user/models/role';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit, AfterViewInit {
+  @ViewChild('myMenu') set myMenu(element) {
+    if (element) {
+      setTimeout(() => {
+        (<any>$("#menu")).metisMenu();
+        this.jqueryCode();
+      }, 500);
+    }
+  }
   role: string = '';
   currentUser: any;
   statusUpdateProfile: string = "2";
@@ -29,12 +37,6 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     else {
       this.role = ''
     }
-
-    setTimeout(() => {
-      console.log($('#menu'));
-        (<any>$("#menu")).metisMenu();
-        this.jqueryCode();
-      }, 500);
   }
   
   jqueryCode() {
@@ -47,7 +49,6 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     $.getScript('../../assets/js/metisMenu.min.js');
     $.getScript('../../assets/js/popper.min.js');
-
   }
 
   ngOnInit() {

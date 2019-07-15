@@ -14,20 +14,7 @@ table {
     margin-bottom: 0;
   }
   
-  .text-secondary{
-    cursor: pointer;
-  }
-  .page .pagination{
-    justify-content: center;
-}
-a.page-link.disabled{
-    background: #007bff;
-    color: white;
-}
-.page{
-   margin: 0 auto;
-   
-}
+
 .mat-column-select {
   overflow: initial;
 }
@@ -37,3 +24,14 @@ a.page-link.disabled{
 .mat-form-field-infix{
   border-top: 0!important;
 }
+.page-footer{
+  background: #fff;
+  padding-top: 1.1rem;
+}
+
+@media only screen and (max-width: 600px) {
+.pagination{
+  display: flex;
+  justify-content: center;
+}
+} 

@@ -3,14 +3,6 @@
         <div class="customLoader"></div>
     </div>
     <form [formGroup]="profileFormGroup" (ngSubmit)="onSubmit()">
-        <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
-            {{message.content}}
-        </div>
-        <ng-template #errMess>
-            <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
-                {{message.content}}
-            </div>
-        </ng-template>
         <div class="row">
             <!-- Textual inputs start -->
             <div class="col-12 mt-5">

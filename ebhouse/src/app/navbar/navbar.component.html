@@ -7,7 +7,7 @@
     <div class="main-menu">
         <div class="menu-inner">
             <nav>
-                <ul class="metismenu" *ngIf='role == "landlord"' id="menu">
+                <ul class="metismenu" *ngIf='role == "landlord"' id="menu" #myMenu>
                     <li>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-dashboard"></i><span>Quản lý
                                 chung</span></a>
@@ -26,7 +26,7 @@
                                 phòng</span></a>
                         <ul class="collapse">
                             <li routerLink="/landlord/room" routerLinkActive="active" class='custom-expand-menu'><a
-                                    href="javascript:void(0)" aria-expanded="true">Thông tin phòng</a></li>
+                                    href="javascript:void(0)">Thông tin phòng</a></li>
                             <li><a href="javascript:void(0)">Hoạt động phòng</a></li>
                         </ul>
                     </li>
@@ -91,7 +91,7 @@
     <div class="main-menu">
         <div class="menu-inner">
             <nav>
-                <ul class="metismenu" *ngIf='role == "tenant"' id="menu" >
+                <ul class="metismenu" *ngIf='role == "tenant"' id="menu" #myMenu >
                     <li>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-dashboard"></i><span>Quản lý
                                 chung</span></a>

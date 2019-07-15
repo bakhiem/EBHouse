@@ -14,39 +14,20 @@
             Tạo nhiều phòng
         </button>
     </div>
-
-
-    <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
-        {{message.content}}
-    </div>
-    <ng-template #errMess>
-        <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
-            {{message.content}}
-        </div>
-    </ng-template>
     <div class="modal fade bd-example-modal-lg one-room">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
 
                 <form [formGroup]="createRoomFormGroup" (ngSubmit)="onSubmit()">
                     <div class="modal-header">
-                        <h5 *ngIf="isEdit == 0; else edit"  class="modal-title">Tạo phòng trọ</h5>
+                        <h5 *ngIf="isEdit == 0; else edit" class="modal-title">Tạo phòng trọ</h5>
                         <ng-template #edit>
                             <h5 *ngIf="isEdit == 1" class="modal-title">Sửa thông tin phòng trọ</h5>
                         </ng-template>
-                       
+
                         <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
                     </div>
                     <div class="modal-body">
-                        <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success"
-                            role="alert">
-                            {{message.content}}
-                        </div>
-                        <ng-template #errMess>
-                            <div *ngIf="message && message.content != '' " class="alert alert-danger" role="alert">
-                                {{message.content}}
-                            </div>
-                        </ng-template>
                         <div class="form-group row">
                             <div class="col-sm-4">
                                 <label for="input-bhouse" class="col-form-label">Nhà trọ</label>
@@ -108,15 +89,7 @@
                         <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
                     </div>
                     <div class="modal-body">
-                        <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success"
-                            role="alert">
-                            {{message.content}}
-                        </div>
-                        <ng-template #errMess>
-                            <div *ngIf="message && message.content != '' " class="alert alert-danger" role="alert">
-                                {{message.content}}
-                            </div>
-                        </ng-template>
+                      
 
                         <div class="form-group row">
                             <div class="col-sm-4">
@@ -161,24 +134,27 @@
                                             formControlName="nameFormat">
                                         <div *ngIf="createMultiRoomFormGroup.get('name.nameFormat')?.errors?.pattern && (createMultiRoomFormGroup.get('name.nameFormat').dirty || createMultiRoomFormGroup.get('name.nameFormat').touched)"
                                             class="alert alert-danger">
-                                           Tên các phòng ngăn cách bởi dấu phẩy
+                                            Tên các phòng ngăn cách bởi dấu phẩy
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="profile" role="tabpanel"
                                         aria-labelledby="profile-tab">
                                         <label for="example-text-input" class="col-form-label required">Phòng bắt
                                             đầu(Nhập số, ví dụ : 1)</label>
-                                        <input class="form-control" type="text" id="example-text-input"
-                                            formControlName="nameBegin">
-                                            <div *ngIf="createMultiRoomFormGroup.get('name.nameBegin')?.errors?.pattern && (createMultiRoomFormGroup.get('name.nameBegin').dirty || createMultiRoomFormGroup.get('name.nameBegin').touched)"
+                                        <input class="form-control" type="number" pattern="[0-9]*"
+                                            onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))"
+                                            id="example-text-input" formControlName="nameBegin">
+                                        <div *ngIf="createMultiRoomFormGroup.get('name.nameBegin')?.errors?.pattern && (createMultiRoomFormGroup.get('name.nameBegin').dirty || createMultiRoomFormGroup.get('name.nameBegin').touched)"
                                             class="alert alert-danger">
-                                          Tên phòng bao gồm các số
+                                            Tên phòng bao gồm các số
                                         </div>
                                         <label for="example-text-input" class="col-form-label required">Phòng kết
                                             thúc(Nhập số, ví dụ : 10)</label>
-                                        <input class="form-control" type="text" id="example-text-input"
+                                        <input class="form-control" pattern="[0-9]*" type="number"
+                                            id="example-text-input"
+                                            onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))"
                                             formControlName="nameEnd">
-                                            <div *ngIf="createMultiRoomFormGroup.get('name.nameEnd')?.errors?.pattern && (createMultiRoomFormGroup.get('name.nameEnd').dirty || createMultiRoomFormGroup.get('name.nameEnd').touched)"
+                                        <div *ngIf="createMultiRoomFormGroup.get('name.nameEnd')?.errors?.pattern && (createMultiRoomFormGroup.get('name.nameEnd').dirty || createMultiRoomFormGroup.get('name.nameEnd').touched)"
                                             class="alert alert-danger">
                                             Tên phòng bao gồm các số
                                         </div>
@@ -257,31 +233,13 @@
             </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" ></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
-
-    <nav class="page mt-3">
-        <ul class="pagination">
-            <li class="page-item">
-                <a class="page-link" (click)="prePage()" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                    <span class="sr-only">Previous</span>
-                </a>
-            </li>
-
-            <li class="page-item" *ngFor="let pageNumber of pageNumbers ">
-                <a *ngIf="pageNumber == currentPage,else inActive" class="page-link disabled ">{{pageNumber}}</a>
-                <ng-template #inActive><a class="page-link" (click)="goToPage(pageNumber)">{{pageNumber}}</a>
-                </ng-template>
-            </li>
-
-            <li class="page-item">
-                <a class="page-link" (click)="nextPage()" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                    <span class="sr-only">Next</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+</div>
+<div class="row page-footer">
+    <div class="col-sm-5 col-12">Tổng số phòng : {{totalPage}} / {{numberOfRoomBh}}</div>
+    <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalPage" [(page)]="currentPage" [maxSize]="perPage" [rotate]="true"
+        [boundaryLinks]="true" (pageChange)="pageChanged($event)">
+    </ngb-pagination>
 </div>
