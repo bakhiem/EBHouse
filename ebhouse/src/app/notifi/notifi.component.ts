@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef  } from '@angular/core';
 import { CommonMessage, Message } from '../models/message';
 import { Notification } from '../models/notification';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -8,12 +8,18 @@ import { AuthenticationService } from '../user/service/authentication.service';
 import { NotifiService } from './service/notifi.service';
 import { Role } from '../user/models/role';
 
+import { find, get, pull } from 'lodash';
+
 @Component({
   selector: 'app-notifi',
   templateUrl: './notifi.component.html',
   styleUrls: ['./notifi.component.css']
 })
 export class NotifiComponent implements OnInit {
+
+  @ViewChild('tagInput') tagInputRef: ElementRef;
+  tags: string[] = ['html', 'Angular'];
+  form: FormGroup;
 
   message: Message = {
     content: '',
@@ -72,6 +78,8 @@ export class NotifiComponent implements OnInit {
 
   creatNotification(){
     this.resetMessage();
+    this.createNotifiFormGroup.reset();
+    $('#myDropdown').removeClass('show-s');
     this.service.getUserSend().subscribe(
       res => {
         let response = JSON.parse('' + res);
@@ -170,6 +178,10 @@ export class NotifiComponent implements OnInit {
     }
   }
 
+  hidenDropDown(){
+    $('#myDropdown').removeClass('show-s');
+  }
+
   disabledClick(t : String, event : any){
     this.option_send = t;
     this.createNotifiFormGroup.get('userToText').setValue(event.target.text);
@@ -182,7 +194,7 @@ export class NotifiComponent implements OnInit {
   //   $('#myDropdown').removeClass('show-s');
   // }
 
-  // forcus(){}
+  forcus(){}
 
   filterFunction() {
     var input, filter, ul, li, a, i, div ,txtValue;
@@ -199,6 +211,41 @@ export class NotifiComponent implements OnInit {
       }
     }
   }
+
+  focusTagInput(): void {
+    this.tagInputRef.nativeElement.focus();
+  }
+
+  onKeyUp(event: KeyboardEvent): void {
+    const inputValue: string = this.form.controls.tag.value;
+    if (event.code === 'Backspace' && !inputValue) {
+      this.removeTag();
+      return;
+    } else {
+      if (event.code === 'Comma' || event.code === 'Space') {
+        this.addTag(inputValue);
+        this.form.controls.tag.setValue('');
+      }
+    }
+  }
+
+  addTag(tag: string): void {
+    if (tag[tag.length - 1] === ',' || tag[tag.length - 1] === ' ') {
+      tag = tag.slice(0, -1);
+    }
+    if (tag.length > 0 && !find(this.tags, tag)) {
+      this.tags.push(tag);
+    }
+  }
+
+  removeTag(tag?: string): void {
+    if (!!tag) {
+      pull(this.tags, tag);
+    } else {
+      this.tags.splice(-1);
+    }
+  }
+
 
   addLoading() {
     $('.customLoading').addClass('preloader');
