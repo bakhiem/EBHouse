@@ -7,8 +7,7 @@ import { PlaceService } from '../service/place.service';
 import { AuthenticationService } from '../user/service/authentication.service';
 import { NotifiService } from './service/notifi.service';
 import { Role } from '../user/models/role';
-
-import { find, get, pull } from 'lodash';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-notifi',
@@ -16,11 +15,6 @@ import { find, get, pull } from 'lodash';
   styleUrls: ['./notifi.component.css']
 })
 export class NotifiComponent implements OnInit {
-
-  @ViewChild('tagInput') tagInputRef: ElementRef;
-  tags: string[] = ['html', 'Angular'];
-  form: FormGroup;
-
   message: Message = {
     content: '',
     type: 0,
@@ -33,6 +27,8 @@ export class NotifiComponent implements OnInit {
   public createNotifiFormGroup: FormGroup;
   public flag: any = 0;
   newNotifi: Notification = new Notification();
+  dataSourceSent = new MatTableDataSource();
+  listDataSet: any[] = [];
   listUser: any[] = [];
   listBH: any[]= [];
   listRoom: any[]= [];
@@ -40,6 +36,8 @@ export class NotifiComponent implements OnInit {
   public currentNotifi: Notification;
   role : string = '';
   currentUser: any;
+
+  displayedColumns: string[] = ['userTo','action'];
 
   constructor(
     private fb: FormBuilder,
@@ -87,7 +85,6 @@ export class NotifiComponent implements OnInit {
           let data = JSON.parse(response.data);
           this.listUser = data.listUser;
           if(data.listBoardingHouse != undefined){
-            console.log(1);
             this.listBH = data.listBoardingHouse;
 
           }
@@ -179,20 +176,21 @@ export class NotifiComponent implements OnInit {
   }
 
   hidenDropDown(){
+    $('a').onClick(function(){
+      this.disabledClick();
+    });
     $('#myDropdown').removeClass('show-s');
   }
 
   disabledClick(t : String, event : any){
     this.option_send = t;
     this.createNotifiFormGroup.get('userToText').setValue(event.target.text);
-    this.createNotifiFormGroup.get('userTo').setValue(event.target.rel);
+    // this.createNotifiFormGroup.get('userTo').setValue(event.target.rel);
+    this.listDataSet.push({name: event.target.text});
+    this.dataSourceSent.data = this.listDataSet;
     $('#myDropdown').removeClass('show-s');
     return false;
   }
-
-  // hidesearch(){
-  //   $('#myDropdown').removeClass('show-s');
-  // }
 
   forcus(){}
 
@@ -211,41 +209,6 @@ export class NotifiComponent implements OnInit {
       }
     }
   }
-
-  focusTagInput(): void {
-    this.tagInputRef.nativeElement.focus();
-  }
-
-  onKeyUp(event: KeyboardEvent): void {
-    const inputValue: string = this.form.controls.tag.value;
-    if (event.code === 'Backspace' && !inputValue) {
-      this.removeTag();
-      return;
-    } else {
-      if (event.code === 'Comma' || event.code === 'Space') {
-        this.addTag(inputValue);
-        this.form.controls.tag.setValue('');
-      }
-    }
-  }
-
-  addTag(tag: string): void {
-    if (tag[tag.length - 1] === ',' || tag[tag.length - 1] === ' ') {
-      tag = tag.slice(0, -1);
-    }
-    if (tag.length > 0 && !find(this.tags, tag)) {
-      this.tags.push(tag);
-    }
-  }
-
-  removeTag(tag?: string): void {
-    if (!!tag) {
-      pull(this.tags, tag);
-    } else {
-      this.tags.splice(-1);
-    }
-  }
-
 
   addLoading() {
     $('.customLoading').addClass('preloader');

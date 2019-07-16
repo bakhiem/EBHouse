@@ -35,59 +35,60 @@
                         </ng-template>
                         <!-- Textual inputs start -->
                         <div class="form-group row">
-                            <div class="col-sm-12">
+                            <div class="col-sm-5">
+                                <div (focus)="forcus()" (focusout)="hidenDropDown()">
                                 <label for="example-text-input" class="col-form-label required">Người Nhận: </label>
-                                <!-- <input class="form-control" type="text" id="example-text-input" formControlName="userTo"> -->
-                                <div [formGroup]="form">
-                                  <div class="editor-tag" (click)="focusTagInput()">
-                                    <span class="tag-item" *ngFor="let tag of tags">
-                                            {{tag}}
-                                            <span class="remove-tag" (click)="removeTag(tag)">×</span>
-                                          </span>
-                                          <input
-                                          placeholder="请输入标签"
-                                          #tagInput type="text"
-                                          class="input-tag"
-                                          (keyup)="onKeyUp($event)"
-                                          formControlName="tag">
-                                        </div>
-                                </div>
-                                <textarea class="form-control" formControlName="userToText" type="text" placeholder="Bạn có thể chọn một người hoặc nhiều người" id="myInput" rows="3" (focus)="forcus()" (focusout)="hidenDropDown()" (click)="myFunction()" (keyup)="filterFunction()" (change)="checkChange()"></textarea>
-                                  <input type="hidden" formControlName="userTo">
-                                <div class="dropdown">
-                                    <!-- <button (click)="myFunction()" class="dropbtn">Dropdown</button> -->
-                                    <div id="myDropdown" class="dropdown-content">
-                                        <div *ngIf="role != 'admin'">
-                                            <a rel="0" (click)="disabledClick('admin', $event)" class="send-admin">Admin</a>
-                                        </div>
-                                        <div *ngFor="let item of listBH; let i = index">
-                                            <a rel="{{ item.id }}" (click)="disabledClick('bh', $event)" class="send-bh">Gửi cho thành viên của {{ item.name }}</a>
-                                        </div>
-                                        <div *ngFor="let item of listRoom; let i = index">
-                                            <a rel="{{ item.id }}" (click)="disabledClick('room', $event)" class="send-room">Gửi cho thành viên của {{ item.bh_name + ' - ' + item.name }}</a>
-                                        </div>
-                                        <div *ngFor="let item of listUser; let i = index">
-                                            <a rel="{{ item.id }}" (click)="disabledClick('user', $event)" class="send-user">{{ item.name }}</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div *ngIf="createNotifiFormGroup.controls['userToText'].hasError('required') && (createNotifiFormGroup.controls['userToText'].dirty || createNotifiFormGroup.controls['userToText'].touched)" class="alert alert-danger">
-                                    Người Nhận không được để trống!
-                                </div>
-                                <div *ngIf="createNotifiFormGroup.controls['userTo'].hasError('required') && (createNotifiFormGroup.controls['userTo'].dirty || createNotifiFormGroup.controls['userTo'].touched)" class="alert alert-danger">
+                                  <input class="form-control tags" formControlName="userToText" type="text" placeholder="Bạn có thể chọn một người hoặc nhiều người" id="myInput" (click)="myFunction()"  (keyup)="filterFunction()" (change)="checkChange()">
+                                  <div class="dropdown">
+                                      <!-- <button (click)="myFunction()" class="dropbtn">Dropdown</button> -->
+                                      <div id="myDropdown" class="dropdown-content">
+                                          <div *ngIf="role != 'admin'">
+                                              <a rel="0" (click)="disabledClick('admin', $event)" class="send-admin">Admin</a>
+                                          </div>
+                                          <div *ngFor="let item of listBH; let i = index">
+                                              <a rel="{{ item.id }}" (click)="disabledClick('bh', $event)" class="send-bh">Gửi cho thành viên của {{ item.name }}</a>
+                                          </div>
+                                          <div *ngFor="let item of listRoom; let i = index">
+                                              <a rel="{{ item.id }}" (click)="disabledClick('room', $event)" class="send-room">Gửi cho thành viên của {{ item.bh_name + ' - ' + item.name }}</a>
+                                          </div>
+                                          <div *ngFor="let item of listUser; let i = index">
+                                              <a rel="{{ item.id }}" (click)="disabledClick('user', $event)" class="send-user">{{ item.name }}</a>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-7">
+                                <table mat-table [dataSource]="dataSourceSent" class="mat-elevation-z8">
+                                    <ng-container matColumnDef="userTo">
+                                        <th mat-header-cell *matHeaderCellDef>Người Nhận</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="action">
+                                        <th mat-header-cell *matHeaderCellDef>Xoá</th>
+                                        <td mat-cell *matCellDef="let element;let i = index;"> <button type="button" class="btn btn-danger" >
+                                            <span>×</span>
+                                          </button></td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;let i = index;"></tr>
+                                </table>
+                                <div *ngIf="listDataSet.length == 0" class="alert alert-danger">
                                     Người Nhận không được để trống!
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-sm-4">
+                            <div class="col-sm-12">
                                 <label for="example-number-input" class="col-form-label required">Tiêu Đề</label>
                                 <input class="form-control" type="text" id="example-number-input" formControlName="subject">
                                 <div *ngIf="createNotifiFormGroup.controls['subject'].hasError('required') && (createNotifiFormGroup.controls['subject'].dirty || createNotifiFormGroup.controls['subject'].touched)" class="alert alert-danger">
                                     Tiêu đề không được để trống
                                 </div>
                             </div>
-                            <div class="col-sm-7">
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
                                 <label for="input-content" class="col-form-label required">Nội Dung</label>
                                 <textarea class="form-control" id="input-content" formControlName="content" rows="4"></textarea>
                                 <div *ngIf="createNotifiFormGroup.controls['content'].hasError('required') && (createNotifiFormGroup.controls['content'].dirty || createNotifiFormGroup.controls['content'].touched)" class="alert alert-danger">

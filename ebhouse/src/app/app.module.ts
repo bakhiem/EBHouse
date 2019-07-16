@@ -35,6 +35,7 @@ import {MatDialogModule}from '@angular/material/dialog';
 import {NavbarComponent }from './navbar/navbar.component';
 import {HeaderComponent }from './header/header.component';
 import {NotifiModule }from './notifi/notifi.module';
+
 @NgModule( {
   declarations:[
     AppComponent,
