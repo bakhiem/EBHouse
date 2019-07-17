@@ -8,7 +8,7 @@ import { AuthenticationService } from '../user/service/authentication.service';
 import { NotifiService } from './service/notifi.service';
 import { Role } from '../user/models/role';
 import { MatTableDataSource } from '@angular/material/table';
-
+declare var $:JQueryStatic;
 @Component({
   selector: 'app-notifi',
   templateUrl: './notifi.component.html',
@@ -36,6 +36,7 @@ export class NotifiComponent implements OnInit {
   public currentNotifi: Notification;
   role : string = '';
   currentUser: any;
+  check : any = 0;
 
   displayedColumns: string[] = ['userTo','action'];
 
@@ -137,7 +138,28 @@ export class NotifiComponent implements OnInit {
         this.newNotifi.subject = this.createNotifiFormGroup.value.subject;
         this.newNotifi.content = this.createNotifiFormGroup.value.content;
 
-        this.service.sendNotification({ notification: this.newNotifi, id: this.createNotifiFormGroup.value.userTo, flag: this.option_send }).subscribe(
+        let listBhSent = [];
+        let listRoomSent = [];
+        let listUserSent = [];
+        if(this.flag == 1){
+          listUserSent.push(this.createNotifiFormGroup.value.userTo);
+        }else{
+          this.listDataSet.forEach(element => {
+            switch(element.option){
+              case 'bh':
+                listBhSent.push(element.id);
+                break;
+              case 'room':
+                listRoomSent.push(element.id);
+                break;
+              case 'user':
+                listUserSent.push(element.id);
+                break;
+            }
+          });
+        }
+
+        this.service.sendNotification({ notification: this.newNotifi, list_bh: listBhSent, list_room: listRoomSent, list_user: listUserSent}).subscribe(
           res => {
             this.removeLoading();
             let response = JSON.parse('' + res);
@@ -176,19 +198,26 @@ export class NotifiComponent implements OnInit {
   }
 
   hidenDropDown(){
-    $('a').onClick(function(){
-      this.disabledClick();
-    });
+    this.check = 0;
     $('#myDropdown').removeClass('show-s');
   }
 
   disabledClick(t : String, event : any){
-    this.option_send = t;
-    this.createNotifiFormGroup.get('userToText').setValue(event.target.text);
-    // this.createNotifiFormGroup.get('userTo').setValue(event.target.rel);
-    this.listDataSet.push({name: event.target.text});
-    this.dataSourceSent.data = this.listDataSet;
-    $('#myDropdown').removeClass('show-s');
+      this.check = 0;
+      let checkExist = 1;
+      this.listDataSet.forEach(element => {
+        if(element.id ==  event.target.rel){
+          checkExist = 0;
+          this.check = 1;
+        }
+      });
+      if(checkExist == 1){
+        this.option_send = t;
+        this.createNotifiFormGroup.get('userToText').setValue(event.target.text);
+        this.listDataSet.push({name: event.target.text, option: t, id: event.target.rel});
+        this.dataSourceSent.data = this.listDataSet;
+        $('#myDropdown').removeClass('show-s');
+      }
     return false;
   }
 
@@ -208,6 +237,11 @@ export class NotifiComponent implements OnInit {
         a[i].style.display = "none";
       }
     }
+  }
+
+  removeDataSent(i:any){
+    this.listDataSet.splice(i,1);
+    this.dataSourceSent.data = this.listDataSet;
   }
 
   addLoading() {
