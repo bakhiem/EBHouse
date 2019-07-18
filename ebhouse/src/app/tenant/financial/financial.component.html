@@ -1,0 +1,230 @@
+<div class="customLoading">
+  <div class="customLoader"></div>
+</div>
+<div class="extrafee">
+  <div class="row input-date">
+    <div class="col-sm-5 col-md-4">
+      <label for="example-text-input" class="col-form-label">Tháng</label>
+      <div class="input-group">
+      <mat-form-field>
+        <input matInput [max]='maxDate' [matDatepicker]="picker2" [formControl]="month">
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2 (monthSelected)="chooseMonth($event,picker2)" startView="multi-year" disabled="false">
+        </mat-datepicker>
+      </mat-form-field>
+    </div>
+    </div>
+    <div class="form-group col-sm-5 col-md-3">
+        <label class="col-form-label">Chọn trạng thái</label>
+        <select class="custom-select mt-2" [(ngModel)]="financialStatus" (change)='getFinancial()'>
+          <option value="1" selected="selected">Chưa Thanh toán</option>
+          <option value="2">Đã Thanh Toán</option>
+          <option value="3">Tất cả</option>
+        </select>
+      </div>
+  </div>
+ 
+
+  <table mat-table [dataSource]="listFinancial" class="mat-elevation-z8">
+    <ng-container matColumnDef="room">
+      <th mat-header-cell *matHeaderCellDef>Phòng</th>
+      <td mat-cell *matCellDef="let element"> {{element.roomName}} </td>
+    </ng-container>
+    <ng-container matColumnDef="total">
+      <th mat-header-cell *matHeaderCellDef>Tổng tiền</th>
+      <td mat-cell *matCellDef="let element"> {{element.total | currency}} </td>
+    </ng-container>
+    <ng-container matColumnDef="payment">
+      <th mat-header-cell *matHeaderCellDef>Thanh toán</th>
+      <td mat-cell *matCellDef="let element"> {{element.payment | currency}} </td>
+    </ng-container>
+    <ng-container matColumnDef="debt">
+      <th mat-header-cell *matHeaderCellDef>Dư/Nợ mới</th>
+      <td mat-cell *matCellDef="let element"> {{element.debt | currency : 2}} </td>
+    </ng-container>
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef>Ngày thanh toán</th>
+      <td mat-cell *matCellDef="let element"> {{element.payment_date | date:"dd/MM/yyyy" }} </td>
+
+    </ng-container>
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Trạng thái</th>
+      <td mat-cell *matCellDef="let element">
+        <span *ngIf='element.payment == 0' class="status-p bg-warning">{{element.statusStr}}</span>
+        <span *ngIf='element.payment != 0' class="status-p bg-success">{{element.statusStr}}</span>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="customColumn">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let row">
+          <ul class="d-flex justify-content-center">
+              <li><a class="text-secondary" (click)="onClickPayment(row)"> <span class="ti-eye"></span></a></li>
+          </ul>
+      </td>
+  </ng-container>
+    <tr mat-header-row *matHeaderRowDef="getDisplayedColumns()"></tr>
+    <tr mat-row (click)='onClickPayment(row)'  *matRowDef="let row; columns: getDisplayedColumns();">
+
+    </tr>
+  </table>
+
+
+  <div class="row page-footer">
+    <div class="col-sm-5 col-12">Tổng số bản ghi : {{totalPage}}</div>
+    <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalPage" [(page)]="currentPage"
+      [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event)">
+    </ngb-pagination>
+  </div>
+</div>
+
+<div class="modal fade bd-example-modal-lg modal-xl">
+  <div class="modal-dialog modal-lg modal-xl">
+    <div class="modal-content">
+
+      <form [formGroup]="createEFFormGroup">
+        <div class="modal-header">
+          <h5>Tài chính phòng {{currentRoom.name}}</h5>
+         
+          <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+        </div>
+        <div class="modal-body">
+
+
+          <!-- Textual inputs start -->
+
+          <div class="form-group row">
+            <label for="createDate" class="col-form-label ml-3">Ngày thanh toán</label>
+            <div class="col-sm-3">
+              <input type="text" class="form-control" id="createDate" formControlName='createDate'>
+            </div>
+          </div>
+          <div class="form-group row">
+            <table class="table text-center table-bordered">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">Tiền phòng</th>
+                  <th scope="col">Tiền điện</th>
+                  <th scope="col">Tiền dịch vụ</th>
+                  <th scope="col">Chi phí khác</th>
+                  <th scope="col">Tổng tiền</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td id='room-fee'></td>
+                  <td id='electric-fee' class='can-click'></td>
+                  <td id='utility-fee' class='can-click'></td>
+                  <td id='extra-fee' class='can-click'></td>
+                  <td id='total-money'></td>
+                </tr>
+              </tbody>
+            </table>
+            <div id="accordionElectric" class="collapse">
+              <table class="table  table-bordered">
+                <thead>
+                  <tr>
+                    <th scope="col">Số điện tháng trước</th>
+                    <th scope="col">Số điện tháng này</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td id='e-last'></td>
+                    <td id='e-present'></td>
+                  </tr>
+
+                </tbody>
+              </table>
+
+            </div>
+            <div id="accordionUtility" class="collapse">
+              <table class="table table-bordered">
+                <thead >
+                  <tr>
+                    <th scope="col">Tiền nước</th>
+                    <th scope="col">Tiền Internet</th>
+                    <th scope="col">Tiền vệ sinh</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td id='water-fee'></td>
+                    <td id='internet-fee'></td>
+                    <td id='clean-fee'></td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+            <div id="accordionExtraFee" class="collapse">
+              
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th scope="col">Số tiền</th>
+                      <th scope="col">Thời gian</th>
+                      <th scope="col">Mô tả</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let extrafee of listExtraFee ">
+                      <td> {{extrafee.amount | currency}}</td>
+                      <td> {{extrafee.date | date:"dd/MM/yyyy" }}</td>
+                      <td>{{extrafee.description |  maxLength : 20}}</td>
+                    </tr>
+
+                  </tbody>
+                </table>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-4">
+              <label class="col-form-label ml-3">Tổng tiền</label>
+              <input type="text" class="form-control" formControlName="total">
+            </div>
+            <div class="col-2 col-md-3"></div>
+            <div class="col-sm-4">
+              <label class="col-form-label ml-3">Thanh toán</label>
+              <input type="text" id='payment' class="form-control input-price" formControlName="payment">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-4">
+              <label class="col-form-label ml-3">Dư/nợ cũ</label>
+              <input type="text" class="form-control" formControlName="oldDebt">
+            </div>
+            <div class="col-2 col-md-3"></div>
+            <div class="col-sm-4">
+              <label class="col-form-label ml-3">Dư/nợ mới</label>
+              <input type="text" class="form-control" id='newDebt' formControlName="newDebt">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-4">
+              <label class="col-form-label ml-3">Thành tiền</label>
+
+              <input type="text" class="form-control" id='money' formControlName="money">
+            </div>
+
+          </div>
+
+
+          <div class="form-group row">
+            <div class="col-sm-12">
+              <label for="example-tel-input" class="col-form-label">Ghi chú</label>
+              <textarea class="form-control" rows="3" formControlName="description"></textarea>
+            </div>
+            <!-- [disabled]="createbhFormGroup.invalid" -->
+          </div>
+        </div>
+        <!-- Textual inputs end -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Trở về</button>
+          <button class="btn btn-info mb-3" type="submit" id="myButton">
+            Lưu</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

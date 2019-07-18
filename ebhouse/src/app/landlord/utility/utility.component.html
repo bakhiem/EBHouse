@@ -16,8 +16,10 @@
         <th scope="row">{{utility.name}}</th>
         <td><input type="text" class='form-control input-price' id="price-{{utility.id}}"></td>
         <td><select class="form-control" id='select-{{utility.id}}'>
-            <option *ngFor="let calculating of utility.calculating" [value]='calculating.id'>{{calculating.name}}</option>
-          </select></td>
+            <option *ngFor="let calculating of utility.calculating" [value]='calculating.id'>{{calculating.name}}
+            </option>
+          </select>
+        </td>
       </tr>
 
 
@@ -25,9 +27,9 @@
   </table>
 
   <div class="row">
-      <div class="col-sm-9 col-md-10"></div>
-        <div class="col-sm-2 text-center">
-            <input class="btn btn-info mb-3" type="submit" value="Lưu tiện ích" (click)="save()">
-          </div>
+    <div class="col-sm-9 col-md-10"></div>
+    <div class="col-sm-2 text-center">
+      <input class="btn btn-info mb-3" type="submit" value="Lưu tiện ích" (click)="save()">
     </div>
+  </div>
 </div>

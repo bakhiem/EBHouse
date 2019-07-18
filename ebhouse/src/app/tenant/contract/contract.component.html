@@ -1,0 +1,76 @@
+<div class="customLoading">
+  <div class="customLoader"></div>
+</div>
+<div class="row create-bh ">
+  <div class="form-group col-sm-3 col-12">
+      <label class="col-form-label">Trạng thái hợp đồng</label>
+      <select class="custom-select col-4 col-sm-12 mt-2" [(ngModel)]="contractStatus" (change)='onchangeStatus()'>
+          <option value="1" selected="selected">Còn hạn</option>
+          <option value="2">Hết hạn</option>
+          <option value="3">Đang chờ xử lý</option>
+          <option value="4">Đã hủy</option>
+          <option value="5">Tất cả</option>
+      </select>
+  </div>
+</div>
+
+
+
+
+<div class="row">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <ng-container matColumnDef="room">
+          <th mat-header-cell *matHeaderCellDef>Phòng</th>
+          <td mat-cell *matCellDef="let element"> {{element.room}} </td>
+      </ng-container>
+      <ng-container matColumnDef="owner">
+          <th mat-header-cell *matHeaderCellDef>Người đại diện</th>
+          <td mat-cell *matCellDef="let element"> {{element.owner}} </td>
+      </ng-container>
+      <ng-container matColumnDef="period">
+          <th mat-header-cell *matHeaderCellDef>Thời hạn hợp đồng</th>
+          <td mat-cell *matCellDef="let element"> {{element.period}} Tháng </td>
+      </ng-container>
+      <ng-container matColumnDef="start">
+          <th mat-header-cell *matHeaderCellDef>Ngày bắt đầu</th>
+          <td mat-cell *matCellDef="let element"> {{element.start}} </td>
+      </ng-container>
+      <ng-container matColumnDef="end">
+          <th mat-header-cell *matHeaderCellDef>Ngày kết thúc</th>
+          <td mat-cell *matCellDef="let element"> {{element.end}} </td>
+      </ng-container>
+      <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef>Giá</th>
+          <td mat-cell *matCellDef="let element"> {{element.price | currency}} </td>
+      </ng-container>
+      <ng-container matColumnDef="deposit">
+          <th mat-header-cell *matHeaderCellDef>Đặt cọc</th>
+          <td mat-cell *matCellDef="let element"> {{element.deposit | currency}} </td>
+      </ng-container>
+      <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Trạng thái</th>
+          <td mat-cell *matCellDef="let element"> 
+              <span *ngIf='element.status == 1'  class="status-p bg-success">{{element.statusStr}}</span>
+              <span *ngIf='element.status == 3'  class="status-p bg-primary">{{element.statusStr}}</span> 
+              <span *ngIf='element.status == 2 || element.status == 4' class="status-p bg-danger">{{element.statusStr}}</span>  
+          </td>
+      </ng-container>
+      <ng-container matColumnDef="customColumn">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row, let i = index">
+              <ul class="d-flex justify-content-center">
+                  <li><a class="text-secondary" (click)="viewOnlyContract(i)"> <span class="ti-eye"></span></a></li>
+              </ul>
+          </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="getDisplayedColumns()"></tr>
+      <tr mat-row (click)="viewOnlyContract(i)" *matRowDef="let row; columns: getDisplayedColumns(); let i = index"></tr>
+  </table>
+
+</div>
+<div class="row page-footer">
+  <div class="col-sm-5 col-12">Tổng số : {{totalPage}} hợp đồng</div>
+  <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalPage" [(page)]="currentPage"
+      [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event)">
+  </ngb-pagination>
+</div>

@@ -8,6 +8,7 @@ import { ConfirmPhoneComponent } from './user/confirm-phone/confirm-phone.compon
 import { LogoutComponent } from './user/logout/logout.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 
+import { ResetPasswordComponent } from './user/reset-password/reset-password.component';
 const routes: Routes = [
   { path: '',   redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'verify', component: ConfirmPhoneComponent },
   { path: 'logout', component: LogoutComponent },
+  { path: 'reset-pass', component: ResetPasswordComponent },
   { path: '**', component: NotFoundComponent}
 ];
 

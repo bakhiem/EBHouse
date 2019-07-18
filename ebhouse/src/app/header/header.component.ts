@@ -17,8 +17,8 @@ export class HeaderComponent implements OnInit {
   isLoggedIn$: Observable<boolean>;
   bhList: BoardingHouse[];
   currentBh: BoardingHouse;
-  listUrlHidden = ['/landlord/bh-info','/landlord/room-type','/notification/from','/notification/to','/landlord/profile']
-  listUrlDisable = ['/landlord/contract-update']
+  listUrlHidden = ['/landlord/bh-info','/landlord/room-type','/notification/from','/notification/to','/landlord/profile','/tenant/profile']
+  listUrlDisable = ['/landlord/contract-update','/tenant/contract-view']
   constructor(private service: SharedServiceService,
     private authService: AuthenticationService,
     private _router: Router) {
@@ -43,6 +43,9 @@ export class HeaderComponent implements OnInit {
       this.getRole();
       if (this.role == 'landlord') {
         this.getBoardingHouses();
+      }
+      else if (this.role == 'tenant') {
+        this.getBoardingHousesTenant();
       }
       else{
         this.service.currentBh.next(null);
@@ -71,7 +74,13 @@ export class HeaderComponent implements OnInit {
     }
     return true;
   }
-
+  getBoardingHousesTenant() {
+    this.service.getAllBoardingHousesTenant().subscribe();
+    this.service.currentBh.subscribe((data) => {
+      this.currentBh = data;
+      this.bhList = this.service.bhList;
+    })
+  }
   getBoardingHouses() {
     this.service.getAllBoardingHouses().subscribe();
     this.service.currentBh.subscribe((data) => {

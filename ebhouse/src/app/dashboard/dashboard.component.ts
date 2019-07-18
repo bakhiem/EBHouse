@@ -34,7 +34,7 @@ export class DashboardComponent implements OnInit {
         this.router.navigate(['/landlord/profile']);
       }
       else {
-        this.router.navigate(['/landlord/dashboard']);
+        this.router.navigate(['/landlord/bh-info']);
       }
     }
     else if (this.isTenant) {
@@ -42,7 +42,7 @@ export class DashboardComponent implements OnInit {
         this.router.navigate(['/tenant/profile']);
       }
       else {
-        this.router.navigate(['/tenant/dashboard']);
+        this.router.navigate(['/tenant/bh-info']);
       }
     }
     else {

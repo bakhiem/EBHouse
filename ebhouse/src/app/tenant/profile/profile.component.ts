@@ -6,6 +6,7 @@ import { PlaceService } from '../../service/place.service';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
+import { ToastrService } from 'ngx-toastr';
 import { CommonMessage, Message } from '../../models/message';
 import { TenantServiceService } from '../service/tenant-service.service';
 import { AuthenticationService } from '../../user/service/authentication.service';
@@ -32,10 +33,6 @@ export class TenantProfileComponent implements OnInit {
   tenant: Tenant;
   check: number = 0;
   user: User;
-  message: Message = {
-    content: '',
-    type: 0,
-  };
 
   //resize image
   resizeOptions: ResizeOptions = {
@@ -49,14 +46,12 @@ export class TenantProfileComponent implements OnInit {
     private router: Router,
     private placeService: PlaceService,
     private authenticationService: AuthenticationService,
-    private service: TenantServiceService
+    private service: TenantServiceService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
-    this.resetMess();
-    this.removeLoading();
     this.getProvince();
-
     this.profileFormGroup = this.fb.group({
       name: this.fb.control('', Validators.compose([Validators.required])),
       phone: this.fb.control('', Validators.compose([Validators.required, Validators.pattern(this.phonePattern)])),
@@ -70,7 +65,12 @@ export class TenantProfileComponent implements OnInit {
       imgArnBack: this.fb.control(''),
     });
   }
-
+  showSuccess(mess) {
+    this.toastr.success(mess, 'Thành công');
+  }
+  showErr(mess) {
+    this.toastr.error(mess, 'Lỗi !');
+  }
   getProfile() {
     this.addLoading();
     this.service.getProfile().subscribe(
@@ -93,12 +93,12 @@ export class TenantProfileComponent implements OnInit {
           this.imgArnFront = this.tenant.imgArnFront != ' ' ? this.tenant.imgArnFront.trim()+ "?date=" + new Date().getTime() : '';
           this.imgArnBack = this.tenant.imgArnBack != ' ' ? this.tenant.imgArnBack.trim()+ "?date=" + new Date().getTime() : '';
         } else {
-          this.message = JSON.parse(response.message);
+          this.showErr(response.message)
         }
         this.removeLoading();
       },
       err => {
-        this.message = JSON.parse(err);
+        this.showErr(CommonMessage.defaultErrMess);
         this.removeLoading();
       }
     );
@@ -211,24 +211,21 @@ export class TenantProfileComponent implements OnInit {
             this.removeLoading();
             let response = JSON.parse('' + res);
             if (response.type == 1) {
-              this.message.type = 1;
+              
+              this.showSuccess(response.message);
             } else {
-              this.message.type = 0;
+              this.showErr(response.message)
             }
-            this.message.content = response.message;
           },
           err => {
-            this.message.type = 0;
-            this.message.content = CommonMessage.defaultErrMess;
+            this.showErr(CommonMessage.defaultErrMess);
           }
         );
       } else {
-        this.message.type = 0;
-        this.message.content = 'Vui lòng thay đổi thông tin nếu bạn muốn cập nhật thông tin!';
+        this.showErr(CommonMessage.notChangeMess);
       }
     } else {
-      this.message.type = 0;
-      this.message.content = 'Vui lòng kiểm tra lại!';
+      this.showErr(CommonMessage.inputAllFiel);
     }
   }
 
@@ -284,10 +281,5 @@ export class TenantProfileComponent implements OnInit {
   removeLoading() {
     $('.customLoading').removeClass('preloader');
     $('.customLoader').removeClass('loader');
-  }
-
-  resetMess() {
-    this.message.content = '';
-    this.message.type = 0;
   }
 }

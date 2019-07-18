@@ -25,6 +25,14 @@ table {
   table th{
     font-size: 0.8rem;
   }
+  table.mat-elevation-z8 ul{
+    margin-bottom: 0;
+    margin-left: 0.4rem;
+    }
+    table ul li:first-child{
+      margin-right :5px!important;
+      margin-left :5px!important;
+    }
 } 
 
 .page-footer{

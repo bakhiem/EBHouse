@@ -36,14 +36,14 @@ import { SharedServiceService } from '../../../service/shared-service.service';
     { provide: DateAdapter, useClass: CustomDateAdapter }
   ],
 })
-export class CreateContractComponent implements OnInit,OnDestroy {
+export class CreateContractComponent implements OnInit, OnDestroy {
   startDateStr: any;
   endDateSrt: any;
   minDate = new Date();
   //Message
   monthStartSelected(params, datepicker) {
     params.setDate(1);
-    if (this.checkValidDate(params,0)) {
+    if (this.checkValidDate(params, 0)) {
       this.createContractFormGroup.get('beginDate').setValue(params);
       this.startDateStr = this.formatDate(params);
       this.periodHandler();
@@ -58,7 +58,7 @@ export class CreateContractComponent implements OnInit,OnDestroy {
   monthEndSelected(params, datepicker) {
     var d = new Date(params.getFullYear(), params.getMonth() + 1, 0);
     params.setDate(d.getDate())
-    if (this.checkValidDate(params,1)) {
+    if (this.checkValidDate(params, 1)) {
       this.endDateSrt = this.formatDate(params);
       this.createContractFormGroup.get('endDate').setValue(params);
       this.periodHandler();
@@ -70,12 +70,12 @@ export class CreateContractComponent implements OnInit,OnDestroy {
     datepicker.close();
   }
 
-  checkValidDate(d: Date, type : number): boolean {
+  checkValidDate(d: Date, type: number): boolean {
     if (!this.listContract) {
       this.displayDialog(CommonMessage.SelectRoomFirst)
       return false;
     }
-    else if (this.listContract.length == 0) {
+    else if (this.listContract.length == 0 && this.availableInThisMonth) {
       return true;
     }
     else {
@@ -84,33 +84,40 @@ export class CreateContractComponent implements OnInit,OnDestroy {
         let enddate = new Date(this.listContract[index].endDate);
         if (d >= startdate && d <= enddate) {
           this.displayDialog(CommonMessage.HaveContractInDate)
-          
           return false;
         }
-        if(type == 0){
-          if(this.createContractFormGroup.get('endDate').value){
+        if (type == 0) {
+          if (this.createContractFormGroup.get('endDate').value) {
             if (d <= startdate && this.createContractFormGroup.get('endDate').value >= enddate) {
-              this.displayDialog( CommonMessage.HaveContractInDate)
-              
+              this.displayDialog(CommonMessage.HaveContractInDate)
               return false;
             }
           }
         }
-        if(type == 1){
-          if(this.createContractFormGroup.get('beginDate').value){
-            if (this.createContractFormGroup.get('beginDate').value <= startdate && d >= enddate  ) {
-              this.displayDialog( CommonMessage.HaveContractInDate)
-              
+        if (type == 1) {
+          if (this.createContractFormGroup.get('beginDate').value) {
+            if (this.createContractFormGroup.get('beginDate').value <= startdate && d >= enddate) {
+              this.displayDialog(CommonMessage.HaveContractInDate)
               return false;
             }
           }
         }
-        
+
+      }
+      // check availableInThisMonth
+      if (this.availableInThisMonth == false) {
+        let d1 = new Date();
+        console.log(d1)
+        console.log(d)
+        if (d1.getMonth() == d.getMonth() && d1.getFullYear() == d.getFullYear()) {
+          this.displayDialog(CommonMessage.HaveDisableContractInMonth)
+          return false;
+        }
       }
     }
     return true;
   }
-  
+
   periodHandler() {
     if (this.startDateStr && this.endDateSrt) {
       let monthBegin = this.startDateStr.split('-');
@@ -159,8 +166,6 @@ export class CreateContractComponent implements OnInit,OnDestroy {
   currentTenant: any;
   phonePattern = '((09|03|07|08|05)+([0-9]{8}))';
   listImg = [];
-  
-
   capacity: number;
   isExtraFee = 0;
   displayedColumns: string[] = ['name', 'phone', 'customColumn'];
@@ -175,10 +180,10 @@ export class CreateContractComponent implements OnInit,OnDestroy {
   listContractDisplay: string[] = [];
   listContract: Contract[];
   filteredOptions: Observable<any[]>;
-
+  availableInThisMonth: boolean = true;
   constructor(
-    private shareService :SharedServiceService,
-    private zone:NgZone,
+    private shareService: SharedServiceService,
+    private zone: NgZone,
     private fb: FormBuilder,
     public dialog: MatDialog,
     private service: LandlordService,
@@ -215,7 +220,9 @@ export class CreateContractComponent implements OnInit,OnDestroy {
     this.jqueryCode();
   }
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if(this.subscription){
+      this.subscription.unsubscribe();
+    }
   }
   showSuccess(mess) {
     this.toastr.success(mess, 'Thành công');
@@ -223,22 +230,24 @@ export class CreateContractComponent implements OnInit,OnDestroy {
   showErr(mess) {
     this.toastr.error(mess, 'Lỗi !');
   }
-  resetFormChangeBh(){
+  resetFormChangeBh() {
     this.listImg = [];
     this.listTenant = [];
     this.dataSource.data = [];
-    $("#customCheck1"). prop("checked", false);
+    $("#customCheck1").prop("checked", false);
     $('#mycollapse').collapse('hide');
     $('#extraFee').val('');
     this.isExtraFee = 0;
     this.listContractDisplay = [];
   }
-  displayDialog(message : string){
+
+  displayDialog(message: string) {
     this.dialog.open(InformationDialogComponent, {
       width: '400px',
       data: message
     });
   }
+
   jqueryCode() {
     $("#room-name").focusout(() => {
       this.roomList.forEach(element => {
@@ -319,7 +328,7 @@ export class CreateContractComponent implements OnInit,OnDestroy {
     }
     else {
       this.displayDialog(CommonMessage.OverCapacity)
-      
+
     }
   }
   deleteRoom(obj) {
@@ -402,20 +411,22 @@ export class CreateContractComponent implements OnInit,OnDestroy {
     });
   }
   onChooseRoom(value) {
+    console.log(value)
     //reset form
     this.createContractFormGroup.reset();
     this.listImg = [];
     $('#extraFee').val('');
-    $('#customCheck1').prop('checked',false);
+    $('#customCheck1').prop('checked', false);
     $('#mycollapse').collapse('hide');
     this.isExtraFee = 0;
     this.listTenant = [];
+    this.dataSource.data = [];
     // set capacity and room price, format room price
-     this.createContractFormGroup.get('room').setValue(value);
+    this.createContractFormGroup.get('room').setValue(value);
     this.capacity = Number(value.capacity);
     let currency = value.price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
     this.createContractFormGroup.get('price').setValue(currency);
-    this.listContractDisplay =[]
+    this.listContractDisplay = []
     // print alert start date and end date of contract in room
     let data = {
       id: value.id
@@ -425,20 +436,20 @@ export class CreateContractComponent implements OnInit,OnDestroy {
       res => {
         this.removeLoading();
         let response = JSON.parse("" + res);
+        console.log(response)
         if (response.type == 1) {
-          this.listContract = response.data;
-          let display = []
+          this.listContract = response.data.lstDate;
+          this.availableInThisMonth = response.data.availableInThisMonth;
+          let display = [];
           if (this.listContract.length > 0) {
             this.listContract.forEach(element => {
               let startDate = new Date(element.startDate);
               let endDate = new Date(element.endDate);
-
               display.push('Phòng đang tồn tại hợp đồng từ ngày ' + this.formatDateDisplay(startDate) + ' đến ngày ' + this.formatDateDisplay(endDate));
-              
             });
           }
           this.zone.run(() => { // <== added
-              this.listContractDisplay = display;
+            this.listContractDisplay = display;
           });
           console.log(this.listContractDisplay)
         }

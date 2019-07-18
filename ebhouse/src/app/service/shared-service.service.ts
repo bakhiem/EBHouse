@@ -20,11 +20,11 @@ export class SharedServiceService {
 
   private baseUrl: string = environment.baseUrl;
   currentBh: BehaviorSubject<any>;
+  
   bhList : [{}];
   
   constructor(private http: HttpClient) { 
     this.currentBh = new BehaviorSubject<any>(null);
-    this.getAllBoardingHouses();
   }
   
   getAllBoardingHouses() : Observable<any> {
@@ -34,6 +34,21 @@ export class SharedServiceService {
       if (response.type == 1) {
         let data = JSON.parse(response.data);
         this.bhList = data.boardingHouse;
+        if (this.bhList.length > 0 && this.currentBh.value == null) {
+         this.currentBh.next(this.bhList[0]);
+        }
+      }
+    }, err => {
+      console.log(err);
+    }));;
+  }
+  getAllBoardingHousesTenant() : Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/api/tenant/bhAll`, null, httpOptions)
+    .pipe(map(res => {
+      let response = JSON.parse("" + res);
+      console.log(response)
+      if (response.type == 1) {
+        this.bhList = response.data;
         if (this.bhList.length > 0 && this.currentBh.value == null) {
          this.currentBh.next(this.bhList[0]);
         }

@@ -29,6 +29,32 @@
     display: flex;
     justify-content: center;
   }
+  table td{
+    font-size: 0.75rem;
+  
+    text-align: center
+  }
+  table th{
+    font-size: 0.85rem;
+    text-align: center;
+  }
+  .example-full-width {
+    width: 50%;
+  }
+  #searchBtn{
+    margin-top: 5px!important;
+  }
+  table ul{
+    margin : 0;
+  }
+  
+  table ul li:first-child{
+    margin-right :5px!important;
+    margin-left :5px!important;
+  }
+  .example-full-width{
+    margin-left: 5px;
+  }
   } 
 .bd-example-modal-lg{
   margin: 0 auto;

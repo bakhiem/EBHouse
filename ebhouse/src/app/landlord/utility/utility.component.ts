@@ -39,7 +39,9 @@ export class UtilityComponent implements OnInit,OnDestroy {
     })
   }
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if(this.subscription){
+      this.subscription.unsubscribe();
+    }
   }
   displayDialog(message : string){
     this.dialog.open(InformationDialogComponent, {
@@ -105,7 +107,7 @@ export class UtilityComponent implements OnInit,OnDestroy {
     $("select").change(() => {
       $("input[type=submit]").removeAttr("disabled");
     });
-    $("input").change(function () {
+    $("input").keypress(function () {
       $("input[type=submit]").removeAttr("disabled");
     });
   }

@@ -1,0 +1,10 @@
+.bh-info{
+ margin-top: 1rem;   
+}
+input:disabled,textarea:disabled {
+    background: #fff;
+    cursor: auto;
+}
+h4{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
