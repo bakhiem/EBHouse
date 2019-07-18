@@ -15,3 +15,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
   .cdk-overlay-container {z-index: 999999 !important;}
+  a.text-secondary{
+    cursor: pointer;
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }

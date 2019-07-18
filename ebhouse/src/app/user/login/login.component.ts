@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone,OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { UserService } from '../service/user.service';
 import { User } from '../models/user';
@@ -6,34 +6,41 @@ import { Role } from '../models/role';
 import { DataService } from '../service/data.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from "../service/authentication.service";
+import { ToastrService } from 'ngx-toastr';
+import {CommonMessage} from '../../models/message';
+import { ISubscription } from "rxjs/Subscription";
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit,OnDestroy {
 
-  messageSuccess: string = "";
-  messageErr: string = "";
   roleDefault: number = 1;
   phonePattern = "((09|03|07|08|05)+([0-9]{8}))";
   loginFormGroup: FormGroup;
   user: User;
 
+  private subscription: ISubscription;
   constructor(
     private ngZone: NgZone,
     private userService: UserService,
     private fb: FormBuilder,
     private authenticationService: AuthenticationService,
     private router: Router,
-    private data: DataService) {
+    private data: DataService,
+    private toastr: ToastrService,) {
     if (this.authenticationService.currentUserValue) {
       this.router.navigate(['/']);
     }
   }
-
+  ngOnDestroy() {
+    if(this.subscription){
+      this.subscription.unsubscribe();
+    }
+  }
   ngOnInit() {
-    this.data.currentUser.subscribe(user => this.user = user);
+    this.subscription =   this.data.currentUser.subscribe(user => this.user = user);
     this.loginFormGroup = this.fb.group({
       phone: this.fb.control((this.user) ? this.user.phone : "", Validators.compose([
         Validators.required,
@@ -44,9 +51,15 @@ export class LoginComponent implements OnInit {
         Validators.minLength(8)
       ]))
     });
-    this.messageSuccess = "";
-    this.messageErr = "";
   }
+
+  showSuccess(mess) {
+    this.toastr.success(mess, 'Thành công');
+  }
+  showErr(mess) {
+    this.toastr.error(mess, 'Lỗi !');
+  }
+
   addLoading() {
     $('.customLoading').addClass('preloader');
     $('.customLoader').addClass('loader');
@@ -60,8 +73,6 @@ export class LoginComponent implements OnInit {
     if($('#customControlAutosizing').prop("checked")){
        rememberPassword = 1;
     }
-    console.log(rememberPassword)
-    console.log(toUser(this.loginFormGroup.value));
     this.addLoading();
     this.authenticationService
       .login(toUser(this.loginFormGroup.value),rememberPassword)
@@ -70,11 +81,11 @@ export class LoginComponent implements OnInit {
           let mess: any;
           mess = JSON.parse("" + res[0]);
           if (mess.type == 1) {
-            //handle when login success
+            this.showSuccess(mess.message)
           }
           else if (mess.type == 0) {
             this.removeLoading();
-            this.messageErr = mess.message;
+            this.showErr(mess.message)
           }
           if (res[1]) {
             // window.location.reload();
@@ -86,7 +97,7 @@ export class LoginComponent implements OnInit {
         err => {
           this.removeLoading();
           console.log(err);
-          this.messageErr = "Có lỗi xảy ra";
+          this.showErr(CommonMessage.defaultErrMess);
         }
       );
   }

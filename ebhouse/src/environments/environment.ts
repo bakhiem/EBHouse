@@ -10,7 +10,9 @@ export const environment = {
   // baseUrl:"http://localhost:8888/CapstoneProject"
   // baseUrl : "http://ebhouse-backup.kilatiron.com/eb"
   // baseUrl : "https://ebhouse.cf/backend/ebhouse"
-  baseUrl : "http://ebhouse-backup.cloudjiffy.net/eb",
+  // baseUrl : "http://ebhouse-backup.cloudjiffy.net/eb",
+  baseUrl : " http://18.138.199.164/"
+ 
 };
 
 /*

@@ -73,7 +73,9 @@ export class ExtraFeeComponent implements OnInit,OnDestroy {
     });
   }
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if(this.subscription){
+      this.subscription.unsubscribe();
+    }
   }
   showSuccess(mess) {
     this.toastr.success(mess, 'Thành công');

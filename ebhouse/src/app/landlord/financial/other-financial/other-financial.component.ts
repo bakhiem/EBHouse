@@ -67,7 +67,9 @@ export class OtherFinancialComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if(this.subscription){
+      this.subscription.unsubscribe();
+    }
   }
   chooseMonth(params, datepicker) {
     params.setDate(1);

@@ -13,4 +13,5 @@ export class User {
     mDate?:any;
     dDate?:any;
     dateOfBirth?:any;
+    fromRegister?:any;
 }

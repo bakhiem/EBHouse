@@ -42,6 +42,7 @@ export class ElectricComponent implements OnInit,AfterViewInit, OnDestroy  {
     })
     this.formatCurrency();
   }
+
   ngForRendred() {
     $("input[type=submit]").attr("disabled", "disabled");
     this.jqueryCode();
@@ -51,14 +52,15 @@ export class ElectricComponent implements OnInit,AfterViewInit, OnDestroy  {
     this.subscription = this.shareService.currentBh.subscribe((data) => {
       this.currentBh = data;
       if (this.currentBh  && this.currentBh.id) {
-       
         this.getElectric();
       }
     })
     this.scrollTop();
   }
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if(this.subscription){
+      this.subscription.unsubscribe();
+    }
   }
   showSuccess(mess) {
     this.toastr.success(mess, 'Thành công');
@@ -113,7 +115,7 @@ export class ElectricComponent implements OnInit,AfterViewInit, OnDestroy  {
           let resData = response.data;
           console.log(resData)
           this.list = resData;
-        
+
           $('#lastMonth').html("Công tơ điện tháng " + this.month.value.getMonth());
           $('#presentMonth').html("Công tơ điện tháng " + (this.month.value.getMonth() + 1));
           if (this.list.length > 0) {
@@ -129,8 +131,6 @@ export class ElectricComponent implements OnInit,AfterViewInit, OnDestroy  {
                 this.list[index].disabledNow = true;
               }
             }
-            
-           
           }
           // //if bh didn't have list utility
           // else{
@@ -180,10 +180,9 @@ export class ElectricComponent implements OnInit,AfterViewInit, OnDestroy  {
 
 
   jqueryCode() {
-    $("input[type=number]").keypress(function () {
+    $("input[type=number]").keydown(function () {
       $("input[type=submit]").removeAttr("disabled");
     });
-
   }
 
 

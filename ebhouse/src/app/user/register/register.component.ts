@@ -4,13 +4,15 @@ import { UserService } from '../service/user.service';
 import { User } from '../models/user';
 import { DataService } from '../service/data.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+
+import {CommonMessage} from '../../models/message';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent implements OnInit {
-  message: string = '';
   roleDefault: number = 1;
 
   userFormGroup: FormGroup;
@@ -20,7 +22,8 @@ export class RegisterComponent implements OnInit {
     private userService: UserService,
     private fb: FormBuilder,
     private data: DataService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
@@ -39,26 +42,41 @@ export class RegisterComponent implements OnInit {
       fullname: this.fb.control('', Validators.required),
     });
   }
-
+  showSuccess(mess) {
+    this.toastr.success(mess, 'Thành công');
+  }
+  showErr(mess) {
+    this.toastr.error(mess, 'Lỗi !');
+  }
+  addLoading() {
+    $('.customLoading').addClass('preloader');
+    $('.customLoader').addClass('loader');
+  }
+  removeLoading() {
+    $('.customLoading').removeClass('preloader');
+    $('.customLoader').removeClass('loader');
+  }
   onSubmit() {
-    console.log(toUserSend(this.userFormGroup.value));
+    this.addLoading();
     this.userService.register(toUserSend(this.userFormGroup.value)).subscribe(
       res => {
+        this.removeLoading()
         let mess: any;
         mess = JSON.parse('' + res);
-        console.log(mess);
         if (mess.type == 1) {
-          this.message = mess.message;
-          this.data.changeUser(toUser(this.userFormGroup.value));
-          // this.confirmPhone.reset();
+          this.showSuccess(mess.message)
+          let userShare = toUser(this.userFormGroup.value);
+          userShare.fromRegister = true;
+          this.data.changeUser(userShare);
           this.router.navigate(['/verify']);
         }
         if (mess.type == 0) {
-          this.message = mess.message;
+          this.showErr(mess.message);
         }
       },
       err => {
-        this.message = 'Có lỗi xảy ra';
+        this.removeLoading()
+        this.showErr(CommonMessage.defaultErrMess);
         console.log(err);
       }
     );

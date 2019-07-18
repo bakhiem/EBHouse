@@ -10,14 +10,15 @@ export enum CommonMessage {
   OverCapacity = 'Vượt quá số lượng người cho phép',
   OverImage = 'Chỉ được tải lên tối đa 5 ảnh',
   NoTenant = 'Không tìm thấy khách thuê',
-  SelectRoomFirst = 'Bạn cần chọn phòng trước',
+  SelectRoomFirst = 'Bạn cần chọn phòng hợp lệ trước',
   DuplicateTenant = 'Khách thuê đã được chọn',
   NoExitstRoom = 'Không tồn tại phòng trong nhà trọ, mời bạn chọn phòng trong danh sách',
   DateFormat = 'Vui lòng chọn tháng bắt đầu và tháng kết thúc hợp lệ',
   HaveContractInDate = 'Đã tồn tại hợp đồng trong thời gian này',
   Utility_InputAllField = 'Vui lòng điền vào tất cả các trường, trường nào không có có thể nhập giá trị 0',
   Electric = 'Số điện tháng sau lớn hơn hoặc bằng số điện tháng trước',
-  InputElectricBefore = 'Bạn cần chốt số điện trước khi hủy hợp đồng'
+  InputElectricBefore = 'Bạn cần chốt số điện trước khi hủy hợp đồng',
+  HaveDisableContractInMonth = 'Phòng đã có hợp đồng đã xóa trong tháng này'
   }
   export class Message {
     content : string;

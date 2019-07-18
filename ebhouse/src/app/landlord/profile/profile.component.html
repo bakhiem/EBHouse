@@ -36,10 +36,11 @@
                             <div class="col-sm-6">
                                 <label for="example-date-input" class="col-form-label .col-required">Ngày sinh</label>
                                 <input class="form-control" type="date" id="example-date-input" formControlName="date">
+                                <div *ngIf="profileFormGroup.controls['date'].hasError('required') && (profileFormGroup.controls['date'].dirty || profileFormGroup.controls['date'].touched)" class="alert alert-danger">
+                                    Ngày sinh là bắt buộc
+                                </div>
                             </div>
-                            <div *ngIf="profileFormGroup.controls['date'].hasError('required') && (profileFormGroup.controls['date'].dirty || profileFormGroup.controls['date'].touched)" class="alert alert-danger">
-                                Ngày sinh là bắt buộc
-                            </div>
+                          
                         </div>
                         <!-- begin radio -->
 

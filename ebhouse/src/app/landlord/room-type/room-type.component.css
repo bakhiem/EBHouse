@@ -1,4 +1,4 @@
-table.mat-elevation-z8 {
+  table.mat-elevation-z8 {
     width: 100%;
     margin-top: 20px;
   }
@@ -43,3 +43,24 @@ table.mat-elevation-z8 {
   background: aliceblue;
   font-size: 1.1rem;
 }
+
+@media only screen and (max-width: 600px) {
+  table.mat-elevation-z8 td{
+    font-size: 0.6rem;
+  }
+  table.mat-elevation-z8 th{
+    font-size: 0.8rem;
+  }
+  table.mat-elevation-z8 button{
+    font-size: 0.8rem;
+    padding: 4px;
+  }
+  table.mat-elevation-z8 ul{
+   margin-bottom: 0;
+   margin-left: 0.4rem;
+  }
+  table ul li:first-child{
+    margin-right :5px!important;
+    margin-left :5px!important;
+  }
+} 

@@ -19,7 +19,7 @@
   }
   #imgArnFront,#imgArnBack{
     max-width: 100%;
-    max-height: 400px;
+    max-height: 300px;
   }
 .modal-dialog{text-align:center;}
 .modal-content{display:inline-block;}

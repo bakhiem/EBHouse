@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '../service/authentication.service';
 
+import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-logout',
@@ -9,7 +10,8 @@ import { Router } from '@angular/router';
 export class LogoutComponent implements OnInit {
 
   constructor(private service: AuthenticationService,
-    private router: Router) { }
+    private router: Router,
+    private toastr: ToastrService) { }
 
   ngOnInit() {
     if (this.service.currentUserValue) {
@@ -21,9 +23,16 @@ export class LogoutComponent implements OnInit {
     } else {
       this.router.navigate(['/login'])
     }
+    this.showSuccess('Đăng xuất thành công')
 
 
     // location.reload(true);
+  }
+  showSuccess(mess) {
+    this.toastr.success(mess, 'Thành công');
+  }
+  showErr(mess) {
+    this.toastr.error(mess, 'Lỗi !');
   }
 
 

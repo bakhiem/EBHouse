@@ -2,9 +2,9 @@
     <div class="customLoader"></div>
 </div>
 <div class="row create-bh ">
-    <div class="form-group col-sm-3">
-        <label class="col-form-label">Chọn trạng thái hợp đồng</label>
-        <select class="custom-select mt-2" [(ngModel)]="contractStatus" (change)='onchangeStatus()'>
+    <div class="form-group col-sm-3 col-12">
+        <label class="col-form-label">Trạng thái hợp đồng</label>
+        <select class="custom-select col-4 col-sm-12 mt-2" [(ngModel)]="contractStatus" (change)='onchangeStatus()'>
             <option value="1" selected="selected">Còn hạn</option>
             <option value="2">Hết hạn</option>
             <option value="3">Đang chờ xử lý</option>
@@ -24,12 +24,12 @@
             </mat-autocomplete>
         </mat-form-field>
     </div>
-    <div class="col sm-3 mt-5">
+    <div class="col-sm-3 mt-5" id='searchBtn'>
         <button type="button" class="btn btn-secondary" (click)="searchByRoom()">
             <span _ngcontent-fdu-c2="" class="ti-search"></span> Tìm kiếm
         </button></div>
-    <div class="mt-5 col-sm-2">
-        <button type="button" class="btn btn-primary mr-3" (click)="createContract()">
+    <div class="mt-5 col-sm-3" id='createBtn'>
+        <button type="button" class="btn btn-primary float-right" (click)="createContract()">
             Tạo hợp đồng
         </button>
     </div>
@@ -70,7 +70,11 @@
         </ng-container>
         <ng-container matColumnDef="status">
             <th mat-header-cell *matHeaderCellDef>Trạng thái</th>
-            <td mat-cell *matCellDef="let element"> {{element.statusStr}} </td>
+            <td mat-cell *matCellDef="let element"> 
+                <span *ngIf='element.status == 1'  class="status-p bg-success">{{element.statusStr}}</span>
+                <span  *ngIf='element.status == 3'  class="status-p bg-primary">{{element.statusStr}}</span> 
+                <span *ngIf='element.status == 2 || element.status == 4' class="status-p bg-danger">{{element.statusStr}}</span>  
+            </td>
         </ng-container>
         <ng-container matColumnDef="customColumn">
             <th mat-header-cell *matHeaderCellDef></th>

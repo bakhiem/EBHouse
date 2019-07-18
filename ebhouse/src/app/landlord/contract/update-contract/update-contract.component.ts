@@ -37,6 +37,8 @@ export class UpdateContractComponent implements OnInit,OnDestroy {
   endDateSrt: any;
   minDate = new Date();
   capacity: number;
+  
+  availableInThisMonth: boolean = true;
   //Message
   monthStartSelected(params, datepicker) {
     params.setDate(1)
@@ -67,7 +69,7 @@ export class UpdateContractComponent implements OnInit,OnDestroy {
     datepicker.close()
   }
   checkValidDate(d: Date, type: number): boolean {
-    if (this.listContract.length == 0) {
+    if (this.listContract.length == 0 && this.availableInThisMonth)  {
       return true;
     }
     else {
@@ -93,6 +95,16 @@ export class UpdateContractComponent implements OnInit,OnDestroy {
               return false;
             }
           }
+        }
+      }
+       // check availableInThisMonth
+       if (this.availableInThisMonth == false) {
+        let d1 = new Date();
+        console.log(d1)
+        console.log(d)
+        if (d1.getMonth() == d.getMonth() && d1.getFullYear() == d.getFullYear()) {
+          this.displayDialog(CommonMessage.HaveDisableContractInMonth)
+          return false;
         }
       }
     }
@@ -191,7 +203,9 @@ export class UpdateContractComponent implements OnInit,OnDestroy {
       });
   }
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if(this.subscription){
+      this.subscription.unsubscribe();
+    }
   }
   ngOnInit() {
     this.subscription =  this.service.currentContract.subscribe(contract => {
@@ -211,7 +225,8 @@ export class UpdateContractComponent implements OnInit,OnDestroy {
           let response = JSON.parse("" + res);
           if (response.type == 1) {
             console.log(response.data)
-            this.listContract = response.data;
+            this.listContract = response.data.lstDate;
+            this.availableInThisMonth = response.data.availableInThisMonth;
             let display = []
             if (this.listContract.length > 0) {
               for (let index = 0; index < this.listContract.length; index++) {

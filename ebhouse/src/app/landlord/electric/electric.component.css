@@ -12,3 +12,12 @@
     .table-wrapper-scroll-y {
     display: block;
     }
+    @media only screen and (max-width: 600px) {
+      table td{
+        font-size: 0.7rem;
+      }
+      table th,table td input{
+        font-size: 0.8rem;
+      }
+     
+    } 

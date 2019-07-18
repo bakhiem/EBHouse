@@ -42,7 +42,7 @@
                     </li>
                     <li routerLink="/landlord/utility" routerLinkActive="active" class='custom-expand-menu'>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-table"></i>
-                            <span>Tiện ích</span></a>
+                            <span>Dịch vụ</span></a>
                     </li>
                     <li>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-pencil-alt"></i><span> Nhập chỉ số</span></a>
@@ -92,34 +92,36 @@
         <div class="menu-inner">
             <nav>
                 <ul class="metismenu" *ngIf='role == "tenant"' id="menu" #myMenu >
-                    <li>
+                    <!-- <li>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-dashboard"></i><span>Quản lý
                                 chung</span></a>
-                    </li>
-                    <li routerLinkActive="active">
+                    </li> -->
+                    <li routerLink="/tenant/bh-info" routerLinkActive="active" class='custom-expand-menu'>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-building-o"></i><span>Thông
                                 tin nhà trọ
                             </span></a>
                     </li>
-                    <li>
-                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-home"></i><span>Quản lý
-                                phòng</span></a>
-                        <ul class="collapse">
-                            <li><a href="javascript:void(0)" aria-expanded="true">Thông tin phòng</a></li>
-                            <li><a href="javascript:void(0)">Hoạt động phòng</a></li>
-                        </ul>
+                    
+                    <li routerLink="/tenant/rooms-info" routerLinkActive="active" class='custom-expand-menu'>
+                        <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-building-o"></i><span>Thông
+                                tin các phòng
+                            </span></a>
+                    </li>
+                    <li routerLink="/tenant/contract" routerLinkActive="active" class='custom-expand-menu'>
+                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-slice"></i><span>Hợp đồng
+                            </span></a>
+                    </li>
+                   
+                    <li routerLink="/tenant/financial" routerLinkActive="active" class='custom-expand-menu'>
+                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-money"></i> <span>Thông tin tài chính</span></a>
+
                     </li>
                     <li>
                         <a href="javascript:void(0)"><i class="ti-email"></i> <span>Quản lý thông báo</span></a>
                         <ul class="collapse">
-                            <li routerLink="/notification/from" routerLinkActive="active"><a href="javascript:void(0)">Thông báo đã gửi</a></li>
-                            <li routerLink="/notification/to" routerLinkActive="active"><a href="javascript:void(0)">Thông báo đã nhận</a></li>
+                            <li routerLink="/notification/from" routerLinkActive="active" class='custom-expand-menu'><a href="javascript:void(0)">Thông báo đã gửi</a></li>
+                            <li routerLink="/notification/to" routerLinkActive="active" class='custom-expand-menu'><a href="javascript:void(0)">Thông báo đã nhận</a></li>
                         </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-money"></i> <span>Quản
-                                lý tài chính</span></a>
-
                     </li>
                     <li routerLink="/tenant/profile" routerLinkActive='active' class='custom-expand-menu'>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-user"></i>

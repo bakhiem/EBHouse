@@ -30,7 +30,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let electric of list,let i = index, let last = last"  #allList>
-          <th scope="row">{{electric.roomName}}</th>
+          <td>{{electric.roomName}}</td>
           <td><input type="number" inputmode="numeric" (focusout)="focusoutFunction(electric.id)"
               onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))"
               pattern="[0-9]*" class='form-control' id="last-{{electric.id}}" [value]='electric.eBefore'

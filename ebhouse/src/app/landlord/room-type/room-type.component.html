@@ -1,123 +1,18 @@
 <div class="customLoading">
     <div class="customLoader"></div>
 </div>
-<div class="row">
-    <div class="create-bh mt-3">
-        <button type="button" class="btn btn-primary mr-3" (click)="createRt()">
+<div class="row mt-3 justify-content-end">
+    
+        <button type="button" class="btn btn-primary col-sm-4 col-md-3 col-lg-2 col-5 mr-3" (click)="createRt()">
             Tạo loại phòng
         </button>
-        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalEquipment">
+        <button type="button" class="btn btn-info col-sm-4 col-md-3 col-lg-2 col-5" data-toggle="modal" data-target="#modalEquipment">
             So sánh tiện ích
         </button>
-    </div>
-    <div class="modal fade bd-example-modal-lg" id="modalRoomType">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
 
-                <form [formGroup]="createRtFormGroup" (ngSubmit)="onSubmit()">
-                    <div class="modal-header">
-                        <h5 *ngIf="isEdit == 0; else edit" class="modal-title">Tạo loại phòng</h5>
-                        <ng-template #edit>
-                            <h5 *ngIf="isEdit == 1" class="modal-title">Sửa thông tin loại phòng</h5>
-                        </ng-template>
-                        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
-                    </div>
-                    <div class="modal-body">
-                      
-                        <!-- Textual inputs start -->
+</div>
 
-                        <div class="form-group row">
-                            <div class="col-sm-7">
-                                <label for="example-text-input" class="col-form-label required">Tên loại phòng</label>
-                                <input class="form-control" type="text" id="example-text-input" formControlName="name">
-                                <div *ngIf="createRtFormGroup.controls['name'].hasError('required') && (createRtFormGroup.controls['name'].dirty || createRtFormGroup.controls['name'].touched)"
-                                    class="alert alert-danger">
-                                    Tên loại phòng là bắt buộc
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <label for="example-number-input" class="col-form-label required">Diện tích</label>
-                                <input class="form-control" type="number" id="example-number-input"
-                                    onkeydown="javascript: return event.keyCode == 69 ? false : true"
-                                    formControlName="area">
-                                <div *ngIf="createRtFormGroup.controls['area'].hasError('required') && (createRtFormGroup.controls['area'].dirty || createRtFormGroup.controls['area'].touched)"
-                                    class="alert alert-danger">
-                                    Vui lòng nhập đúng định dạng
-                                </div>
-                                <div *ngIf="createRtFormGroup.controls['area'].hasError('pattern') && (createRtFormGroup.controls['area'].dirty || createRtFormGroup.controls['area'].touched)"
-                                    class="alert alert-danger">
-                                    Không đúng định dạng
-                                </div>
-
-                            </div>
-                        </div>
-
-
-                        <div class="form-group row">
-                            <div class="col-sm-7">
-                                <label for="input-price" class="col-form-label required">Giá</label>
-
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="input-price" formControlName="price">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">Đồng</span>
-                                    </div>
-                                </div>
-                                <div *ngIf="createRtFormGroup.controls['price'].hasError('required') && (createRtFormGroup.controls['price'].dirty || createRtFormGroup.controls['price'].touched)"
-                                    class="alert alert-danger">
-                                    Giá là bắt buộc
-                                </div>
-
-                            </div>
-                            <div class="col-sm-4">
-                                <label for="input-capacity" class="col-form-label required">Số người tối đa</label>
-                                <input class="form-control" type="number" id="input-capacity"
-                                    onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))"
-                                    formControlName="capacity">
-                                <div *ngIf="createRtFormGroup.controls['capacity'].hasError('required') && (createRtFormGroup.controls['capacity'].dirty || createRtFormGroup.controls['capacity'].touched)"
-                                    class="alert alert-danger">
-                                    Số người tối đa là bắt buộc
-                                </div>
-                                <div *ngIf="createRtFormGroup.controls['capacity'].hasError('pattern') && (createRtFormGroup.controls['capacity'].dirty || createRtFormGroup.controls['capacity'].touched)"
-                                    class="alert alert-danger">
-                                    Không đúng định dạng
-                                </div>
-
-                            </div>
-
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-sm-11">
-                                <label for="input-description" class="col-form-label">Mô tả</label>
-                                <textarea class="form-control" rows="3" formControlName="description"></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group row ml-3 mt-3">
-                            <div formArrayName="dataEquipment"
-                                *ngFor="let item of createRtFormGroup.controls.dataEquipment['controls']; let i = index"
-                                class="custom-control custom-checkbox col-sm-4 mb-3">
-                                <input type="checkbox" class="custom-control-input" id="{{dataEquipment[i].id}}"
-                                    [formControlName]="i">
-                                <label class="custom-control-label" for="{{dataEquipment[i].id}}">
-                                    {{dataEquipment[i].name}}</label>
-                            </div>
-
-
-                        </div>
-
-                        <!-- [disabled]="createRtFormGroup.invalid" -->
-                    </div>
-                    <!-- Textual inputs end -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Trở về</button>
-                        <button class="btn btn-info mb-3" type="submit" id="myButton"
-                            [disabled]="createRtFormGroup.invalid"> Lưu</button>
-                    </div>
-
-                </form>
-            </div>
-        </div>
-    </div>
+<div class="row">
     <table mat-table [dataSource]="rtList" class="mat-elevation-z8">
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>Tên loại phòng</th>
@@ -160,7 +55,16 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-    <div class="modal fade bd-example-modal-lg modal-xl" id="modalEquipment">
+    
+</div>
+
+<div class="row page-footer">
+    <div class="col-sm-5 col-12">Tổng số : {{totalPage}} loại phòng</div>
+    <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalPage" [(page)]="currentPage"
+        [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event)">
+    </ngb-pagination>
+</div>
+<div class="modal fade bd-example-modal-lg modal-xl" id="modalEquipment">
         <div class="modal-dialog modal-lg modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
@@ -206,11 +110,111 @@
             </div>
         </div>
     </div>
-</div>
+<div class="modal fade bd-example-modal-lg" id="modalRoomType">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
 
-<div class="row page-footer">
-        <div class="col-sm-5 col-12">Tổng số : {{totalPage}} loại phòng</div>
-        <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalPage" [(page)]="currentPage" [maxSize]="perPage" [rotate]="true"
-            [boundaryLinks]="true" (pageChange)="pageChanged($event)">
-        </ngb-pagination>
+            <form [formGroup]="createRtFormGroup" (ngSubmit)="onSubmit()">
+                <div class="modal-header">
+                    <h5 *ngIf="isEdit == 0; else edit" class="modal-title">Tạo loại phòng</h5>
+                    <ng-template #edit>
+                        <h5 *ngIf="isEdit == 1" class="modal-title">Sửa thông tin loại phòng</h5>
+                    </ng-template>
+                    <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                </div>
+                <div class="modal-body">
+
+                    <!-- Textual inputs start -->
+
+                    <div class="form-group row">
+                        <div class="col-sm-7">
+                            <label for="example-text-input" class="col-form-label required">Tên loại phòng</label>
+                            <input class="form-control" type="text" id="example-text-input" formControlName="name">
+                            <div *ngIf="createRtFormGroup.controls['name'].hasError('required') && (createRtFormGroup.controls['name'].dirty || createRtFormGroup.controls['name'].touched)"
+                                class="alert alert-danger">
+                                Tên loại phòng là bắt buộc
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="example-number-input" class="col-form-label required">Diện tích</label>
+                            <input class="form-control" type="number" id="example-number-input"
+                                onkeydown="javascript: return event.keyCode == 69 ? false : true"
+                                formControlName="area">
+                            <div *ngIf="createRtFormGroup.controls['area'].hasError('required') && (createRtFormGroup.controls['area'].dirty || createRtFormGroup.controls['area'].touched)"
+                                class="alert alert-danger">
+                                Vui lòng nhập đúng định dạng
+                            </div>
+                            <div *ngIf="createRtFormGroup.controls['area'].hasError('pattern') && (createRtFormGroup.controls['area'].dirty || createRtFormGroup.controls['area'].touched)"
+                                class="alert alert-danger">
+                                Không đúng định dạng
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row">
+                        <div class="col-sm-7">
+                            <label for="input-price" class="col-form-label required">Giá</label>
+
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="input-price" formControlName="price">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">Đồng</span>
+                                </div>
+                            </div>
+                            <div *ngIf="createRtFormGroup.controls['price'].hasError('required') && (createRtFormGroup.controls['price'].dirty || createRtFormGroup.controls['price'].touched)"
+                                class="alert alert-danger">
+                                Giá là bắt buộc
+                            </div>
+
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="input-capacity" class="col-form-label required">Số người tối đa</label>
+                            <input class="form-control" type="number" id="input-capacity"
+                                onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))"
+                                formControlName="capacity">
+                            <div *ngIf="createRtFormGroup.controls['capacity'].hasError('required') && (createRtFormGroup.controls['capacity'].dirty || createRtFormGroup.controls['capacity'].touched)"
+                                class="alert alert-danger">
+                                Số người tối đa là bắt buộc
+                            </div>
+                            <div *ngIf="createRtFormGroup.controls['capacity'].hasError('pattern') && (createRtFormGroup.controls['capacity'].dirty || createRtFormGroup.controls['capacity'].touched)"
+                                class="alert alert-danger">
+                                Không đúng định dạng
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-11">
+                            <label for="input-description" class="col-form-label">Mô tả</label>
+                            <textarea class="form-control" rows="3" formControlName="description"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row ml-3 mt-3">
+                        <div formArrayName="dataEquipment"
+                            *ngFor="let item of createRtFormGroup.controls.dataEquipment['controls']; let i = index"
+                            class="custom-control custom-checkbox col-sm-4 mb-3">
+                            <input type="checkbox" class="custom-control-input" id="{{dataEquipment[i].id}}"
+                                [formControlName]="i">
+                            <label class="custom-control-label" for="{{dataEquipment[i].id}}">
+                                {{dataEquipment[i].name}}</label>
+                        </div>
+
+
+                    </div>
+
+                    <!-- [disabled]="createRtFormGroup.invalid" -->
+                </div>
+                <!-- Textual inputs end -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Trở về</button>
+                    <button class="btn btn-info mb-3" type="submit" id="myButton"
+                        [disabled]="createRtFormGroup.invalid"> Lưu</button>
+                </div>
+
+            </form>
+        </div>
     </div>
+</div>

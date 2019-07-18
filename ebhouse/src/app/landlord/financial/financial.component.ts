@@ -1,4 +1,4 @@
-import { Component, OnInit,OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { LandlordService } from '../service/landlord-service.service';
 import { ISubscription } from "rxjs/Subscription";
@@ -21,7 +21,7 @@ import { map, startWith } from 'rxjs/operators';
     { provide: DateAdapter, useClass: CustomDateAdapterMonth }
   ]
 })
-export class FinancialComponent implements OnInit,OnDestroy {
+export class FinancialComponent implements OnInit, OnDestroy {
 
   //paging
   perPage: number = 10;
@@ -47,8 +47,16 @@ export class FinancialComponent implements OnInit,OnDestroy {
     private toastr: ToastrService) { }
   maxDate = new Date();
   month: FormControl;
-  isInvalid : boolean = true;
-  displayedColumns: string[] = ['customColumn', 'room', 'total', 'payment', 'debt', 'date', 'status'];
+  isInvalid: boolean = true;
+  isSelectAllStatus: number = 0;
+  getDisplayedColumns(): string[] {
+    if (this.isSelectAllStatus == 1) {
+      return ['customColumn', 'room', 'total', 'payment', 'debt', 'date', 'status'];
+    }
+    else {
+      return ['customColumn', 'room', 'total', 'payment', 'debt', 'date'];
+    }
+  }
 
   ngOnInit() {
     this.month = new FormControl({ value: new Date(), disabled: true });
@@ -69,11 +77,14 @@ export class FinancialComponent implements OnInit,OnDestroy {
       cDate: '',
       oldDebt: this.fb.control({ value: '', disabled: true }),
       description: '',
+      status: ''
     });
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
   chooseMonth(params, datepicker) {
     params.setDate(1);
@@ -110,7 +121,7 @@ export class FinancialComponent implements OnInit,OnDestroy {
   showErr(mess) {
     this.toastr.error(mess, 'Lỗi !');
   }
-   getFinancial() {
+  getFinancial() {
     if (!this.currentBh || !this.currentBh.id) {
       return;
     }
@@ -121,6 +132,12 @@ export class FinancialComponent implements OnInit,OnDestroy {
       roomID: this.roomControl.value ? this.roomControl.value.id : 0,
       status: this.financialStatus
     }
+    if (this.financialStatus == 3) {
+      this.isSelectAllStatus = 1;
+    }
+    else {
+      this.isSelectAllStatus = 0;
+    }
     console.log(data);
     this.addLoading();
     this.service.getFinancial(data).subscribe(
@@ -130,8 +147,8 @@ export class FinancialComponent implements OnInit,OnDestroy {
         if (response.type == 1) {
           let resData = JSON.parse("" + response.data)
           this.listFinancial = resData.financial;
-          this.totalPage =resData.totalPage;
-         
+          this.totalPage = resData.totalPage;
+
           for (let index = 0; index < this.listFinancial.length; index++) {
 
             const element = this.listFinancial[index];
@@ -139,10 +156,10 @@ export class FinancialComponent implements OnInit,OnDestroy {
               this.listFinancial[index].paymentDate = ''
             }
             if (element.payment == 0) {
-              this.listFinancial[index].statusStr = 'Chưa thanh toán'
+              this.listFinancial[index].statusStr = 'Chưa T.Toán'
               this.listFinancial[index].debt = ''
             } else {
-              this.listFinancial[index].statusStr = 'Đã thanh toán'
+              this.listFinancial[index].statusStr = 'Đã T.Toán'
               this.listFinancial[index].debt = element.total - element.payment
             }
             let roomObj = this.getRoomName(element.room);
@@ -159,9 +176,14 @@ export class FinancialComponent implements OnInit,OnDestroy {
 
   ngAfterViewInit() {
     this.formatCurrency();
+    this.jqueryCode();
   }
 
-
+  jqueryCode() {
+    $('#payment').on("keyup", function (event) {
+      $('#myButton').prop('disabled', false);
+    })
+  }
   //send notification
   sendNoti() {
 
@@ -275,7 +297,7 @@ export class FinancialComponent implements OnInit,OnDestroy {
       if ($.inArray(event.keyCode, [38, 40, 37, 39]) !== -1) {
         return;
       }
-      $('#myButton').prop('disabled', false);
+
       var $this = $(this);
       // Get the value.
       let input = $this.val();
@@ -302,15 +324,20 @@ export class FinancialComponent implements OnInit,OnDestroy {
 
   }
   createExtrafee(data, obj) {
+    
+    $('.collapse').collapse('hide');
     this.createEFFormGroup.reset();
-    if(obj.status == 1){
+    if (obj.status == 1) {
       this.createEFFormGroup.get('payment').disable();
       this.isInvalid = true;
+
     }
-    else{
+    else {
       this.createEFFormGroup.get('payment').enable();
       this.isInvalid = false;
     }
+    $('.input-price').val('');
+    this.createEFFormGroup.get('status').setValue(obj.status);
     this.createEFFormGroup.get('cDate').setValue(obj.cDate);
     this.createEFFormGroup.get('id').setValue(obj.id);
     this.createEFFormGroup.get('room').setValue(obj.room);
@@ -326,7 +353,6 @@ export class FinancialComponent implements OnInit,OnDestroy {
       let financialOld = JSON.parse(data.financialOld);
       oldDebt = financialOld.total
     }
-
     let extraFee = 0;
     this.listExtraFee = [];
     for (let index = 0; index < lstExtraFee.length; index++) {
@@ -352,57 +378,59 @@ export class FinancialComponent implements OnInit,OnDestroy {
       this.isEdit = 0;
       this.createEFFormGroup.get('createDate').setValue(this.formatDateFull(new Date(), 1));
     }
-    $('.input-price').on("keyup", (event) => {
-      let input = $('.input-price').val();
+    $('#payment').on("keyup", (event) => {
+      let input = $('#payment').val();
       let removeComma = input.toString().replace(/[^0-9]/g, '');
       if (isNaN(Number(removeComma)) == false) {
         let money = this.createEFFormGroup.get('money').value;
         let removeCommaMoney = money.toString().replace(/[^0-9]/g, '');
-        this.createEFFormGroup.get('newDebt').setValue(this.convertCurrency( Number(removeCommaMoney) - Number(removeComma)));
+        this.createEFFormGroup.get('newDebt').setValue(this.convertCurrency(Number(removeCommaMoney) - Number(removeComma)));
       }
     })
-    let isCollapShow = 0;
+    let isCollapShow1 = 0;
+    let isCollapShow2 = 0;
+    let isCollapShow3 = 0;
     $('#room-fee').html(this.convertCurrency(data.roomPrice));
     $('#electric-fee').html(this.convertCurrency(electricFee));
     $('#utility-fee').html(this.convertCurrency(utilityFee));
     $('#extra-fee').html(this.convertCurrency(extraFee));
     $('#total-money').html(this.convertCurrency(financialNew.total));
     $('#electric-fee').click(() => {
-      if (isCollapShow == 0) {
+      if (isCollapShow1 == 0) {
         $('#accordionElectric').collapse('show');
         $('#e-last').html('' + data.electricityOld)
         $('#e-present').html('' + data.electricityNew)
-        isCollapShow = 1;
+        isCollapShow1 = 1;
       }
       else {
-        $('.collapse').collapse('hide');
-        isCollapShow = 0;
+        $('#accordionElectric').collapse('hide');
+        isCollapShow1 = 0;
 
       }
     })
     $('#utility-fee').click(() => {
-      if (isCollapShow == 0) {
+      if (isCollapShow2 == 0) {
         $('#accordionUtility').collapse('show');
         $('#water-fee').html(this.convertCurrency(data.WaterFee))
         $('#internet-fee').html(this.convertCurrency(data.InternetFee))
         $('#clean-fee').html(this.convertCurrency(data.CleaningFee))
-        isCollapShow = 1;
+        isCollapShow2 = 1;
       }
       else {
-        $('.collapse').collapse('hide');
-        isCollapShow = 0;
+        $('#accordionUtility').collapse('hide');
+        isCollapShow2 = 0;
       }
     })
     $('#extra-fee').click(() => {
-      if (isCollapShow == 0) {
+      if (isCollapShow3 == 0) {
         if (this.listExtraFee.length > 0) {
           $('#accordionExtraFee').collapse('show');
-          isCollapShow = 1;
+          isCollapShow3 = 1;
         }
       }
       else {
-        $('.collapse').collapse('hide');
-        isCollapShow = 0;
+        $('#accordionExtraFee').collapse('hide');
+        isCollapShow3 = 0;
       }
 
     })
@@ -421,17 +449,29 @@ export class FinancialComponent implements OnInit,OnDestroy {
     }
     return false;
   }
-
+  //add money to payment
+  addMoney() {
+    $('#myButton').prop('disabled', false);
+    let money = $('.input-price:nth-child(1)').val();
+    let convertMoney = this.convertToNumberPrice(money);
+    let payment = this.convertToNumberPrice($('#payment').val());
+    $('#payment').val(this.convertCurrency(Number(convertMoney) + Number(payment)));
+    let input = $('#payment').val();
+    let removeComma = input.toString().replace(/[^0-9]/g, '');
+    if (isNaN(Number(removeComma)) == false) {
+      let money = this.createEFFormGroup.get('money').value;
+      let removeCommaMoney = money.toString().replace(/[^0-9]/g, '');
+      this.createEFFormGroup.get('newDebt').setValue(this.convertCurrency(Number(removeCommaMoney) - Number(removeComma)));
+    }
+  }
   convertToNumberPrice(value): Number {
     return Number(value.split('.').join(''));
   }
   onSubmit() {
-    if (this.createEFFormGroup.invalid || this.createEFFormGroup.get('payment').value == '') {
+    if (this.createEFFormGroup.invalid) {
       this.displayDialog(CommonMessage.inputAllFiel)
       return;
     }
-
-
     let paymentDateArr = this.createEFFormGroup.get('createDate').value.split('-');
     let paymentDate = [paymentDateArr[2], paymentDateArr[1], paymentDateArr[0]].join('-');
     let data = {
@@ -441,7 +481,8 @@ export class FinancialComponent implements OnInit,OnDestroy {
       total: this.convertToNumberPrice(this.createEFFormGroup.get('total').value),
       payment: this.convertToNumberPrice(this.createEFFormGroup.get('payment').value),
       paymentDate: paymentDate,
-      cDate: this.createEFFormGroup.get('cDate').value
+      cDate: this.createEFFormGroup.get('cDate').value,
+      status: this.createEFFormGroup.get('status').value
     }
     console.log(data)
     this.addLoading();

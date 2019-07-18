@@ -27,17 +27,16 @@ import {BrowserAnimationsModule }from '@angular/platform-browser/animations';
 
 import {ConfirmationDialogComponent }from './shared/confirmation-dialog/confirmation-dialog.component';
 import {InformationDialogComponent }from './shared/info-dialog/information-dialog.component';
-
 import {RedirectDialogComponent }from './shared/redirect-dialog/redirect-dialog.component';
 import {MatDialogModule}from '@angular/material/dialog';
 import {NavbarComponent }from './navbar/navbar.component';
 import {HeaderComponent }from './header/header.component';
 import { ToastrModule, ToastContainerModule } from 'ngx-toastr';
 import {NotifiModule }from './notifi/notifi.module';
+import { ResetPasswordComponent } from './user/reset-password/reset-password.component';
 @NgModule( {
   declarations:[
     AppComponent,
-    
     DashboardComponent,
     LoginComponent,
     RegisterComponent,
@@ -49,12 +48,13 @@ import {NotifiModule }from './notifi/notifi.module';
     LogoutComponent,
     NavbarComponent,
     HeaderComponent,
+    ResetPasswordComponent,
   ],
   imports:[
     ReactiveFormsModule,
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot({
-      timeOut: 8000,
+      timeOut: 4000,
       positionClass: 'toast-top-right',
       preventDuplicates: false,
     }),

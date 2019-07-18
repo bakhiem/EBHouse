@@ -41,7 +41,8 @@ export class BhInfoComponent implements OnInit {
     private service: LandlordService,
     private shareService: SharedServiceService,
     private toastr: ToastrService
-  ) { }
+  ) {}
+
   ngOnInit() {
     this.getBoardingHouses();
     //get province from service
@@ -53,7 +54,7 @@ export class BhInfoComponent implements OnInit {
       this.dataProvince = arr;
       this.dataWards = null;
     });
-    // this.jqueryCode();
+     //this.jqueryCode();
 
     //create form group
     this.createbhFormGroup = this.fb.group({
@@ -78,8 +79,8 @@ export class BhInfoComponent implements OnInit {
       ])),
       description: ''
     });
-
   }
+
   showSuccess(mess) {
     this.toastr.success(mess, 'Thành công');
   }
@@ -212,15 +213,17 @@ export class BhInfoComponent implements OnInit {
   }
   jqueryCode() {
     $("select").change(() => {
+      console.log('asdasd')
       if (this.isEdit == 1) {
-        console.log('asdasd')
+      
         $("#myButton").removeAttr("disabled");
       }
 
     });
     $("input").keypress(() => {
+      console.log('asdasd')
       if (this.isEdit == 1) {
-        console.log('asdasd')
+       
         $("#myButton").removeAttr("disabled");
       }
     });
@@ -239,7 +242,8 @@ export class BhInfoComponent implements OnInit {
     this.arrAddress = obj.address.split('-');
     this.getProvinceOnEdit(this.arrAddress[3]);
     this.createbhFormGroup.get('address').setValue(this.arrAddress[0]);
-    // $("#myButton").attr("disabled", "disabled");
+    console.log($("#myButton"))
+    // $("#myButton").attr("disabled", "disabled");s
     $('.bd-example-modal-lg').modal('show');
 
   }
