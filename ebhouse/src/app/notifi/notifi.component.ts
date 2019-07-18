@@ -55,8 +55,8 @@ export class NotifiComponent implements OnInit {
       this.getRole();
     });
     this.createNotifiFormGroup = this.fb.group({
-      userToText: this.fb.control('', Validators.compose([Validators.required])),
-      userTo: this.fb.control('', Validators.compose([Validators.required])),
+      userToText: this.fb.control(''),
+      userTo: this.fb.control(''),
       subject: this.fb.control('', Validators.compose([Validators.required])),
       content: this.fb.control('', Validators.compose([Validators.required]))
     });
@@ -141,6 +141,7 @@ export class NotifiComponent implements OnInit {
         let listBhSent = [];
         let listRoomSent = [];
         let listUserSent = [];
+        let listAdminSent = [];
         if(this.flag == 1){
           listUserSent.push(this.createNotifiFormGroup.value.userTo);
         }else{
@@ -155,11 +156,14 @@ export class NotifiComponent implements OnInit {
               case 'user':
                 listUserSent.push(element.id);
                 break;
+              case 'admin':
+                listAdminSent.push(element.id);
+                break;
             }
           });
         }
 
-        this.service.sendNotification({ notification: this.newNotifi, list_bh: listBhSent, list_room: listRoomSent, list_user: listUserSent}).subscribe(
+        this.service.sendNotification({ notification: this.newNotifi, list_bh: listBhSent, list_room: listRoomSent, list_user: listUserSent, list_admin: listAdminSent}).subscribe(
           res => {
             this.removeLoading();
             let response = JSON.parse('' + res);
