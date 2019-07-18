@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,OnDestroy } from '@angular/core';
 import { Calculating, Utility } from '../../models/utility';
 
 import { LandlordService } from '../service/landlord-service.service';
@@ -8,31 +8,29 @@ import { SharedServiceService } from '../../service/shared-service.service';
 import { MatDialog, MatCheckboxModule } from '@angular/material';
 import { CommonMessage, Message } from '../../models/message';
 
+import { ToastrService } from 'ngx-toastr';
 import { InformationDialogComponent } from '../../shared/info-dialog/information-dialog.component';
 @Component({
   selector: 'app-utility',
   templateUrl: './utility.component.html',
   styleUrls: ['./utility.component.css']
 })
-export class UtilityComponent implements OnInit {
+export class UtilityComponent implements OnInit,OnDestroy {
   listUtility: Utility[] = [
     { id: 1, name: 'Điện', calculating: [{ id: 3, name: "Theo số" }] },
     { id: 2, name: 'Nước', calculating: [{ id: 1, name: "Theo phòng" }, { id: 2, name: "Theo người" }] },
     { id: 3, name: 'Internet', calculating: [{ id: 1, name: "Theo phòng" }, { id: 2, name: "Theo người" }] },
     { id: 4, name: 'Vệ sinh', calculating: [{ id: 1, name: "Theo phòng" }, { id: 2, name: "Theo người" }] }
   ]
-  //Message
-  message: Message = {
-    content: '',
-    type: 0
-  }
+
 
   private subscription: ISubscription;
   currentBh: any;
   list: any[];
   constructor(private service: LandlordService,
     private shareService: SharedServiceService,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog,
+    private toastr: ToastrService) { }
 
   ngOnInit() {
     this.subscription = this.shareService.currentBh.subscribe((data) => {
@@ -40,12 +38,23 @@ export class UtilityComponent implements OnInit {
       this.getUtility();
     })
   }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
   displayDialog(message : string){
     this.dialog.open(InformationDialogComponent, {
       width: '400px',
       data: message
     });
   }
+
+  showSuccess(mess) {
+    this.toastr.success(mess, 'Thành công');
+  }
+  showErr(mess) {
+    this.toastr.error(mess, 'Lỗi !');
+  }
+
   private getUtility() {
     if (!this.currentBh || !this.currentBh.id) {
       return;
@@ -96,7 +105,7 @@ export class UtilityComponent implements OnInit {
     $("select").change(() => {
       $("input[type=submit]").removeAttr("disabled");
     });
-    $("input").keypress(function () {
+    $("input").change(function () {
       $("input[type=submit]").removeAttr("disabled");
     });
   }
@@ -142,7 +151,6 @@ export class UtilityComponent implements OnInit {
     return notempty;
   }
   save() {
-    this.resetMess();
     if (this.checkEmpty() == false) {
       this.displayDialog(CommonMessage.Utility_InputAllField);
       return;
@@ -187,25 +195,18 @@ export class UtilityComponent implements OnInit {
         
         let response = JSON.parse("" + res);
         if (response.type == 1) {
-          this.message.type = 1;
-          this.message.content = response.message;
+          this.showSuccess(response.message);
           this.getUtility();
         }
         else{
           this.removeLoading();
-          this.message.type = 0;
-          this.message.content = response.message;
+          this.showErr(response.message);
         }
       }, err => {
         this.removeLoading();
-        this.message.type = 0;
-        this.message.content = CommonMessage.defaultErrMess;
+        this.showErr(CommonMessage.defaultErrMess);
         console.log(err);
       })
   }
   
-  resetMess() {
-    this.message.content = '';
-    this.message.type = 0;
-  }
 }

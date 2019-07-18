@@ -7,7 +7,7 @@ import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/co
 import { LandlordService } from '../service/landlord-service.service';
 
 import { BoardingHouse } from '../../models/bh';
-
+import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from '../../user/service/authentication.service';
 import { CommonMessage, Message } from '../../models/message';
 import { Observable, throwError } from 'rxjs';
@@ -32,20 +32,16 @@ export class ContractComponent implements OnInit, OnDestroy {
   //paging
   perPage: number = 10;
   currentPage: number = 1;
-  totalPage: number;
-  pageNumbers: number[] = [];
+  totalPage: number = 0;
+
   dataSource = new MatTableDataSource();
   listContract: Contract[];
   listContractFormat: any[];
   contractStatus: number = 1;
   isSelectAllStatus: number = 0;
   roomList: any[];
-  // displayedColumns: string[] = 
-  //Message
-  message: Message = {
-    content: '',
-    type: 0
-  }
+ 
+ 
   private subscription: ISubscription;
 
   //search
@@ -57,7 +53,8 @@ export class ContractComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private service: LandlordService,
     private authenticationService: AuthenticationService,
-    private router: Router) {
+    private router: Router,
+    private toastr: ToastrService) {
 
   }
   getDisplayedColumns(): string[] {
@@ -76,6 +73,17 @@ export class ContractComponent implements OnInit, OnDestroy {
       
     })
     
+  }
+
+  showSuccess(mess) {
+    this.toastr.success(mess, 'Thành công');
+  }
+  showErr(mess) {
+    this.toastr.error(mess, 'Lỗi !');
+  }
+
+  onchangeStatus(){
+    this.resetFormAndGetContract();
   }
   displayDialog(message : string){
     this.dialog.open(InformationDialogComponent, {
@@ -112,8 +120,8 @@ export class ContractComponent implements OnInit, OnDestroy {
             let data = JSON.parse(response.data);
             this.listContract = data.contract;
             this.handleListContract();
-            this.totalPage = Math.ceil(data.totalPage / this.perPage);
-            this.toArray(this.totalPage);
+            this.totalPage = data.totalPage
+
           } catch (error) {
             console.log(response)
             this.errRequestHandle(error);
@@ -127,7 +135,6 @@ export class ContractComponent implements OnInit, OnDestroy {
 
   // search contract by room
   getRoomsFromCurrentBh() {
-    this.resetMess();
     if(!this.currentBh || !this.currentBh.id){
       return;
     }
@@ -174,6 +181,12 @@ export class ContractComponent implements OnInit, OnDestroy {
         console.log(err);
       })
   }
+
+  //view contract disable
+  viewOnlyContract(obj){
+    this.service.changeCOntract(this.listContract[obj]);
+    this.router.navigate(['/landlord/contract-update']);
+  }
   private _filter(name: string): any[] {
     const filterValue = name.toLowerCase();
     return this.roomList.filter(roomList => roomList.name.toLowerCase().indexOf(filterValue) === 0);
@@ -181,25 +194,22 @@ export class ContractComponent implements OnInit, OnDestroy {
   displayFn(room?: any): string | undefined {
     return room ? room.name : undefined;
   }
-  
+  resetFormAndGetContract(){
+    this.currentPage = 1;
+    this.getContract();
+  }
   searchByRoom(){
     let isValid = 0;
     if(!this.roomControl.value){
       this.roomControl.setValue(this.roomList[0]);
-      this.pageNumbers = [];
-      this.currentPage = 1;
-      this.getContract();
-      this.resetMess();
+      this.resetFormAndGetContract();
       return;
     }
     this.roomList.forEach(element => {
       if (element.name == this.roomControl.value || element.name == this.roomControl.value.name) {
         this.roomControl.setValue(element);
         isValid = 1;
-        this.pageNumbers = [];
-        this.currentPage = 1;
-        this.getContract();
-        this.resetMess();
+        this.resetFormAndGetContract();
         return;
       }
     });
@@ -223,18 +233,19 @@ export class ContractComponent implements OnInit, OnDestroy {
         end: this.formatDate(element.endDate),
         price: element.roomPrice,
         deposit: element.deposit,
+        status : element.status
       }
-      if(element.status == '1'){
-        contract.status = 'Còn hạn'
+      if(element.status == 1){
+        contract.statusStr = 'Còn hạn'
       }
-      else if(element.status == '2'){
-        contract.status = 'Hết hạn'
+      else if(element.status == 2){
+        contract.statusStr = 'Hết hạn'
       }
-      else if(element.status == '3'){
-        contract.status = 'Chờ xử lý'
+      else if(element.status == 3){
+        contract.statusStr = 'Chờ xử lý'
       }
-      else if(element.status == '4'){
-        contract.status = 'Đã hủy'
+      else if(element.status == 4){
+        contract.statusStr = 'Đã hủy'
       }
       element.lstContractTenant.forEach(element2 => {
         if (element2.isOwner == 1) {
@@ -275,7 +286,6 @@ export class ContractComponent implements OnInit, OnDestroy {
     this.router.navigate(['/landlord/contract-update']);
   }
   deleteContract(obj) {
-    this.resetMess();
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '400px',
       data: "Bạn chắc chắn muốn xóa hợp đồng không ?"
@@ -302,8 +312,7 @@ export class ContractComponent implements OnInit, OnDestroy {
           res => {
             let resObject = JSON.parse("" + res);
             if (resObject.type == 1) {
-              this.message.type = 1;
-              this.message.content = resObject.message;
+              this.showSuccess(resObject.message);
               this.removeLoading();
               this.getContract();
             }
@@ -342,54 +351,28 @@ export class ContractComponent implements OnInit, OnDestroy {
   successRequestHandle(res) {
     let resObject = JSON.parse("" + res);
     if (resObject.type == 1) {
-      this.message.type = 1;
-      this.message.content = resObject.message;
+      this.showSuccess(resObject.message)
       this.removeLoading();
       this.getContract();
     }
     else {
-      this.message.type = 0;
-      this.message.content = resObject.message;
+     
+    this.showErr(resObject.message)
       this.removeLoading();
     }
   }
   errRequestHandle(err?) {
-    this.message.type = 0;
-    this.message.content = CommonMessage.defaultErrMess;
+    this.showErr(CommonMessage.defaultErrMess)
     console.log(err);
     this.removeLoading();
   }
-  resetMess() {
-    this.message.content = '';
-    this.message.type = 0;
-  }
+
   //paging
-  toArray = function (num: number) {
-    this.pageNumbers = [];
-    for (let i = 1; i <= num; i++) {
-      this.pageNumbers[i - 1] = i;
-    }
-  }
-  goToPage(page: any) { // without type info
+  pageChanged(page) {
     this.currentPage = page;
-    this.resetMess();
     this.getContract();
   }
-  prePage() {
-    if (this.currentPage > 1) {
-      this.currentPage = this.currentPage - 1
-      this.resetMess();
-      this.getContract();
-    }
-  }
 
-  nextPage() {
-    if (this.currentPage < this.totalPage) {
-      this.currentPage = this.currentPage + 1;
-      this.resetMess();
-      this.getContract();
-    }
-  }
 
 };
 

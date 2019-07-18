@@ -4,7 +4,7 @@
 <div class="row create-bh ">
     <div class="form-group col-sm-3">
         <label class="col-form-label">Chọn trạng thái hợp đồng</label>
-        <select class="custom-select mt-2" [(ngModel)]="contractStatus">
+        <select class="custom-select mt-2" [(ngModel)]="contractStatus" (change)='onchangeStatus()'>
             <option value="1" selected="selected">Còn hạn</option>
             <option value="2">Hết hạn</option>
             <option value="3">Đang chờ xử lý</option>
@@ -15,7 +15,8 @@
     <div class="col-sm-3">
         <label class="col-form-label">Chọn phòng</label>
         <mat-form-field class="example-full-width">
-            <input type="text" id='room-name' placeholder="Điền tên phòng" aria-label="Assignee" matInput [matAutocomplete]="auto" [formControl]="roomControl">
+            <input type="text" id='room-name' placeholder="Điền tên phòng" aria-label="Assignee" matInput
+                [matAutocomplete]="auto" [formControl]="roomControl">
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
                 <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                     {{option.name}}
@@ -25,8 +26,8 @@
     </div>
     <div class="col sm-3 mt-5">
         <button type="button" class="btn btn-secondary" (click)="searchByRoom()">
-        <span _ngcontent-fdu-c2="" class="ti-search"></span>  Tìm kiếm
-    </button></div>
+            <span _ngcontent-fdu-c2="" class="ti-search"></span> Tìm kiếm
+        </button></div>
     <div class="mt-5 col-sm-2">
         <button type="button" class="btn btn-primary mr-3" (click)="createContract()">
             Tạo hợp đồng
@@ -35,14 +36,6 @@
 </div>
 
 
-<div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
-    {{message.content}}
-</div>
-<ng-template #errMess>
-    <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
-        {{message.content}}
-    </div>
-</ng-template>
 
 
 <div class="row">
@@ -77,15 +70,19 @@
         </ng-container>
         <ng-container matColumnDef="status">
             <th mat-header-cell *matHeaderCellDef>Trạng thái</th>
-            <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.statusStr}} </td>
         </ng-container>
         <ng-container matColumnDef="customColumn">
             <th mat-header-cell *matHeaderCellDef></th>
             <td mat-cell *matCellDef="let row, let i = index">
-                <ul class="d-flex justify-content-center">
+                <ul *ngIf='row.status != 4 && row.status != 2' class="d-flex justify-content-center">
                     <li class="mr-3"><a class="text-secondary" (click)="editContract(i)"><i class="fa fa-edit"></i></a>
                     </li>
+
                     <li><a class="text-danger" (click)="deleteContract(i)"><i class="ti-trash"></i></a></li>
+                </ul>
+                <ul *ngIf='row.status == 4 || row.status == 2' class="d-flex justify-content-center">
+                    <li><a class="text-secondary" (click)="viewOnlyContract(i)"> <span class="ti-eye"></span></a></li>
                 </ul>
             </td>
         </ng-container>
@@ -93,28 +90,10 @@
         <tr mat-row *matRowDef="let row; columns: getDisplayedColumns();"></tr>
     </table>
 
-
-    <nav class="page mt-3">
-        <ul class="pagination">
-            <li class="page-item">
-                <a class="page-link" (click)="prePage()" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                    <span class="sr-only">Previous</span>
-                </a>
-            </li>
-
-            <li class="page-item" *ngFor="let pageNumber of pageNumbers ">
-                <a *ngIf="pageNumber == currentPage,else inActive" class="page-link disabled ">{{pageNumber}}</a>
-                <ng-template #inActive><a class="page-link" (click)="goToPage(pageNumber)">{{pageNumber}}</a>
-                </ng-template>
-            </li>
-
-            <li class="page-item">
-                <a class="page-link" (click)="nextPage()" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                    <span class="sr-only">Next</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+</div>
+<div class="row page-footer">
+    <div class="col-sm-5 col-12">Tổng số : {{totalPage}} hợp đồng</div>
+    <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalPage" [(page)]="currentPage"
+        [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event)">
+    </ngb-pagination>
 </div>

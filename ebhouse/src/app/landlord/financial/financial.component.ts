@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { LandlordService } from '../service/landlord-service.service';
 import { ISubscription } from "rxjs/Subscription";
+import { ToastrService } from 'ngx-toastr';
 
 import { SharedServiceService } from '../../service/shared-service.service';
 import { MatDialog, MatCheckboxModule } from '@angular/material';
@@ -20,18 +21,12 @@ import { map, startWith } from 'rxjs/operators';
     { provide: DateAdapter, useClass: CustomDateAdapterMonth }
   ]
 })
-export class FinancialComponent implements OnInit {
+export class FinancialComponent implements OnInit,OnDestroy {
 
-  //Message
-  message: Message = {
-    content: '',
-    type: 0
-  }
   //paging
   perPage: number = 10;
   currentPage: number = 1;
-  totalPage: number;
-  pageNumbers: number[] = [];
+  totalPage: number = 0;
   private subscription: ISubscription;
   currentBh: any;
   listFinancial: any[];
@@ -48,10 +43,11 @@ export class FinancialComponent implements OnInit {
   constructor(private service: LandlordService,
     private shareService: SharedServiceService,
     public dialog: MatDialog,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder,
+    private toastr: ToastrService) { }
   maxDate = new Date();
   month: FormControl;
-
+  isInvalid : boolean = true;
   displayedColumns: string[] = ['customColumn', 'room', 'total', 'payment', 'debt', 'date', 'status'];
 
   ngOnInit() {
@@ -76,9 +72,13 @@ export class FinancialComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
   chooseMonth(params, datepicker) {
     params.setDate(1);
     this.month.setValue(params);
+    this.currentPage = 1;
     this.getFinancial();
     datepicker.close();
   }
@@ -104,7 +104,12 @@ export class FinancialComponent implements OnInit {
     }
     return '';
   }
-
+  showSuccess(mess) {
+    this.toastr.success(mess, 'Thành công');
+  }
+  showErr(mess) {
+    this.toastr.error(mess, 'Lỗi !');
+  }
    getFinancial() {
     if (!this.currentBh || !this.currentBh.id) {
       return;
@@ -125,8 +130,8 @@ export class FinancialComponent implements OnInit {
         if (response.type == 1) {
           let resData = JSON.parse("" + response.data)
           this.listFinancial = resData.financial;
-          this.totalPage = Math.ceil(resData.totalPage / this.perPage);
-          this.toArray(this.totalPage);
+          this.totalPage =resData.totalPage;
+         
           for (let index = 0; index < this.listFinancial.length; index++) {
 
             const element = this.listFinancial[index];
@@ -146,8 +151,7 @@ export class FinancialComponent implements OnInit {
           console.log(this.listFinancial)
         }
       }, err => {
-        this.message.content = CommonMessage.defaultErrMess;
-        this.message.type = 0;
+        this.showErr(CommonMessage.defaultErrMess);
         this.removeLoading();
         console.log(err);
       })
@@ -186,6 +190,7 @@ export class FinancialComponent implements OnInit {
             this.roomList = data;
 
             if (this.roomList.length > 1) {
+              this.currentPage = 1;
               this.getFinancial();
             }
             else {
@@ -217,12 +222,9 @@ export class FinancialComponent implements OnInit {
   }
 
   searchByRoom() {
-
-    this.resetMess();
     let isValid = 0;
     if (!this.roomControl.value) {
       this.roomControl.setValue(this.roomList[0]);
-      this.pageNumbers = [];
       this.currentPage = 1;
       this.getFinancial();
       return;
@@ -232,7 +234,6 @@ export class FinancialComponent implements OnInit {
       if (element.name == this.roomControl.value || element.name == this.roomControl.value.name) {
         this.roomControl.setValue(element);
         isValid = 1;
-        this.pageNumbers = [];
         this.currentPage = 1;
         this.getFinancial();
         return;
@@ -302,13 +303,13 @@ export class FinancialComponent implements OnInit {
   }
   createExtrafee(data, obj) {
     this.createEFFormGroup.reset();
-    this.resetMess();
     if(obj.status == 1){
-      $('#myButton').prop('disabled', true);
-      this.createEFFormGroup.get('payment').disable()
+      this.createEFFormGroup.get('payment').disable();
+      this.isInvalid = true;
     }
     else{
-      this.createEFFormGroup.get('payment').enable()
+      this.createEFFormGroup.get('payment').enable();
+      this.isInvalid = false;
     }
     this.createEFFormGroup.get('cDate').setValue(obj.cDate);
     this.createEFFormGroup.get('id').setValue(obj.id);
@@ -449,20 +450,17 @@ export class FinancialComponent implements OnInit {
         this.removeLoading();
         let response = JSON.parse("" + res);
         if (response.type == 1) {
-          this.message.content = response.message;
-          this.message.type = 1;
+          this.showSuccess(response.message);
           $('.bd-example-modal-lg').modal('hide');
           this.isEdit = 0;;
           this.getFinancial();
         }
         else if (response.type == 2) {
-          this.message.content = response.message;
-          this.message.type = 0;
+          this.showErr(response.message);
         }
       }, err => {
         this.removeLoading();
-        this.message.content = CommonMessage.defaultErrMess;
-        this.message.type = 0;
+        this.showErr(CommonMessage.defaultErrMess);
         console.log(err);
       })
 
@@ -495,35 +493,9 @@ export class FinancialComponent implements OnInit {
       })
 
   }
-  resetMess() {
-    this.message.content = '';
-    this.message.type = 0;
-  }
-  //paging
-  toArray = function (num: number) {
-    this.pageNumbers = []
-    for (let i = 1; i <= num; i++) {
-      this.pageNumbers[i - 1] = i;
-    }
-  }
-  goToPage(page: any) { // without type info
+  pageChanged(page) {
     this.currentPage = page;
-    this.resetMess();
     this.getFinancial();
   }
-  prePage() {
-    if (this.currentPage > 1) {
-      this.currentPage = this.currentPage - 1;
-      this.resetMess();
-      this.getFinancial();
-    }
-  }
 
-  nextPage() {
-    if (this.currentPage < this.totalPage) {
-      this.currentPage = this.currentPage + 1;
-      this.resetMess();
-      this.getFinancial();
-    }
-  }
 }

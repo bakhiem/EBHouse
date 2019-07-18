@@ -10,16 +10,8 @@
             <div class="col-12 mt-5">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="header-title">Cập nhật thông tin hợp đồng</h4>
-                        <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success"
-                            role="alert">
-                            {{message.content}}
-                        </div>
-                        <ng-template #errMess>
-                            <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
-                                {{message.content}}
-                            </div>
-                        </ng-template>
+                        <h4 *ngIf='!isDisable' class="header-title">Cập nhật thông tin hợp đồng</h4>
+                        <h4 *ngIf='isDisable' class="header-title">Xem thông tin hợp đồng</h4>
                         <div class="row">
                             <div class="col-sm-6">
                                 <label class="col-form-label required">Phòng ký hợp đồng</label>
@@ -40,7 +32,7 @@
                                     <input class="form-control mr-3 col-sm-6" type="text"
                                         placeholder="Nhập số điện thoại" aria-label="Search"
                                         formControlName="tenantSearch">
-                                    <button class="btn btn-rounded btn-secondary" (click)="searchByPhone()">Tìm
+                                    <button class="btn btn-rounded btn-secondary" (click)="searchByPhone()" [disabled]='isDisable'>Tìm
                                         kiếm</button>
                                 </div>
                                 <div *ngIf="createContractFormGroup.controls['tenantSearch'].hasError('pattern') && (createContractFormGroup.controls['tenantSearch'].dirty || createContractFormGroup.controls['tenantSearch'].touched)"
@@ -123,7 +115,7 @@
                                             placeholder="Bấm để chọn" [matDatepicker]="picker">
                                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                         <mat-datepicker #picker (monthSelected)="monthStartSelected($event,picker)"
-                                            startView="multi-year" disabled="false"></mat-datepicker>
+                                            startView="multi-year" [disabled]="false || isDisable"></mat-datepicker>
                                     </mat-form-field>
 
                                 </div>
@@ -139,7 +131,7 @@
                                             placeholder="Bấm để chọn" formControlName="endDate">
                                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                                         <mat-datepicker #picker2 (monthSelected)="monthEndSelected($event,picker2)"
-                                            startView="multi-year" disabled="false"></mat-datepicker>
+                                            startView="multi-year" [disabled]="false || isDisable"></mat-datepicker>
                                     </mat-form-field>
 
                                 </div>
@@ -164,7 +156,7 @@
                             <div class="custom-file col-sm-5">
                                 <input type="file" imageUpload accept="image/*" class="custom-file-input"
                                     id="customFile" (imageSelected)="uploadImage($event)"
-                                    [resizeOptions]="resizeOptions" multiple>
+                                    [resizeOptions]="resizeOptions" multiple [disabled]='isDisable'>
                                 <label class="custom-file-label" for="customFile">Tải lên ảnh hợp đồng(Tối đa 5
                                     ảnh)</label>
 
@@ -176,7 +168,7 @@
                                 <div class="card text-center">
                                     <div class="card-body">
                                         <img [src]="img" alt="" (click)='this.viewImg(img)'>
-                                        <button (click)='deleteImage(i)' class="btn btn-rounded btn-danger mt-2">Xóa
+                                        <button (click)='deleteImage(i)' class="btn btn-rounded btn-danger mt-2" [disabled]='isDisable'>Xóa
                                             ảnh</button>
                                     </div>
                                 </div>
@@ -188,7 +180,7 @@
                         <div class="form-group row">
                             <div class="col-sm-11">
                                 <label for="input-description" class="col-form-label">Mô tả</label>
-                                <textarea class="form-control" rows="3" formControlName="description"></textarea>
+                                <textarea class="form-control" rows="3" formControlName="description" [disabled]='isDisable'></textarea>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -196,7 +188,7 @@
                             <div class="mt-3 float-right col-sm-6 text-center">
                                 <input routerLink="/landlord/contract" class="btn btn-secondary mb-3 mr-3" type="submit"
                                     value="Trở về">
-                                <input class="btn btn-info mb-3" type="submit" value="Cập nhật hợp đồng"
+                                <input *ngIf='!isDisable' class="btn btn-info mb-3" type="submit" value="Cập nhật hợp đồng"
                                     (click)="onSubmit()" [disabled]="createContractFormGroup.invalid">
                             </div>
                         </div>

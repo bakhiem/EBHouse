@@ -16,17 +16,8 @@ table {
     margin-bottom: 0;
   }
 
-  .text-secondary{
-    cursor: pointer;
-  }
-a.page-link.disabled{
-    background: #007bff;
-    color: white;
-}
-#dataTable3_info{
-  font-size: 1.1rem;
-  font-weight: 600;
-}
+
+
 @media only screen and (max-width: 600px) {
   table td{
     font-size: 0.6rem;
@@ -34,4 +25,16 @@ a.page-link.disabled{
   table th{
     font-size: 0.8rem;
   }
+} 
+
+.page-footer{
+  background: #fff;
+  padding-top: 1.1rem;
+}
+
+@media only screen and (max-width: 600px) {
+.pagination{
+  display: flex;
+  justify-content: center;
+}
 } 

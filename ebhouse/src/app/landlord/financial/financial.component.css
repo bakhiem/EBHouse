@@ -18,20 +18,6 @@
     color: midnightblue;
   }
 
-  .text-secondary{
-    cursor: pointer;
-  }
-  .page .pagination{
-    justify-content: center;
-}
-a.page-link.disabled{
-    background: #007bff;
-    color: white;
-}
-.page{
-   margin: 0 auto;
-   
-}
 .bd-example-modal-lg{
   margin: 0 auto;
 }
@@ -72,3 +58,17 @@ a.page-link.disabled{
 ::-webkit-scrollbar-thumb:hover {
   background: #555; 
 }
+
+
+.page-footer{
+  background: #fff;
+  padding-top: 1.1rem;
+  margin: 0 auto;
+}
+
+@media only screen and (max-width: 600px) {
+.pagination{
+  display: flex;
+  justify-content: center;
+}
+} 

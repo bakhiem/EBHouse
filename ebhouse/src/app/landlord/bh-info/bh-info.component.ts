@@ -4,14 +4,13 @@ import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from
 import { MatDialog } from '@angular/material';
 import { PlaceService } from '../../service/place.service';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
-
 import { LandlordService } from '../service/landlord-service.service';
-
 import { BoardingHouse } from '../../models/bh';
+import * as $AB from 'jquery';
+import * as bootstrap from "bootstrap";
 import { LandlordComponent } from '../landlord.component';
-
 import { CommonMessage, Message } from '../../models/message';
-
+import { ToastrService } from 'ngx-toastr';
 import { SharedServiceService } from '../../service/shared-service.service';
 @Component({
   selector: 'app-bh-info',
@@ -27,17 +26,11 @@ export class BhInfoComponent implements OnInit {
   createbhFormGroup: FormGroup;
   isEdit: number = 0;
   currentBh: BoardingHouse;
-  totalPageString: string;
-  //Message
-  message: Message = {
-    content: '',
-    type: 0
-  }
+
   //paging
   perPage: number = 10;
   currentPage: number = 1;
-  totalPage: number;
-  pageNumbers: number[] = [];
+  totalPage: number = 0;
 
   displayedColumns: string[] = ['name', 'address', 'numberOfRoom', 'description', 'customColumn'];
 
@@ -47,7 +40,7 @@ export class BhInfoComponent implements OnInit {
     public dialog: MatDialog,
     private service: LandlordService,
     private shareService: SharedServiceService,
-    private landlordComponent: LandlordComponent
+    private toastr: ToastrService
   ) { }
   ngOnInit() {
     this.getBoardingHouses();
@@ -60,7 +53,7 @@ export class BhInfoComponent implements OnInit {
       this.dataProvince = arr;
       this.dataWards = null;
     });
-
+    // this.jqueryCode();
 
     //create form group
     this.createbhFormGroup = this.fb.group({
@@ -87,7 +80,12 @@ export class BhInfoComponent implements OnInit {
     });
 
   }
-
+  showSuccess(mess) {
+    this.toastr.success(mess, 'Thành công');
+  }
+  showErr(mess) {
+    this.toastr.error(mess, 'Lỗi !');
+  }
   getBoardingHouses() {
     let page: any = {
       page: this.currentPage
@@ -100,14 +98,12 @@ export class BhInfoComponent implements OnInit {
         if (response.type == 1) {
           let data = JSON.parse(response.data);
           this.bhList = data.boardingHouse;
-          this.totalPage = Math.ceil(data.totalPage / this.perPage);
-          this.totalPageString = 'Tổng số nhà trọ: ' + data.totalPage
-          this.toArray(this.totalPage);
+          this.totalPage = data.totalPage;
+
         }
       }, err => {
         this.removeLoading();
-        this.message.content = CommonMessage.defaultErrMess;
-        this.message.type = 0;
+        this.showErr(CommonMessage.defaultErrMess);
         console.log(err);
       })
   }
@@ -118,38 +114,43 @@ export class BhInfoComponent implements OnInit {
     this.createbhFormGroup.reset();
     this.isEdit = 0;
     this.currentBh = null;
-    this.resetMess();
     this.dataDistric = [];
     this.dataWards = [];
     $('.bd-example-modal-lg').modal('show');
   }
   onSubmit() {
-    this.resetMess();
     let fullAddress = this.createbhFormGroup.value.address + "-" + this.createbhFormGroup.value.wards.name + "-" + this.createbhFormGroup.value.distric.name + "-" + this.createbhFormGroup.value.province.name;
     if (this.isEdit == 1) {
-      let bh: BoardingHouse = {
-        id: this.createbhFormGroup.value.id,
-        name: this.createbhFormGroup.value.name,
-        address: fullAddress,
-        numberOfRoom: this.createbhFormGroup.value.numberOfRoom,
-        description: this.createbhFormGroup.value.description ? this.createbhFormGroup.value.description : ''
-      }
-
-      if (bh.address == this.currentBh.address && bh.name == this.currentBh.name && bh.numberOfRoom == this.currentBh.numberOfRoom && bh.description == this.currentBh.description) {
-        this.message.content = CommonMessage.notChangeMess;
-        this.message.type = 0;
-      }
-      else {
-        this.addLoading();
-        this.service.editBh(bh).subscribe(
-          res => {
-            this.successRequestHandle(res)
-          },
-          err => {
-            this.errRequestHandle(err);
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        width: '400px',
+        data: "Bạn chắc chắn muốn lưu thay đổi không ?"
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          let bh: BoardingHouse = {
+            id: this.createbhFormGroup.value.id,
+            name: this.createbhFormGroup.value.name,
+            address: fullAddress,
+            numberOfRoom: this.createbhFormGroup.value.numberOfRoom,
+            description: this.createbhFormGroup.value.description ? this.createbhFormGroup.value.description : ''
           }
-        )
-      }
+
+          if (bh.address == this.currentBh.address && bh.name == this.currentBh.name && bh.numberOfRoom == this.currentBh.numberOfRoom && bh.description == this.currentBh.description) {
+            this.showErr(CommonMessage.notChangeMess);
+          }
+          else {
+            this.addLoading();
+            this.service.editBh(bh).subscribe(
+              res => {
+                this.successRequestHandle(res)
+              },
+              err => {
+                this.errRequestHandle(err);
+              }
+            )
+          }
+        }
+      })
     }
     else {
       let bh: BoardingHouse = {
@@ -173,25 +174,21 @@ export class BhInfoComponent implements OnInit {
   successRequestHandle(res) {
     let resObject = JSON.parse("" + res);
     if (resObject.type == 1) {
-      this.message.type = 1;
-      this.message.content = resObject.message;
+      this.showSuccess(resObject.message);
       this.removeLoading();
       this.currentBh = null;
       $('.bd-example-modal-lg').modal('hide');
       this.getBoardingHouses();
       this.shareService.currentBh.next(null);
       this.shareService.getAllBoardingHouses().subscribe();
-
     }
     else {
-      this.message.type = 0;
-      this.message.content = resObject.message;
+      this.showErr(resObject.message);
       this.removeLoading();
     }
   }
   errRequestHandle(err) {
-    this.message.type = 0;
-    this.message.content = CommonMessage.defaultErrMess;
+    this.showErr(CommonMessage.defaultErrMess);
     console.log(err);
     this.removeLoading();
   }
@@ -214,14 +211,20 @@ export class BhInfoComponent implements OnInit {
     $('.customLoader').removeClass('loader');
   }
   jqueryCode() {
-    if (this.isEdit == 1) {
-      $("select").change(() => {
+    $("select").change(() => {
+      if (this.isEdit == 1) {
+        console.log('asdasd')
         $("#myButton").removeAttr("disabled");
-      });
-      $("input").keypress(function () {
+      }
+
+    });
+    $("input").keypress(() => {
+      if (this.isEdit == 1) {
+        console.log('asdasd')
         $("#myButton").removeAttr("disabled");
-      });
-    }
+      }
+    });
+
 
   }
 
@@ -234,25 +237,19 @@ export class BhInfoComponent implements OnInit {
     this.createbhFormGroup.get('description').setValue(obj.description);
     this.createbhFormGroup.get('id').setValue(obj.id);
     this.arrAddress = obj.address.split('-');
-    $("#myButton").attr("disabled", "disabled");
     this.getProvinceOnEdit(this.arrAddress[3]);
     this.createbhFormGroup.get('address').setValue(this.arrAddress[0]);
+    // $("#myButton").attr("disabled", "disabled");
     $('.bd-example-modal-lg').modal('show');
-    this.resetMess();
-  }
-  resetMess() {
-    this.message.content = '';
-    this.message.type = 0;
+
   }
   deleteBh(obj) {
-    this.resetMess();
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '400px',
       data: "Bạn chắc chắn muốn xóa nhà trọ không ?"
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.resetMess();
         let bh = {
           id: obj.id
         }
@@ -315,32 +312,12 @@ export class BhInfoComponent implements OnInit {
     });
   };
   //paging
-  toArray = function (num: number) {
-    this.pageNumbers = []
-    for (let i = 1; i <= num; i++) {
-      this.pageNumbers[i - 1] = i;
-    }
-  }
-  goToPage(page: any) { // without type info
+
+  pageChanged(page) {
     this.currentPage = page;
-    this.resetMess();
     this.getBoardingHouses();
   }
-  prePage() {
-    if (this.currentPage > 1) {
-      this.currentPage = this.currentPage - 1;
-      this.resetMess();
-      this.getBoardingHouses();
-    }
-  }
 
-  nextPage() {
-    if (this.currentPage < this.totalPage) {
-      this.currentPage = this.currentPage + 1;
-      this.resetMess();
-      this.getBoardingHouses();
-    }
-  }
 }
 
 

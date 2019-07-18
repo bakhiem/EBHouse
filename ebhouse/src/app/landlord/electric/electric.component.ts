@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit ,ViewChildren,AfterViewInit, QueryList,OnDestroy} from '@angular/core';
 import { Calculating, Utility } from '../../models/utility';
 
 import { LandlordService } from '../service/landlord-service.service';
@@ -11,6 +11,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { InformationDialogComponent } from '../../shared/info-dialog/information-dialog.component';
 import { CustomDateAdapterMonth } from '../contract/customDate';
 
+import { ToastrService } from 'ngx-toastr';
 import { FormControl } from '@angular/forms';
 @Component({
   selector: 'app-electric',
@@ -21,37 +22,54 @@ import { FormControl } from '@angular/forms';
     { provide: DateAdapter, useClass: CustomDateAdapterMonth }
   ]
 })
-export class ElectricComponent implements OnInit {
 
-  //Message
-  message: Message = {
-    content: '',
-    type: 0
-  }
-
+export class ElectricComponent implements OnInit,AfterViewInit, OnDestroy  {
+  @ViewChildren('allList') listElectric: QueryList<any>;
   private subscription: ISubscription;
   currentBh: any;
-  list: any[];
+  list: any[]= [];
+
   constructor(private service: LandlordService,
     private shareService: SharedServiceService,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog,
+    private toastr: ToastrService) { }
   maxDate = new Date();
   month: FormControl;
+
+  ngAfterViewInit() {
+    this.listElectric.changes.subscribe(t => {
+      this.ngForRendred();
+    })
+    this.formatCurrency();
+  }
+  ngForRendred() {
+    $("input[type=submit]").attr("disabled", "disabled");
+    this.jqueryCode();
+  }
   ngOnInit() {
     this.month = new FormControl({ value: new Date(), disabled: true });
     this.subscription = this.shareService.currentBh.subscribe((data) => {
       this.currentBh = data;
       if (this.currentBh  && this.currentBh.id) {
+       
         this.getElectric();
       }
-      
     })
     this.scrollTop();
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+  showSuccess(mess) {
+    this.toastr.success(mess, 'Thành công');
+  }
+  showErr(mess) {
+    this.toastr.error(mess, 'Lỗi !');
   }
   chooseMonth(params, datepicker) {
     params.setDate(1);
     this.month.setValue(params);
-    this.resetMess();
+    
     this.getElectric();
     datepicker.close();
   }
@@ -61,6 +79,8 @@ export class ElectricComponent implements OnInit {
       data: message
     });
   }
+
+
   scrollTop(){
     //  $('.electric').animate({scrollTop: '200px'}, 0);
     var elmnt = document.getElementsByClassName("electric");
@@ -109,7 +129,8 @@ export class ElectricComponent implements OnInit {
                 this.list[index].disabledNow = true;
               }
             }
-            // $("input[type=submit]").attr("disabled", "disabled");
+            
+           
           }
           // //if bh didn't have list utility
           // else{
@@ -136,7 +157,7 @@ export class ElectricComponent implements OnInit {
       $('#present-' + id).val(Number($('#present-' + id).val()));
       $('#last-' + id).val(Number($('#last-' + id).val()));
       $('#usage-' + id).html('' + usage);
-      let amount = usage * Number(this.list[1].value);
+      let amount = usage * Number(this.list[0].value);
       let currency = amount.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
       $('#amount-' + id).html(currency);
     }
@@ -155,16 +176,12 @@ export class ElectricComponent implements OnInit {
     $("input[type=number]").val('');
     // $("input[type=submit]").attr("disabled", "disabled");
   }
-  ngAfterViewInit() {
-    this.formatCurrency();
-    // this.jqueryCode();
-  }
+  
 
 
   jqueryCode() {
-   
-    $("input[type=submit]").keypress(function () {
-     console.log(this)
+    $("input[type=number]").keypress(function () {
+      $("input[type=submit]").removeAttr("disabled");
     });
 
   }
@@ -217,7 +234,7 @@ export class ElectricComponent implements OnInit {
     return [year, month, day].join('-');
   }
   save() {
-    this.resetMess();
+    //da check rui
     // if (this.checkValidBeforeSubmit() == false) {
     //   this.displayDialog(CommonMessage.Electric);
     //   return;
@@ -256,25 +273,17 @@ export class ElectricComponent implements OnInit {
       res => {
         let response = JSON.parse("" + res);
         if (response.type == 1) {
-          this.message.type = 1;
-          this.message.content = response.message;
+          this.showSuccess(response.message);
           this.getElectric();
         }
         else {
           this.removeLoading();
-          this.message.type = 0;
-          this.message.content = response.message;
+          this.showErr(response.message);
         }
       }, err => {
         this.removeLoading();
-        this.message.type = 0;
-        this.message.content = CommonMessage.defaultErrMess;
+        this.showErr(CommonMessage.defaultErrMess);
         console.log(err);
       })
-  }
-
-  resetMess() {
-    this.message.content = '';
-    this.message.type = 0;
   }
 }

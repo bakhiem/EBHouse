@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,OnDestroy } from '@angular/core';
 import { Calculating, Utility } from '../../models/utility';
 import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { LandlordService } from '../service/landlord-service.service';
 import { ISubscription } from "rxjs/Subscription";
+import { ToastrService } from 'ngx-toastr';
 
 import { SharedServiceService } from '../../service/shared-service.service';
 import { MatDialog, MatCheckboxModule } from '@angular/material';
@@ -22,18 +23,13 @@ import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/co
     { provide: DateAdapter, useClass: CustomDateAdapterMonth }
   ]
 })
-export class ExtraFeeComponent implements OnInit {
+export class ExtraFeeComponent implements OnInit,OnDestroy {
 
-  //Message
-  message: Message = {
-    content: '',
-    type: 0
-  }
+
   //paging
   perPage: number = 10;
   currentPage: number = 1;
-  totalPage: number;
-  pageNumbers: number[] = [];
+  totalPage: number = 0;
   private subscription: ISubscription;
   currentBh: any;
   listExtrafee: any[];
@@ -50,7 +46,8 @@ export class ExtraFeeComponent implements OnInit {
   constructor(private service: LandlordService,
     private shareService: SharedServiceService,
     public dialog: MatDialog,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder,
+    private toastr: ToastrService) { }
   month: FormControl;
 
   displayedColumns: string[] = ['room', 'amount', 'description', 'date', 'customColumn'];
@@ -75,9 +72,20 @@ export class ExtraFeeComponent implements OnInit {
       ])),
     });
   }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+  showSuccess(mess) {
+    this.toastr.success(mess, 'Thành công');
+  }
+  showErr(mess) {
+    this.toastr.error(mess, 'Lỗi !');
+  }
+
   chooseMonth(params, datepicker) {
     params.setDate(1);
     this.month.setValue(params);
+    this.currentPage = 1;
     this.getExtrafee();
     datepicker.close();
   }
@@ -103,7 +111,6 @@ export class ExtraFeeComponent implements OnInit {
   }
 
   private getExtrafee() {
-   
     let data: any = {
       boardingHouseID: this.currentBh.id,
       date: this.formatDate() + '-01',
@@ -120,8 +127,8 @@ export class ExtraFeeComponent implements OnInit {
         if (response.type == 1) {
           let resData = JSON.parse("" + response.data)
           this.listExtrafee = resData.extraFee;
-          this.totalPage = Math.ceil(resData.totalPage / this.perPage);
-          this.toArray(this.totalPage);
+          this.totalPage = resData.totalPage
+
           for (let index = 0; index < this.listExtrafee.length; index++) {
             const element = this.listExtrafee[index];
             let roomObj = this.getRoomName(element.room);
@@ -129,9 +136,11 @@ export class ExtraFeeComponent implements OnInit {
           }
           console.log(this.listExtrafee)
         }
+        else{
+          this.showErr(CommonMessage.defaultErrMess);
+        }
       }, err => {
-        this.message.content = CommonMessage.defaultErrMess;
-        this.message.type = 0;
+        this.showErr(CommonMessage.defaultErrMess);
         this.removeLoading();
         console.log(err);
       })
@@ -166,6 +175,7 @@ export class ExtraFeeComponent implements OnInit {
             data.unshift(elementAll)
             this.roomList = data.slice(0);
             if (this.roomListCreate.length > 0) {
+              this.currentPage = 1;
               this.getExtrafee();
             }
             else {
@@ -211,11 +221,9 @@ export class ExtraFeeComponent implements OnInit {
   }
 
   searchByRoom() {
-    this.resetMess();
     let isValid = 0;
     if (!this.roomControl.value) {
       this.roomControl.setValue(this.roomList[0]);
-      this.pageNumbers = [];
       this.currentPage = 1;
       this.getExtrafee();
       return;
@@ -224,7 +232,6 @@ export class ExtraFeeComponent implements OnInit {
       if (element.name == this.roomControl.value || element.name == this.roomControl.value.name) {
         this.roomControl.setValue(element);
         isValid = 1;
-        this.pageNumbers = [];
         this.currentPage = 1;
         this.getExtrafee();
         return;
@@ -267,7 +274,6 @@ export class ExtraFeeComponent implements OnInit {
       this.isEdit = 3;
     }
     $('.bd-example-modal-lg').modal('show');
-    this.resetMess();
   }
   private _filter(name: string): any[] {
     const filterValue = name.toLowerCase();
@@ -323,7 +329,6 @@ export class ExtraFeeComponent implements OnInit {
     this.roomControlCreate.reset();
     this.roomControlCreate.enable();
     this.isEdit = 0;
-    this.resetMess();
     $('.bd-example-modal-lg').modal('show');
   }
 
@@ -389,25 +394,21 @@ export class ExtraFeeComponent implements OnInit {
     this.removeLoading();
     let resObject = JSON.parse("" + res);
     if (resObject.type == 1) {
-      this.message.type = 1;
-      this.message.content = resObject.message;
+      this.showSuccess(resObject.message);
       this.isEdit = 0;;
       $('.bd-example-modal-lg').modal('hide');
       this.getExtrafee();
     }
     else {
-      this.message.type = 0;
-      this.message.content = resObject.message;
+      this.showErr(resObject.message);
     }
   }
   errRequestHandle(err) {
-    this.message.type = 0;
-    this.message.content = CommonMessage.defaultErrMess;
+    this.showErr( CommonMessage.defaultErrMess);
     console.log(err);
     this.removeLoading();
   }
   deleteEF(index) {
-    this.resetMess();
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '400px',
       data: "Bạn chắc chắn muốn xóa chi phí khác không ?"
@@ -415,7 +416,6 @@ export class ExtraFeeComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
 
-        this.resetMess();
         let element = this.listExtrafee[index];
         let data = {
           amount: element.amount,
@@ -437,35 +437,9 @@ export class ExtraFeeComponent implements OnInit {
       }
     });
   }
-  resetMess() {
-    this.message.content = '';
-    this.message.type = 0;
-  }
-  //paging
-  toArray = function (num: number) {
-    this.pageNumbers = []
-    for (let i = 1; i <= num; i++) {
-      this.pageNumbers[i - 1] = i;
-    }
-  }
-  goToPage(page: any) { // without type info
+  pageChanged(page) {
     this.currentPage = page;
-    this.resetMess();
     this.getExtrafee();
   }
-  prePage() {
-    if (this.currentPage > 1) {
-      this.currentPage = this.currentPage - 1;
-      this.resetMess();
-      this.getExtrafee();
-    }
-  }
 
-  nextPage() {
-    if (this.currentPage < this.totalPage) {
-      this.currentPage = this.currentPage + 1;
-      this.resetMess();
-      this.getExtrafee();
-    }
-  }
 }

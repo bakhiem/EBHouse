@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { LandlordService } from '../../service/landlord-service.service';
 import { ISubscription } from "rxjs/Subscription";
@@ -11,6 +11,7 @@ import { InformationDialogComponent } from '../../../shared/info-dialog/informat
 import { CustomDateAdapterMonth } from '../../contract/customDate';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-other-financial',
   templateUrl: './other-financial.component.html',
@@ -20,24 +21,18 @@ import { map, startWith } from 'rxjs/operators';
     { provide: DateAdapter, useClass: CustomDateAdapterMonth }
   ]
 })
-export class OtherFinancialComponent implements OnInit {
+export class OtherFinancialComponent implements OnInit, OnDestroy {
 
-  //Message
-  message: Message = {
-    content: '',
-    type: 0
-  }
+
   //paging
   perPage: number = 10;
   currentPage: number = 1;
-  totalPage: number;
-  pageNumbers: number[] = [];
+  totalPage: number = 0;
+
 
   //paging electric
   currentPageElectric: number = 1;
-  totalPageElectric: number;
-  pageNumbersElectric: number[] = [];
-
+  totalPageElectric: number = 0;
 
   private subscription: ISubscription;
   currentBh: any;
@@ -51,7 +46,8 @@ export class OtherFinancialComponent implements OnInit {
   currentRoom: any;
   constructor(private service: LandlordService,
     private shareService: SharedServiceService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private toastr: ToastrService
   ) { }
   maxDate = new Date();
   month: FormControl;
@@ -68,6 +64,10 @@ export class OtherFinancialComponent implements OnInit {
       }
 
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
   chooseMonth(params, datepicker) {
     params.setDate(1);
@@ -100,7 +100,12 @@ export class OtherFinancialComponent implements OnInit {
     }
     return '';
   }
-
+  showSuccess(mess) {
+    this.toastr.success(mess, 'Thành công');
+  }
+  showErr(mess) {
+    this.toastr.error(mess, 'Lỗi !');
+  }
   getFinancial() {
     let data: any = {
       boardingHouseID: this.currentBh.id,
@@ -145,12 +150,10 @@ export class OtherFinancialComponent implements OnInit {
             this.listOtherElectric.push(elm);
           }
 
-          this.totalPageElectric = Math.ceil(response.data.totalPageElectricity / this.perPage);
-          this.toArrayElectric(this.totalPageElectric);
+          this.totalPageElectric = response.data.totalPageElectricity;
           console.log(listElectricNew)
           console.log(listElectricOld)
-          this.totalPage = Math.ceil(resDataExtra.totalPage / this.perPage);
-          this.toArray(this.totalPage);
+          this.totalPage = resDataExtra.totalPage;
 
         }
       }, err => {
@@ -159,8 +162,7 @@ export class OtherFinancialComponent implements OnInit {
   }
 
   errRequestHandle(err) {
-    this.message.type = 0;
-    this.message.content = CommonMessage.defaultErrMess;
+    this.showErr(CommonMessage.defaultErrMess);
     console.log(err);
     this.removeLoading();
   }
@@ -189,6 +191,8 @@ export class OtherFinancialComponent implements OnInit {
             this.roomList = data;
 
             if (this.roomList.length > 1) {
+              this.currentPage = 1;
+              this.currentPageElectric = 1;
               this.getFinancial();
             }
             else {
@@ -220,18 +224,15 @@ export class OtherFinancialComponent implements OnInit {
   }
 
   searchByRoom() {
-    this.resetMess();
     let isValid = 0;
     let activeTab = $(".nav-link.active.show").attr('id');
     if (!this.roomControl.value) {
       this.roomControl.setValue(this.roomList[0]);
       if (activeTab == 'extrafee-tab') {
-        this.pageNumbers = [];
         this.currentPage = 1;
         this.getFinancialExtraFee();
       }
       else {
-        this.pageNumbersElectric = [];
         this.currentPageElectric = 1;
         this.getFinancialElectric();
       }
@@ -243,12 +244,10 @@ export class OtherFinancialComponent implements OnInit {
         this.roomControl.setValue(element);
         isValid = 1;
         if (activeTab == 'extrafee-tab') {
-          this.pageNumbers = [];
           this.currentPage = 1;
           this.getFinancialExtraFee();
         }
         else {
-          this.pageNumbersElectric = [];
           this.currentPageElectric = 1;
           this.getFinancialElectric();
         }
@@ -278,15 +277,14 @@ export class OtherFinancialComponent implements OnInit {
         if (response.type == 1) {
           let resData = JSON.parse(response.data)
           this.listOtherExtrafee = resData.extraFee;
-           
+
           // console.log(this.listOtherExtrafee);
           for (let index = 0; index < this.listOtherExtrafee.length; index++) {
             const element = this.listOtherExtrafee[index];
             let roomObj = this.getRoomName(element.room);
             this.listOtherExtrafee[index].roomObj = roomObj;
           }
-          this.totalPage = Math.ceil(resData.totalPage / this.perPage);
-          this.toArray(this.totalPage);
+          this.totalPage = resData.totalPage;
         }
       }, err => {
         this.errRequestHandle(err)
@@ -331,8 +329,7 @@ export class OtherFinancialComponent implements OnInit {
             this.listOtherElectric.push(elm);
           }
 
-          this.totalPageElectric = Math.ceil(response.data.totalPageElectricity / this.perPage);
-          this.toArrayElectric(this.totalPageElectric);
+          this.totalPageElectric = response.data.totalPageElectricity;
           console.log(listElectricNew)
           console.log(listElectricOld)
         }
@@ -416,64 +413,15 @@ export class OtherFinancialComponent implements OnInit {
     return Number(value.split('.').join(''));
   }
 
-
-
-  resetMess() {
-    this.message.content = '';
-    this.message.type = 0;
-  }
   //paging
-  toArray = function (num: number) {
-    this.pageNumbers = []
-    for (let i = 1; i <= num; i++) {
-      this.pageNumbers[i - 1] = i;
-    }
-  }
-  goToPage(page: any) { // without type info
+  pageChanged(page) {
     this.currentPage = page;
-    this.resetMess();
     this.getFinancialExtraFee();
   }
-  prePage() {
-    if (this.currentPage > 1) {
-      this.currentPage = this.currentPage - 1;
-      this.resetMess();
-      this.getFinancialExtraFee();
-    }
-  }
 
-  nextPage() {
-    if (this.currentPage < this.totalPage) {
-      this.currentPage = this.currentPage + 1;
-      this.resetMess();
-      this.getFinancialExtraFee();
-    }
-  }
   //paging electric
-  toArrayElectric = function (num: number) {
-    this.pageNumbersElectric = []
-    for (let i = 1; i <= num; i++) {
-      this.pageNumbersElectric[i - 1] = i;
-    }
-  }
-  goToPageElectric(page: any) { // without type info
+  pageChangedElectric(page) {
     this.currentPageElectric = page;
-    this.resetMess();
     this.getFinancialElectric();
-  }
-  prePageElectric() {
-    if (this.currentPageElectric > 1) {
-      this.currentPageElectric = this.currentPageElectric - 1;
-      this.resetMess();
-      this.getFinancialElectric();
-    }
-  }
-
-  nextPageElectric() {
-    if (this.currentPageElectric < this.totalPageElectric) {
-      this.currentPageElectric = this.currentPageElectric + 1;
-      this.resetMess();
-      this.getFinancialElectric();
-    }
   }
 }

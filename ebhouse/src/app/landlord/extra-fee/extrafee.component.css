@@ -17,21 +17,6 @@
   small{
     color: midnightblue;
   }
-
-  .text-secondary{
-    cursor: pointer;
-  }
-  .page .pagination{
-    justify-content: center;
-}
-a.page-link.disabled{
-    background: #007bff;
-    color: white;
-}
-.page{
-   margin: 0 auto;
-   
-}
 .searchBox{
   margin-top: 20px;
 }
@@ -48,4 +33,17 @@ a.page-link.disabled{
   .searchBox{
     margin-top: 5px;
   }
+} 
+
+.page-footer{
+  background: #fff;
+  padding-top: 1.1rem;
+  margin: 0 auto;
+}
+
+@media only screen and (max-width: 600px) {
+.pagination{
+  display: flex;
+  justify-content: center;
+}
 } 

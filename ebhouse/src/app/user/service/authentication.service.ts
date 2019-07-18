@@ -51,9 +51,9 @@ export class AuthenticationService {
                 let resObject = JSON.parse(res);
                 if (resObject && resObject.data) {
                     let resDataObject = resObject.data.map;
-
+                    console.log(resObject)
                     if (resDataObject.role == Role.Lanlord) {
-                        let userLogin = JSON.parse(resObject.data.map.landlord);
+                        let userLogin = JSON.parse(resDataObject.landlord);
                         if (resDataObject && userLogin.user.token) {
                             // store user details and jwt token in local storage to keep user logged in between page refreshes
                             this.userStorage = {
@@ -73,7 +73,7 @@ export class AuthenticationService {
                         }
                     }
                     else if (resDataObject.role == Role.Tenant) {
-                        let userLogin = JSON.parse(resObject.data.map.tenant);
+                        let userLogin = JSON.parse(resDataObject.tenant);
                         if (resDataObject && userLogin.user.token) {
                             // store user details and jwt token in local storage to keep user logged in between page refreshes
                             this.userStorage = {

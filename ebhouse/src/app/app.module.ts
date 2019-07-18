@@ -34,11 +34,13 @@ import {RedirectDialogComponent }from './shared/redirect-dialog/redirect-dialog.
 import {MatDialogModule}from '@angular/material/dialog';
 import {NavbarComponent }from './navbar/navbar.component';
 import {HeaderComponent }from './header/header.component';
+import { ToastrModule, ToastContainerModule } from 'ngx-toastr';
 import {NotifiModule }from './notifi/notifi.module';
 
 @NgModule( {
   declarations:[
     AppComponent,
+    
     DashboardComponent,
     LoginComponent,
     RegisterComponent,
@@ -49,10 +51,17 @@ import {NotifiModule }from './notifi/notifi.module';
     RedirectDialogComponent,
     LogoutComponent,
     NavbarComponent,
-    HeaderComponent
+    HeaderComponent,
   ],
   imports:[
     ReactiveFormsModule,
+    BrowserAnimationsModule, // required animations module
+    ToastrModule.forRoot({
+      timeOut: 8000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: false,
+    }),
+    ToastContainerModule,
     BrowserModule,
     FormsModule,
     HttpClientModule,

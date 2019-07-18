@@ -7,7 +7,7 @@
     <div class="main-menu">
         <div class="menu-inner">
             <nav>
-                <ul class="metismenu" *ngIf='role == "landlord"' id="menu">
+                <ul class="metismenu" *ngIf='role == "landlord"' id="menu" #myMenu>
                     <li>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-dashboard"></i><span>Quản lý
                                 chung</span></a>
@@ -88,40 +88,43 @@
             <nav>
                 <ul class="metismenu" *ngIf='role == "tenant"' id="menu">
                     <li class='custom-expand-menu'>
-                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-dashboard"></i><span>Quản lý
+                        <ul class="metismenu" *ngIf='role == "tenant"' id="menu" #myMenu>
+                            <li>
+                                >>>>>>> 324fff154f3f592447a5bbb11c63a64f283fdb4b
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-dashboard"></i><span>Quản lý
                                 chung</span></a>
-                    </li>
-                    <li routerLinkActive="active" class='custom-expand-menu'>
-                        <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-building-o"></i><span>Thông
+                            </li>
+                            <li routerLinkActive="active" class='custom-expand-menu'>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-building-o"></i><span>Thông
                                 tin nhà trọ
                             </span></a>
-                    </li>
-                    <li routerLinkActive="active">
-                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-home"></i><span>Quản lý
+                            </li>
+                            <li routerLinkActive="active">
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-home"></i><span>Quản lý
                                 phòng</span></a>
-                        <ul class="collapse">
-                            <li class='custom-expand-menu'><a href="javascript:void(0)" aria-expanded="true">Thông tin phòng</a></li>
-                            <li class='custom-expand-menu'><a href="javascript:void(0)">Hoạt động phòng</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0)"><i class="ti-email"></i> <span>Quản lý thông báo</span></a>
-                        <ul class="collapse">
-                            <li routerLink="/notification/from" routerLinkActive="active" class='custom-expand-menu'><a href="javascript:void(0)">Thông báo đã gửi</a></li>
-                            <li routerLink="/notification/to" routerLinkActive="active" class='custom-expand-menu'><a href="javascript:void(0)">Thông báo đã nhận</a></li>
-                        </ul>
-                    </li>
-                    <li class='custom-expand-menu'>
-                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-money"></i> <span>Quản
+                                <ul class="collapse">
+                                    <li class='custom-expand-menu'><a href="javascript:void(0)" aria-expanded="true">Thông tin phòng</a></li>
+                                    <li class='custom-expand-menu'><a href="javascript:void(0)">Hoạt động phòng</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)"><i class="ti-email"></i> <span>Quản lý thông báo</span></a>
+                                <ul class="collapse">
+                                    <li routerLink="/notification/from" routerLinkActive="active" class='custom-expand-menu'><a href="javascript:void(0)">Thông báo đã gửi</a></li>
+                                    <li routerLink="/notification/to" routerLinkActive="active" class='custom-expand-menu'><a href="javascript:void(0)">Thông báo đã nhận</a></li>
+                                </ul>
+                            </li>
+                            <li class='custom-expand-menu'>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-money"></i> <span>Quản
                                 lý tài chính</span></a>
 
-                    </li>
-                    <li routerLink="/tenant/profile" routerLinkActive='active' class='custom-expand-menu'>
-                        <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-user"></i>
+                            </li>
+                            <li routerLink="/tenant/profile" routerLinkActive='active' class='custom-expand-menu'>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-user"></i>
                             <span>Thông tin cá nhân</span></a>
-                    </li>
+                            </li>
 
-                </ul>
+                        </ul>
             </nav>
         </div>
     </div>

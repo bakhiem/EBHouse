@@ -10,10 +10,13 @@ import { Pipe, PipeTransform } from '@angular/core';
 */
 @Pipe({name: 'currency'})
 export class CurrencyFormat implements PipeTransform {
-  transform(value: number): string {
-        if(value === 0){
-            return "";  
+  transform(value: number, type ?: number): string {
+        if(value === 0 &&  type == 2){
+            return "0";  
         }
+        else if (value === 0  &&  type != 2){
+          return "";  
+      }
         let currency = value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
         return currency;
         

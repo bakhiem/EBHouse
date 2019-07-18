@@ -8,4 +8,6 @@ export const environment =  {
 // baseUrl : "http://localhost:8080/ebhouse"
 // baseUrl : "http://54.250.72.117/backend/ebhouse/"
 baseUrl : "https://ebhouse.cf/backend/ebhouse/"
+// baseUrl:"http://ebhouse-backup.cloudjiffy.net/eb"
+// baseUrl : "http://54.255.165.53:8080/ebhouse"
 };

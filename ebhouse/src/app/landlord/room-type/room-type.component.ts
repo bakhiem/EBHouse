@@ -4,14 +4,10 @@ import { FormControl, FormGroup, FormBuilder, FormArray, Validators, AbstractCon
 import { MatDialog } from '@angular/material';
 import { EquipmentServiceService } from '../service/equipment-service.service';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
-import * as $AB from 'jquery';
-import * as bootstrap from "bootstrap";
+
 import { LandlordService } from '../service/landlord-service.service';
-
-import { Landlord } from '../../models/landlord';
 import { RoomType } from '../../models/room-type';
-
-
+import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from '../../user/service/authentication.service';
 import { User } from '../../user/models/user';
 import { CommonMessage, Message } from '../../models/message';
@@ -30,19 +26,12 @@ export class RoomTypeComponent implements OnInit {
 
   //equipment
   dataEquipment: any[];
-  //Message
 
-  message: Message = {
-    content: '',
-    type: 0
-  }
   //paging
   perPage: number = 10;
   currentPage: number = 1;
-  totalPage: number;
-  pageNumbers: number[] = [];
-  
-  totalPageString : string;
+  totalPage: number = 0;
+
   displayedColumns: string[] = ['name', 'area', 'capacity', 'price', 'description', 'equipment', 'customColumn'];
 
 
@@ -50,7 +39,8 @@ export class RoomTypeComponent implements OnInit {
     private equipmentService: EquipmentServiceService,
     public dialog: MatDialog,
     private service: LandlordService,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private toastr: ToastrService
   ) {
   }
   ngOnInit() {
@@ -72,9 +62,14 @@ export class RoomTypeComponent implements OnInit {
       dataEquipment: new FormArray([])
     });
     this.getEquipment();
-    
     this.formatCurrency();
 
+  }
+  showSuccess(mess) {
+    this.toastr.success(mess, 'Thành công');
+  }
+  showErr(mess) {
+    this.toastr.error(mess, 'Lỗi !');
   }
   formatCurrency() {
     var $input = $("#input-price");
@@ -139,16 +134,17 @@ export class RoomTypeComponent implements OnInit {
           let resData = JSON.parse(response.data);
           this.rtList = resData.roomType;
           this.getChecked();
-          this.totalPage = Math.ceil(resData.totalPage / this.perPage);
-          this.totalPageString = 'Tổng số loại phòng: ' + resData.totalPage;
-          this.toArray(this.totalPage);
+          this.getStringEquipment()
+          this.totalPage = resData.totalPage;
         }
       }, err => {
         this.removeLoading();
-        this.message.content = CommonMessage.defaultErrMess;
-        this.message.type = 0;
+        this.showErr(CommonMessage.defaultErrMess);
         console.log(err);
       })
+  }
+  getEquipmentName(){
+
   }
   //convert list id equipment to string equipment
   getStringEquipment() {
@@ -157,7 +153,7 @@ export class RoomTypeComponent implements OnInit {
       element.lstEquipment.forEach(equipment => {
         stringEquip += equipment.name + " - ";
       });
-      element.equipment = stringEquip.substring(0, stringEquip.length - 2);
+      element.equipments = stringEquip.substring(0, stringEquip.length - 2);
     });
     console.log(this.rtList);
   }
@@ -169,7 +165,8 @@ export class RoomTypeComponent implements OnInit {
       for (let i = 0; i < this.dataEquipment.length; i++) {
         element.lstEquipment.forEach(equipment => {
           if (this.dataEquipment[i].id == equipment.id) {
-            checked[i] = true
+            checked[i] = true;
+            equipment.name = this.dataEquipment[i].name
           }
         });
       }
@@ -181,7 +178,6 @@ export class RoomTypeComponent implements OnInit {
     this.createRtFormGroup.reset();
     this.isEdit = 0;
     this.currentRt = null;
-    this.resetMess();
     $('#modalRoomType').modal('show');
   }
   listEquipmentOnSubmit() {
@@ -209,8 +205,7 @@ export class RoomTypeComponent implements OnInit {
       }
       let newRt = sendToServer.roomType[0];
       if (newRt.area == this.currentRt.area && newRt.name == this.currentRt.name && newRt.price == this.currentRt.price && newRt.capacity == this.currentRt.capacity && newRt.description == this.currentRt.description && JSON.stringify(this.currentRt['checked']) == JSON.stringify(this.createRtFormGroup.controls.dataEquipment.value)) {
-        this.message.content = CommonMessage.notChangeMess;
-        this.message.type = 0;
+        this.showErr(CommonMessage.notChangeMess);
       }
       else {
         this.addLoading();
@@ -252,22 +247,21 @@ export class RoomTypeComponent implements OnInit {
   successRequestHandle(res) {
     let resObject = JSON.parse("" + res);
     if (resObject.type == 1) {
-      this.message.type = 1;
-      this.message.content = resObject.message;
+      this.showSuccess(resObject.message);
+  
       this.removeLoading();
       this.currentRt = null;
       $('.bd-example-modal-lg').modal('hide');
       this.getRoomTypes();
     }
     else {
-      this.message.type = 0;
-      this.message.content = resObject.message;
+      this.showErr(resObject.message);
       this.removeLoading();
     }
   }
   errRequestHandle(err) {
-    this.message.type = 0;
-    this.message.content = CommonMessage.defaultErrMess;
+    
+    this.showErr(CommonMessage.defaultErrMess);
     console.log(err);
     this.removeLoading();
   }
@@ -293,11 +287,7 @@ export class RoomTypeComponent implements OnInit {
     this.createRtFormGroup.get('id').setValue(obj.id);
     this.createRtFormGroup.setControl('dataEquipment', this.fb.array(obj.checked || []));
     $('#modalRoomType').modal('show');
-    this.resetMess();
-  }
-  resetMess() {
-    this.message.content = '';
-    this.message.type = 0;
+
   }
   deleteBh(obj) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
@@ -323,32 +313,10 @@ export class RoomTypeComponent implements OnInit {
     });
   }
 
-  //paging
-  toArray = function (num: number) {
-    this.pageNumbers = []
-    for (let i = 1; i <= num; i++) {
-      this.pageNumbers[i - 1] = i;
-    }
-  }
-  goToPage(page: any) { // without type info
+
+   pageChanged(page) {
     this.currentPage = page;
     this.getRoomTypes();
-    this.resetMess();
-  }
-  prePage() {
-    if (this.currentPage > 1) {
-      this.currentPage = this.currentPage - 1
-      this.getRoomTypes();
-      this.resetMess();
-    }
-  }
-
-  nextPage() {
-    if (this.currentPage < this.totalPage) {
-      this.currentPage = this.currentPage + 1;
-      this.getRoomTypes();
-      this.resetMess();
-    }
   }
 }
 

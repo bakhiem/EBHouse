@@ -4,18 +4,12 @@ import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl, Valid
 import { MatDialog, MatCheckboxModule } from '@angular/material';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
-import * as $AB from 'jquery';
-import * as bootstrap from "bootstrap";
+
 import { LandlordService } from '../service/landlord-service.service';
-
-import { Landlord } from '../../models/landlord';
+import { ToastrService } from 'ngx-toastr';
 import { BoardingHouse } from '../../models/bh';
-import { LandlordComponent } from '../landlord.component';
-
 import { AuthenticationService } from '../../user/service/authentication.service';
-import { User } from '../../user/models/user';
 import { CommonMessage, Message } from '../../models/message';
-import { Observable, throwError } from 'rxjs';
 import { ISubscription } from "rxjs/Subscription";
 
 import { SharedServiceService } from '../../service/shared-service.service';
@@ -31,25 +25,19 @@ export class RoomComponent implements OnInit, OnDestroy {
   createRoomFormGroup: FormGroup;
   createMultiRoomFormGroup: FormGroup;
   isEdit: number = 0;
-  roomList: any[];
+  roomList: any[] = [];
   currentBh: BoardingHouse;
-
+  totalPageString: string;
   currentRoom: any;
 
-
-  //Message
-  message: Message = {
-    content: '',
-    type: 0
-  }
-
+  numberOfRoomBh: number;
   patternMultiName = '^([a-zA-Z0-9,]*)$';
   patternBeginName = '^([0-9]*)$';
   //paging
   perPage: number = 10;
   currentPage: number = 1;
-  totalPage: number;
-  pageNumbers: number[] = [];
+  totalPage: number = 0;
+
 
   displayedColumns: string[] = ['select', 'name', 'roomType', 'area', 'capacity', 'price', 'description', 'customColumn'];
 
@@ -78,22 +66,23 @@ export class RoomComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
     public dialog: MatDialog,
     private service: LandlordService,
-    private shareService : SharedServiceService,
-    private authenticationService: AuthenticationService
-  ) { }
+    private shareService: SharedServiceService,
+    private authenticationService: AuthenticationService,
+    private toastr: ToastrService
+  ) {
+  }
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
   ngOnInit() {
     this.subscription = this.shareService.currentBh.subscribe((data) => {
-      this.pageNumbers = [];
-      this.currentPage = 1;
       this.currentBh = data;
-      if(this.currentBh && this.currentBh.id){
+      if (this.currentBh && this.currentBh.id) {
+        this.currentPage = 1;
+        this.numberOfRoomBh = data.numberOfRoom;
         $('.boarding-house').val(this.currentBh.name);
         this.getRoomsFromCurrentBh();
       }
-     
     })
     this.getRoomType();
     this.createRoomFormGroup = this.fb.group({
@@ -105,8 +94,6 @@ export class RoomComponent implements OnInit, OnDestroy {
       ])),
       description: ''
     });
-
-
     this.createMultiRoomFormGroup = this.fb.group({
       name: this.fb.group({
         nameFormat: this.fb.control('', Validators.pattern(this.patternMultiName)),
@@ -119,6 +106,14 @@ export class RoomComponent implements OnInit, OnDestroy {
     });
 
   }
+
+  showSuccess(mess) {
+    this.toastr.success(mess, 'Thành công');
+  }
+  showErr(mess) {
+    this.toastr.error(mess, 'Lỗi !');
+  }
+
   getRoomType() {
     this.service.getAllRoomTypes().subscribe(
       res => {
@@ -133,7 +128,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
   getRoomsFromCurrentBh() {
     this.selection.clear();
-    if(!this.currentBh.id){
+    if (!this.currentBh.id) {
       return;
     }
     let page: any = {
@@ -150,11 +145,11 @@ export class RoomComponent implements OnInit, OnDestroy {
         if (response.type == 1) {
           let data = JSON.parse(response.data);
           this.roomList = data.room;
-          this.totalPage = Math.ceil(data.totalPage / this.perPage);
-          this.toArray(this.totalPage);
+          this.totalPage = data.totalPage;
         }
       }, err => {
         this.removeLoading();
+        this.showErr(CommonMessage.defaultErrMess);
         console.log(err);
       })
   }
@@ -167,7 +162,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     if (this.rtList) {
       this.createRoomFormGroup.get('roomType').setValue(this.rtList[0]);
     }
-    this.resetMess();
     $('.bd-example-modal-lg.one-room').modal('show');
   }
   createMultiRoom() {
@@ -175,7 +169,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     if (this.rtList) {
       this.createMultiRoomFormGroup.get('roomType').setValue(this.rtList[0]);
     }
-    this.resetMess();
     $('.bd-example-modal-lg.multi-room').modal('show');
   }
   onSubmit() {
@@ -190,8 +183,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         }
       }
       if (room.roomTypeID == this.currentRoom.roomType.id && room.room.name == this.currentRoom.name && room.room.description == this.currentRoom.description) {
-        this.message.content = CommonMessage.notChangeMess;
-        this.message.type = 0;
+        this.showErr(CommonMessage.notChangeMess)
       }
       else {
         this.addLoading();
@@ -230,8 +222,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   successRequestHandle(res) {
     let resObject = JSON.parse("" + res);
     if (resObject.type == 1) {
-      this.message.type = 1;
-      this.message.content = resObject.message;
+      this.showSuccess(resObject.message);
       this.removeLoading();
       this.currentRoom = null;
       $('.bd-example-modal-lg.multi-room').modal('hide');
@@ -239,21 +230,19 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.getRoomsFromCurrentBh();
     }
     else {
-      this.message.type = 0;
-      this.message.content = resObject.message;
+      this.showErr(resObject.message);
       this.removeLoading();
     }
   }
   errRequestHandle(err) {
-    this.message.type = 0;
-    this.message.content = CommonMessage.defaultErrMess;
+    this.showErr(CommonMessage.defaultErrMess);
     console.log(err);
     this.removeLoading();
   }
   onSubmitMultiRoom() {
     if (this.createMultiRoomFormGroup.value.name.nameBegin != null && this.createMultiRoomFormGroup.value.name.nameEnd == '' && this.createMultiRoomFormGroup.value.name.nameFormat == '') {
-      this.message.content = CommonMessage.inputAllFiel;
-      this.message.type = 0;
+
+      this.showErr(CommonMessage.inputAllFiel);
     }
     else {
       let room: any;
@@ -270,8 +259,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         let to = this.createMultiRoomFormGroup.value.name.nameEnd;
         let arrRoom = '';
         if (Number(to) < Number(from)) {
-          this.message.content = CommonMessage.toSmallerThanFrom;
-          this.message.type = 0;
+          this.showErr(CommonMessage.toSmallerThanFrom);
           return;
         }
         for (let i = Number(from); i <= Number(to); i++) {
@@ -322,19 +310,14 @@ export class RoomComponent implements OnInit, OnDestroy {
         break;
       }
     }
-    this.resetMess();
     $('.bd-example-modal-lg.one-room').modal('show');
 
   }
 
-  resetMess() {
-    this.message.content = '';
-    this.message.type = 0;
-  }
+ 
 
 
   deleteRoom(obj) {
-    this.resetMess();
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '400px',
       data: "Bạn chắc chắn muốn xóa phòng trọ không ?"
@@ -343,13 +326,12 @@ export class RoomComponent implements OnInit, OnDestroy {
       if (result) {
         let rooms = {
           roomID: [obj.id],
-          boardingHouseID : [this.currentBh.id]
+          boardingHouseID: [this.currentBh.id]
         }
         this.addLoading();
         this.service.deleteRoom(rooms).subscribe(
           res => {
             this.successRequestHandle(res)
-
           },
           err => {
             this.errRequestHandle(err)
@@ -359,7 +341,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     });
   }
   deleteMultiRoom() {
-    this.resetMess();
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '400px',
       data: "Bạn chắc chắn muốn xóa phòng trọ không ?"
@@ -372,7 +353,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         }
         let rooms = {
           roomID: roomID,
-          boardingHouseID : [this.currentBh.id]
+          boardingHouseID: [this.currentBh.id]
         }
         this.addLoading();
         this.service.deleteRoom(rooms).subscribe(
@@ -386,33 +367,9 @@ export class RoomComponent implements OnInit, OnDestroy {
       }
     });
   }
-
-  //paging
-  toArray = function (num: number) {
-    this.pageNumbers = [];
-    for (let i = 1; i <= num; i++) {
-      this.pageNumbers[i - 1] = i;
-    }
-  }
-  goToPage(page: any) { // without type info
+  pageChanged(page) {
     this.currentPage = page;
-    this.resetMess();
     this.getRoomsFromCurrentBh();
-  }
-  prePage() {
-    if (this.currentPage > 1) {
-      this.currentPage = this.currentPage - 1
-      this.resetMess();
-      this.getRoomsFromCurrentBh();
-    }
-  }
-
-  nextPage() {
-    if (this.currentPage < this.totalPage) {
-      this.currentPage = this.currentPage + 1;
-      this.resetMess();
-      this.getRoomsFromCurrentBh();
-    }
   }
 }
 export const atLeastOne = (validator: ValidatorFn, controls: string[] = null) => (

@@ -7,14 +7,7 @@
             Tạo nhà trọ
         </button>
     </div>
-    <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success" role="alert">
-        {{message.content}}
-    </div>
-    <ng-template #errMess>
-        <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
-            {{message.content}}
-        </div>
-    </ng-template>
+
     <div class="modal fade bd-example-modal-lg show">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -31,15 +24,7 @@
 
                         <!-- alert -->
 
-                        <div *ngIf="message && message.type == 1; else errMess" class="alert alert-success"
-                            role="alert">
-                            {{message.content}}
-                        </div>
-                        <ng-template #errMess>
-                            <div *ngIf="message && message.content != ''" class="alert alert-danger" role="alert">
-                                {{message.content}}
-                            </div>
-                        </ng-template>
+
                         <!-- Textual inputs start -->
 
                         <div class="form-group row">
@@ -70,7 +55,7 @@
 
                         <div class="form-group row">
                             <div class="col-sm-3">
-                                <label class="col-form-label">Tỉnh / Thành phố </label>
+                                <label class="col-form-label required">Tỉnh / Thành phố </label>
                                 <select class="custom-select" formControlName="province" (change)="onChangeProvince()">
                                     <option *ngFor="let aprovince of dataProvince" [ngValue]="aprovince">
                                         {{aprovince.name}}
@@ -82,7 +67,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <label class="col-form-label">Quận / Huyện</label>
+                                <label class="col-form-label required">Quận / Huyện</label>
                                 <select class="custom-select" formControlName="distric" (change)="onChangeDistric()">
                                     <option *ngFor="let adistric of dataDistric" [ngValue]="adistric">
                                         {{adistric.name}}
@@ -165,35 +150,13 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-    
+
 
 
 </div>
-<div class="row">
-    <div class="col-sm-12 col-md-5 mt-3">
-        <div class="dataTables_info" id="dataTable3_info" role="status" aria-live="polite">{{totalPageString}}</div>
-    </div>
-    <nav class="page mt-3 col-sm-12 col-md-7">
-        <ul class="pagination">
-            <li class="page-item">
-                <a class="page-link" (click)="prePage()" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                    <span class="sr-only">Previous</span>
-                </a>
-            </li>
-
-            <li class="page-item" *ngFor="let pageNumber of pageNumbers ">
-                <a *ngIf="pageNumber == currentPage,else inActive" class="page-link disabled ">{{pageNumber}}</a>
-                <ng-template #inActive><a class="page-link" (click)="goToPage(pageNumber)">{{pageNumber}}</a>
-                </ng-template>
-            </li>
-
-            <li class="page-item">
-                <a class="page-link" (click)="nextPage()" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                    <span class="sr-only">Next</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+<div class="row page-footer">
+    <div class="col-sm-5 col-12">Tổng số : {{totalPage}} nhà trọ</div>
+    <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalPage" [(page)]="currentPage"
+        [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event)">
+    </ngb-pagination>
 </div>

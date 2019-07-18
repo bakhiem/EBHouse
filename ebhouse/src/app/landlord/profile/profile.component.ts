@@ -6,7 +6,8 @@ import { PlaceService } from '../../service/place.service';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
-import { CommonMessage, Message } from '../../models/message';
+import { ToastrService } from 'ngx-toastr';
+import { CommonMessage } from '../../models/message';
 import { LandlordService } from '../service/landlord-service.service';
 import { AuthenticationService } from '../../user/service/authentication.service';
 import { User } from '../../user/models/user';
@@ -26,10 +27,6 @@ export class LandlordProfileComponent implements OnInit {
   profileFormGroup: FormGroup;
   landlord: Landlord;
   user: User;
-  message: Message = {
-    content: '',
-    type: 0,
-  };
   check: number = 0;
 
   constructor(
@@ -38,11 +35,11 @@ export class LandlordProfileComponent implements OnInit {
     private router: Router,
     private placeService: PlaceService,
     private authenticationService: AuthenticationService,
-    private service: LandlordService
+    private service: LandlordService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
-    this.resetMess();
     this.removeLoading();
     this.getProvince();
     this.profileFormGroup = this.fb.group({
@@ -81,17 +78,21 @@ export class LandlordProfileComponent implements OnInit {
           }
           this.profileFormGroup.get('sex').setValue(this.landlord.user.sex);
         } else {
-          this.message = JSON.parse(response.message);
+          this.showErr(response.message)
         }
       },
       err => {
-        this.message.type = 0;
-        this.message.content = CommonMessage.defaultErrMess;
+        this.showErr(CommonMessage.defaultErrMess)
         this.removeLoading();
       }
     );
   }
-
+  showSuccess(mess) {
+    this.toastr.success(mess, 'Thành công');
+  }
+  showErr(mess) {
+    this.toastr.error(mess, 'Lỗi !');
+  }
   getAddress() {
     let arr = null;
     if (this.landlord.user.address != ' ') {
@@ -199,24 +200,21 @@ export class LandlordProfileComponent implements OnInit {
             this.removeLoading();
             let response = JSON.parse('' + res);
             if (response.type == 1) {
-              this.message.type = 1;
+              this.showSuccess(response.message)
             } else {
-              this.message.type = 0;
+              this.showErr(response.message)
             }
-            this.message.content = response.message;
           },
           err => {
-            this.message.type = 0;
-            this.message.content = CommonMessage.defaultErrMess;
+            this.showErr(CommonMessage.defaultErrMess)
           }
         );
       } else {
-        this.message.type = 0;
-        this.message.content = 'Vui lòng thay đổi thông tin nếu bạn muốn cập nhật thông tin!';
+        this.showErr('Vui lòng thay đổi thông tin nếu bạn muốn cập nhật thông tin!')
+     
       }
     } else {
-      this.message.type = 0;
-      this.message.content = 'Vui lòng kiểm tra lại!';
+      this.showErr('Vui lòng kiểm tra lại!')
     }
   }
 
@@ -253,8 +251,4 @@ export class LandlordProfileComponent implements OnInit {
     $('.customLoader').removeClass('loader');
   }
 
-  resetMess() {
-    this.message.content = '';
-    this.message.type = 0;
-  }
 }

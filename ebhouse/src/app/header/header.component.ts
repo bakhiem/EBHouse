@@ -18,6 +18,7 @@ export class HeaderComponent implements OnInit {
   bhList: BoardingHouse[];
   currentBh: BoardingHouse;
   listUrlHidden = ['/landlord/bh-info','/landlord/room-type','/notification/from','/notification/to','/landlord/profile']
+  listUrlDisable = ['/landlord/contract-update']
   constructor(private service: SharedServiceService,
     private authService: AuthenticationService,
     private _router: Router) {
@@ -43,7 +44,22 @@ export class HeaderComponent implements OnInit {
       if (this.role == 'landlord') {
         this.getBoardingHouses();
       }
+      else{
+        this.service.currentBh.next(null);
+        this.service.bhList = [{}];
+        this.bhList = [];
+        this.currentBh = null;
+      }
     });
+  }
+  isDisabled() : boolean{
+    for (let index = 0; index < this.listUrlDisable.length; index++) {
+      const element = this.listUrlDisable[index];
+      if(this._router.url == element){
+        return true;
+      }
+    }
+    return false;
   }
   isHiddenChooseBh() : boolean{
     for (let index = 0; index < this.listUrlHidden.length; index++) {
