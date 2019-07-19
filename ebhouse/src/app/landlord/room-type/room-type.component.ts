@@ -203,6 +203,7 @@ export class RoomTypeComponent implements OnInit {
         }],
         equipment: this.listEquipmentOnSubmit()
       }
+      console.log(sendToServer)
       let newRt = sendToServer.roomType[0];
       if (newRt.area == this.currentRt.area && newRt.name == this.currentRt.name && newRt.price == this.currentRt.price && newRt.capacity == this.currentRt.capacity && newRt.description == this.currentRt.description && JSON.stringify(this.currentRt['checked']) == JSON.stringify(this.createRtFormGroup.controls.dataEquipment.value)) {
         this.showErr(CommonMessage.notChangeMess);
@@ -232,6 +233,7 @@ export class RoomTypeComponent implements OnInit {
         }],
         equipment: this.listEquipmentOnSubmit()
       }
+      console.log(sendToServer)
       this.addLoading();
       this.service.createRt(sendToServer).subscribe(
         res => {

@@ -1,4 +1,4 @@
-import { Component, OnInit,OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Calculating, Utility } from '../../models/utility';
 import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { LandlordService } from '../service/landlord-service.service';
@@ -23,7 +23,7 @@ import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/co
     { provide: DateAdapter, useClass: CustomDateAdapterMonth }
   ]
 })
-export class ExtraFeeComponent implements OnInit,OnDestroy {
+export class ExtraFeeComponent implements OnInit, OnDestroy {
 
 
   //paging
@@ -49,7 +49,7 @@ export class ExtraFeeComponent implements OnInit,OnDestroy {
     private fb: FormBuilder,
     private toastr: ToastrService) { }
   month: FormControl;
-
+  haveContractInMonth = false;
   displayedColumns: string[] = ['room', 'amount', 'description', 'date', 'customColumn'];
 
   ngOnInit() {
@@ -59,7 +59,7 @@ export class ExtraFeeComponent implements OnInit,OnDestroy {
       if (this.currentBh && this.currentBh.id) {
         this.getRoomsFromCurrentBh();
       }
-      
+
     })
     this.createEFFormGroup = this.fb.group({
       price: this.fb.control('', Validators.compose([
@@ -73,7 +73,7 @@ export class ExtraFeeComponent implements OnInit,OnDestroy {
     });
   }
   ngOnDestroy() {
-    if(this.subscription){
+    if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }
@@ -111,6 +111,24 @@ export class ExtraFeeComponent implements OnInit,OnDestroy {
     }
     return '';
   }
+  formatDateStr(date, type) {
+    var d;
+    if (type == 1) {
+      d = new Date(date)
+    }
+    else {
+      d = new Date();
+    }
+
+    var month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [day, month, year].join('-');
+  }
 
   private getExtrafee() {
     let data: any = {
@@ -138,7 +156,7 @@ export class ExtraFeeComponent implements OnInit,OnDestroy {
           }
           console.log(this.listExtrafee)
         }
-        else{
+        else {
           this.showErr(CommonMessage.defaultErrMess);
         }
       }, err => {
@@ -157,7 +175,7 @@ export class ExtraFeeComponent implements OnInit,OnDestroy {
 
   //search room
   getRoomsFromCurrentBh() {
-   
+
     let data: any = {
       boardingHouseID: this.currentBh.id
     }
@@ -247,10 +265,16 @@ export class ExtraFeeComponent implements OnInit,OnDestroy {
   }
 
   editEF(obj) {
+    if(obj.status != 12 && obj.status != 13){
+      this.onChooseRoom(obj.roomObj);
+    }
+    
     this.isEdit = 1;
-    console.log(obj)
+    console.log(obj);
+    this.createEFFormGroup.reset();
     this.roomControlCreate.setValue(obj.roomObj);
     this.roomControlCreate.disable();
+    $('#date-create').val(this.formatDateStr(obj.cDate, 1));
     this.createEFFormGroup.get('cDate').setValue(obj.cDate);
     this.createEFFormGroup.get('description').setValue(obj.description);
     this.createEFFormGroup.get('id').setValue(obj.id);
@@ -269,29 +293,73 @@ export class ExtraFeeComponent implements OnInit,OnDestroy {
     }
 
     //last month and can't edit
-    if (obj.status == 1) {
+    if (obj.status == 13) {
+      this.disableForm(13);
+      this.isEdit = 3;
+    }
+    else if (obj.status == 12) {
+      this.disableForm(12);
+      this.isEdit = 3;
+    }
+    else {
+      this.enableForm();
+      this.isEdit = 1;
+      if (obj.status == 2) {
+        $('#landlord').prop('checked', false);
+        $('#tenant').prop('checked', true);
+      } else if (obj.status == 3) {
+        $('#landlord').prop('checked', true);
+        $('#tenant').prop('checked', false);
+      }
+    }
+    $('.bd-example-modal-lg').modal('show');
+  }
+  enableForm() {
+    $("#landlord").prop("disabled", false);
+    $("#tenant").prop("disabled", false);
+    $("#decrease").prop("disabled", false);
+    $("#increase").prop("disabled", false);
+    this.createEFFormGroup.get('cDate').enable();
+    this.createEFFormGroup.get('description').enable();
+    this.createEFFormGroup.get('price').enable();
+  }
+  disableForm(status) {
+    if (status == 13) {
+      console.log('123')
       this.createEFFormGroup.get('cDate').disable();
       this.createEFFormGroup.get('description').disable();
       this.createEFFormGroup.get('price').disable();
-      this.isEdit = 3;
+      $('#landlord').prop('checked', true);
+      $('#tenant').prop('checked', false);
+      $("#landlord").attr('disabled', 'true');
+      $("#tenant").attr('disabled', 'true');
+      $("#decrease").attr('disabled', 'true');
+      $("#increase").attr('disabled', 'true');
     }
-    $('.bd-example-modal-lg').modal('show');
+    else if (status == 12) {
+      this.createEFFormGroup.get('cDate').disable();
+      this.createEFFormGroup.get('description').disable();
+      this.createEFFormGroup.get('price').disable();
+      $('#landlord').prop('checked', false);
+      $('#tenant').prop('checked', true);
+
+      $("#landlord").attr('disabled', 'true');
+      $("#tenant").attr('disabled', 'true');
+      $("#decrease").attr('disabled', 'true');
+      $("#increase").attr('disabled', 'true');
+    }
   }
   private _filter(name: string): any[] {
     const filterValue = name.toLowerCase();
     return this.roomList.filter(roomList => roomList.name.toLowerCase().indexOf(filterValue) === 0);
   }
-
   private _filter2(name: string): any[] {
     const filterValueCreate = name.toLowerCase();
     return this.roomListCreate.filter(roomList => roomList.name.toLowerCase().indexOf(filterValueCreate) === 0);
   }
-
-
   displayFn(room?: any): string | undefined {
     return room ? room.name : undefined;
   }
-
   addLoading() {
     $('.customLoading').addClass('preloader');
     $('.customLoader').addClass('loader');
@@ -300,7 +368,6 @@ export class ExtraFeeComponent implements OnInit,OnDestroy {
     $('.customLoading').removeClass('preloader');
     $('.customLoader').removeClass('loader');
   }
-
   formatCurrency() {
     var $input = $(".input-price");
     $input.on("keyup", function (event) {
@@ -323,17 +390,16 @@ export class ExtraFeeComponent implements OnInit,OnDestroy {
       });
     });
   }
-
-
-
   createExtrafee() {
+    $('#haveTenantMessage').html('');
+    $('#date-create').val(this.formatDateStr('', 2));
     this.createEFFormGroup.reset();
     this.roomControlCreate.reset();
     this.roomControlCreate.enable();
+    this.enableForm();
     this.isEdit = 0;
     $('.bd-example-modal-lg').modal('show');
   }
-
   checkRoomValid() {
     for (let i = 0; i < this.roomList.length; i++) {
       if (this.roomList[i].name == $('#room-name').val().toString().trim()) {
@@ -343,7 +409,61 @@ export class ExtraFeeComponent implements OnInit,OnDestroy {
     }
     return false;
   }
+  onChooseRoom(value) {
+    let data = {
+      id: value.id
+    }
+    this.addLoading()
+    this.service.getContractByRoom(data).subscribe(
+      res => {
+        this.removeLoading();
+        let response = JSON.parse("" + res);
+        if (response.type == 1) {
+          console.log(response.data)
+          let listContract = response.data.lstDate;
+          let isAvailable = false;
+          if (listContract.length > 0) {
+            for (let index = 0; index < listContract.length; index++) {
+              const element = listContract[index];
+              let toDay = new Date();
+              let startDate = new Date(element.startDate);
+              let endDate = new Date(element.endDate);
+              if (startDate.getTime() <= toDay.getTime() && endDate.getTime() >= toDay.getTime()) {
+                this.haveContractInMonth = true;
+                isAvailable = true;
+                this.handleAvailable(value.name);
+                break;
+              }
+            }
+          }
+          if (isAvailable == false) {
+            this.haveContractInMonth = false;
+            this.handleAvailable(value.name);
+          }
+        }
+        else {
+          this.showErr(response.message);
+        }
+      }, err => {
+        this.removeLoading();
+        this.showErr(CommonMessage.defaultErrMess);
+        console.log(err);
+      })
 
+  }
+  handleAvailable(name) {
+    if (this.haveContractInMonth == false) {
+      $('#haveTenantMessage').html('Phòng ' + name + ' không tồn tại khách thuê trong tháng này');
+      $('#landlord').prop('checked', true);
+      $("#landlord").attr('disabled', 'true');
+      $("#tenant").attr('disabled', 'true');
+    }
+    else {
+      $('#haveTenantMessage').html('');
+      $("#landlord").prop("disabled", false);
+      $("#tenant").prop("disabled", false);
+    }
+  }
   onSubmit() {
     if (this.createEFFormGroup.invalid) {
       this.displayDialog(CommonMessage.inputAllFiel)
@@ -361,21 +481,28 @@ export class ExtraFeeComponent implements OnInit,OnDestroy {
         }
       }
       let data;
+
       if (this.isEdit == 1) {
         data = {
-          id: this.createEFFormGroup.value.id,
-          room: { id: this.roomControlCreate.value.id },
-          description: this.createEFFormGroup.value.description,
-          amount: amount,
-          cDate: this.createEFFormGroup.value.cDate
+          extraFee: {
+            id: this.createEFFormGroup.value.id,
+            room: { id: this.roomControlCreate.value.id },
+            description: this.createEFFormGroup.value.description,
+            amount: amount,
+            cDate: this.createEFFormGroup.value.cDate
+          },
+          isLandlord: $('#landlord').is(':checked')
         }
       }
       else if (this.isEdit == 0) {
         data = {
-          id: 0,
-          room: { id: this.roomControlCreate.value.id },
-          description: this.createEFFormGroup.value.description,
-          amount: amount,
+          extraFee: {
+            id: 0,
+            room: { id: this.roomControlCreate.value.id },
+            description: this.createEFFormGroup.value.description,
+            amount: amount
+          },
+          isLandlord: $('#landlord').is(':checked')
         }
       }
       console.log(data)
@@ -397,7 +524,7 @@ export class ExtraFeeComponent implements OnInit,OnDestroy {
     let resObject = JSON.parse("" + res);
     if (resObject.type == 1) {
       this.showSuccess(resObject.message);
-      this.isEdit = 0;;
+      this.isEdit = 0;
       $('.bd-example-modal-lg').modal('hide');
       this.getExtrafee();
     }
@@ -406,7 +533,7 @@ export class ExtraFeeComponent implements OnInit,OnDestroy {
     }
   }
   errRequestHandle(err) {
-    this.showErr( CommonMessage.defaultErrMess);
+    this.showErr(CommonMessage.defaultErrMess);
     console.log(err);
     this.removeLoading();
   }

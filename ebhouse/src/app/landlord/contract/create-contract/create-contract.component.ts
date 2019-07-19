@@ -500,7 +500,7 @@ export class CreateContractComponent implements OnInit, OnDestroy {
       this.displayDialog(CommonMessage.inputAllFiel)
       return;
     }
-
+    
     if (this.checkRoomValid()) {
       let formatRoomPrice = this.createContractFormGroup.value.price.toString().split('.').join('');
       let roomPrice = Number(formatRoomPrice);

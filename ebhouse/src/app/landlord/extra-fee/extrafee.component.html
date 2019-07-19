@@ -19,8 +19,8 @@
     <div class="col-sm-3">
       <label class="col-form-label">Chọn phòng</label>
       <mat-form-field class="example-full-width">
-        <input type="text" placeholder="Điền tên phòng" aria-label="Assignee" matInput
-          [matAutocomplete]="auto" [formControl]="roomControl">
+        <input type="text" placeholder="Điền tên phòng" aria-label="Assignee" matInput [matAutocomplete]="auto"
+          [formControl]="roomControl">
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
           <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
             {{option.name}}
@@ -33,8 +33,8 @@
         <span _ngcontent-fdu-c2="" class="ti-search"></span> Tìm kiếm
       </button>
     </div>
-    <div class="col-sm-4 col-md-2"><input class="btn btn-primary float-right mt-3" type="submit" value="Tạo chi phí phát sinh"
-        (click)="createExtrafee()"> </div>
+    <div class="col-sm-4 col-md-2"><input class="btn btn-primary float-right mt-3" type="submit"
+        value="Tạo chi phí phát sinh" (click)="createExtrafee()"> </div>
   </div>
   <table mat-table [dataSource]="listExtrafee" class="mat-elevation-z8">
     <ng-container matColumnDef="room">
@@ -73,8 +73,8 @@
 </div>
 <div class="row page-footer">
   <div class="col-sm-5 col-12">Tổng số chi phí phát sinh : {{totalPage}}</div>
-  <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalPage" [(page)]="currentPage" [maxSize]="perPage" [rotate]="true"
-      [boundaryLinks]="true" (pageChange)="pageChanged($event)">
+  <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalPage" [(page)]="currentPage"
+    [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event)">
   </ngb-pagination>
 </div>
 <div class="modal fade bd-example-modal-lg">
@@ -91,11 +91,19 @@
         </div>
         <div class="modal-body">
 
-      
 
-       
+
+
           <!-- Textual inputs start -->
 
+          <div class="form-group row">
+              <div class="col-sm-4">
+                  <label class="col-form-label required">Ngày tạo</label>
+                  
+                    <input type='text' class="form-control" id='date-create' disabled/>
+              </div>
+
+          </div>
           <div class="form-group row">
             <div class="col-sm-4">
 
@@ -103,7 +111,8 @@
               <mat-form-field class="example-full-width">
                 <input type="text" id='room-name' placeholder="Điền tên phòng" aria-label="Assignee" matInput
                   [matAutocomplete]="auto1" [formControl]="roomControlCreate">
-                <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayFn">
+                <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayFn"
+                  (optionSelected)="onChooseRoom($event.option.value)">
                   <mat-option *ngFor="let option of filteredOptionsCreate | async" [value]="option">
                     {{option.name}}
                   </mat-option>
@@ -140,6 +149,22 @@
           </div>
           <div class="form-group row">
             <div class="col-sm-12">
+              <label class="col-form-label required">Người chịu chi phí</label>
+              <div><small id='haveTenantMessage'></small></div>
+              <div class="input-group">
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" checked="" id="landlord" name="customRadio3" class="custom-control-input">
+                  <label class="custom-control-label" for="landlord">Chủ trọ</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="tenant" name="customRadio3" class="custom-control-input">
+                  <label class="custom-control-label" for="tenant">Khách thuê</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-12">
               <label for="example-tel-input" class="col-form-label required">Nội dung</label>
               <textarea class="form-control" rows="3" formControlName="description"></textarea>
               <div
@@ -154,7 +179,8 @@
         <!-- Textual inputs end -->
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Trở về</button>
-          <button class="btn btn-info mb-3" type="submit" id="myButton" [disabled]="createEFFormGroup.invalid || isEdit == 3">
+          <button class="btn btn-info mb-3" type="submit" id="myButton"
+            [disabled]="createEFFormGroup.invalid || isEdit == 3">
             Lưu</button>
         </div>
 

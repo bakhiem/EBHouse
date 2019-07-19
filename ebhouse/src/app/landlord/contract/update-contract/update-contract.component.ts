@@ -469,7 +469,6 @@ export class UpdateContractComponent implements OnInit,OnDestroy {
     let today = new Date();
     if (!this.compareDate(startDate, startDateInput)) {
       if (today > startDate) {
-        console.log('asdasdas')
         return false;
       }
     }
@@ -540,7 +539,6 @@ export class UpdateContractComponent implements OnInit,OnDestroy {
       imgContract: listImgSplit,
 
     }
-    console.log(JSON.stringify(data))
     this.addLoading();
     this.service.updateContract(data).subscribe(
       res => {

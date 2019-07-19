@@ -16,7 +16,9 @@ $(document).ready(function ($) {
     $('.nav-btn').on('click', function () {
         $('.page-container').toggleClass('sbar_collapsed');
     });
-    
+    $(document).on("wheel", "input[type=number]", function (e) {
+        $(this).blur();
+    });
     /*================================
     Start Footer resizer
     ==================================*/

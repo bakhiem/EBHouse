@@ -324,7 +324,6 @@ export class FinancialComponent implements OnInit, OnDestroy {
 
   }
   createExtrafee(data, obj) {
-    
     $('.collapse').collapse('hide');
     this.createEFFormGroup.reset();
     if (obj.status == 1) {
@@ -455,7 +454,8 @@ export class FinancialComponent implements OnInit, OnDestroy {
     let money = $('.input-price:nth-child(1)').val();
     let convertMoney = this.convertToNumberPrice(money);
     let payment = this.convertToNumberPrice($('#payment').val());
-    $('#payment').val(this.convertCurrency(Number(convertMoney) + Number(payment)));
+    this.createEFFormGroup.get('payment').setValue(this.convertCurrency(Number(convertMoney) + Number(payment)))
+
     let input = $('#payment').val();
     let removeComma = input.toString().replace(/[^0-9]/g, '');
     if (isNaN(Number(removeComma)) == false) {
