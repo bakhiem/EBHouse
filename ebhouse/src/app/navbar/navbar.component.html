@@ -25,8 +25,7 @@
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-home"></i><span>Quản lý
                                 phòng</span></a>
                         <ul class="collapse">
-                            <li routerLink="/landlord/room" routerLinkActive="active" class='custom-expand-menu'><a
-                                    href="javascript:void(0)">Thông tin phòng</a></li>
+                            <li routerLink="/landlord/room" routerLinkActive="active" class='custom-expand-menu'><a href="javascript:void(0)" aria-expanded="true">Thông tin phòng</a></li>
                             <li><a href="javascript:void(0)">Hoạt động phòng</a></li>
                         </ul>
                     </li>
@@ -34,10 +33,8 @@
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-slice"></i><span>Quản lý hợp
                                 đồng</span></a>
                         <ul class="collapse">
-                            <li routerLink="/landlord/contract" routerLinkActive="active" class='custom-expand-menu'><a
-                                    href="javascript:void(0)">Xem hợp đồng</a></li>
-                            <li routerLink="/landlord/contract-create" routerLinkActive="active"
-                                class='custom-expand-menu'><a href="javascript:void(0)">Tạo hợp đồng</a></li>
+                            <li routerLink="/landlord/contract" routerLinkActive="active" class='custom-expand-menu'><a href="javascript:void(0)">Xem hợp đồng</a></li>
+                            <li routerLink="/landlord/contract-create" routerLinkActive="active" class='custom-expand-menu'><a href="javascript:void(0)">Tạo hợp đồng</a></li>
                         </ul>
                     </li>
                     <li routerLink="/landlord/utility" routerLinkActive="active" class='custom-expand-menu'>
@@ -60,15 +57,13 @@
                         </ul>
                     </li>
 
-                   
+
                     <li>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-email"></i><span>Quản lý thông
                                 báo</span></a>
                         <ul class="collapse">
-                            <li routerLink="/notification/from" routerLinkActive="active" class='custom-expand-menu'><a
-                                    href="javascript:void(0)">Thông báo đã gửi</a></li>
-                            <li routerLink="/notification/to" routerLinkActive="active" class='custom-expand-menu'><a
-                                    href="javascript:void(0)">Thông báo đã nhận</a></li>
+                            <li routerLink="/notification/from" routerLinkActive="active" class='custom-expand-menu'><a href="javascript:void(0)">Thông báo đã gửi</a></li>
+                            <li routerLink="/notification/to" routerLinkActive="active" class='custom-expand-menu'><a href="javascript:void(0)">Thông báo đã nhận</a></li>
                         </ul>
                     </li>
                     <li routerLink="/landlord/profile" routerLinkActive='active' class='custom-expand-menu'>
@@ -91,7 +86,7 @@
     <div class="main-menu">
         <div class="menu-inner">
             <nav>
-                <ul class="metismenu" *ngIf='role == "tenant"' id="menu" #myMenu >
+                <ul class="metismenu" *ngIf='role == "tenant"' id="menu" #myMenu>
                     <!-- <li>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-dashboard"></i><span>Quản lý
                                 chung</span></a>
@@ -101,7 +96,7 @@
                                 tin nhà trọ
                             </span></a>
                     </li>
-                    
+
                     <li routerLink="/tenant/rooms-info" routerLinkActive="active" class='custom-expand-menu'>
                         <a href="javascript:void(0)" aria-expanded="false"><i class="fa fa-building-o"></i><span>Thông
                                 tin các phòng
@@ -111,7 +106,7 @@
                         <a href="javascript:void(0)" aria-expanded="false"><i class="ti-slice"></i><span>Hợp đồng
                             </span></a>
                     </li>
-                   
+
                     <li routerLink="/tenant/financial" routerLinkActive="active" class='custom-expand-menu'>
                         <a href="javascript:void(0)" aria-expanded="false"><i class="ti-money"></i> <span>Thông tin tài chính</span></a>
 

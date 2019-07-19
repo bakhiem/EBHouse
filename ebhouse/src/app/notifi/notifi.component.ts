@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef  } from '@angular/core';
 import { CommonMessage, Message } from '../models/message';
 import { Notification } from '../models/notification';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -7,14 +7,14 @@ import { PlaceService } from '../service/place.service';
 import { AuthenticationService } from '../user/service/authentication.service';
 import { NotifiService } from './service/notifi.service';
 import { Role } from '../user/models/role';
-
+import { MatTableDataSource } from '@angular/material/table';
+declare var $:JQueryStatic;
 @Component({
   selector: 'app-notifi',
   templateUrl: './notifi.component.html',
   styleUrls: ['./notifi.component.css']
 })
 export class NotifiComponent implements OnInit {
-
   message: Message = {
     content: '',
     type: 0,
@@ -27,6 +27,8 @@ export class NotifiComponent implements OnInit {
   public createNotifiFormGroup: FormGroup;
   public flag: any = 0;
   newNotifi: Notification = new Notification();
+  dataSourceSent = new MatTableDataSource();
+  listDataSet: any[] = [];
   listUser: any[] = [];
   listBH: any[]= [];
   listRoom: any[]= [];
@@ -34,6 +36,9 @@ export class NotifiComponent implements OnInit {
   public currentNotifi: Notification;
   role : string = '';
   currentUser: any;
+  check : any = 0;
+
+  displayedColumns: string[] = ['userTo','action'];
 
   constructor(
     private fb: FormBuilder,
@@ -50,8 +55,8 @@ export class NotifiComponent implements OnInit {
       this.getRole();
     });
     this.createNotifiFormGroup = this.fb.group({
-      userToText: this.fb.control('', Validators.compose([Validators.required])),
-      userTo: this.fb.control('', Validators.compose([Validators.required])),
+      userToText: this.fb.control(''),
+      userTo: this.fb.control(''),
       subject: this.fb.control('', Validators.compose([Validators.required])),
       content: this.fb.control('', Validators.compose([Validators.required]))
     });
@@ -72,6 +77,8 @@ export class NotifiComponent implements OnInit {
 
   creatNotification(){
     this.resetMessage();
+    this.createNotifiFormGroup.reset();
+    $('#myDropdown').removeClass('show-s');
     this.service.getUserSend().subscribe(
       res => {
         let response = JSON.parse('' + res);
@@ -79,7 +86,6 @@ export class NotifiComponent implements OnInit {
           let data = JSON.parse(response.data);
           this.listUser = data.listUser;
           if(data.listBoardingHouse != undefined){
-            console.log(1);
             this.listBH = data.listBoardingHouse;
 
           }
@@ -132,7 +138,32 @@ export class NotifiComponent implements OnInit {
         this.newNotifi.subject = this.createNotifiFormGroup.value.subject;
         this.newNotifi.content = this.createNotifiFormGroup.value.content;
 
-        this.service.sendNotification({ notification: this.newNotifi, id: this.createNotifiFormGroup.value.userTo, flag: this.option_send }).subscribe(
+        let listBhSent = [];
+        let listRoomSent = [];
+        let listUserSent = [];
+        let listAdminSent = [];
+        if(this.flag == 1){
+          listUserSent.push(this.createNotifiFormGroup.value.userTo);
+        }else{
+          this.listDataSet.forEach(element => {
+            switch(element.option){
+              case 'bh':
+                listBhSent.push(element.id);
+                break;
+              case 'room':
+                listRoomSent.push(element.id);
+                break;
+              case 'user':
+                listUserSent.push(element.id);
+                break;
+              case 'admin':
+                listAdminSent.push(element.id);
+                break;
+            }
+          });
+        }
+
+        this.service.sendNotification({ notification: this.newNotifi, list_bh: listBhSent, list_room: listRoomSent, list_user: listUserSent, list_admin: listAdminSent}).subscribe(
           res => {
             this.removeLoading();
             let response = JSON.parse('' + res);
@@ -170,19 +201,31 @@ export class NotifiComponent implements OnInit {
     }
   }
 
-  disabledClick(t : String, event : any){
-    this.option_send = t;
-    this.createNotifiFormGroup.get('userToText').setValue(event.target.text);
-    this.createNotifiFormGroup.get('userTo').setValue(event.target.rel);
+  hidenDropDown(){
+    this.check = 0;
     $('#myDropdown').removeClass('show-s');
+  }
+
+  disabledClick(t : String, event : any){
+      this.check = 0;
+      let checkExist = 1;
+      this.listDataSet.forEach(element => {
+        if(element.id ==  event.target.rel){
+          checkExist = 0;
+          this.check = 1;
+        }
+      });
+      if(checkExist == 1){
+        this.option_send = t;
+        this.createNotifiFormGroup.get('userToText').setValue(event.target.text);
+        this.listDataSet.push({name: event.target.text, option: t, id: event.target.rel});
+        this.dataSourceSent.data = this.listDataSet;
+        $('#myDropdown').removeClass('show-s');
+      }
     return false;
   }
 
-  // hidesearch(){
-  //   $('#myDropdown').removeClass('show-s');
-  // }
-
-  // forcus(){}
+  forcus(){}
 
   filterFunction() {
     var input, filter, ul, li, a, i, div ,txtValue;
@@ -198,6 +241,11 @@ export class NotifiComponent implements OnInit {
         a[i].style.display = "none";
       }
     }
+  }
+
+  removeDataSent(i:any){
+    this.listDataSet.splice(i,1);
+    this.dataSourceSent.data = this.listDataSet;
   }
 
   addLoading() {
