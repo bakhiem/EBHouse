@@ -325,7 +325,6 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
   }
   disableForm(status) {
     if (status == 13) {
-      console.log('123')
       this.createEFFormGroup.get('cDate').disable();
       this.createEFFormGroup.get('description').disable();
       this.createEFFormGroup.get('price').disable();
