@@ -72,16 +72,18 @@ export class TenantProfileComponent implements OnInit {
     this.toastr.error(mess, 'Lỗi !');
   }
   getProfile() {
+    console.log(this.tenant);
     this.addLoading();
     this.service.getProfile().subscribe(
       res => {
         let response = JSON.parse('' + res);
         if (response.type == 1) {
           this.tenant = JSON.parse(response.data);
-          let arr = null;
-          if (this.tenant.user.address != ' ') {
-            arr = this.tenant.user.address.split('-');
-          }
+          console.log(this.tenant);
+          // let arr = null;
+          // if (this.tenant.user.address != ' ') {
+          //   arr = this.tenant.user.address.split('-');
+          // }
           this.getAddress();
           this.profileFormGroup.get('name').setValue(this.tenant.user.name != ' ' ? this.tenant.user.name.trim() : ' ');
           this.profileFormGroup .get('phone').setValue(this.tenant.user.phone != ' ' ? this.tenant.user.phone.trim() : ' ');
@@ -105,6 +107,7 @@ export class TenantProfileComponent implements OnInit {
   }
 
   getAddress() {
+    this.addLoading();
     let arr = null;
     if (this.tenant.user.address != ' ') {
       arr = this.tenant.user.address.split('-');
@@ -138,6 +141,7 @@ export class TenantProfileComponent implements OnInit {
               break;
             }
           }
+          this.removeLoading();
         });
         break;
       }
@@ -201,17 +205,15 @@ export class TenantProfileComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.profileFormGroup.value)
     if (!this.profileFormGroup.invalid) {
-      this.checkChangeData();
-      if (this.check == 1) {
+      if (this.checkChangeData()) {
         this.addLoading();
         this.service.updateProfile({ user: this.tenant.user, tenant: this.tenant }).subscribe(
           res => {
             this.removeLoading();
             let response = JSON.parse('' + res);
             if (response.type == 1) {
-              
+
               this.showSuccess(response.message);
             } else {
               this.showErr(response.message)
@@ -229,7 +231,8 @@ export class TenantProfileComponent implements OnInit {
     }
   }
 
-  checkChangeData() {
+  checkChangeData(): any {
+    let check = false;
     let address =
       this.profileFormGroup.value.address +
       '-' +
@@ -240,31 +243,36 @@ export class TenantProfileComponent implements OnInit {
       this.profileFormGroup.value.province.name;
     if (this.tenant.user.name != this.profileFormGroup.value.name) {
       this.tenant.user.name = this.profileFormGroup.value.name
-      this.check = 1;
-    } else if (this.tenant.user.sex != this.profileFormGroup.value.sex) {
+      check = true;
+    }
+    if (this.tenant.user.sex != this.profileFormGroup.value.sex) {
       this.tenant.user.sex = this.profileFormGroup.value.sex
-      this.check = 1;
-    } else if (this.tenant.user.dateOfBirth != this.profileFormGroup.value.date) {
+      check = true;
+    }
+    if (this.tenant.user.dateOfBirth != this.profileFormGroup.value.date) {
       this.tenant.user.dateOfBirth = this.profileFormGroup.value.date
-      this.check = 1;
-    }else if(this.tenant.user.address != address){
+      check = true;
+    }
+    if(this.tenant.user.address != address){
       this.tenant.user.address = address
-      this.check = 1;
+      check = true;
     }
     if(this.profileFormGroup.value.imgArnFront != ''){
       this.tenant.imgArnFront = this.imgArnFront.split(',')[1];
-      this.check = 1;
+      check = true;
     }else{
       this.tenant.imgArnFront = '';
     }
 
     if(this.profileFormGroup.value.imgArnBack != ''){
       this.tenant.imgArnBack = this.imgArnBack.split(',')[1];
-      this.check = 1;
+      check = true;
     }else{
       this.tenant.imgArnBack = '';
     }
-
+    console.log(address);
+    console.log(this.tenant.user.address);
+    return check;
   }
 
   uploadFrontID(imageResult: ImageResult) {

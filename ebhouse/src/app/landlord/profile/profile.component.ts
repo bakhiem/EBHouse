@@ -61,10 +61,10 @@ export class LandlordProfileComponent implements OnInit {
         let response = JSON.parse('' + res);
         if (response.type == 1) {
           this.landlord = JSON.parse(response.data);
-          let arr = null;
-          if (this.landlord.user.address != ' ') {
-            arr = this.landlord.user.address.split('-');
-          }
+          // let arr = null;
+          // if (this.landlord.user.address != ' ') {
+          //   arr = this.landlord.user.address.split('-');
+          // }
           this.getAddress();
           this.profileFormGroup
             .get('name')
@@ -94,6 +94,7 @@ export class LandlordProfileComponent implements OnInit {
     this.toastr.error(mess, 'Lỗi !');
   }
   getAddress() {
+    this.addLoading();
     let arr = null;
     if (this.landlord.user.address != ' ') {
       arr = this.landlord.user.address.split('-');
@@ -127,6 +128,7 @@ export class LandlordProfileComponent implements OnInit {
               break;
             }
           }
+          this.removeLoading();
         });
         break;
       }
@@ -211,7 +213,7 @@ export class LandlordProfileComponent implements OnInit {
         );
       } else {
         this.showErr('Vui lòng thay đổi thông tin nếu bạn muốn cập nhật thông tin!')
-     
+
       }
     } else {
       this.showErr('Vui lòng kiểm tra lại!')
@@ -230,13 +232,16 @@ export class LandlordProfileComponent implements OnInit {
     if (this.landlord.user.name != this.profileFormGroup.value.name) {
       this.landlord.user.name = this.profileFormGroup.value.name
       this.check = 1;
-    } else if (this.landlord.user.sex != this.profileFormGroup.value.sex) {
+    }
+    if (this.landlord.user.sex != this.profileFormGroup.value.sex) {
       this.landlord.user.sex = this.profileFormGroup.value.sex
       this.check = 1;
-    } else if (this.landlord.user.dateOfBirth != this.profileFormGroup.value.date) {
+    }
+    if (this.landlord.user.dateOfBirth != this.profileFormGroup.value.date) {
       this.landlord.user.dateOfBirth = this.profileFormGroup.value.date
       this.check = 1;
-    }else if(this.landlord.user.address != address){
+    }
+    if(this.landlord.user.address != address){
       this.landlord.user.address = address
       this.check = 1;
     }

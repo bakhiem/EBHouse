@@ -13,7 +13,7 @@
                         <div class="form-group row">
                             <div class="col-sm-6">
                                 <label for="example-text-input" class="col-form-label">Họ tên</label>
-                                <input class="form-control" type="text" id="example-text-input" formControlName="name">
+                                <input class="form-control" type="text" id="example-text-input" formControlName="name" maxlength="255">
                                 <div *ngIf="profileFormGroup.controls['name'].hasError('required') && (profileFormGroup.controls['name'].dirty || profileFormGroup.controls['name'].touched)" class="alert alert-danger">
                                     Họ tên là bắt buộc
                                 </div>
@@ -40,7 +40,7 @@
                                     Ngày sinh là bắt buộc
                                 </div>
                             </div>
-                          
+
                         </div>
                         <!-- begin radio -->
 
