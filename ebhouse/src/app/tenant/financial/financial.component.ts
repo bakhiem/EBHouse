@@ -4,6 +4,7 @@ import { TenantServiceService } from '../service/tenant-service.service';
 import { ISubscription } from "rxjs/Subscription";
 import { ToastrService } from 'ngx-toastr';
 
+import { CommmonFunction } from '../../shared/common-function';
 import { SharedServiceService } from '../../service/shared-service.service';
 import { MatDialog, MatCheckboxModule } from '@angular/material';
 import { CommonMessage, Message } from '../../models/message';
@@ -44,14 +45,8 @@ export class FinancialComponent implements OnInit, OnDestroy {
   maxDate = new Date();
   month: FormControl;
   isSelectAllStatus: number = 0;
-  getDisplayedColumns(): string[] {
-    if (this.isSelectAllStatus == 1) {
-      return ['room', 'total', 'payment', 'debt', 'date', 'status','customColumn'];
-    }
-    else {
-      return [ 'room', 'total', 'payment', 'debt', 'date','customColumn'];
-    }
-  }
+  displayedColumns = ['room', 'total', 'payment', 'debt', 'date','customColumn'];
+ 
 
   ngOnInit() {
     this.month = new FormControl({ value: new Date(), disabled: true });
@@ -130,9 +125,7 @@ export class FinancialComponent implements OnInit, OnDestroy {
           this.listFinancial = response.data;
           this.totalPage = totalPage.totalRecord;
           this.handleListFinancial();
-         
         }
-      
           console.log(this.listFinancial)
         }
       }, err => {
@@ -150,10 +143,8 @@ export class FinancialComponent implements OnInit, OnDestroy {
         this.listFinancial[index].paymentDate = ''
       }
       if (element.payment == 0) {
-        this.listFinancial[index].statusStr = 'Chưa T.Toán'
         this.listFinancial[index].debt = ''
       } else {
-        this.listFinancial[index].statusStr = 'Đã T.Toán'
         this.listFinancial[index].debt = element.total - element.payment
       }
     }
@@ -167,7 +158,6 @@ export class FinancialComponent implements OnInit, OnDestroy {
     $('.customLoading').removeClass('preloader');
     $('.customLoader').removeClass('loader');
   }
-
 
   formatDateFull(d, type) {
     let month = '' + (d.getMonth() + 1),
@@ -191,36 +181,56 @@ export class FinancialComponent implements OnInit, OnDestroy {
     this.createEFFormGroup.get('id').setValue(obj.id);
     this.createEFFormGroup.get('room').setValue(obj.room);
     this.currentRoom = obj.roomName;
-    let financialNew = JSON.parse(data.financialNew);
+    let financialNew = JSON.parse(CommmonFunction.escapeSpecialChars(data.financialNew));
     $('.bd-example-modal-lg').modal('show');
     let electricFee = ((Number(data.electricityNew) - Number(data.electricityOld)) * Number(data.valuePerElectricity));
     let utilityFee = Number(data.InternetFee) + Number(data.WaterFee) + Number(data.CleaningFee);
-    let lstExtraFee = JSON.parse(data.lstExtraFee);
+    let lstExtraFee = JSON.parse(CommmonFunction.escapeSpecialChars(data.lstExtraFee));
     let oldDebt = 0;
     if (data.financialOld.length > 0) {
-      let financialOld = JSON.parse(data.financialOld);
+      let financialOld = JSON.parse(CommmonFunction.escapeSpecialChars(data.financialOld));
       oldDebt = financialOld.total
     }
     let extraFee = 0;
     this.listExtraFee = [];
     for (let index = 0; index < lstExtraFee.length; index++) {
-      extraFee += lstExtraFee[index].amount * -1;
+      extraFee += lstExtraFee[index].amount;
       const element = {
         date: lstExtraFee[index].cDate,
-        amount: lstExtraFee[index].amount * -1,
+        amount: lstExtraFee[index].amount,
         description: lstExtraFee[index].description,
       };
       this.listExtraFee.push(element);
     }
     this.createEFFormGroup.get('total').setValue(this.convertCurrency(financialNew.total));
-    this.createEFFormGroup.get('oldDebt').setValue(this.convertCurrency(oldDebt));
+    if(oldDebt < 0){
+      $('#old-debt').html('Số dư tháng trước')
+    }
+    else if(oldDebt > 0){
+      $('#old-debt').html('Số nợ tháng trước')
+    }
+    else {
+      $('#old-debt').html('Dư/ nợ')
+    }
+    this.createEFFormGroup.get('oldDebt').setValue(this.convertCurrency(oldDebt*-1));
     this.createEFFormGroup.get('money').setValue(this.convertCurrency(Number(financialNew.total) + Number(oldDebt)));
     //edit payment
     if (Number(financialNew.payment) > 0) {
       this.isEdit = 1;
       this.createEFFormGroup.get('createDate').setValue(this.formatDateFull(new Date(financialNew.paymentDate), 1));
       this.createEFFormGroup.get('payment').setValue(this.convertCurrency(financialNew.payment));
-      this.createEFFormGroup.get('newDebt').setValue(this.convertCurrency(Number(financialNew.total) - Number(financialNew.payment) + Number(oldDebt)));
+      let newDebt = Number(financialNew.total) - Number(financialNew.payment) + Number(oldDebt);
+      if(newDebt < 0){
+        $('#new-debt').html('Số dư tháng này')
+      }
+      else if(newDebt > 0){
+        $('#new-debt').html('Số nợ tháng này')
+      }
+      else{
+        $('#new-debt').html('Dư/ nợ')
+      }
+      this.createEFFormGroup.get('newDebt').setValue(this.convertCurrency(Math.abs(newDebt)) );
+      
     }
     else {
       this.isEdit = 0;

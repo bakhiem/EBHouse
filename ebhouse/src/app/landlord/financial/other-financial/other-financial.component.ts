@@ -36,8 +36,8 @@ export class OtherFinancialComponent implements OnInit, OnDestroy {
 
   private subscription: ISubscription;
   currentBh: any;
-  listOtherExtrafee: any[];
-  listOtherElectric: any[];
+  listOtherExtrafee: any[] = [];
+  listOtherElectric: any[] = [];
   roomList: any[];
   roomControl = new FormControl();
   listExtraFee: any[] = [];

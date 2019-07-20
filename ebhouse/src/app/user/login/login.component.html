@@ -18,11 +18,11 @@
                     </div>
                     <div *ngIf="loginFormGroup.controls['phone'].hasError('required') && (loginFormGroup.controls['phone'].dirty || loginFormGroup.controls['phone'].touched)"
                         class="alert alert-danger">
-                        Vui lòng nhập số điện thoại
+                        {{CommonMessage.InputPhone}}
                     </div>
                     <div *ngIf="loginFormGroup.controls['phone'].hasError('pattern') && (loginFormGroup.controls['phone'].dirty || loginFormGroup.controls['phone'].touched)"
                         class="alert alert-danger">
-                        Số điện thoại bao gồm 10 chữ số
+                        {{CommonMessage.InvalidPhone}}
                     </div>
                     <div class="form-gp focused">
                         <label for="exampleInputPassword1" class="required" >Mật khẩu</label>
@@ -31,11 +31,12 @@
                     </div>
                     <div *ngIf="loginFormGroup.get('password')?.errors?.required && (loginFormGroup.get('password').dirty || loginFormGroup.get('password').touched)"
                         class="alert alert-danger">
-                        Vui lòng nhập mật khẩu
+                        {{CommonMessage.InputPassword}}
+                      
                     </div>
                     <div *ngIf="loginFormGroup.get('password')?.errors?.minlength && (loginFormGroup.get('password').dirty || loginFormGroup.get('password').touched)"
                         class="alert alert-danger">
-                        Mật khẩu phải nhiều hơn 7 ký tự
+                        {{CommonMessage.InvalidPassword}}
                     </div>
                     <div class="row mb-4 rmber-area">
                         <div class="col-6">

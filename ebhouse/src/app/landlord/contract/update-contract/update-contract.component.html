@@ -200,7 +200,7 @@
                                 <table mat-table [dataSource]="contractLog" >
                                     <ng-container matColumnDef="cDate">
                                         <th mat-header-cell *matHeaderCellDef>Ngày thực hiện</th>
-                                        <td mat-cell *matCellDef="let element" style="width : 13%"> {{element.cDate}}
+                                        <td mat-cell *matCellDef="let element" style="width : 13%"> {{element.cDate  | date:"dd/MM/yyyy" }}
                                         </td>
                                     </ng-container>
                                     <ng-container matColumnDef="content" class="text-center">

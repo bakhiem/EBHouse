@@ -5,6 +5,7 @@ import { LandlordService } from '../service/landlord-service.service';
 import { ISubscription } from "rxjs/Subscription";
 import { ToastrService } from 'ngx-toastr';
 
+import { CommmonFunction } from '../../shared/common-function';
 import { SharedServiceService } from '../../service/shared-service.service';
 import { MatDialog, MatCheckboxModule } from '@angular/material';
 import { CommonMessage, Message } from '../../models/message';
@@ -119,14 +120,11 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
     else {
       d = new Date();
     }
-
     var month = '' + (d.getMonth() + 1),
       day = '' + d.getDate(),
       year = d.getFullYear();
-
     if (month.length < 2) month = '0' + month;
     if (day.length < 2) day = '0' + day;
-
     return [day, month, year].join('-');
   }
 
@@ -144,8 +142,9 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
         this.removeLoading();
         console.log(res)
         let response = JSON.parse("" + res);
+        console.log
         if (response.type == 1) {
-          let resData = JSON.parse("" + response.data)
+          let resData = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data))
           this.listExtrafee = resData.extraFee;
           this.totalPage = resData.totalPage
 
@@ -265,10 +264,10 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
   }
 
   editEF(obj) {
-    if(obj.status != 12 && obj.status != 13){
+    if (obj.status != 12 && obj.status != 13) {
       this.onChooseRoom(obj.roomObj);
     }
-    
+
     this.isEdit = 1;
     console.log(obj);
     this.createEFFormGroup.reset();
@@ -420,7 +419,13 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
         if (response.type == 1) {
           console.log(response.data)
           let listContract = response.data.lstDate;
+          //check 
           let isAvailable = false;
+          if (response.data.availableInThisMonth == false) {
+            isAvailable = false;
+            this.haveContractInMonth = false;
+            this.handleAvailable(value.name);
+          }
           if (listContract.length > 0) {
             for (let index = 0; index < listContract.length; index++) {
               const element = listContract[index];
@@ -428,10 +433,12 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
               let startDate = new Date(element.startDate);
               let endDate = new Date(element.endDate);
               if (startDate.getTime() <= toDay.getTime() && endDate.getTime() >= toDay.getTime()) {
-                this.haveContractInMonth = true;
-                isAvailable = true;
-                this.handleAvailable(value.name);
-                break;
+                if(response.data.availableInThisMonth == true){
+                  this.haveContractInMonth = true;
+                  isAvailable = true;
+                  this.handleAvailable(value.name);
+                  break;
+                }
               }
             }
           }

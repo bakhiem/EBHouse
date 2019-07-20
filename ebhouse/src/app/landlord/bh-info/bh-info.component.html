@@ -33,7 +33,7 @@
                                 <input class="form-control" type="text" id="example-text-input" formControlName="name">
                                 <div *ngIf="createbhFormGroup.controls['name'].hasError('required') && (createbhFormGroup.controls['name'].dirty || createbhFormGroup.controls['name'].touched)"
                                     class="alert alert-danger">
-                                    Tên nhà trọ là bắt buộc
+                                   {{CommonMessage.InputRequire}}tên nhà trọ
                                 </div>
                             </div>
                             <div class="col-sm-3">
@@ -43,11 +43,11 @@
                                     formControlName="numberOfRoom">
                                 <div *ngIf="createbhFormGroup.controls['numberOfRoom'].hasError('required') && (createbhFormGroup.controls['numberOfRoom'].dirty || createbhFormGroup.controls['numberOfRoom'].touched)"
                                     class="alert alert-danger">
-                                    Số lượng phòng là bắt buộc
+                                    {{CommonMessage.InputRequire}}số lượng phòng
                                 </div>
                                 <div *ngIf="createbhFormGroup.controls['numberOfRoom'].hasError('pattern') && (createbhFormGroup.controls['numberOfRoom'].dirty || createbhFormGroup.controls['numberOfRoom'].touched)"
                                     class="alert alert-danger">
-                                    Không đúng định dạng
+                                   {{CommonMessage.InvalidInput}}
                                 </div>
                             </div>
                         </div>
@@ -63,7 +63,7 @@
                                 </select>
                                 <div *ngIf="createbhFormGroup.controls['province'].hasError('required') && (createbhFormGroup.controls['province'].dirty || createbhFormGroup.controls['province'].touched)"
                                     class="alert alert-danger">
-                                    Tỉnh / Thành phố là bắt buộc
+                                    {{CommonMessage.InputRequire}}Tỉnh / Thành phố
                                 </div>
                             </div>
                             <div class="col-sm-3">
@@ -75,7 +75,7 @@
                                 </select>
                                 <div *ngIf="createbhFormGroup.controls['distric'].hasError('required') && (createbhFormGroup.controls['distric'].dirty || createbhFormGroup.controls['distric'].touched)"
                                     class="alert alert-danger">
-                                    Quận / Huyện là bắt buộc
+                                   {{CommonMessage.InputRequire}}Quận / Huyện
                                 </div>
                             </div>
                             <div class="col-sm-3">
@@ -87,7 +87,7 @@
                                 </select>
                                 <div *ngIf="createbhFormGroup.controls['wards'].hasError('required') && (createbhFormGroup.controls['wards'].dirty || createbhFormGroup.controls['wards'].touched)"
                                     class="alert alert-danger">
-                                    Xã / Phường là bắt buộc
+                                    {{CommonMessage.InputRequire}}Xã / Phường
                                 </div>
                             </div>
                         </div>
@@ -98,7 +98,7 @@
                                     formControlName="address">
                                 <div *ngIf="createbhFormGroup.controls['address'].hasError('required') && (createbhFormGroup.controls['address'].dirty || createbhFormGroup.controls['address'].touched)"
                                     class="alert alert-danger">
-                                    Thôn xóm/ số nhà không được để trống
+                                    {{CommonMessage.InputRequire}}Thôn xóm/ số nhà
                                 </div>
                             </div>
                         </div>

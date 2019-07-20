@@ -5,13 +5,15 @@ import { Observable } from 'rxjs/Observable';
 import { AuthenticationService } from '../user/service/authentication.service';
 import { Role } from '../user/models/role';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ISubscription } from "rxjs/Subscription";
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  
+  private subcription1 : ISubscription;
+  private subcription2 : ISubscription;
   role: string = '';
   currentUser: any;
   isLoggedIn$: Observable<boolean>;
@@ -75,15 +77,16 @@ export class HeaderComponent implements OnInit {
     return true;
   }
   getBoardingHousesTenant() {
-    this.service.getAllBoardingHousesTenant().subscribe();
-    this.service.currentBh.subscribe((data) => {
+   this.service.getAllBoardingHousesTenant().subscribe();
+  this.service.currentBh.subscribe((data) => {
       this.currentBh = data;
       this.bhList = this.service.bhList;
+      console.log(this.bhList)
     })
   }
   getBoardingHouses() {
-    this.service.getAllBoardingHouses().subscribe();
-    this.service.currentBh.subscribe((data) => {
+  this.service.getAllBoardingHouses().subscribe();
+   this.service.currentBh.subscribe((data) => {
       this.currentBh = data;
       this.bhList = this.service.bhList;
     })

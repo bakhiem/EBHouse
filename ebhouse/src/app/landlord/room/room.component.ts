@@ -79,6 +79,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.shareService.currentBh.subscribe((data) => {
       this.currentBh = data;
+      console.log(data)
       if (this.currentBh && this.currentBh.id) {
         this.currentPage = 1;
         this.numberOfRoomBh = data.numberOfRoom;
@@ -158,6 +159,10 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   //create bh
   createRoom() {
+    if(!this.currentBh){
+      this.showErr(CommonMessage.InputBh);
+      return;
+    }
     this.createRoomFormGroup.reset();
     this.currentRoom = null;
     this.isEdit = 0;

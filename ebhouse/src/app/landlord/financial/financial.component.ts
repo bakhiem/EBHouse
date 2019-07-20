@@ -5,6 +5,8 @@ import { ISubscription } from "rxjs/Subscription";
 import { ToastrService } from 'ngx-toastr';
 
 import { SharedServiceService } from '../../service/shared-service.service';
+
+import { CommmonFunction } from '../../shared/common-function';
 import { MatDialog, MatCheckboxModule } from '@angular/material';
 import { CommonMessage, Message } from '../../models/message';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -29,7 +31,7 @@ export class FinancialComponent implements OnInit, OnDestroy {
   totalPage: number = 0;
   private subscription: ISubscription;
   currentBh: any;
-  listFinancial: any[];
+  listFinancial: any[] = [];
   roomList: any[];
   roomControl = new FormControl();
   listExtraFee: any[] = [];
@@ -39,7 +41,7 @@ export class FinancialComponent implements OnInit, OnDestroy {
   createEFFormGroup: FormGroup;
   isEdit: number;
   currentRoom: any;
-  financialStatus: number = 1;
+  financialStatus: number = 3;
   constructor(private service: LandlordService,
     private shareService: SharedServiceService,
     public dialog: MatDialog,
@@ -145,12 +147,11 @@ export class FinancialComponent implements OnInit, OnDestroy {
         this.removeLoading();
         let response = JSON.parse("" + res);
         if (response.type == 1) {
-          let resData = JSON.parse("" + response.data)
+          let resData = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
           this.listFinancial = resData.financial;
           this.totalPage = resData.totalPage;
 
           for (let index = 0; index < this.listFinancial.length; index++) {
-
             const element = this.listFinancial[index];
             if (element.paymentDate == 'null') {
               this.listFinancial[index].paymentDate = ''
@@ -210,7 +211,6 @@ export class FinancialComponent implements OnInit, OnDestroy {
             }
             data.unshift(elementAll)
             this.roomList = data;
-
             if (this.roomList.length > 1) {
               this.currentPage = 1;
               this.getFinancial();
@@ -341,15 +341,15 @@ export class FinancialComponent implements OnInit, OnDestroy {
     this.createEFFormGroup.get('id').setValue(obj.id);
     this.createEFFormGroup.get('room').setValue(obj.room);
     this.currentRoom = obj.roomObj;
-    let financialNew = JSON.parse(data.financialNew);
+    let financialNew = JSON.parse(CommmonFunction.escapeSpecialChars(data.financialNew));
     $('.bd-example-modal-lg').modal('show');
     $('#myButton').prop('disabled', true);
     let electricFee = ((Number(data.electricityNew) - Number(data.electricityOld)) * Number(data.valuePerElectricity));
     let utilityFee = Number(data.InternetFee) + Number(data.WaterFee) + Number(data.CleaningFee);
-    let lstExtraFee = JSON.parse(data.lstExtraFee);
+    let lstExtraFee = JSON.parse(CommmonFunction.escapeSpecialChars(data.lstExtraFee));
     let oldDebt = 0;
     if (data.financialOld.length > 0) {
-      let financialOld = JSON.parse(data.financialOld);
+      let financialOld = JSON.parse(CommmonFunction.escapeSpecialChars(data.financialOld));
       oldDebt = financialOld.total
     }
     let extraFee = 0;
@@ -477,7 +477,7 @@ export class FinancialComponent implements OnInit, OnDestroy {
     let data = {
       id: this.createEFFormGroup.get('id').value,
       room: { id: this.createEFFormGroup.get('room').value },
-      description: this.createEFFormGroup.value.description ? this.createEFFormGroup.value.description : '',
+      description: this.createEFFormGroup.value.description ? this.createEFFormGroup.value.description.trim() : '',
       total: this.convertToNumberPrice(this.createEFFormGroup.get('total').value),
       payment: this.convertToNumberPrice(this.createEFFormGroup.get('payment').value),
       paymentDate: paymentDate,
@@ -519,6 +519,7 @@ export class FinancialComponent implements OnInit, OnDestroy {
     this.service.getOneFinancial(data).subscribe(
       res => {
         this.removeLoading();
+        console.log(res)
         try {
           let response = JSON.parse("" + res);
           if (response.type == 1) {

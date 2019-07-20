@@ -67,6 +67,9 @@ export class RoomsInfoComponent implements OnInit,OnDestroy {
         }
         
       }
+      else if(this.currentBh){
+        this.showInfo(CommonMessage.TenantNoBh)
+      } 
     });
   }
   ngOnDestroy() {
@@ -172,6 +175,9 @@ export class RoomsInfoComponent implements OnInit,OnDestroy {
   }
   showErr(mess) {
     this.toastr.error(mess, 'Lỗi !');
+  }
+  showInfo(mess) {
+    this.toastr.info(mess, 'Thông báo !');
   }
   pageChanged(page) {
     this.currentPage = page;

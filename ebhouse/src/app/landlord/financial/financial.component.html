@@ -22,9 +22,9 @@
     <div class="form-group col-sm-3">
       <label class="col-form-label">Chọn trạng thái</label>
       <select class="custom-select mt-2" [(ngModel)]="financialStatus" (change)='getFinancial()'>
-        <option value="1" selected="selected">Chưa Thanh toán</option>
+        <option value="1">Chưa Thanh toán</option>
         <option value="2">Đã Thanh Toán</option>
-        <option value="3">Tất cả</option>
+        <option value="3"  selected="selected">Tất cả</option>
       </select>
     </div>
 

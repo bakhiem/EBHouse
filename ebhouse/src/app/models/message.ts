@@ -18,7 +18,26 @@ export enum CommonMessage {
   Utility_InputAllField = 'Vui lòng điền vào tất cả các trường, trường nào không có có thể nhập giá trị 0',
   Electric = 'Số điện tháng sau lớn hơn hoặc bằng số điện tháng trước',
   InputElectricBefore = 'Bạn cần chốt số điện trước khi hủy hợp đồng',
-  HaveDisableContractInMonth = 'Phòng đã có hợp đồng đã xóa trong tháng này'
+  HaveDisableContractInMonth = 'Không thể tạo do phòng đã có hợp đồng đã xóa trong tháng này',
+
+  InvalidInput= 'Vui lòng đúng dữ liệu',
+
+  InputUserName = 'Vui lòng nhập họ và tên',
+  InputPhone = 'Vui lòng nhập số điện thoại',
+  InputPassword = 'Vui lòng nhập mật khẩu',
+  InvalidPassword = 'Mật khẩu nhiều hơn 7 kí tự',
+  InvalidPhone = 'Số điện thoại gồm 10 chữ số',
+  PasswordNotMatch = 'Mật khẩu cần trùng nhau',
+
+  //bhInfo
+  InputRequire = 'Vui lòng nhập ',
+
+
+  //room
+  InputBh = 'Chưa có nhà trọ, mời bạn tạo nhà trọ',
+
+  //tenant
+  TenantNoBh = 'Hiện tại bạn chưa ở trong nhà trọ nào'
   }
   export class Message {
     content : string;

@@ -26,7 +26,7 @@ export class BhInfoComponent implements OnInit {
   createbhFormGroup: FormGroup;
   isEdit: number = 0;
   currentBh: BoardingHouse;
-
+  CommonMessage = CommonMessage;
   //paging
   perPage: number = 10;
   currentPage: number = 1;
