@@ -6,6 +6,7 @@ import { PlaceService } from '../../service/place.service';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
+import { CommmonFunction } from '../../shared/common-function';
 import { ToastrService } from 'ngx-toastr';
 import { CommonMessage } from '../../models/message';
 import { LandlordService } from '../service/landlord-service.service';
@@ -60,7 +61,7 @@ export class LandlordProfileComponent implements OnInit {
         this.removeLoading();
         let response = JSON.parse('' + res);
         if (response.type == 1) {
-          this.landlord = JSON.parse(response.data);
+          this.landlord = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
           let arr = null;
           if (this.landlord.user.address != ' ') {
             arr = this.landlord.user.address.split('-');

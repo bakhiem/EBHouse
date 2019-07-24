@@ -38,7 +38,7 @@
                             </div>
                             <div class="col-sm-3">
                                 <label for="example-number-input" class="col-form-label required">Số lượng phòng</label>
-                                <input class="form-control" type="number" id="example-number-input"
+                                <input  class="form-control" type="number" id="example-number-input"
                                     onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))"
                                     formControlName="numberOfRoom">
                                 <div *ngIf="createbhFormGroup.controls['numberOfRoom'].hasError('required') && (createbhFormGroup.controls['numberOfRoom'].dirty || createbhFormGroup.controls['numberOfRoom'].touched)"

@@ -31,14 +31,18 @@ export enum CommonMessage {
 
   //bhInfo
   InputRequire = 'Vui lòng nhập ',
-
-
+  RedirectUtility = 'Bạn vừa tạo nhà trọ, mời bạn đến trang Dịch Vụ để tạo đơn giá cho các dịch vụ trong nhà trọ',
   //room
-  InputBh = 'Chưa có nhà trọ, mời bạn tạo nhà trọ',
-
+  InputBh = 'Vui lòng tạo nhà trọ trước',
+  InputRoom = 'Vui lòng tạo phòng trước',
+  InputRt = 'Vui lòng tạo loại phòng trước',
+  InputMaxRoom = 'Mỗi lần được tạo tối đa 150 phòng, bạn vui lòng tạo thành nhiều lần',
   //tenant
-  TenantNoBh = 'Hiện tại bạn chưa ở trong nhà trọ nào'
-  }
+  TenantNoBh = 'Hiện tại bạn chưa ở trong nhà trọ nào',
+
+
+  //landlord
+}
   export class Message {
     content : string;
     type : number;

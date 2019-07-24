@@ -12,21 +12,21 @@ import { ISubscription } from "rxjs/Subscription";
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  private subcription1 : ISubscription;
-  private subcription2 : ISubscription;
   role: string = '';
   currentUser: any;
   isLoggedIn$: Observable<boolean>;
   bhList: BoardingHouse[];
   currentBh: BoardingHouse;
-  listUrlHidden = ['/landlord/bh-info','/landlord/room-type','/notification/from','/notification/to','/landlord/profile','/tenant/profile']
+  listUrlHidden = ['/landlord/bh-info','/landlord/room-type','/notification/from','/notification/to','/landlord/profile','/tenant/profile','/landlord/dashboard']
   listUrlDisable = ['/landlord/contract-update','/tenant/contract-view']
+
+  isLandlingPage : boolean = true;
   constructor(private service: SharedServiceService,
     private authService: AuthenticationService,
     private _router: Router) {
-   
     // this.getBoardingHouses() 
   }
+
   getRole() {
     if (this.currentUser && this.currentUser.role === Role.Lanlord) {
       this.role = 'landlord';
@@ -56,6 +56,11 @@ export class HeaderComponent implements OnInit {
         this.currentBh = null;
       }
     });
+  }
+  isLandingPage(){
+    if(this._router.url == '/home'){
+      return true;
+    }
   }
   isDisabled() : boolean{
     for (let index = 0; index < this.listUrlDisable.length; index++) {

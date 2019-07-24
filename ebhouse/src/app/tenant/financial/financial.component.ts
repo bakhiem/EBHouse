@@ -3,6 +3,7 @@ import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
 import { TenantServiceService } from '../service/tenant-service.service';
 import { ISubscription } from "rxjs/Subscription";
 import { ToastrService } from 'ngx-toastr';
+import { MatTableDataSource } from '@angular/material/table';
 
 import { CommmonFunction } from '../../shared/common-function';
 import { SharedServiceService } from '../../service/shared-service.service';
@@ -30,6 +31,7 @@ export class FinancialComponent implements OnInit, OnDestroy {
   totalPage: number = 0;
   private subscription: ISubscription;
   currentBh: any;
+  dataSource = new MatTableDataSource();
   listFinancial: any[];
   listExtraFee: any[] = [];
   createEFFormGroup: FormGroup;
@@ -126,6 +128,10 @@ export class FinancialComponent implements OnInit, OnDestroy {
           this.totalPage = totalPage.totalRecord;
           this.handleListFinancial();
         }
+        else{
+          this.listFinancial = [];
+          this.dataSource.data =[];
+        }
           console.log(this.listFinancial)
         }
       }, err => {
@@ -148,6 +154,7 @@ export class FinancialComponent implements OnInit, OnDestroy {
         this.listFinancial[index].debt = element.total - element.payment
       }
     }
+    this.dataSource.data = this.listFinancial;
   }
 
   addLoading() {

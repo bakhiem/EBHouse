@@ -26,9 +26,13 @@ export class DashboardComponent implements OnInit {
   }
   deleteDataInLocal() {
     this.authenticationService.removeLocalUser();
-    this.router.navigate(['/login'])
+    this.router.navigate(['/home'])
   }
   ngOnInit() {
+    this.checkRole();
+    console.log(this.currentUser);
+  }
+  checkRole() {
     if (this.isLandlord) {
       if (this.currentUser.user.status == this.statusUpdateProfile) {
         this.router.navigate(['/landlord/profile']);

@@ -4,12 +4,14 @@ import { FormControl, FormGroup, FormBuilder, FormArray, Validators, AbstractCon
 import { MatDialog } from '@angular/material';
 import { EquipmentServiceService } from '../service/equipment-service.service';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
-
+import { MatTableDataSource } from '@angular/material/table';
 import { LandlordService } from '../service/landlord-service.service';
 import { RoomType } from '../../models/room-type';
 import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from '../../user/service/authentication.service';
 import { User } from '../../user/models/user';
+
+import { CommmonFunction } from '../../shared/common-function';
 import { CommonMessage, Message } from '../../models/message';
 
 @Component({
@@ -31,7 +33,7 @@ export class RoomTypeComponent implements OnInit {
   perPage: number = 10;
   currentPage: number = 1;
   totalPage: number = 0;
-
+  dataSource = new MatTableDataSource();
   displayedColumns: string[] = ['name', 'area', 'capacity', 'price', 'description', 'equipment', 'customColumn'];
 
 
@@ -95,12 +97,12 @@ export class RoomTypeComponent implements OnInit {
   }
 
   //add . to price
-  formatCurrencyEdit(price : number) : string{
-    if(price === 0){
-      return "";  
-  }
-  let currency = price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
-  return currency;
+  formatCurrencyEdit(price: number): string {
+    if (price === 0) {
+      return "";
+    }
+    let currency = price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+    return currency;
   }
 
   private getEquipment() {
@@ -131,7 +133,7 @@ export class RoomTypeComponent implements OnInit {
         this.removeLoading();
         let response = JSON.parse("" + res);
         if (response.type == 1) {
-          let resData = JSON.parse(response.data);
+          let resData = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
           this.rtList = resData.roomType;
           this.getChecked();
           this.getStringEquipment()
@@ -143,7 +145,7 @@ export class RoomTypeComponent implements OnInit {
         console.log(err);
       })
   }
-  getEquipmentName(){
+  getEquipmentName() {
 
   }
   //convert list id equipment to string equipment
@@ -155,6 +157,7 @@ export class RoomTypeComponent implements OnInit {
       });
       element.equipments = stringEquip.substring(0, stringEquip.length - 2);
     });
+    this.dataSource.data= this.rtList;
     console.log(this.rtList);
   }
 
@@ -192,25 +195,61 @@ export class RoomTypeComponent implements OnInit {
   onSubmit() {
     let formatPrice = this.createRtFormGroup.value.price.split('.').join('');
     if (this.isEdit == 1) {
-      let sendToServer = {
-        roomType: [{
-          id: this.createRtFormGroup.value.id,
-          name: this.createRtFormGroup.value.name,
-          area: this.createRtFormGroup.value.area,
-          price: formatPrice,
-          capacity: this.createRtFormGroup.value.capacity,
-          description: this.createRtFormGroup.value.description ? this.createRtFormGroup.value.description : '',
-        }],
-        equipment: this.listEquipmentOnSubmit()
-      }
-      console.log(sendToServer)
-      let newRt = sendToServer.roomType[0];
-      if (newRt.area == this.currentRt.area && newRt.name == this.currentRt.name && newRt.price == this.currentRt.price && newRt.capacity == this.currentRt.capacity && newRt.description == this.currentRt.description && JSON.stringify(this.currentRt['checked']) == JSON.stringify(this.createRtFormGroup.controls.dataEquipment.value)) {
-        this.showErr(CommonMessage.notChangeMess);
-      }
-      else {
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        width: '400px',
+        data: "Bạn chắc chắn muốn lưu thay đổi không ?"
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if(result){
+        let sendToServer = {
+          roomType: [{
+            id: this.createRtFormGroup.value.id,
+            name: this.createRtFormGroup.value.name,
+            area: this.createRtFormGroup.value.area,
+            price: formatPrice,
+            capacity: this.createRtFormGroup.value.capacity,
+            description: this.createRtFormGroup.value.description ? this.createRtFormGroup.value.description : '',
+          }],
+          equipment: this.listEquipmentOnSubmit()
+        }
+        console.log(sendToServer)
+        let newRt = sendToServer.roomType[0];
+        if (newRt.area == this.currentRt.area && newRt.name == this.currentRt.name && newRt.price == this.currentRt.price && newRt.capacity == this.currentRt.capacity && newRt.description == this.currentRt.description && JSON.stringify(this.currentRt['checked']) == JSON.stringify(this.createRtFormGroup.controls.dataEquipment.value)) {
+          this.showErr(CommonMessage.notChangeMess);
+        }
+        else {
+          this.addLoading();
+          this.service.editRt(sendToServer).subscribe(
+            res => {
+              this.successRequestHandle(res);
+            },
+            err => {
+              this.errRequestHandle(err);
+            }
+          )
+        }
+     } })
+    }
+    else if (this.isEdit == 0) {
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        width: '400px',
+        data: "Bạn chắc chắn muốn tạo loại phòng không ?"
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if(result){
+        let sendToServer = {
+          roomType: [{
+            name: this.createRtFormGroup.value.name,
+            area: this.createRtFormGroup.value.area,
+            price: formatPrice,
+            capacity: this.createRtFormGroup.value.capacity,
+            description: this.createRtFormGroup.value.description ? this.createRtFormGroup.value.description : '',
+          }],
+          equipment: this.listEquipmentOnSubmit()
+        }
+        console.log(sendToServer)
         this.addLoading();
-        this.service.editRt(sendToServer).subscribe(
+        this.service.createRt(sendToServer).subscribe(
           res => {
             this.successRequestHandle(res);
           },
@@ -218,31 +257,8 @@ export class RoomTypeComponent implements OnInit {
             this.errRequestHandle(err);
           }
         )
-      }
-    }
+     } })
 
-
-    else if (this.isEdit == 0) {
-      let sendToServer = {
-        roomType: [{
-          name: this.createRtFormGroup.value.name,
-          area: this.createRtFormGroup.value.area,
-          price: formatPrice,
-          capacity: this.createRtFormGroup.value.capacity,
-          description: this.createRtFormGroup.value.description ? this.createRtFormGroup.value.description : '',
-        }],
-        equipment: this.listEquipmentOnSubmit()
-      }
-      console.log(sendToServer)
-      this.addLoading();
-      this.service.createRt(sendToServer).subscribe(
-        res => {
-          this.successRequestHandle(res);
-        },
-        err => {
-          this.errRequestHandle(err);
-        }
-      )
     }
   }
 
@@ -250,7 +266,7 @@ export class RoomTypeComponent implements OnInit {
     let resObject = JSON.parse("" + res);
     if (resObject.type == 1) {
       this.showSuccess(resObject.message);
-  
+
       this.removeLoading();
       this.currentRt = null;
       $('.bd-example-modal-lg').modal('hide');
@@ -262,7 +278,7 @@ export class RoomTypeComponent implements OnInit {
     }
   }
   errRequestHandle(err) {
-    
+
     this.showErr(CommonMessage.defaultErrMess);
     console.log(err);
     this.removeLoading();
@@ -316,7 +332,7 @@ export class RoomTypeComponent implements OnInit {
   }
 
 
-   pageChanged(page) {
+  pageChanged(page) {
     this.currentPage = page;
     this.getRoomTypes();
   }

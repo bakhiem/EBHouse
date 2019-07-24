@@ -4,7 +4,7 @@ import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from
 import { LandlordService } from '../service/landlord-service.service';
 import { ISubscription } from "rxjs/Subscription";
 import { ToastrService } from 'ngx-toastr';
-
+import { MatTableDataSource } from '@angular/material/table';
 import { CommmonFunction } from '../../shared/common-function';
 import { SharedServiceService } from '../../service/shared-service.service';
 import { MatDialog, MatCheckboxModule } from '@angular/material';
@@ -15,6 +15,7 @@ import { CustomDateAdapterMonth } from '../contract/customDate';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
+import { ThrowStmt } from '@angular/compiler';
 @Component({
   selector: 'app-extrafee',
   templateUrl: './extrafee.component.html',
@@ -36,7 +37,7 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
   listExtrafee: any[];
   roomList: any[];
   roomControl = new FormControl();
-
+  dataSource = new MatTableDataSource();
   roomControlCreate = new FormControl();
   filteredOptions: Observable<any[]>;
 
@@ -59,6 +60,9 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
       this.currentBh = data;
       if (this.currentBh && this.currentBh.id) {
         this.getRoomsFromCurrentBh();
+      }
+      else if (this.currentBh) {
+        this.showInfo(CommonMessage.InputBh)
       }
 
     })
@@ -84,7 +88,9 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
   showErr(mess) {
     this.toastr.error(mess, 'Lỗi !');
   }
-
+  showInfo(mess) {
+    this.toastr.info(mess, 'Thông báo !');
+  }
   chooseMonth(params, datepicker) {
     params.setDate(1);
     this.month.setValue(params);
@@ -129,6 +135,9 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
   }
 
   private getExtrafee() {
+    if (!this.currentBh.id) {
+      return;
+    }
     let data: any = {
       boardingHouseID: this.currentBh.id,
       date: this.formatDate() + '-01',
@@ -140,20 +149,19 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
     this.service.getExtrafee(data).subscribe(
       res => {
         this.removeLoading();
-        console.log(res)
         let response = JSON.parse("" + res);
         console.log
         if (response.type == 1) {
           let resData = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data))
           this.listExtrafee = resData.extraFee;
-          this.totalPage = resData.totalPage
+          this.totalPage = resData.totalPage;
 
           for (let index = 0; index < this.listExtrafee.length; index++) {
             const element = this.listExtrafee[index];
             let roomObj = this.getRoomName(element.room);
             this.listExtrafee[index].roomObj = roomObj;
           }
-          console.log(this.listExtrafee)
+          this.dataSource.data = this.listExtrafee;
         }
         else {
           this.showErr(CommonMessage.defaultErrMess);
@@ -174,11 +182,10 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
 
   //search room
   getRoomsFromCurrentBh() {
-
     let data: any = {
       boardingHouseID: this.currentBh.id
     }
-    // this.addLoading();
+    this.addLoading();
     this.service.getRoomsAvailable(data).subscribe(
       res => {
         try {
@@ -193,12 +200,12 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
             }
             data.unshift(elementAll)
             this.roomList = data.slice(0);
-            if (this.roomListCreate.length > 0) {
-              this.currentPage = 1;
-              this.getExtrafee();
-            }
-            else {
-              // this.removeLoading()
+            this.getExtrafee();
+            for (let index = 0; index < this.roomListCreate.length; index++) {
+              if (this.roomListCreate[index].status == 0) {
+                this.roomListCreate.splice(index, 1);
+                index--;
+              }
             }
             this.filteredOptions = this.roomControl.valueChanges
               .pipe(
@@ -389,6 +396,15 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
     });
   }
   createExtrafee() {
+    if (!this.currentBh.id) {
+      this.showErr(CommonMessage.InputBh);
+      return;
+    }
+    if (!this.roomList) {
+      this.showErr(CommonMessage.InputRoom);
+      return;
+    }
+
     $('#haveTenantMessage').html('');
     $('#date-create').val(this.formatDateStr('', 2));
     this.createEFFormGroup.reset();
@@ -433,7 +449,7 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
               let startDate = new Date(element.startDate);
               let endDate = new Date(element.endDate);
               if (startDate.getTime() <= toDay.getTime() && endDate.getTime() >= toDay.getTime()) {
-                if(response.data.availableInThisMonth == true){
+                if (response.data.availableInThisMonth == true) {
                   this.haveContractInMonth = true;
                   isAvailable = true;
                   this.handleAvailable(value.name);
@@ -476,49 +492,57 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
       return;
     }
     if (this.checkRoomValid()) {
-      var amount = 0;
-      if ($('#extraFee').val()) {
-        let formatPrice = $('#extraFee').val().toString().split('.').join('');
-        if ($('#increase').is(':checked')) {
-          amount = Number(formatPrice);
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        width: '400px',
+        data: "Bạn chắc chắn muốn lưu không ?"
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if(result){
+        var amount = 0;
+        if ($('#extraFee').val()) {
+          let formatPrice = $('#extraFee').val().toString().split('.').join('');
+          if ($('#increase').is(':checked')) {
+            amount = Number(formatPrice);
+          }
+          else if ($('#decrease').is(':checked')) {
+            amount = Number(formatPrice) * -1;
+          }
         }
-        else if ($('#decrease').is(':checked')) {
-          amount = Number(formatPrice) * -1;
-        }
-      }
-      let data;
+        let data;
 
-      if (this.isEdit == 1) {
-        data = {
-          extraFee: {
-            id: this.createEFFormGroup.value.id,
-            room: { id: this.roomControlCreate.value.id },
-            description: this.createEFFormGroup.value.description,
-            amount: amount,
-            cDate: this.createEFFormGroup.value.cDate
-          },
-          isLandlord: $('#landlord').is(':checked')
+        if (this.isEdit == 1) {
+          data = {
+            extraFee: {
+              id: this.createEFFormGroup.value.id,
+              room: { id: this.roomControlCreate.value.id },
+              description: this.createEFFormGroup.value.description.trim(),
+              amount: amount,
+              cDate: this.createEFFormGroup.value.cDate
+            },
+            isLandlord: $('#landlord').is(':checked')
+          }
         }
-      }
-      else if (this.isEdit == 0) {
-        data = {
-          extraFee: {
-            id: 0,
-            room: { id: this.roomControlCreate.value.id },
-            description: this.createEFFormGroup.value.description,
-            amount: amount
-          },
-          isLandlord: $('#landlord').is(':checked')
+        else if (this.isEdit == 0) {
+          data = {
+            extraFee: {
+              id: 0,
+              room: { id: this.roomControlCreate.value.id },
+              description: this.createEFFormGroup.value.description.trim(),
+              amount: amount
+            },
+            isLandlord: $('#landlord').is(':checked')
+          }
         }
-      }
-      console.log(data)
-      this.addLoading();
-      this.service.addExtrafee(data).subscribe(
-        res => {
-          this.successRequestHandle(res);
-        }, err => {
-          this.errRequestHandle(err);
-        })
+        console.log(data)
+        this.addLoading();
+        this.service.addExtrafee(data).subscribe(
+          res => {
+            this.successRequestHandle(res);
+          }, err => {
+            this.errRequestHandle(err);
+          })
+     } })
+
     }
     else {
       this.displayDialog(CommonMessage.NoExitstRoom);

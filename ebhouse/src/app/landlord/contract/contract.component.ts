@@ -9,10 +9,12 @@ import { LandlordService } from '../service/landlord-service.service';
 import { BoardingHouse } from '../../models/bh';
 import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from '../../user/service/authentication.service';
+
+import { CommmonFunction } from '../../shared/common-function';
 import { CommonMessage, Message } from '../../models/message';
 import { Observable, throwError } from 'rxjs';
 import { ISubscription } from "rxjs/Subscription";
-import { Contract} from '../../models/contract';
+import { Contract } from '../../models/contract';
 import { Router } from '@angular/router';
 
 import { map, startWith } from 'rxjs/operators';
@@ -40,8 +42,8 @@ export class ContractComponent implements OnInit, OnDestroy {
   contractStatus: number = 1;
   isSelectAllStatus: number = 0;
   roomList: any[];
- 
- 
+
+
   private subscription: ISubscription;
 
   //search
@@ -58,21 +60,26 @@ export class ContractComponent implements OnInit, OnDestroy {
 
   }
   getDisplayedColumns(): string[] {
-    if(this.isSelectAllStatus == 1){
-      return ['room', 'owner', 'period', 'start', 'end', 'price', 'deposit', 'status','customColumn'];
+    if (this.isSelectAllStatus == 1) {
+      return ['room', 'owner', 'period', 'start', 'end', 'price', 'deposit', 'status', 'customColumn'];
     }
-    else{
-      return ['room', 'owner', 'period', 'start', 'end', 'price', 'deposit','customColumn'];
+    else {
+      return ['room', 'owner', 'period', 'start', 'end', 'price', 'deposit', 'customColumn'];
     }
   }
   ngOnInit() {
     this.subscription = this.shareService.currentBh.subscribe((data) => {
       this.currentBh = data;
-      this.getContract();
-      this.getRoomsFromCurrentBh();
-      
+      if (this.currentBh && this.currentBh.id) {
+        this.getContract();
+        this.getRoomsFromCurrentBh();
+      } else if (this.currentBh) {
+        this.showInfo(CommonMessage.InputBh)
+      }
+
+
     })
-    
+
   }
 
   showSuccess(mess) {
@@ -81,35 +88,38 @@ export class ContractComponent implements OnInit, OnDestroy {
   showErr(mess) {
     this.toastr.error(mess, 'Lỗi !');
   }
+  showInfo(mess) {
+    this.toastr.info(mess, 'Thông báo !');
+  }
 
-  onchangeStatus(){
+  onchangeStatus() {
     this.resetFormAndGetContract();
   }
-  displayDialog(message : string){
+  displayDialog(message: string) {
     this.dialog.open(InformationDialogComponent, {
       width: '400px',
       data: message
     });
   }
   ngOnDestroy() {
-    if(this.subscription){
+    if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }
   getContract() {
-   if(!this.currentBh || !this.currentBh.id){
-    return;
-   }
+    if (!this.currentBh || !this.currentBh.id) {
+      return;
+    }
     let page: any = {
       status: Number(this.contractStatus),
       boardingHouseID: this.currentBh.id,
       page: this.currentPage,
-      roomID : this.roomControl.value ? this.roomControl.value.id : 0
+      roomID: this.roomControl.value ? this.roomControl.value.id : 0
     }
-    if(this.contractStatus == 5){
+    if (this.contractStatus == 5) {
       this.isSelectAllStatus = 1;
     }
-    else{
+    else {
       this.isSelectAllStatus = 0;
     }
     this.addLoading();
@@ -119,7 +129,7 @@ export class ContractComponent implements OnInit, OnDestroy {
         console.log(response)
         if (response.type == 1) {
           try {
-            let data = JSON.parse(response.data);
+            let data = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
             this.listContract = data.contract;
             this.handleListContract();
             this.totalPage = data.totalPage
@@ -137,7 +147,7 @@ export class ContractComponent implements OnInit, OnDestroy {
 
   // search contract by room
   getRoomsFromCurrentBh() {
-    if(!this.currentBh || !this.currentBh.id){
+    if (!this.currentBh || !this.currentBh.id) {
       return;
     }
     let data: any = {
@@ -152,8 +162,8 @@ export class ContractComponent implements OnInit, OnDestroy {
             let data = response.data;
             console.log(data)
             let elementAll = {
-              name : 'Tất cả',
-              id : 0
+              name: 'Tất cả',
+              id: 0
             }
             data.unshift(elementAll);
             this.roomList = data;
@@ -185,7 +195,7 @@ export class ContractComponent implements OnInit, OnDestroy {
   }
 
   //view contract disable
-  viewOnlyContract(obj){
+  viewOnlyContract(obj) {
     this.service.changeCOntract(this.listContract[obj]);
     this.router.navigate(['/landlord/contract-update']);
   }
@@ -196,13 +206,13 @@ export class ContractComponent implements OnInit, OnDestroy {
   displayFn(room?: any): string | undefined {
     return room ? room.name : undefined;
   }
-  resetFormAndGetContract(){
+  resetFormAndGetContract() {
     this.currentPage = 1;
     this.getContract();
   }
-  searchByRoom(){
+  searchByRoom() {
     let isValid = 0;
-    if(!this.roomControl.value){
+    if (!this.roomControl.value) {
       this.roomControl.setValue(this.roomList[0]);
       this.resetFormAndGetContract();
       return;
@@ -216,7 +226,7 @@ export class ContractComponent implements OnInit, OnDestroy {
       }
     });
     console.log(this.roomControl.value)
-    if(isValid == 0){
+    if (isValid == 0) {
       this.displayDialog('Không tồn tại phòng');
     }
   }
@@ -235,18 +245,18 @@ export class ContractComponent implements OnInit, OnDestroy {
         end: this.formatDate(element.endDate),
         price: element.roomPrice,
         deposit: element.deposit,
-        status : element.status
+        status: element.status
       }
-      if(element.status == 1){
+      if (element.status == 1) {
         contract.statusStr = 'Còn hạn'
       }
-      else if(element.status == 2){
+      else if (element.status == 2) {
         contract.statusStr = 'Hết hạn'
       }
-      else if(element.status == 3){
+      else if (element.status == 3) {
         contract.statusStr = 'Chờ xử lý'
       }
-      else if(element.status == 4){
+      else if (element.status == 4) {
         contract.statusStr = 'Đã hủy'
       }
       element.lstContractTenant.forEach(element2 => {
@@ -296,19 +306,20 @@ export class ContractComponent implements OnInit, OnDestroy {
       console.log(this.listContract[obj])
       if (result) {
         let data = {
-          contract : [
+          contract: [
             {
-              room : {id : Number(this.listContract[obj].room.id)},
-              id : this.listContract[obj].id,
-              roomPrice : this.listContract[obj].roomPrice,
-              deposit : this.listContract[obj].deposit,
-              description : this.listContract[obj].description,
-              startDate : this.listContract[obj].startDate,
-              endDate : this.listContract[obj].endDate,
+              room: { id: Number(this.listContract[obj].room.id) },
+              id: this.listContract[obj].id,
+              roomPrice: this.listContract[obj].roomPrice,
+              deposit: this.listContract[obj].deposit,
+              description: this.listContract[obj].description,
+              startDate: this.listContract[obj].startDate,
+              contractImg : this.listContract[obj].contractImg,
+              endDate: this.listContract[obj].endDate,
             }
           ]
         }
-        console.log(JSON.stringify(data))
+        console.log(data)
         this.addLoading();
         this.service.deleteContract(data).subscribe(
           res => {
@@ -318,7 +329,7 @@ export class ContractComponent implements OnInit, OnDestroy {
               this.removeLoading();
               this.getContract();
             }
-            else if (resObject.type == 2){
+            else if (resObject.type == 2) {
               this.removeLoading();
               const dialogRefElectric = this.dialog.open(RedirectDialogComponent, {
                 width: '400px',
@@ -330,7 +341,7 @@ export class ContractComponent implements OnInit, OnDestroy {
                 }
               })
             }
-            else if (resObject.type == 3){
+            else if (resObject.type == 3) {
               this.removeLoading();
               const dialogRefFinancial = this.dialog.open(RedirectDialogComponent, {
                 width: '400px',
@@ -338,7 +349,8 @@ export class ContractComponent implements OnInit, OnDestroy {
               });
               dialogRefFinancial.afterClosed().subscribe(result => {
                 if (result) {
-                  this.router.navigate(['/landlord/financial']);
+                  let roomID = this.listContract[obj].room.id;
+                  this.router.navigate(['/landlord/financial',roomID]);
                 }
               })
             }
@@ -358,8 +370,8 @@ export class ContractComponent implements OnInit, OnDestroy {
       this.getContract();
     }
     else {
-     
-    this.showErr(resObject.message)
+
+      this.showErr(resObject.message)
       this.removeLoading();
     }
   }

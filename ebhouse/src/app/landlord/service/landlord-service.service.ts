@@ -144,5 +144,30 @@ export class LandlordService {
   getOneFinancial(data : any) : Observable<Landlord>{
     return this.http.post<any>(`${this.baseUrl}/api/landlord/financial/get`, data, httpOptions);
   }
+  getOtherExtraFee(data : any) : Observable<Landlord>{
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/extraFee/searchOther`, data, httpOptions);
+  }
+  getRoomsInfo(data : any) : Observable<any>{
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/room/roomInfo`, data, httpOptions);
+  }
+
+  //manage tenant
+  getAllTenant(data : any) : Observable<any>{
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/bh/getTenantAll`, data, httpOptions);
+  }
+  getTenant(data : any) : Observable<any>{
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/bh/getTenant`, data, httpOptions);
+  }
+
+  //dashboard
+  getReportFinancial(data : any) : Observable<any>{
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/bh/getReportFinancial`, data, httpOptions);
+  }
+  getReportRooms(data : any) : Observable<any>{
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/bh/getReportRoom`, data, httpOptions);
+  }
+  getReportContract(data : any) : Observable<any>{
+    return this.http.post<any>(`${this.baseUrl}/api/landlord/bh/getReportContract`, data, httpOptions);
+  }
 
 }

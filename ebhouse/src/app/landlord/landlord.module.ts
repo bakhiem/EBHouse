@@ -29,6 +29,9 @@ import { FinancialComponent } from './financial/financial.component';
 import { OtherFinancialComponent } from './financial/other-financial/other-financial.component';
 //pipe module
 import { SharedModule } from '../shared/shared.module';
+import { RoomActivityComponent } from './room/room-activity/room-activity.component';
+import { ManageTenantComponent } from './manage-tenant/manage-tenant.component';
+import {ChartsModule} from 'ng2-charts';
 @NgModule({
   declarations: [
     LandlordComponent,
@@ -44,12 +47,15 @@ import { SharedModule } from '../shared/shared.module';
     ElectricComponent,
     ExtraFeeComponent,
     FinancialComponent,
-    OtherFinancialComponent
+    OtherFinancialComponent,
+    RoomActivityComponent,
+    ManageTenantComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     MatTableModule,
+    ChartsModule,
     CommonModule, 
     SharedModule,
     LandlordRoutingModule,

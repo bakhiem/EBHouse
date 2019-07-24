@@ -21,7 +21,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   currentUser: any;
   statusUpdateProfile: string = "2";
   constructor(
-    private router: Router,
+    private _router: Router,
     private authenticationService: AuthenticationService
   ) {
 
@@ -50,6 +50,11 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     $.getScript('../../assets/js/metisMenu.min.js');
     $.getScript('../../assets/js/popper.min.js');
   }
+  isLandingPage(){
+    if(this._router.url == '/home'){
+      return true;
+    }
+  }
 
   ngOnInit() {
     this.authenticationService.currentUser.subscribe(data => {
@@ -57,6 +62,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
       this.getRole();
     });
 
+    
 
     // if (this.isLandlord) {
     //   if (this.currentUser.user.status == this.statusUpdateProfile) {

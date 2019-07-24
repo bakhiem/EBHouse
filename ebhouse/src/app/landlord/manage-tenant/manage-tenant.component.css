@@ -1,0 +1,104 @@
+
+.mat-datepicker-toggle{
+    font-size: 2rem
+  }
+  table {
+    width: 100%;
+    margin-top: 20px;
+  }
+  table td{
+    cursor: pointer;
+  }
+  table th{
+    font-size: 1.1rem;
+    color: black;
+  }
+  .example-full-width {
+    width: 100%;
+  }
+
+.bd-example-modal-lg{
+  margin: 0 auto;
+}
+.can-click{
+  cursor: pointer;
+}
+
+
+.form-group.row,.col-form-label{
+  padding-bottom: 0;
+}
+
+
+.page-footer{
+  background: #fff;
+  padding-top: 1.1rem;
+}
+
+.form-group.row{
+  margin-bottom: 0;
+}
+
+@media only screen and (max-width: 600px) {
+  .handle{
+    padding-left: 0.5rem!important;
+  }
+  .status-p{
+    padding: 0rem 0.5rem!important;
+  }
+.pagination{
+  display: flex;
+  justify-content: center;
+}
+table td{
+  font-size: 0.65rem;
+
+  text-align: center
+}
+table th{
+  font-size: 0.7rem;
+  text-align: center;
+}
+.example-full-width {
+  width: 50%;
+}
+#searchBtn{
+  margin-top: 5px!important;
+}
+table ul{
+  margin : 0;
+}
+
+table ul li:first-child{
+  margin-right :5px!important;
+  margin-left :5px!important;
+}
+#sendNoti{
+  margin-top: 0!important;
+}
+.example-full-width{
+  margin-left: 2px;
+}
+table.mat-elevation-z8 button{
+  font-size: 0.6rem;
+  padding: 4px;
+}
+table{
+  margin-left: -0.5rem;
+}
+.page-footer{
+  width: 100%;
+  margin-left: -0.5rem;
+}
+} 
+
+#modal2 img{
+  margin: 0 auto;
+  max-width: 550px;
+  max-height: 500px;
+  display: block;
+}
+
+#modal2 input:disabled{
+  background: #fff;
+}

@@ -1,4 +1,4 @@
-<div class="" [ngClass]="{'hide': (isLoggedIn$ | async) == false}" >
+<div class="" [ngClass]="{'hide': (isLoggedIn$ | async) == false  || isLandingPage() }" >
   <div class="header-area">
     <div class="row align-items-center">
       <!-- nav and search button -->

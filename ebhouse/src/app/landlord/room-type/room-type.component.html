@@ -2,18 +2,19 @@
     <div class="customLoader"></div>
 </div>
 <div class="row mt-3 justify-content-end">
-    
-        <button type="button" class="btn btn-primary col-sm-4 col-md-3 col-lg-2 col-5 mr-3" (click)="createRt()">
-            Tạo loại phòng
-        </button>
-        <button type="button" class="btn btn-info col-sm-4 col-md-3 col-lg-2 col-5" data-toggle="modal" data-target="#modalEquipment">
-            So sánh tiện ích
-        </button>
+
+    <button type="button" class="btn btn-primary col-sm-4 col-md-3 col-lg-2 col-5 mr-3" (click)="createRt()">
+        Tạo loại phòng
+    </button>
+    <button type="button" class="btn btn-info col-sm-4 col-md-3 col-lg-2 col-5" data-toggle="modal"
+        data-target="#modalEquipment">
+        So sánh tiện ích
+    </button>
 
 </div>
 
 <div class="row">
-    <table mat-table [dataSource]="rtList" class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>Tên loại phòng</th>
             <td mat-cell *matCellDef="let element"> {{element.name}} </td>
@@ -55,7 +56,7 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-    
+
 </div>
 
 <div class="row page-footer">
@@ -65,51 +66,51 @@
     </ngb-pagination>
 </div>
 <div class="modal fade bd-example-modal-lg modal-xl" id="modalEquipment">
-        <div class="modal-dialog modal-lg modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Tiện ích phòng</h5>
-                    <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
-                </div>
-                <div class="modal-body">
-                    <!-- Table  -->
-                    <div class="single-table">
-                        <div class="table-responsive">
-                            <table class="table table-bordered text-center">
-                                <thead class="text-uppercase">
-                                    <tr>
-                                        <th scope="col"></th>
-                                        <th *ngFor="let eq of dataEquipment" scope="col">{{eq.name}}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let rt of rtList">
-                                        <th scope="row">{{rt.name}}</th>
-                                        <td *ngFor="let eq of dataEquipment; let i = index">
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" [checked]="rt.checked[i]" disabled
-                                                    class="custom-control-input" id="customCheck1">
-                                                <label class="custom-control-label" for="customCheck1"></label>
-                                            </div>
-                                        </td>
-
-                                    </tr>
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <!-- Table  -->
-                </div>
-                <!-- Textual inputs end -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Trở về</button>
-                </div>
-
-
+    <div class="modal-dialog modal-lg modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tiện ích phòng</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
             </div>
+            <div class="modal-body">
+                <!-- Table  -->
+                <div class="single-table">
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center">
+                            <thead class="text-uppercase">
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th *ngFor="let eq of dataEquipment" scope="col">{{eq.name}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let rt of rtList">
+                                    <th scope="row">{{rt.name}}</th>
+                                    <td *ngFor="let eq of dataEquipment; let i = index">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" [checked]="rt.checked[i]" disabled
+                                                class="custom-control-input" id="customCheck1">
+                                            <label class="custom-control-label" for="customCheck1"></label>
+                                        </div>
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Table  -->
+            </div>
+            <!-- Textual inputs end -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Trở về</button>
+            </div>
+
+
         </div>
     </div>
+</div>
 <div class="modal fade bd-example-modal-lg" id="modalRoomType">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -132,21 +133,26 @@
                             <input class="form-control" type="text" id="example-text-input" formControlName="name">
                             <div *ngIf="createRtFormGroup.controls['name'].hasError('required') && (createRtFormGroup.controls['name'].dirty || createRtFormGroup.controls['name'].touched)"
                                 class="alert alert-danger">
-                                Tên loại phòng là bắt buộc
+                                Vui lòng nhập tên loại phòng
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <label for="example-number-input" class="col-form-label required">Diện tích</label>
-                            <input class="form-control" type="number" id="example-number-input"
-                                onkeydown="javascript: return event.keyCode == 69 ? false : true"
-                                formControlName="area">
+                            <div class="input-group">
+                                <input class="form-control" type="number" id="example-number-input"
+                                    onkeydown="javascript: return event.keyCode == 69 ? false : true"
+                                    formControlName="area">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">m²</span>
+                                </div>
+                            </div>
                             <div *ngIf="createRtFormGroup.controls['area'].hasError('required') && (createRtFormGroup.controls['area'].dirty || createRtFormGroup.controls['area'].touched)"
                                 class="alert alert-danger">
-                                Vui lòng nhập đúng định dạng
+                                Vui lòng nhập diện tích
                             </div>
                             <div *ngIf="createRtFormGroup.controls['area'].hasError('pattern') && (createRtFormGroup.controls['area'].dirty || createRtFormGroup.controls['area'].touched)"
                                 class="alert alert-danger">
-                                Không đúng định dạng
+                                Diện tích bao gồm các số
                             </div>
 
                         </div>
@@ -165,7 +171,7 @@
                             </div>
                             <div *ngIf="createRtFormGroup.controls['price'].hasError('required') && (createRtFormGroup.controls['price'].dirty || createRtFormGroup.controls['price'].touched)"
                                 class="alert alert-danger">
-                                Giá là bắt buộc
+                                Vui lòng nhập giá
                             </div>
 
                         </div>
@@ -174,13 +180,14 @@
                             <input class="form-control" type="number" id="input-capacity"
                                 onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))"
                                 formControlName="capacity">
+
                             <div *ngIf="createRtFormGroup.controls['capacity'].hasError('required') && (createRtFormGroup.controls['capacity'].dirty || createRtFormGroup.controls['capacity'].touched)"
                                 class="alert alert-danger">
-                                Số người tối đa là bắt buộc
+                                Vui lòng nhập số người tối đa
                             </div>
                             <div *ngIf="createRtFormGroup.controls['capacity'].hasError('pattern') && (createRtFormGroup.controls['capacity'].dirty || createRtFormGroup.controls['capacity'].touched)"
                                 class="alert alert-danger">
-                                Không đúng định dạng
+                                Số người tối đa bao gồm các số
                             </div>
 
                         </div>

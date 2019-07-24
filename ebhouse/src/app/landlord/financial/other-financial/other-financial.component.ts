@@ -2,9 +2,11 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { LandlordService } from '../../service/landlord-service.service';
 import { ISubscription } from "rxjs/Subscription";
-
+import { MatTableDataSource } from '@angular/material/table';
 import { SharedServiceService } from '../../../service/shared-service.service';
 import { MatDialog, MatCheckboxModule } from '@angular/material';
+
+import { CommmonFunction } from '../../../shared/common-function';
 import { CommonMessage, Message } from '../../../models/message';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { InformationDialogComponent } from '../../../shared/info-dialog/information-dialog.component';
@@ -29,7 +31,8 @@ export class OtherFinancialComponent implements OnInit, OnDestroy {
   currentPage: number = 1;
   totalPage: number = 0;
 
-
+  dataSourceExtra = new MatTableDataSource();
+  dataSourceElectric = new MatTableDataSource();
   //paging electric
   currentPageElectric: number = 1;
   totalPageElectric: number = 0;
@@ -61,7 +64,13 @@ export class OtherFinancialComponent implements OnInit, OnDestroy {
       this.currentBh = data;
       if (this.currentBh && this.currentBh.id) {
         this.getRoomsFromCurrentBh();
+        
+        
       }
+      else if(this.currentBh){
+        this.showInfo(CommonMessage.InputBh)
+      } 
+
 
     });
   }
@@ -108,7 +117,13 @@ export class OtherFinancialComponent implements OnInit, OnDestroy {
   showErr(mess) {
     this.toastr.error(mess, 'Lỗi !');
   }
+  showInfo(mess) {
+    this.toastr.info(mess, 'Thông báo !');
+  }
   getFinancial() {
+    if(!this.currentBh.id){
+      return;
+    }
     let data: any = {
       boardingHouseID: this.currentBh.id,
       date: this.formatDate() + '-01',
@@ -126,7 +141,7 @@ export class OtherFinancialComponent implements OnInit, OnDestroy {
           this.listOtherElectric = [];
           console.log(response.data)
           let eValue = response.data.valuePerElectricity;
-          let resDataExtra = JSON.parse(response.data.extraFee);
+          let resDataExtra = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data.extraFee));
           let resDataElectricNew = JSON.parse(response.data.electricityNew);
           let resDataElectricOld = JSON.parse(response.data.electricityOld);
           this.listOtherExtrafee = resDataExtra.extraFee;
@@ -135,6 +150,7 @@ export class OtherFinancialComponent implements OnInit, OnDestroy {
             let roomObj = this.getRoomName(element.room);
             this.listOtherExtrafee[index].roomObj = roomObj;
           }
+          this.dataSourceExtra.data = this.listOtherExtrafee;
           let listElectricNew = resDataElectricNew;
           let listElectricOld = resDataElectricOld;
 
@@ -151,7 +167,7 @@ export class OtherFinancialComponent implements OnInit, OnDestroy {
             }
             this.listOtherElectric.push(elm);
           }
-
+          this.dataSourceElectric.data = this.listOtherElectric;
           this.totalPageElectric = response.data.totalPageElectricity;
           console.log(listElectricNew)
           console.log(listElectricOld)
@@ -191,15 +207,7 @@ export class OtherFinancialComponent implements OnInit, OnDestroy {
             }
             data.unshift(elementAll)
             this.roomList = data;
-
-            if (this.roomList.length > 1) {
-              this.currentPage = 1;
-              this.currentPageElectric = 1;
-              this.getFinancial();
-            }
-            else {
-              this.removeLoading()
-            }
+            this.getFinancial();
             this.filteredOptions = this.roomControl.valueChanges
               .pipe(
                 startWith(''),
@@ -217,10 +225,10 @@ export class OtherFinancialComponent implements OnInit, OnDestroy {
               );
           }
         } catch (error) {
-          this.removeLoading();
+         
         }
       }, err => {
-        this.removeLoading();
+        
         console.log(err);
       })
   }
@@ -277,7 +285,7 @@ export class OtherFinancialComponent implements OnInit, OnDestroy {
         let response = JSON.parse("" + res);
 
         if (response.type == 1) {
-          let resData = JSON.parse(response.data)
+          let resData = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data))
           this.listOtherExtrafee = resData.extraFee;
 
           // console.log(this.listOtherExtrafee);
@@ -286,6 +294,7 @@ export class OtherFinancialComponent implements OnInit, OnDestroy {
             let roomObj = this.getRoomName(element.room);
             this.listOtherExtrafee[index].roomObj = roomObj;
           }
+          this.dataSourceExtra.data = this.listOtherExtrafee;
           this.totalPage = resData.totalPage;
         }
       }, err => {
@@ -330,6 +339,7 @@ export class OtherFinancialComponent implements OnInit, OnDestroy {
             }
             this.listOtherElectric.push(elm);
           }
+          this.dataSourceElectric.data = this.listOtherElectric;
 
           this.totalPageElectric = response.data.totalPageElectricity;
           console.log(listElectricNew)

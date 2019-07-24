@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { PlaceService } from '../../service/place.service';
@@ -12,17 +12,13 @@ import { NotifiService } from '../service/notifi.service';
 import { Notification } from 'src/app/models/notification';
 
 import { ISubscription } from "rxjs/Subscription";
-
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-from-notification',
   templateUrl: './from-notification.component.html',
   styleUrls: ['./from-notification.component.css'],
 })
-export class FromNotificationComponent implements OnInit {
-  message: Message = {
-    content: '',
-    type: 0,
-  };
+export class FromNotificationComponent implements OnInit,OnDestroy{
   listNotification: any = 1;
   notifiListSent: any[] = [];
   notifiListSeen: any[] = [];
@@ -57,17 +53,27 @@ export class FromNotificationComponent implements OnInit {
     private router: Router,
     private placeService: PlaceService,
     private authenticationService: AuthenticationService,
-    private service: NotifiService
+    private service: NotifiService,
+    private toastr : ToastrService
   ) {}
 
   ngOnInit() {
-    this.resetMess();
     // this.getAllFrom();
     this.subscription = this.service.listNotification.subscribe((data) => {
       this.getAllFrom();
     })
   }
-
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+  showSuccess(mess) {
+    this.toastr.success(mess, 'Thành công');
+  }
+  showErr(mess) {
+    this.toastr.error(mess, 'Lỗi !');
+  }
   public getAllFrom() {
     this.getNotificationByStatus(0, this.currentPageSent);
     this.getNotificationByStatus(1, this.currentPageSeen);
@@ -103,14 +109,12 @@ export class FromNotificationComponent implements OnInit {
           this.dataSourceSeen.data = this.notifiListSeen;
           this.dataSourceAnswered.data = this.notifiListAnswered;
         } else {
-          this.message.content = response.message;
-          this.message.type = 0;
+          this.showErr(response.message);
         }
         this.removeLoading();
       },
       err => {
-        this.message.content = 'Lỗi';
-        this.message.type = 0;
+        this.showErr(CommonMessage.defaultErrMess);
         this.removeLoading();
       }
     );
@@ -195,7 +199,6 @@ export class FromNotificationComponent implements OnInit {
         this.currentPageAnswered = page;
       break;
     }
-    this.resetMess();
     this.getNotificationByStatus(status, page);
   }
   prePage(status:number) {
@@ -203,21 +206,18 @@ export class FromNotificationComponent implements OnInit {
       case 0:
           if (this.currentPageSent > 1) {
             this.currentPageSent = this.currentPageSent - 1;
-            this.resetMess();
             this.getNotificationByStatus(status, this.currentPageSent);
           }
       break;
     case 1:
         if (this.currentPageSeen > 1) {
           this.currentPageSeen = this.currentPageSeen - 1;
-          this.resetMess();
           this.getNotificationByStatus(status, this.currentPageSeen);
         }
       break;
     case 2:
         if (this.currentPageAnswered > 1) {
-          this.currentPageAnswered = this.currentPageAnswered - 1
-          this.resetMess();
+          this.currentPageAnswered = this.currentPageAnswered - 1;
           this.getNotificationByStatus(status,this.currentPageAnswered);
         }
       break;
@@ -228,21 +228,18 @@ export class FromNotificationComponent implements OnInit {
       case 0:
           if (this.currentPageSent < this.totalPageSent) {
             this.currentPageSent = this.currentPageSent + 1;
-            this.resetMess();
             this.getNotificationByStatus(status, this.currentPageSent);
           }
       break;
     case 1:
         if (this.currentPageSeen < this.totalPageSeen) {
           this.currentPageSeen = this.currentPageSeen + 1;
-          this.resetMess();
           this.getNotificationByStatus(status, this.currentPageSeen);
         }
       break;
     case 2:
         if (this.currentPageAnswered < this.totalPageAnswered) {
-          this.currentPageAnswered = this.currentPageAnswered + 1
-          this.resetMess();
+          this.currentPageAnswered = this.currentPageAnswered + 1;
           this.getNotificationByStatus(status,this.currentPageAnswered);
         }
       break;
@@ -256,9 +253,5 @@ export class FromNotificationComponent implements OnInit {
   removeLoading() {
     $('.customLoading').removeClass('preloader');
     $('.customLoader').removeClass('loader');
-  }
-  resetMess() {
-    this.message.content = '';
-    this.message.type = 0;
   }
 }

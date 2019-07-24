@@ -4,3 +4,6 @@
 .main-content-inner {
     min-height: 80vh;
 }
+.no-padding-home{
+    padding: 0!important;
+}

@@ -108,6 +108,11 @@ export class ContractComponent implements OnInit, OnDestroy {
               this.totalPage = totalPage.totalRecord
               this.handleListContract();
             }
+            else{
+              this.listContract = [];
+              this.listContractFormat = [];
+              this.dataSource.data = [];
+            }
 
           } catch (error) {
             console.log(response)

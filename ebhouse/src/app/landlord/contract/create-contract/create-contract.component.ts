@@ -40,6 +40,7 @@ export class CreateContractComponent implements OnInit, OnDestroy {
   startDateStr: any;
   endDateSrt: any;
   minDate = new Date();
+  CommonMessage = CommonMessage;
   //Message
   monthStartSelected(params, datepicker) {
     params.setDate(1);
@@ -75,9 +76,9 @@ export class CreateContractComponent implements OnInit, OnDestroy {
       this.displayDialog(CommonMessage.SelectRoomFirst)
       return false;
     }
-    else if (this.listContract.length == 0 && this.availableInThisMonth) {
-      return true;
-    }
+    // else if (this.listContract.length == 0 && this.availableInThisMonth) {
+    //   return true;
+    // }
     else {
       for (let index = 0; index < this.listContract.length; index++) {
         let startdate = new Date(this.listContract[index].startDate);
@@ -105,15 +106,23 @@ export class CreateContractComponent implements OnInit, OnDestroy {
 
       }
       // check availableInThisMonth
-      if (this.availableInThisMonth == false) {
-        let d1 = new Date();
-        console.log(d1)
-        console.log(d)
-        if (d1.getMonth() == d.getMonth() && d1.getFullYear() == d.getFullYear()) {
+      let d1 = new Date();
+      if (d1.getMonth() == d.getMonth() && d1.getFullYear() == d.getFullYear() && type == 0) {
+        if (this.availableInThisMonth == false) {
           this.displayDialog(CommonMessage.HaveDisableContractInMonth)
           return false;
         }
+        if (this.extraFeeList.length > 0) {
+          $('#modal3').modal('show');
+        }
       }
+      return true;
+
+
+
+
+      //check if room has extrafee in month
+
     }
     return true;
   }
@@ -176,6 +185,9 @@ export class CreateContractComponent implements OnInit, OnDestroy {
     resizeMaxHeight: 1000,
     resizeMaxWidth: 1000
   };
+
+  //extra fee
+  extraFeeList: any[] = [];
   private subscription: ISubscription;
   listContractDisplay: string[] = [];
   listContract: Contract[];
@@ -215,12 +227,15 @@ export class CreateContractComponent implements OnInit, OnDestroy {
         this.getRoomsFromCurrentBh();
         this.resetFormChangeBh();
       }
+      else if (this.currentBh) {
+        this.showInfo(CommonMessage.InputBh)
+      }
     })
     this.formatCurrency();
     this.jqueryCode();
   }
   ngOnDestroy() {
-    if(this.subscription){
+    if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }
@@ -229,6 +244,9 @@ export class CreateContractComponent implements OnInit, OnDestroy {
   }
   showErr(mess) {
     this.toastr.error(mess, 'Lỗi !');
+  }
+  showInfo(mess) {
+    this.toastr.info(mess, 'Thông báo !');
   }
   resetFormChangeBh() {
     this.listImg = [];
@@ -256,9 +274,7 @@ export class CreateContractComponent implements OnInit, OnDestroy {
         }
       });
     })
-
     //extra fee
-
     $('#customCheck1').change(() => {
       if (this.isExtraFee == 0) {
         $('#mycollapse').collapse('show');
@@ -287,6 +303,12 @@ export class CreateContractComponent implements OnInit, OnDestroy {
           this.roomList = data;
           if (this.roomList.length == 0) {
             this.showErr(CommonMessage.BhHaveNoRoom);
+          }
+          for (let index = 0; index < this.roomList.length; index++) {
+            if (this.roomList[index].status == 0) {
+              this.roomList.splice(index, 1);
+              index--;
+            }
           }
           this.filteredOptions = this.createContractFormGroup.get('room').valueChanges
             .pipe(
@@ -370,11 +392,20 @@ export class CreateContractComponent implements OnInit, OnDestroy {
             $('#tenant-name').val(data.user.name);
             $('#tenant-phone').val(data.user.phone);
             $('#tenant-address').val(data.user.address);
+            if(data.user.sex == 0){
+              $('#tenant-sex').val('Giới tính khác');
+            }
+            if(data.user.sex == 1){
+              $('#tenant-sex').val('Nam');
+            }
+            if(data.user.sex == 2){
+              $('#tenant-sex').val('Nữ');
+            }
             if (data.imgArnFront) {
-              $('#imgArnFront').attr('src', data.imgArnFront);
+              $('#imgArnFront').attr('src', data.imgArnFront.trim()+ "?date=" + new Date().getTime());
             }
             if (data.imgArnBack) {
-              $('#imgArnBack').attr('src', data.imgArnBack);
+              $('#imgArnBack').attr('src', data.imgArnBack.trim()+ "?date=" + new Date().getTime());
             }
             $('#modal2').modal('show');
             this.currentTenant = data;
@@ -434,9 +465,10 @@ export class CreateContractComponent implements OnInit, OnDestroy {
     this.addLoading()
     this.service.getContractByRoom(data).subscribe(
       res => {
-        this.removeLoading();
+        // this.removeLoading();
         let response = JSON.parse("" + res);
         console.log(response)
+        this.getExtraFee(value);
         if (response.type == 1) {
           this.listContract = response.data.lstDate;
           this.availableInThisMonth = response.data.availableInThisMonth;
@@ -462,8 +494,35 @@ export class CreateContractComponent implements OnInit, OnDestroy {
         console.log(err);
       })
   }
+  getCurrentDate(): string {
+    let date = new Date();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    return year + '-' + month
+  }
+  getExtraFee(value) {
+    let data = {
+      roomID: value.id,
+      date: this.getCurrentDate() + '-01'
+    }
+    this.service.getOtherExtraFee(data).subscribe(
+      res => {
+        this.removeLoading();
+        let response = JSON.parse("" + res);
 
-
+        if (response.type == 1) {
+          this.extraFeeList = JSON.parse("" + response.data);
+          console.log(this.extraFeeList)
+        }
+        else {
+          this.showErr(response.message);
+        }
+      }, err => {
+        this.removeLoading();
+        this.showErr(CommonMessage.defaultErrMess);
+        console.log(err);
+      })
+  }
   deleteImage(src) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '400px',
@@ -491,6 +550,9 @@ export class CreateContractComponent implements OnInit, OnDestroy {
   displayFn(room?: any): string | undefined {
     return room ? room.name : undefined;
   }
+  saveExtraFee() {
+
+  }
   onSubmit() {
     if (!this.createContractFormGroup.value.period || this.createContractFormGroup.value.period == '') {
       this.displayDialog(CommonMessage.DateFormat)
@@ -500,70 +562,98 @@ export class CreateContractComponent implements OnInit, OnDestroy {
       this.displayDialog(CommonMessage.inputAllFiel)
       return;
     }
-    
-    if (this.checkRoomValid()) {
-      let formatRoomPrice = this.createContractFormGroup.value.price.toString().split('.').join('');
-      let roomPrice = Number(formatRoomPrice);
-      let deposit = 0;
-      if (this.createContractFormGroup.value.deposit) {
-        let formatDeposit = this.createContractFormGroup.value.deposit.toString().split('.').join('');
-        deposit = Number(formatDeposit);
-      }
-      var extraFee = 0;
-      if ($('#customCheck1').is(':checked')) {
-        if ($('#extraFee').val()) {
-          let formatPrice = $('#extraFee').val().toString().split('.').join('');
-          if ($('#increase').is(':checked')) {
-            extraFee = Number(formatPrice);
-          }
-          else if ($('#decrease').is(':checked')) {
-            extraFee = Number(formatPrice) * -1;
+    let d = new Date();
+    let dStart = new Date(this.startDateStr);
+    let listExtraFeeSend = [];
+    if (d.getMonth() == dStart.getMonth() && d.getFullYear() == dStart.getFullYear()) {
+      if (this.extraFeeList.length > 0) {
+        for (let index = 0; index < this.extraFeeList.length; index++) {
+          const element = this.extraFeeList[index];
+          if ($('#tenant-' + element.id).is(':checked')) {
+            let elm = {
+              id: element.id
+            }
+            listExtraFeeSend.push(elm);
           }
         }
       }
-      let listImgSplit = []
-      for (let index = 0; index < this.listImg.length; index++) {
-        let tmp = this.listImg[index].split(',');
-        listImgSplit.push(tmp[1]);
-      }
-      let data = {
-        contract: [{
-          roomPrice: roomPrice,
-          deposit: deposit,
-          startDate: this.startDateStr,
-          endDate: this.endDateSrt,
-          description: this.createContractFormGroup.value.description ? this.createContractFormGroup.value.description : ''
-        }],
-        room: [{
-          id: this.createContractFormGroup.value.room.id
-        }],
-        lstTenant: this.listTenant,
-        owner: [this.createContractFormGroup.value.owner.id],
-        extraFee: [{
-          amount: extraFee
-        }],
-        imgContract: listImgSplit,
+    }
 
-      }
-      console.log(data)
+    if (this.checkRoomValid()) {
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        width: '400px',
+        data: "Bạn chắc chắn muốn lưu thay đổi không ?"
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
 
-      this.addLoading();
-      this.service.addContract(data).subscribe(
-        res => {
-          this.removeLoading();
-          let response = JSON.parse("" + res);
-          if (response.type == 1) {
-            this.showSuccess(response.message);
-            setTimeout(() => { this.router.navigate(['/landlord/contract']) }, 1500);
+
+          let formatRoomPrice = this.createContractFormGroup.value.price.toString().split('.').join('');
+          let roomPrice = Number(formatRoomPrice);
+          let deposit = 0;
+          if (this.createContractFormGroup.value.deposit) {
+            let formatDeposit = this.createContractFormGroup.value.deposit.toString().split('.').join('');
+            deposit = Number(formatDeposit);
           }
-          else {
-            this.showErr(response.message);
+          var extraFee = 0;
+          if ($('#customCheck1').is(':checked')) {
+            if ($('#extraFee').val()) {
+              let formatPrice = $('#extraFee').val().toString().split('.').join('');
+              if ($('#increase').is(':checked')) {
+                extraFee = Number(formatPrice);
+              }
+              else if ($('#decrease').is(':checked')) {
+                extraFee = Number(formatPrice) * -1;
+              }
+            }
           }
-        }, err => {
-          this.removeLoading();
-          this.showErr(CommonMessage.defaultErrMess);
-          console.log(err);
-        })
+          let listImgSplit = []
+          for (let index = 0; index < this.listImg.length; index++) {
+            let tmp = this.listImg[index].split(',');
+            listImgSplit.push(tmp[1]);
+          }
+          let data = {
+            contract: [{
+              roomPrice: roomPrice,
+              deposit: deposit,
+              startDate: this.startDateStr,
+              endDate: this.endDateSrt,
+              description: this.createContractFormGroup.value.description ? this.createContractFormGroup.value.description.trim() : '',
+
+            }],
+            room: [{
+              id: this.createContractFormGroup.value.room.id
+            }],
+            lstTenant: this.listTenant,
+            owner: [this.createContractFormGroup.value.owner.id],
+            extraFee: [{
+              amount: extraFee
+            }],
+            imgContract: listImgSplit,
+            extraFeeUpdate: listExtraFeeSend,
+          }
+          console.log(JSON.stringify(data))
+
+          this.addLoading();
+          this.service.addContract(data).subscribe(
+            res => {
+              this.removeLoading();
+              let response = JSON.parse("" + res);
+              if (response.type == 1) {
+                this.showSuccess(response.message);
+                setTimeout(() => { this.router.navigate(['/landlord/contract']) }, 1500);
+              }
+              else {
+                this.showErr(response.message);
+              }
+            }, err => {
+              this.removeLoading();
+              this.showErr(CommonMessage.defaultErrMess);
+              console.log(err);
+            })
+        }
+      })
+
     }
     else {
       this.displayDialog(CommonMessage.NoExitstRoom)
