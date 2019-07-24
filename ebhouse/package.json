@@ -36,8 +36,6 @@
         "moment-timezone": "^0.5.26",
         "ng2-charts": "^2.2.3",
         "ng2-imageupload": "^1.4.2",
-        "ngx-chips": "^2.0.2",
-        "ngx-tags-input": "^2.0.1",
         "ngx-toastr": "^10.0.4",
         "path": "^0.12.7",
         "rxjs": "^6.5.2",
