@@ -36,6 +36,7 @@ import {HeaderComponent }from './header/header.component';
 import { ToastrModule, ToastContainerModule } from 'ngx-toastr';
 import {NotifiModule }from './notifi/notifi.module';
 import { ResetPasswordComponent } from './user/reset-password/reset-password.component';
+import { LandingComponent } from './landing/landing.component';
 @NgModule( {
   declarations:[
     AppComponent,
@@ -51,6 +52,7 @@ import { ResetPasswordComponent } from './user/reset-password/reset-password.com
     NavbarComponent,
     HeaderComponent,
     ResetPasswordComponent,
+    LandingComponent,
   ],
   imports:[
     ReactiveFormsModule,

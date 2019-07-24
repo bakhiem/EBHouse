@@ -14,7 +14,7 @@ import {CommonMessage} from '../../models/message';
 })
 export class RegisterComponent implements OnInit {
   roleDefault: number = 1;
-
+  CommonMessage = CommonMessage;
   userFormGroup: FormGroup;
   phonePattern = '((09|03|07|08|05)+([0-9]{8}))';
   //passwordPattern = '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}';

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 
 import { DataService } from '../../user/service/data.service';
@@ -22,7 +22,7 @@ import { SharedServiceService } from '../../service/shared-service.service';
   templateUrl: './bh-info.component.html',
   styleUrls: ['./bh-info.component.css']
 })
-export class BhInfoComponent implements OnInit {
+export class BhInfoComponent implements OnInit, OnDestroy {
   listUtility: Utility[] = [
     { id: 1, name: 'Điện', calculating: [{ id: 3, name: "Theo số" }] },
     { id: 2, name: 'Nước', calculating: [{ id: 1, name: "Theo phòng" }, { id: 2, name: "Theo người" }] },
@@ -30,18 +30,25 @@ export class BhInfoComponent implements OnInit {
     { id: 4, name: 'Vệ sinh', calculating: [{ id: 1, name: "Theo phòng" }, { id: 2, name: "Theo người" }] }
   ];
   list: any[];
-  currentBh : any;
+  currentBh: any;
   private subscription: ISubscription;
   constructor(private shareService: SharedServiceService,
     private service: TenantServiceService,
     private toastr: ToastrService) { }
-
+  ngOnDestroy() {
+    if(this.subscription){
+      this.subscription.unsubscribe()
+    }
+  }
   ngOnInit() {
     this.subscription = this.shareService.currentBh.subscribe((data) => {
       this.currentBh = data;
-      if(this.currentBh && this.currentBh.id){
+      if (this.currentBh && this.currentBh.id) {
         this.getBhInfo();
         this.getUtility();
+      }
+      else if (this.currentBh) {
+        this.showInfo(CommonMessage.TenantNoBh)
       }
     })
   }
@@ -65,7 +72,7 @@ export class BhInfoComponent implements OnInit {
         } else {
 
         }
-       
+
       },
       err => {
         this.showErr(CommonMessage.defaultErrMess);
@@ -73,7 +80,7 @@ export class BhInfoComponent implements OnInit {
       }
     );
   }
-  
+
   private getUtility() {
     let data = {
       boardingHouseID: this.currentBh.id
@@ -96,10 +103,10 @@ export class BhInfoComponent implements OnInit {
             }
             $("input[type=submit]").attr("disabled", "disabled");
           }
-          
+
           //if bh didn't have list utility
-          else{
-           
+          else {
+
           }
         }
       }, err => {
@@ -123,5 +130,8 @@ export class BhInfoComponent implements OnInit {
   }
   showErr(mess) {
     this.toastr.error(mess, 'Lỗi !');
+  }
+  showInfo(mess) {
+    this.toastr.info(mess, 'Thông báo !');
   }
 }

@@ -3,8 +3,10 @@ import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from
 import { LandlordService } from '../service/landlord-service.service';
 import { ISubscription } from "rxjs/Subscription";
 import { ToastrService } from 'ngx-toastr';
-
+import { MatTableDataSource } from '@angular/material/table';
 import { SharedServiceService } from '../../service/shared-service.service';
+
+import { CommmonFunction } from '../../shared/common-function';
 import { MatDialog, MatCheckboxModule } from '@angular/material';
 import { CommonMessage, Message } from '../../models/message';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -12,6 +14,8 @@ import { InformationDialogComponent } from '../../shared/info-dialog/information
 import { CustomDateAdapterMonth } from '../contract/customDate';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-financial',
   templateUrl: './financial.component.html',
@@ -29,23 +33,25 @@ export class FinancialComponent implements OnInit, OnDestroy {
   totalPage: number = 0;
   private subscription: ISubscription;
   currentBh: any;
-  listFinancial: any[];
+  listFinancial: any[] = [];
   roomList: any[];
   roomControl = new FormControl();
   listExtraFee: any[] = [];
   filteredOptions: Observable<any[]>;
-
+  dataSource = new MatTableDataSource();
 
   createEFFormGroup: FormGroup;
   isEdit: number;
   currentRoom: any;
-  financialStatus: number = 1;
+  financialStatus: number = 3;
   constructor(private service: LandlordService,
     private shareService: SharedServiceService,
     public dialog: MatDialog,
     private fb: FormBuilder,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService,
+    private route: ActivatedRoute) { }
   maxDate = new Date();
+  roomID: any;
   month: FormControl;
   isInvalid: boolean = true;
   isSelectAllStatus: number = 0;
@@ -60,9 +66,15 @@ export class FinancialComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.month = new FormControl({ value: new Date(), disabled: true });
+    this.roomID = this.route.snapshot.paramMap.get('roomID');
     this.subscription = this.shareService.currentBh.subscribe((data) => {
       this.currentBh = data;
-      this.getRoomsFromCurrentBh();
+      if (this.currentBh && this.currentBh.id) {
+        this.getRoomsFromCurrentBh();
+      }
+      else if (this.currentBh) {
+        this.showInfo(CommonMessage.InputBh)
+      }
     });
     this.createEFFormGroup = this.fb.group({
       total: this.fb.control({ value: '', disabled: true }),
@@ -121,17 +133,33 @@ export class FinancialComponent implements OnInit, OnDestroy {
   showErr(mess) {
     this.toastr.error(mess, 'Lỗi !');
   }
+  showInfo(mess) {
+    this.toastr.info(mess, 'Thông báo !');
+  }
   getFinancial() {
     if (!this.currentBh || !this.currentBh.id) {
       return;
     }
-    let data: any = {
-      boardingHouseID: this.currentBh.id,
-      date: this.formatDate() + '-01',
-      page: this.currentPage,
-      roomID: this.roomControl.value ? this.roomControl.value.id : 0,
-      status: this.financialStatus
+    let data;
+    if (this.roomID) {
+      data = {
+        boardingHouseID: this.currentBh.id,
+        date: this.formatDate() + '-01',
+        page: this.currentPage,
+        roomID: this.roomID,
+        status: this.financialStatus
+      }
     }
+    else {
+      data = {
+        boardingHouseID: this.currentBh.id,
+        date: this.formatDate() + '-01',
+        page: this.currentPage,
+        roomID: this.roomControl.value ? this.roomControl.value.id : 0,
+        status: this.financialStatus
+      }
+    }
+
     if (this.financialStatus == 3) {
       this.isSelectAllStatus = 1;
     }
@@ -145,12 +173,11 @@ export class FinancialComponent implements OnInit, OnDestroy {
         this.removeLoading();
         let response = JSON.parse("" + res);
         if (response.type == 1) {
-          let resData = JSON.parse("" + response.data)
+          let resData = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
           this.listFinancial = resData.financial;
           this.totalPage = resData.totalPage;
-
+          this.roomID = null;
           for (let index = 0; index < this.listFinancial.length; index++) {
-
             const element = this.listFinancial[index];
             if (element.paymentDate == 'null') {
               this.listFinancial[index].paymentDate = ''
@@ -165,7 +192,8 @@ export class FinancialComponent implements OnInit, OnDestroy {
             let roomObj = this.getRoomName(element.room);
             this.listFinancial[index].roomObj = roomObj;
           }
-          console.log(this.listFinancial)
+          console.log(this.listFinancial);
+          this.dataSource.data = this.listFinancial;
         }
       }, err => {
         this.showErr(CommonMessage.defaultErrMess);
@@ -203,6 +231,7 @@ export class FinancialComponent implements OnInit, OnDestroy {
         try {
           let response = JSON.parse("" + res);
           if (response.type == 1) {
+            console.log(response.data)
             let data = response.data;
             let elementAll = {
               name: 'Tất cả',
@@ -210,14 +239,7 @@ export class FinancialComponent implements OnInit, OnDestroy {
             }
             data.unshift(elementAll)
             this.roomList = data;
-
-            if (this.roomList.length > 1) {
-              this.currentPage = 1;
-              this.getFinancial();
-            }
-            else {
-              this.removeLoading()
-            }
+            this.getFinancial();
             this.filteredOptions = this.roomControl.valueChanges
               .pipe(
                 startWith(''),
@@ -324,13 +346,11 @@ export class FinancialComponent implements OnInit, OnDestroy {
 
   }
   createExtrafee(data, obj) {
-    
     $('.collapse').collapse('hide');
     this.createEFFormGroup.reset();
     if (obj.status == 1) {
       this.createEFFormGroup.get('payment').disable();
       this.isInvalid = true;
-
     }
     else {
       this.createEFFormGroup.get('payment').enable();
@@ -342,15 +362,15 @@ export class FinancialComponent implements OnInit, OnDestroy {
     this.createEFFormGroup.get('id').setValue(obj.id);
     this.createEFFormGroup.get('room').setValue(obj.room);
     this.currentRoom = obj.roomObj;
-    let financialNew = JSON.parse(data.financialNew);
+    let financialNew = JSON.parse(CommmonFunction.escapeSpecialChars(data.financialNew));
     $('.bd-example-modal-lg').modal('show');
     $('#myButton').prop('disabled', true);
     let electricFee = ((Number(data.electricityNew) - Number(data.electricityOld)) * Number(data.valuePerElectricity));
     let utilityFee = Number(data.InternetFee) + Number(data.WaterFee) + Number(data.CleaningFee);
-    let lstExtraFee = JSON.parse(data.lstExtraFee);
+    let lstExtraFee = JSON.parse(CommmonFunction.escapeSpecialChars(data.lstExtraFee));
     let oldDebt = 0;
     if (data.financialOld.length > 0) {
-      let financialOld = JSON.parse(data.financialOld);
+      let financialOld = JSON.parse(CommmonFunction.escapeSpecialChars(data.financialOld));
       oldDebt = financialOld.total
     }
     let extraFee = 0;
@@ -455,7 +475,8 @@ export class FinancialComponent implements OnInit, OnDestroy {
     let money = $('.input-price:nth-child(1)').val();
     let convertMoney = this.convertToNumberPrice(money);
     let payment = this.convertToNumberPrice($('#payment').val());
-    $('#payment').val(this.convertCurrency(Number(convertMoney) + Number(payment)));
+    this.createEFFormGroup.get('payment').setValue(this.convertCurrency(Number(convertMoney) + Number(payment)))
+
     let input = $('#payment').val();
     let removeComma = input.toString().replace(/[^0-9]/g, '');
     if (isNaN(Number(removeComma)) == false) {
@@ -472,38 +493,48 @@ export class FinancialComponent implements OnInit, OnDestroy {
       this.displayDialog(CommonMessage.inputAllFiel)
       return;
     }
-    let paymentDateArr = this.createEFFormGroup.get('createDate').value.split('-');
-    let paymentDate = [paymentDateArr[2], paymentDateArr[1], paymentDateArr[0]].join('-');
-    let data = {
-      id: this.createEFFormGroup.get('id').value,
-      room: { id: this.createEFFormGroup.get('room').value },
-      description: this.createEFFormGroup.value.description ? this.createEFFormGroup.value.description : '',
-      total: this.convertToNumberPrice(this.createEFFormGroup.get('total').value),
-      payment: this.convertToNumberPrice(this.createEFFormGroup.get('payment').value),
-      paymentDate: paymentDate,
-      cDate: this.createEFFormGroup.get('cDate').value,
-      status: this.createEFFormGroup.get('status').value
-    }
-    console.log(data)
-    this.addLoading();
-    this.service.updateFinancial(data).subscribe(
-      res => {
-        this.removeLoading();
-        let response = JSON.parse("" + res);
-        if (response.type == 1) {
-          this.showSuccess(response.message);
-          $('.bd-example-modal-lg').modal('hide');
-          this.isEdit = 0;;
-          this.getFinancial();
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '400px',
+      data: "Bạn chắc chắn muốn lưu không ?"
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        let paymentDateArr = this.createEFFormGroup.get('createDate').value.split('-');
+        let paymentDate = [paymentDateArr[2], paymentDateArr[1], paymentDateArr[0]].join('-');
+        let data = {
+          id: this.createEFFormGroup.get('id').value,
+          room: { id: this.createEFFormGroup.get('room').value },
+          description: this.createEFFormGroup.value.description ? this.createEFFormGroup.value.description.trim() : '',
+          total: this.convertToNumberPrice(this.createEFFormGroup.get('total').value),
+          payment: this.convertToNumberPrice(this.createEFFormGroup.get('payment').value),
+          paymentDate: paymentDate,
+          cDate: this.createEFFormGroup.get('cDate').value,
+          status: this.createEFFormGroup.get('status').value
         }
-        else if (response.type == 2) {
-          this.showErr(response.message);
-        }
-      }, err => {
-        this.removeLoading();
-        this.showErr(CommonMessage.defaultErrMess);
-        console.log(err);
-      })
+        console.log(data)
+        this.addLoading();
+        this.service.updateFinancial(data).subscribe(
+          res => {
+            this.removeLoading();
+            let response = JSON.parse("" + res);
+            if (response.type == 1) {
+              this.showSuccess(response.message);
+              $('.bd-example-modal-lg').modal('hide');
+              this.isEdit = 0;;
+              this.getFinancial();
+            }
+            else if (response.type == 2) {
+              this.showErr(response.message);
+            }
+          }, err => {
+            this.removeLoading();
+            this.showErr(CommonMessage.defaultErrMess);
+            console.log(err);
+          })
+
+      }
+    })
+
 
 
   }
@@ -519,6 +550,7 @@ export class FinancialComponent implements OnInit, OnDestroy {
     this.service.getOneFinancial(data).subscribe(
       res => {
         this.removeLoading();
+        console.log(res)
         try {
           let response = JSON.parse("" + res);
           if (response.type == 1) {

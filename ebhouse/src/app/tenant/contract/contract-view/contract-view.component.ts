@@ -102,7 +102,7 @@ export class ContractViewComponent implements OnInit, OnDestroy {
       this.createContractFormGroup.get('beginDate').setValue(startDate);
       this.createContractFormGroup.get('endDate').setValue(endDate);
       this.createContractFormGroup.get('period').setValue(this.calPeriod(startDate,endDate));
-      this.createContractFormGroup.get('description').setValue(this.currentContract.owner);
+      this.createContractFormGroup.get('description').setValue(this.currentContract.description);
 
       this.dataSource.data = this.currentContract.tenantList;
       this.contractLog = JSON.parse(this.currentContract.listLog)

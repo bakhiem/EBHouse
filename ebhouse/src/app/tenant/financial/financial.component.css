@@ -30,12 +30,10 @@
   width: 100%;
 }
 .collapse table, .collapsing table{
-  width: 50%;
+  width: 70%;
   margin: 0 auto;
 }
-#accordionExtraFee table{
-  width: 70%;
-}
+
 
 .form-group.row,.col-form-label{
   padding-bottom: 0;
@@ -69,12 +67,7 @@
 }
 
 @media only screen and (max-width: 600px) {
-  .handle{
-    padding-left: 0.5rem!important;
-  }
-  .status-p{
-    padding: 0rem 0.5rem!important;
-  }
+
 .pagination{
   display: flex;
   justify-content: center;
@@ -121,4 +114,7 @@ table{
 }
 .mat-elevation-z8 td{
   cursor: pointer;
+}
+.form-group.row{
+  margin-bottom: 0;
 }

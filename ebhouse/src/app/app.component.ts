@@ -7,7 +7,8 @@ import { AuthenticationService } from './user/service/authentication.service';
 // import { map, filter, scan } from 'rxjs/operators';
 // import { Event as RouterEvent } from '@angular/router';
 // declare var $: any;
-import { ToastContainerDirective, ToastrService } from 'ngx-toastr';
+  import { ToastContainerDirective, ToastrService } from 'ngx-toastr';
+  import { Router } from '@angular/router';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -19,12 +20,18 @@ export class AppComponent implements OnInit {
   isLoggedIn$: Observable<boolean>;
   constructor(
     private authService: AuthenticationService,
-    private toastrService: ToastrService
+    private toastrService: ToastrService,
+    private _router: Router
     ) { }
 
   ngOnInit() {
     this.isLoggedIn$ = this.authService.isLoggedIn;
     this.toastrService.overlayContainer = this.toastContainer;
+  }
+  isLandingPage(){
+    if(this._router.url == '/home'){
+      return true;
+    }
   }
 
 

@@ -3,7 +3,7 @@ import { FormControl} from '@angular/forms';
 import { TenantServiceService } from '../service/tenant-service.service';
 import { ISubscription } from "rxjs/Subscription";
 import { ToastrService } from 'ngx-toastr';
-
+import { MatTableDataSource } from '@angular/material/table';
 import { CommonMessage, Message } from '../../models/message';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { InformationDialogComponent } from '../../shared/info-dialog/information-dialog.component';
@@ -30,6 +30,7 @@ export class RoomsInfoComponent implements OnInit,OnDestroy {
   currentBh: any;
   listRooms: any[];
   roomStatus: number = 1;
+  dataSource = new MatTableDataSource();
   constructor(private service: TenantServiceService,
     private shareService: SharedServiceService,
     private toastr: ToastrService) { }
@@ -67,6 +68,9 @@ export class RoomsInfoComponent implements OnInit,OnDestroy {
         }
         
       }
+      else if(this.currentBh){
+        this.showInfo(CommonMessage.TenantNoBh)
+      } 
     });
   }
   ngOnDestroy() {
@@ -138,6 +142,9 @@ export class RoomsInfoComponent implements OnInit,OnDestroy {
           this.handleListRoom();
           this.getStringEquipment();
         }
+        else{
+          this.listRooms = [];
+        }
           console.log(this.listRooms)
         }
       }, err => {
@@ -158,6 +165,7 @@ export class RoomsInfoComponent implements OnInit,OnDestroy {
       }
      
     }
+    this.dataSource.data = this.listRooms;
   }
   addLoading() {
     $('.customLoading').addClass('preloader');
@@ -172,6 +180,9 @@ export class RoomsInfoComponent implements OnInit,OnDestroy {
   }
   showErr(mess) {
     this.toastr.error(mess, 'Lỗi !');
+  }
+  showInfo(mess) {
+    this.toastr.info(mess, 'Thông báo !');
   }
   pageChanged(page) {
     this.currentPage = page;

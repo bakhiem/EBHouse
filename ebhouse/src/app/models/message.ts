@@ -18,8 +18,31 @@ export enum CommonMessage {
   Utility_InputAllField = 'Vui lòng điền vào tất cả các trường, trường nào không có có thể nhập giá trị 0',
   Electric = 'Số điện tháng sau lớn hơn hoặc bằng số điện tháng trước',
   InputElectricBefore = 'Bạn cần chốt số điện trước khi hủy hợp đồng',
-  HaveDisableContractInMonth = 'Phòng đã có hợp đồng đã xóa trong tháng này'
-  }
+  HaveDisableContractInMonth = 'Không thể tạo do phòng đã có hợp đồng đã xóa trong tháng này',
+
+  InvalidInput= 'Vui lòng đúng dữ liệu',
+
+  InputUserName = 'Vui lòng nhập họ và tên',
+  InputPhone = 'Vui lòng nhập số điện thoại',
+  InputPassword = 'Vui lòng nhập mật khẩu',
+  InvalidPassword = 'Mật khẩu nhiều hơn 7 kí tự',
+  InvalidPhone = 'Số điện thoại gồm 10 chữ số',
+  PasswordNotMatch = 'Mật khẩu cần trùng nhau',
+
+  //bhInfo
+  InputRequire = 'Vui lòng nhập ',
+  RedirectUtility = 'Bạn vừa tạo nhà trọ, mời bạn đến trang Dịch Vụ để tạo đơn giá cho các dịch vụ trong nhà trọ',
+  //room
+  InputBh = 'Vui lòng tạo nhà trọ trước',
+  InputRoom = 'Vui lòng tạo phòng trước',
+  InputRt = 'Vui lòng tạo loại phòng trước',
+  InputMaxRoom = 'Mỗi lần được tạo tối đa 150 phòng, bạn vui lòng tạo thành nhiều lần',
+  //tenant
+  TenantNoBh = 'Hiện tại bạn chưa ở trong nhà trọ nào',
+
+
+  //landlord
+}
   export class Message {
     content : string;
     type : number;

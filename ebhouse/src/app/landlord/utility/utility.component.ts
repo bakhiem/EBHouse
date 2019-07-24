@@ -1,4 +1,4 @@
-import { Component, OnInit,OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Calculating, Utility } from '../../models/utility';
 
 import { LandlordService } from '../service/landlord-service.service';
@@ -7,6 +7,7 @@ import { ISubscription } from "rxjs/Subscription";
 import { SharedServiceService } from '../../service/shared-service.service';
 import { MatDialog, MatCheckboxModule } from '@angular/material';
 import { CommonMessage, Message } from '../../models/message';
+import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 
 import { ToastrService } from 'ngx-toastr';
 import { InformationDialogComponent } from '../../shared/info-dialog/information-dialog.component';
@@ -15,7 +16,7 @@ import { InformationDialogComponent } from '../../shared/info-dialog/information
   templateUrl: './utility.component.html',
   styleUrls: ['./utility.component.css']
 })
-export class UtilityComponent implements OnInit,OnDestroy {
+export class UtilityComponent implements OnInit, OnDestroy {
   listUtility: Utility[] = [
     { id: 1, name: 'Điện', calculating: [{ id: 3, name: "Theo số" }] },
     { id: 2, name: 'Nước', calculating: [{ id: 1, name: "Theo phòng" }, { id: 2, name: "Theo người" }] },
@@ -35,15 +36,21 @@ export class UtilityComponent implements OnInit,OnDestroy {
   ngOnInit() {
     this.subscription = this.shareService.currentBh.subscribe((data) => {
       this.currentBh = data;
-      this.getUtility();
+      if (this.currentBh && this.currentBh.id) {
+        this.getUtility();
+      } else if (this.currentBh) {
+        this.showInfo(CommonMessage.InputBh)
+      }
+
+
     })
   }
   ngOnDestroy() {
-    if(this.subscription){
+    if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }
-  displayDialog(message : string){
+  displayDialog(message: string) {
     this.dialog.open(InformationDialogComponent, {
       width: '400px',
       data: message
@@ -56,7 +63,9 @@ export class UtilityComponent implements OnInit,OnDestroy {
   showErr(mess) {
     this.toastr.error(mess, 'Lỗi !');
   }
-
+  showInfo(mess) {
+    this.toastr.info(mess, 'Thông báo !');
+  }
   private getUtility() {
     if (!this.currentBh || !this.currentBh.id) {
       return;
@@ -82,9 +91,9 @@ export class UtilityComponent implements OnInit,OnDestroy {
             }
             $("input[type=submit]").attr("disabled", "disabled");
           }
-          
+
           //if bh didn't have list utility
-          else{
+          else {
             this.resetForm();
           }
         }
@@ -93,7 +102,7 @@ export class UtilityComponent implements OnInit,OnDestroy {
         console.log(err);
       })
   }
-  resetForm(){
+  resetForm() {
     $("input[type=text]").val('');
     $("input[type=submit]").attr("disabled", "disabled");
   }
@@ -107,7 +116,7 @@ export class UtilityComponent implements OnInit,OnDestroy {
     $("select").change(() => {
       $("input[type=submit]").removeAttr("disabled");
     });
-    $("input").keypress(function () {
+    $("input").keyup(function () {
       $("input[type=submit]").removeAttr("disabled");
     });
   }
@@ -153,62 +162,76 @@ export class UtilityComponent implements OnInit,OnDestroy {
     return notempty;
   }
   save() {
+    if (!this.currentBh.id) {
+      this.showErr(CommonMessage.InputBh);
+      return;
+    }
     if (this.checkEmpty() == false) {
       this.displayDialog(CommonMessage.Utility_InputAllField);
       return;
     }
-    let listSendServer = []
-    if (this.list.length == 0) {
-      for (let index = 0; index < this.listUtility.length; index++) {
-        let formatPrice = $('#price-' + this.listUtility[index].id).val().toString().split('.').join('');
-        let utility = {
-          utility: { id: this.listUtility[index].id },
-          boardingHouse: { id: this.currentBh.id },
-          value: Number(formatPrice),
-          calculatingMethod: Number($('#select-' + this.listUtility[index].id).children("option:selected").val())
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '400px',
+      data: "Bạn chắc chắn muốn lưu thay đổi không ?"
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        let listSendServer = []
+        if (this.list.length == 0) {
+          for (let index = 0; index < this.listUtility.length; index++) {
+            let formatPrice = $('#price-' + this.listUtility[index].id).val().toString().split('.').join('');
+            let utility = {
+              utility: { id: this.listUtility[index].id },
+              boardingHouse: { id: this.currentBh.id },
+              value: Number(formatPrice),
+              calculatingMethod: Number($('#select-' + this.listUtility[index].id).children("option:selected").val())
+            }
+            listSendServer.push(utility);
+          }
         }
-        listSendServer.push(utility);
+        else {
+          for (let index = 0; index < this.list.length; index++) {
+            let formatPrice = $('#price-' + this.list[index].utility).val().toString().split('.').join('');
+            let utility = {
+              id: this.list[index].id,
+              utility: { id: this.list[index].utility },
+              boardingHouse: { id: this.currentBh.id },
+              value: Number(formatPrice),
+              calculatingMethod: Number($('#select-' + this.list[index].utility).children("option:selected").val()),
+              cDate: this.list[index].cDate
+            }
+            listSendServer.push(utility);
+          }
+        }
+
+
+
+        let data = {
+          data: listSendServer
+        }
+        console.log(data);
+        this.addLoading();
+        this.service.updateUtility(data).subscribe(
+          res => {
+
+            let response = JSON.parse("" + res);
+            if (response.type == 1) {
+              this.showSuccess(response.message);
+              this.getUtility();
+            }
+            else {
+              this.removeLoading();
+              this.showErr(response.message);
+            }
+          }, err => {
+            this.removeLoading();
+            this.showErr(CommonMessage.defaultErrMess);
+            console.log(err);
+          })
       }
-    }
-    else {
-      for (let index = 0; index < this.list.length; index++) {
-        let formatPrice = $('#price-' + this.list[index].utility).val().toString().split('.').join('');
-        let utility = {
-          id: this.list[index].id,
-          utility: { id: this.list[index].utility },
-          boardingHouse: { id: this.currentBh.id },
-          value: Number(formatPrice),
-          calculatingMethod: Number($('#select-' + this.list[index].utility).children("option:selected").val()),
-          cDate: this.list[index].cDate
-        }
-        listSendServer.push(utility);
-      }
-    }
+    })
 
 
-
-    let data = {
-      data: listSendServer
-    }
-    console.log(data);
-    this.addLoading();
-    this.service.updateUtility(data).subscribe(
-      res => {
-        
-        let response = JSON.parse("" + res);
-        if (response.type == 1) {
-          this.showSuccess(response.message);
-          this.getUtility();
-        }
-        else{
-          this.removeLoading();
-          this.showErr(response.message);
-        }
-      }, err => {
-        this.removeLoading();
-        this.showErr(CommonMessage.defaultErrMess);
-        console.log(err);
-      })
   }
-  
+
 }

@@ -6,6 +6,7 @@ import { PlaceService } from '../../service/place.service';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
+import { CommmonFunction } from '../../shared/common-function';
 import { ToastrService } from 'ngx-toastr';
 import { CommonMessage } from '../../models/message';
 import { LandlordService } from '../service/landlord-service.service';

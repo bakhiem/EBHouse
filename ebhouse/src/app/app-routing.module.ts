@@ -9,9 +9,11 @@ import { LogoutComponent } from './user/logout/logout.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 
 import { ResetPasswordComponent } from './user/reset-password/reset-password.component';
+
+import { LandingComponent } from './landing/landing.component';
 const routes: Routes = [
-  { path: '',   redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: 'dashboard', component: DashboardComponent },
+  { path: '',   redirectTo: '/home', pathMatch: 'full' },
+  { path: 'home', component: DashboardComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'verify', component: ConfirmPhoneComponent },

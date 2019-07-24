@@ -1,2 +1,95 @@
-<h1>dashboard</h1>
-<img src="https://ebhousetest.s3-ap-southeast-1.amazonaws.com/54-2-imgArnBack"/>
+<div class="customLoading">
+  <div class="customLoader"></div>
+</div>
+<div class="row mt-3">
+  <div class="col-xl-9 col-lg-8">
+    <div class="card">
+      <div class="card-body no-padding-top">
+        <mat-form-field class='col-6 col-sm-3 month-bar'>
+          <input matInput [max]='maxDate' [matDatepicker]="picker" [formControl]="monthBar">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker (monthSelected)="chooseMonthBar($event,picker)" startView="multi-year"
+            disabled="false">
+          </mat-datepicker>
+        </mat-form-field>
+        <div style="display: block">
+          <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+            [legend]="barChartLegend" [chartType]="barChartType">
+          </canvas>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-lg-4 col-sm-6 coin-distribution">
+    <div class="card h-full">
+      <div class="card-body no-padding">
+        <select class="custome-select border-0 pr-3 mb-2 col-6" [(ngModel)]="currentBhPie" (change)="onChangeBhPie()">
+          <option *ngFor="let bh of listBh" [ngValue]="bh">
+            {{bh.name}}
+          </option>
+        </select>
+        <mat-form-field class='col-6 month-pie'>
+          <input matInput [matDatepicker]="picker2" [formControl]="monthPie">
+          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+          <mat-datepicker #picker2 (monthSelected)="chooseMonthPie($event,picker2)" startView="multi-year"
+            disabled="false">
+          </mat-datepicker>
+        </mat-form-field>
+        <div class="chart">
+          <canvas baseChart width="100%" height="120%" [data]="pieChartData" [labels]="pieChartLabels"
+            [chartType]="pieChartType" [options]="pieChartOptions"  [colors]="pieChartColors"
+            [legend]="pieChartLegend">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row mt-3">
+  <div class="col-sm-6 col-12">
+    <div class="card">
+      <div class="card-header">Danh sách hợp đồng sắp hết hạn</div>
+      <div class="card-body no-padding-top">
+        <div class="row"> 
+          <select class="custome-select border-0 pr-3 mb-2 col-6 col-sm-4" [(ngModel)]="currentBhContract"
+            (change)="onChangeBhContract()">
+            <option *ngFor="let bh of listBh" [ngValue]="bh">
+              {{bh.name}}
+            </option>
+          </select>
+          <mat-form-field class='col-6 col-sm-4 month-contract'>
+              <input matInput [matDatepicker]="picker3" [formControl]="monthContract">
+              <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+              <mat-datepicker #picker3 (monthSelected)="chooseMonthContract($event,picker3)" startView="multi-year"
+                disabled="false">
+              </mat-datepicker>
+            </mat-form-field>
+          <table mat-table [dataSource]="listContract" class="mat-elevation-z8">
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Tên phòng</th>
+                <td mat-cell *matCellDef="let element"> {{element.roomName}} </td>
+              </ng-container>
+              <ng-container matColumnDef="startDate">
+                <th mat-header-cell *matHeaderCellDef>Ngày bắt đầu</th>
+                <td mat-cell *matCellDef="let element"> {{element.start_date | date:"dd/MM/yyyy" }} </td>
+              </ng-container>
+              <ng-container matColumnDef="endDate">
+                <th mat-header-cell *matHeaderCellDef>Ngày hết hạn</th>
+                <td mat-cell *matCellDef="let element"> {{element.end_date | date:"dd/MM/yyyy" }}</td>
+              </ng-container>
+    
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+ 
+</div>

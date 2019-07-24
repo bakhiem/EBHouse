@@ -37,7 +37,7 @@ export class UpdateContractComponent implements OnInit,OnDestroy {
   endDateSrt: any;
   minDate = new Date();
   capacity: number;
-  
+  CommonMessage = CommonMessage;
   availableInThisMonth: boolean = true;
   //Message
   monthStartSelected(params, datepicker) {
@@ -312,8 +312,14 @@ export class UpdateContractComponent implements OnInit,OnDestroy {
     this.periodHandler();
     this.createContractFormGroup.get('beginDate').setValue(startDate);
     this.createContractFormGroup.get('endDate').setValue(endDate);
-    if (this.currentContract.contractImg && this.currentContract.contractImg != 'NULL' && this.currentContract.contractImg != 'null')
+    if (this.currentContract.contractImg && this.currentContract.contractImg != 'NULL' && this.currentContract.contractImg != 'null'){
       this.listImg = this.currentContract.contractImg ? this.currentContract.contractImg.split(',') : [];
+      for (let index = 0; index <  this.listImg.length; index++) {
+        this.listImg[index] += "?date=" + new Date().getTime();
+      }
+    }
+    
+
     this.contractLog = this.currentContract.lstContractLog;
   }
 
@@ -395,11 +401,20 @@ export class UpdateContractComponent implements OnInit,OnDestroy {
             $('#tenant-name').val(data.user.name);
             $('#tenant-phone').val(data.user.phone);
             $('#tenant-address').val(data.user.address);
+            if(data.user.sex == 0){
+              $('#tenant-sex').val('Giới tính khác');
+            }
+            if(data.user.sex == 1){
+              $('#tenant-sex').val('Nam');
+            }
+            if(data.user.sex == 2){
+              $('#tenant-sex').val('Nữ');
+            }
             if (data.imgArnFront) {
-              $('#imgArnFront').attr('src', data.imgArnFront);
+              $('#imgArnFront').attr('src', data.imgArnFront.trim()+ "?date=" + new Date().getTime());
             }
             if (data.imgArnBack) {
-              $('#imgArnBack').attr('src', data.imgArnBack);
+              $('#imgArnBack').attr('src', data.imgArnBack.trim()+ "?date=" + new Date().getTime());
             }
             $('#modal2').modal('show');
             this.currentTenant = data;
@@ -469,7 +484,6 @@ export class UpdateContractComponent implements OnInit,OnDestroy {
     let today = new Date();
     if (!this.compareDate(startDate, startDateInput)) {
       if (today > startDate) {
-        console.log('asdasdas')
         return false;
       }
     }
@@ -499,69 +513,75 @@ export class UpdateContractComponent implements OnInit,OnDestroy {
       this.displayDialog('Không thể sửa thời gian bắt đầu của hợp đồng đã được bắt đầu.');
       this.createContractFormGroup.get('beginDate').setValue(this.formatDateFromServer(this.currentContract.startDate));
       let startDate = this.formatDateFromServer(this.currentContract.startDate);
-
       this.startDateStr = this.formatDate(startDate);
       return;
     }
 
-    let formatRoomPrice = this.createContractFormGroup.value.price.toString().split('.').join('');
-    let roomPrice = Number(formatRoomPrice);
-    let deposit = 0;
-    if (this.createContractFormGroup.value.deposit) {
-      let formatDeposit = this.createContractFormGroup.value.deposit.toString().split('.').join('');
-      deposit = Number(formatDeposit);
-    }
-
-    let listImgSplit = []
-    for (let index = 0; index < this.listImg.length; index++) {
-      if (this.listImg[index].includes(',')) {
-        let tmp = this.listImg[index].split(',');
-        listImgSplit.push(tmp[1]);
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '400px',
+      data: "Bạn chắc chắn muốn lưu thay đổi không ?"
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result){
+      let formatRoomPrice = this.createContractFormGroup.value.price.toString().split('.').join('');
+      let roomPrice = Number(formatRoomPrice);
+      let deposit = 0;
+      if (this.createContractFormGroup.value.deposit) {
+        let formatDeposit = this.createContractFormGroup.value.deposit.toString().split('.').join('');
+        deposit = Number(formatDeposit);
       }
-      else {
-        listImgSplit.push(this.listImg[index])
-      }
-    }
-    let data = {
-      contract: [{
-        id: this.currentContract.id,
-        contractImg: this.currentContract.contractImg,
-        roomPrice: roomPrice,
-        deposit: deposit,
-        startDate: this.startDateStr,
-        endDate: this.endDateSrt,
-        description: this.createContractFormGroup.value.description ? this.createContractFormGroup.value.description : ''
-      }],
-      room: [{
-        id: this.currentContract.room.id
-      }],
-      lstTenant: this.listTenant,
-      owner: [this.currentOwner.id],
-      imgContract: listImgSplit,
-
-    }
-    console.log(JSON.stringify(data))
-    this.addLoading();
-    this.service.updateContract(data).subscribe(
-      res => {
-        this.removeLoading();
-        let response = JSON.parse("" + res);
-        if (response.type == 1) {
-          // this.displayDialog(response.message);
-          this.showSuccess(response.message);
-          setTimeout(() => { this.router.navigate(['/landlord/contract']) }, 1500);
+  
+      let listImgSplit = []
+      for (let index = 0; index < this.listImg.length; index++) {
+        if (this.listImg[index].includes(',')) {
+          let tmp = this.listImg[index].split(',');
+          listImgSplit.push(tmp[1]);
         }
         else {
-          
-          this.showErr(response.message);
-          this.displayDialog(response.message);
+          listImgSplit.push(this.listImg[index])
         }
-      }, err => {
-        this.removeLoading();
-        this.showErr( CommonMessage.defaultErrMess);
-        // this.displayDialog(CommonMessage.defaultErrMess);
-        console.log(err);
-      })
+      }
+      let data = {
+        contract: [{
+          id: this.currentContract.id,
+          contractImg: this.currentContract.contractImg,
+          roomPrice: roomPrice,
+          deposit: deposit,
+          startDate: this.startDateStr,
+          endDate: this.endDateSrt,
+          description: this.createContractFormGroup.value.description ? this.createContractFormGroup.value.description : ''
+        }],
+        room: [{
+          id: this.currentContract.room.id
+        }],
+        lstTenant: this.listTenant,
+        owner: [this.currentOwner.id],
+        imgContract: listImgSplit,
+  
+      }
+      this.addLoading();
+      this.service.updateContract(data).subscribe(
+        res => {
+          this.removeLoading();
+          let response = JSON.parse("" + res);
+          if (response.type == 1) {
+            // this.displayDialog(response.message);
+            this.showSuccess(response.message);
+            setTimeout(() => { this.router.navigate(['/landlord/contract']) }, 1500);
+          }
+          else {
+            
+            this.showErr(response.message);
+            this.displayDialog(response.message);
+          }
+        }, err => {
+          this.removeLoading();
+          this.showErr( CommonMessage.defaultErrMess);
+          // this.displayDialog(CommonMessage.defaultErrMess);
+          console.log(err);
+        })
+}})
+
   }
   uploadImage(imageResult: ImageResult) {
     if (this.listImg.length < 5) {

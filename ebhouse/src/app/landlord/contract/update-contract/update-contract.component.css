@@ -21,10 +21,7 @@
   .modal-content img{
     max-height: 90vh;
   }
-  #imgArnFront,#imgArnBack{
-    max-width: 100%;
-    max-height: 300px;
-  }
+
 .modal-dialog{text-align:center;}
 .modal-content{display:inline-block;}
 .example-month-picker .mat-calendar-period-button {
@@ -41,9 +38,19 @@
 th.mat-header-cell{
   text-align: center;
 }
-
- .card img{
+.card img{
   margin: 0 auto;
   max-height: 300px;
   display: block;
+}
+
+#modal2 img{
+  margin: 0 auto;
+  max-width: 550px;
+  max-height: 450px;
+  display: block;
+ }
+
+#modal2 input:disabled{
+  background: #fff;
 }

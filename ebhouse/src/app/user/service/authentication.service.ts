@@ -53,6 +53,8 @@ export class AuthenticationService {
                     let resDataObject = resObject.data.map;
                     console.log(resObject)
                     if (resDataObject.role == Role.Lanlord) {
+                        
+                        console.log('landlord')
                         let userLogin = JSON.parse(resDataObject.landlord);
                         if (resDataObject && userLogin.user.token) {
                             // store user details and jwt token in local storage to keep user logged in between page refreshes
@@ -67,12 +69,13 @@ export class AuthenticationService {
                             else {
                                 localStorage.setItem('currentUser', JSON.stringify(this.userStorage));
                             }
-
+                            console.log(this.userStorage)
                             this.currentUserSubject.next(this.userStorage);
                             this.loggedIn.next(true);
                         }
                     }
                     else if (resDataObject.role == Role.Tenant) {
+                        console.log('tenant')
                         let userLogin = JSON.parse(resDataObject.tenant);
                         if (resDataObject && userLogin.user.token) {
                             // store user details and jwt token in local storage to keep user logged in between page refreshes
@@ -87,6 +90,7 @@ export class AuthenticationService {
                             else {
                                 localStorage.setItem('currentUser', JSON.stringify(this.userStorage));
                             }
+                            console.log(this.userStorage)
                             this.currentUserSubject.next(this.userStorage);
                             this.loggedIn.next(true);
                         }

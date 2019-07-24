@@ -19,7 +19,7 @@
                     </div>
                     <div *ngIf="userFormGroup.controls['fullname'].hasError('required') && (userFormGroup.controls['fullname'].dirty || userFormGroup.controls['fullname'].touched)"
                         class="alert alert-danger">
-                        Bạn phải nhập họ và tên
+                       {{CommonMessage.InputUserName}}
                     </div>
                     <div *ngIf="userFormGroup.controls['fullname'].hasError('minlength') && (userFormGroup.controls['fullname'].dirty || userFormGroup.controls['fullname'].touched)"
                         class="alert alert-danger">
@@ -33,11 +33,11 @@
 
                     <div *ngIf="userFormGroup.controls['phone'].hasError('required') && (userFormGroup.controls['phone'].dirty || userFormGroup.controls['phone'].touched)"
                         class="alert alert-danger">
-                        Số điện thoại là bắt buộc
+                        {{CommonMessage.InputPhone}}
                     </div>
                     <div *ngIf="userFormGroup.controls['phone'].hasError('pattern') && (userFormGroup.controls['phone'].dirty || userFormGroup.controls['phone'].touched)"
                         class="alert alert-danger">
-                        Số điện thoại không đúng định dạng
+                        {{CommonMessage.InvalidPhone}}
                     </div>
                     <div formGroupName="pw">
                         <div class="form-gp focused">
@@ -47,11 +47,11 @@
                         </div>
                         <div *ngIf="userFormGroup.get('pw.password')?.errors?.required && (userFormGroup.get('pw.password').dirty || userFormGroup.get('pw.password').touched)"
                             class="alert alert-danger">
-                            Mật khẩu là bắt buộc
+                            {{CommonMessage.InputPassword}}
                         </div>
                         <div *ngIf="userFormGroup.get('pw.password')?.errors?.minlength && (userFormGroup.get('pw.password').dirty || userFormGroup.get('pw.password').touched)"
                             class="alert alert-danger">
-                            Mật khẩu phải nhiều hơn 8 ký tự
+                            {{CommonMessage.InvalidPassword}}
                         </div>
                         <div class="form-gp focused">
                             <label for="exampleInputPassword2" class="required">Nhập lại mật khẩu</label>
@@ -60,14 +60,14 @@
                         </div>
                         <div *ngIf="userFormGroup.hasError('passwordnotmatch', ['pw']) && (userFormGroup.get('pw').dirty || userFormGroup.get('pw').touched)"
                             class="alert alert-danger">
-                            Mật khẩu phải trùng nhau
+                            {{CommonMessage.PasswordNotMatch}}
                         </div>
                     </div>
                     <div class="form-group choose-role">
                         <label for="exampleFormControlSelect1" class="required">Chọn chức năng</label>
                         <select class="form-control" id="exampleFormControlSelect1" formControlName="role" >
-                            <option value="1">Chủ trọ</option>
                             <option value="2">Khách thuê</option>
+                            <option value="1">Chủ trọ</option>
                         </select>
                     </div>
                     

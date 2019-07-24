@@ -213,7 +213,6 @@ export class TenantProfileComponent implements OnInit {
             this.removeLoading();
             let response = JSON.parse('' + res);
             if (response.type == 1) {
-
               this.showSuccess(response.message);
             } else {
               this.showErr(response.message)
