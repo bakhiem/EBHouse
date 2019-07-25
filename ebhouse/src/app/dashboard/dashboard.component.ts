@@ -36,9 +36,6 @@ export class DashboardComponent implements OnInit {
     console.log(this.currentUser);
   }
   ngAfterViewInit() {
-<<<<<<< HEAD
-
-=======
    this.jqueryCode();
   }
   jqueryCode(){
@@ -49,7 +46,6 @@ export class DashboardComponent implements OnInit {
           $(".navbar").removeClass("fixed-menu-bg");
       }
   });
->>>>>>> a0b9cd7eec7ecc1aa9772d75fcc8494bfb81e4f7
   }
   checkRole() {
     if (this.isLandlord) {
@@ -57,11 +53,7 @@ export class DashboardComponent implements OnInit {
         this.router.navigate(['/landlord/profile']);
       }
       else {
-<<<<<<< HEAD
-        this.router.navigate(['/landlord/home']);
-=======
         this.router.navigate(['/landlord/dashboard']);
->>>>>>> a0b9cd7eec7ecc1aa9772d75fcc8494bfb81e4f7
       }
     }
     else if (this.isTenant) {
