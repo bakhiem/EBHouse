@@ -35,6 +35,9 @@ export class DashboardComponent implements OnInit {
     this.checkRole();
     console.log(this.currentUser);
   }
+  ngAfterViewInit() {
+   
+  }
   checkRole() {
     if (this.isLandlord) {
       if (this.currentUser.user.status == this.statusUpdateProfile) {

@@ -36,7 +36,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   patternMultiName = '^([a-zA-Z0-9,]*)$';
   patternBeginName = '^([0-9]*)$';
   //paging
-  perPage: number = 10;
+  perPage: number = 5;
   currentPage: number = 1;
   totalPage: number = 0;
 

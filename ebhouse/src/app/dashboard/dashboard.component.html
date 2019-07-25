@@ -1,77 +1,417 @@
-<div class="home-page">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container">
-          <a class="navbar-brand" href="#">Start Bootstrap</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-          <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-              <li class="nav-item active">
-                <a class="nav-link" href="#">Home
-                      <span class="sr-only">(current)</span>
-                    </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" routerLink="/login">Đăng nhập</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Services</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Contact</a>
-              </li>
-            </ul>
+<nav class="navbar">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/home"><img src='assets/img/logo.PNG' /><span>Bhouse</span></a>
+    <a class="btn btn-primary" routerLink="/login">Đăng nhập</a>
+  </div>
+</nav>
+
+<!-- Masthead -->
+<header class="masthead text-white text-center">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-5">
+        <h1 class="mb-5">Website quản lý nhà trọ chuyên nghiệp</h1>
+      </div>
+      <div class="col-xl-7">
+        <img src="assets/img/1.png" alt="">
+      </div>
+
+
+    </div>
+    <div class="row">
+      <div class="col-sm-5">
+        <form>
+          <div class="form-row">
+            <div class=" mx-auto">
+              <button type="button" routerLink="/register" class="btn btn-block btn-lg btn-primary">Đăng ký miễn
+                phí</button>
+            </div>
           </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Icons Grid -->
+<section class="features-icons bg-light text-center">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+          <div class="features-icons-icon d-flex">
+            <i class="icon-screen-tablet m-auto text-primary"></i>
+          </div>
+          <h3>Quản lý mọi lúc, mọi nơi</h3>
+          <p class="lead mb-0">Chỉ cần có kết nối mạng, bất cứ nơi đâu bạn cũng có thể dễ dàng quản lý được nhà trọ của
+            mình</p>
         </div>
-      </nav>
-      
-      <header>
-        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+      </div>
+      <div class="col-lg-4">
+        <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+          <div class="features-icons-icon d-flex">
+            <i class="icon-equalizer m-auto text-primary"></i>
+          </div>
+          <h3>Đơn giản, dễ dùng</h3>
+          <p class="lead mb-0">Giao diện đơn giản, thân thiện, giúp việc quản lý nhà trọ của bạn dễ dàng và nhanh chóng
+          </p>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="features-icons-item mx-auto mb-0 mb-lg-3">
+          <div class="features-icons-icon d-flex">
+            <i class="icon-check m-auto text-primary"></i>
+          </div>
+          <h3>Phù hợp nhiều mô hình</h3>
+          <p class="lead mb-0">Chúng tôi nghiên cứu thiết kế phần mềm để phù hợp cho nhiều mô hình nhà trọ</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Image Showcases -->
+<section class="showcase">
+  <div class="container-fluid p-0">
+    <div class="row no-gutters mt-3">
+
+      <div class="col-lg-7 order-lg-2 text-white showcase-img">
+        <img src="assets/img/contract.png" alt="">
+      </div>
+      <div class="col-lg-5 order-lg-1 my-auto showcase-text">
+        <h2>Quản lý hợp đồng</h2>
+        <p class="lead mb-0">Chức năng quản lý thông tin hợp đồng thuê phòng, gồm có phòng,thời hạn hợp đồng, khách
+          thuê, số tiền, đặt cọc, ảnh hợp đồng,...</p>
+      </div>
+    </div>
+    <div class="row no-gutters mt-3">
+      <div class="col-lg-7 text-white showcase-img">
+        <img src="assets/img/financial.PNG" alt="">
+      </div>
+      <div class="col-lg-5 my-auto showcase-text">
+        <h2>Quản lý tài chính</h2>
+        <p class="lead mb-0">Chức năng quản lý tài chính hàng tháng gồm các chi phí như tiền phòng, tiền điện nước, và
+          các chi phí phát sinh. Sẽ giúp bạn không bỏ sót bất cứ chi phí nào khi thu tiền vào cuối tháng.</p>
+      </div>
+    </div>
+    <div class="row no-gutters mt-3">
+      <div class="col-lg-7 order-lg-2 text-white showcase-img">
+        <img src="assets/img/financial.PNG" alt="">
+      </div>
+      <div class="col-lg-5 order-lg-1 my-auto showcase-text">
+        <h2>Quản lý khách thuê</h2>
+        <p class="lead mb-0">
+          Chức năng quản lý thông tin khách thuê, gồm các thông tin cá nhân, phòng đang ở, thông tin liên hệ, ảnh chứng
+          minh thư,...</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<!-- <section class="testimonials text-center bg-light">
+  <div class="container">
+    <h2 class="mb-5">Khách hàng nói gì...</h2>
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+          <img class="img-fluid rounded-circle mb-3" src="../../assets/img/testimonials-1.jpg" alt="">
+          <h5>Cô Chi (Hà Nội)</h5>
+          <p class="font-weight-light mb-0">"Thật là một phần mềm tuyệt vời, nó giúp cô quản lý được tài chính và các
+            hợp đồng dễ dàng. Giao diện thân thiện nên cô dễ dàng tiếp cận."</p>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+          <img class="img-fluid rounded-circle mb-3" src="../../assets/img/testimonials-2.jpg" alt="">
+          <h5>Chú Bắc(Hà Nội)</h5>
+          <p class="font-weight-light mb-0">"Trước đây chú hay quản lý nhà trọ bằng excel, vừa khó vừa hay bị mất mát
+            thông tin, nhưng từ ngày chuyển sang dùng phần mềm này thấy khỏe hẳn ra, chỉ cần nhập thông tin là phần mềm
+            tự làm hết cho mình."</p>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+          <img class="img-fluid rounded-circle mb-3" src="../../assets/img/testimonials-3.jpg" alt="">
+          <h5>Anh Thoan(Hòa Lạc)</h5>
+          <p class="font-weight-light mb-0">"Cảm ơn các bạn đã làm ra phần mềm này để giúp việc quản lý nhà trọ của mọi
+            người đơn giản và nhanh hơn, bây giờ anh có nhiều thời gian để đi xây thêm nhà trọ mới rồi(Cười)"</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+<section class='bg-light customer-feedback'>
+    <div class="container ">
+        <div id="myCarousel" class="carousel slide col-10" data-ride="carousel">
+            <h2>Khách hàng nói gì...</h2>
+          <!-- Carousel indicators -->
           <ol class="carousel-indicators">
-            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-          </ol>
-          <div class="carousel-inner" role="listbox">
-            <!-- Slide One - Set the background image for this slide in the line below -->
-            <div class="carousel-item active" style="background-image: url('https://source.unsplash.com/RCAhiGJsUUE/1920x1080')">
-              <div class="carousel-caption d-none d-md-block">
-                <h3 class="display-4">First Slide</h3>
-                <p class="lead">This is a description for the first slide.</p>
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+          </ol>   
+          <!-- Wrapper for carousel items -->
+          <div class="carousel-inner">		
+            <div class="item carousel-item active">
+              <div class="img-box"><img src="assets/img/testimonials-1.jpg" alt=""></div>
+              <p class="testimonial">Thật là một phần mềm tuyệt vời, nó giúp cô quản lý được tài chính và các
+                  hợp đồng dễ dàng. Giao diện thân thiện nên cô dễ dàng tiếp cận.</p>
+              <p class="overview"><b>Cô Chi</b>Hà Nội</p>
+              <div class="star-rating">
+                <ul class="list-inline">
+                  <li class="list-inline-item"><i class="fa fa-star"></i></li>
+                  <li class="list-inline-item"><i class="fa fa-star"></i></li>
+                  <li class="list-inline-item"><i class="fa fa-star"></i></li>
+                  <li class="list-inline-item"><i class="fa fa-star"></i></li>
+                  <li class="list-inline-item"><i class="fa fa-star-o"></i></li>
+                </ul>
               </div>
             </div>
-            <!-- Slide Two - Set the background image for this slide in the line below -->
-            <div class="carousel-item" style="background-image: url('https://source.unsplash.com/wfh8dDlNFOk/1920x1080')">
-              <div class="carousel-caption d-none d-md-block">
-                <h3 class="display-4">Second Slide</h3>
-                <p class="lead">This is a description for the second slide.</p>
+            <div class="item carousel-item">
+              <div class="img-box"><img src="assets/img/testimonials-2.jpg" alt=""></div>
+              <p class="testimonial">Trước đây chú hay quản lý nhà trọ bằng excel, vừa khó vừa hay bị mất mát
+                  thông tin, nhưng từ ngày chuyển sang dùng phần mềm này thấy khỏe hẳn ra, chỉ cần nhập thông tin là phần mềm
+                  tự làm hết cho mình.</p>
+              <p class="overview"><b>Chú Bắc</b>Hà Nội</p>
+              <div class="star-rating">
+                <ul class="list-inline">
+                  <li class="list-inline-item"><i class="fa fa-star"></i></li>
+                  <li class="list-inline-item"><i class="fa fa-star"></i></li>
+                  <li class="list-inline-item"><i class="fa fa-star"></i></li>
+                  <li class="list-inline-item"><i class="fa fa-star"></i></li>
+                  <li class="list-inline-item"><i class="fa fa-star-o"></i></li>
+                </ul>
               </div>
             </div>
-            <!-- Slide Three - Set the background image for this slide in the line below -->
-            <div class="carousel-item" style="background-image: url('https://source.unsplash.com/O7fzqFEfLlo/1920x1080')">
-              <div class="carousel-caption d-none d-md-block">
-                <h3 class="display-4">Third Slide</h3>
-                <p class="lead">This is a description for the third slide.</p>
+            <div class="item carousel-item">
+              <div class="img-box"><img src="assets/img/testimonials-3.jpg" alt=""></div>
+              <p class="testimonial">Cảm ơn các bạn đã làm ra phần mềm này để giúp việc quản lý nhà trọ của mọi
+                  người đơn giản và nhanh hơn, bây giờ anh có nhiều thời gian để đi xây thêm nhà trọ mới rồi(Cười).</p>
+              <p class="overview"><b>Anh Thoan</b>Hòa Lạc</p>
+              <div class="star-rating">
+                <ul class="list-inline">
+                  <li class="list-inline-item"><i class="fa fa-star"></i></li>
+                  <li class="list-inline-item"><i class="fa fa-star"></i></li>
+                  <li class="list-inline-item"><i class="fa fa-star"></i></li>
+                  <li class="list-inline-item"><i class="fa fa-star"></i></li>
+                  <li class="list-inline-item"><i class="fa fa-star-half-o"></i></li>
+                </ul>
               </div>
+            </div>		
+          </div>
+          <!-- Carousel controls -->
+          <a class="carousel-control left carousel-control-prev" href="#myCarousel" data-slide="prev">
+            <i class="fa fa-angle-left"></i>
+          </a>
+          <a class="carousel-control right carousel-control-next" href="#myCarousel" data-slide="next">
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </div>
+        
+        </div>
+</section>
+
+
+
+
+
+
+<section class="page-section" id="team">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h2 class="section-heading text-uppercase">Đội ngũ phát triển</h2>
+        <h3 class="section-subheading text-muted">Là những con người tận tâm, đem hết tâm huyết của mình vào sản phẩm
+        </h3>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-sm-2">
+        <div class="team-member">
+          <img class="mx-auto rounded-circle" src="assets/img/team/1.jpg" alt="">
+          <h4>ThoanVV</h4>
+          <p class="text-muted">Project Manager</p>
+          <ul class="list-inline social-buttons">
+            <li class="list-inline-item">
+              <a href="#">
+                <i class="fa fa-twitter"></i>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="#">
+                <i class="fa fa-facebook"></i>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="#">
+                <i class="fa fa-linkedin"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="team-member">
+          <img class="mx-auto rounded-circle" src="assets/img/team/2.jpg" alt="">
+          <h4>KhiemNB</h4>
+          <p class="text-muted">Front-End Leader</p>
+          <ul class="list-inline social-buttons">
+            <li class="list-inline-item">
+              <a href="#">
+                <i class="fa fa-twitter"></i>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="#">
+                <i class="fa fa-facebook-f"></i>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="#">
+                <i class="fa fa-linkedin"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="team-member">
+          <img class="mx-auto rounded-circle" src="assets/img/team/3.jpg" alt="">
+          <h4>AnhLH</h4>
+          <p class="text-muted">Server Leader</p>
+          <ul class="list-inline social-buttons">
+            <li class="list-inline-item">
+              <a href="#">
+                <i class="fa fa-twitter"></i>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="#">
+                <i class="fa fa-facebook-f"></i>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="#">
+                <i class="fa fa-linkedin"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="team-member">
+          <img class="mx-auto rounded-circle" src="assets/img/team/4.JPG" alt="">
+          <h4>HungDVN</h4>
+          <p class="text-muted">Doc Leader</p>
+          <ul class="list-inline social-buttons">
+            <li class="list-inline-item">
+              <a href="#">
+                <i class="fa fa-twitter"></i>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="#">
+                <i class="fa fa-facebook-f"></i>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="#">
+                <i class="fa fa-linkedin"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="team-member">
+          <img class="mx-auto rounded-circle" src="assets/img/team/5.jpg" alt="">
+          <h4>ThangPQ</h4>
+          <p class="text-muted">Test Leader</p>
+          <ul class="list-inline social-buttons">
+            <li class="list-inline-item">
+              <a href="#">
+                <i class="fa fa-twitter"></i>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="#">
+                <i class="fa fa-facebook-f"></i>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="#">
+                <i class="fa fa-linkedin"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+
+    </div>
+    <!-- <div class="row  justify-content-center">
+        <div class="col-sm-4">
+            <div class="team-member">
+              <img class="mx-auto rounded-circle" src="assets/img/team/1.jpg" alt="">
+              <h4>Diana Pertersen</h4>
+              <p class="text-muted">Lead Developer</p>
+              <ul class="list-inline social-buttons">
+                <li class="list-inline-item">
+                  <a href="#">
+                    <i class="fa fa-twitter"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item">
+                  <a href="#">
+                    <i class="fa fa-facebook-f"></i>
+                  </a>
+                </li>
+                <li class="list-inline-item">
+                  <a href="#">
+                    <i class="fa fa-linkedin"></i>
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
-          <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-              </a>
-          <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-              </a>
-        </div>
-      </header>
-      
-      <!-- Page Content -->
-      <section class="py-5">
-        <div class="container">
-          <h1 class="font-weight-light">Half Page Image Slider</h1>
-          <p class="lead">The background images for the slider are set directly in the HTML using inline CSS. The images in this snippet are from <a href="https://unsplash.com">Unsplash</a>!</p>
-        </div>
-      </section>
-</div>
+          <div class="col-sm-4">
+              <div class="team-member">
+                <img class="mx-auto rounded-circle" src="assets/img/team/1.jpg" alt="">
+                <h4>Diana Pertersen</h4>
+                <p class="text-muted">Lead Developer</p>
+                <ul class="list-inline social-buttons">
+                  <li class="list-inline-item">
+                    <a href="#">
+                      <i class="fa fa-twitter"></i>
+                    </a>
+                  </li>
+                  <li class="list-inline-item">
+                    <a href="#">
+                      <i class="fa fa-facebook-f"></i>
+                    </a>
+                  </li>
+                  <li class="list-inline-item">
+                    <a href="#">
+                      <i class="fa fa-linkedin"></i>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+    </div> -->
+    <div class="row">
+      <div class="col-lg-8 mx-auto text-center">
+        <p class="large text-muted">
+
+
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+

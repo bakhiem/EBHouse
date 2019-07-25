@@ -37,7 +37,7 @@ import { RedirectDialogComponent } from '../../shared/redirect-dialog/redirect-d
 export class ManageTenantComponent implements OnInit, OnDestroy {
   currentBh: BoardingHouse;
   //paging
-  perPage: number = 10;
+  perPage: number = 5;
   currentPage: number = 1;
   totalPage: number = 0;
 
