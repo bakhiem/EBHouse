@@ -22,8 +22,8 @@ export class NotifiComponent implements OnInit {
   public createNotifiFormGroup: FormGroup;
   public flag: any = 0;
   newNotifi: Notification = new Notification();
-  dataSourceSent = new MatTableDataSource();
-  listDataSet: any[] = [];
+  public dataSourceSent = new MatTableDataSource();
+  public listDataSet: any[] = [];
   listUser: any[] = [];
   listBH: any[] = [];
   listRoom: any[] = [];
@@ -102,7 +102,7 @@ export class NotifiComponent implements OnInit {
               });
             });
           }
-
+          this.dataSourceSent.data = [];
           this.createNotifiFormGroup.get('userTo').setValue(null);
           this.createNotifiFormGroup.get('userToText').setValue(null);
           this.createNotifiFormGroup.get('subject').setValue(null);

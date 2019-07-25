@@ -15,7 +15,7 @@ import { NotifiComponent } from '../notifi.component';
 
 import { ISubscription } from "rxjs/Subscription";
 import { CommmonFunction } from '../../shared/common-function';
-import { ToastrService } from 'ngx-toastr';	
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-to-notification',
   templateUrl: './to-notification.component.html',
@@ -30,22 +30,19 @@ export class ToNotificationComponent implements OnInit, OnDestroy {
   notifiList: any[];
   currentNotifi: any;
   currentIndex: any;
-  //paging
-  perPage: number = 10;
+
+  perPage = 10;
 
   currentPageSent: number = 1;
-  totalPageSent: number;
-  pageNumbersSent: number[] = [];
+  totalPageSent: number =0;
   dataSourceSent = new MatTableDataSource();
 
   currentPageSeen: number = 1;
-  totalPageSeen: number;
-  pageNumbersSeen: number[] = [];
+  totalPageSeen: number=0;
   dataSourceSeen = new MatTableDataSource();
 
   currentPageAnswered: number = 1;
-  totalPageAnswered: number;
-  pageNumbersAnswered: number[] = [];
+  totalPageAnswered: number=0;
   dataSourceAnswered = new MatTableDataSource();
 
   displayedColumns: string[] = ['userTo', 'subject', 'cDate', 'status'];
@@ -89,31 +86,29 @@ export class ToNotificationComponent implements OnInit, OnDestroy {
     this.addLoading();
     this.service.getAllToNotification({ page: currentPage-1, status : status}).subscribe(
       res => {
-        let response = JSON.parse('' + res);
+        let response = JSON.parse("" + CommmonFunction.escapeSpecialChars(res));
         if (response.type == 1) {
-          let data = JSON.parse(response.data);
-          switch(status){
-            case 0:
-                this.notifiListSent = data.listNotification;
-                this.totalPageSent = Math.ceil(data.totalPage / this.perPage);
-                this.toArray(this.totalPageSent, status);
-              break;
-            case 1:
-                this.notifiListSeen = data.listNotification;
-                this.totalPageSeen = Math.ceil(data.totalPage / this.perPage);
-                this.toArray(this.totalPageSeen, status);
-              break;
-            case 2:
-                this.notifiListAnswered = data.listNotification;
-                this.totalPageAnswered = Math.ceil(data.totalPage / this.perPage);
-                this.toArray(this.totalPageAnswered, status);
-              break;
+          if(response.data != null){
+            let data = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
+            switch(status){
+              case 0:
+                  this.notifiListSent = data.listNotification;
+                  this.totalPageSent = data.totalPage;
+                break;
+              case 1:
+                  this.notifiListSeen = data.listNotification;
+                  this.totalPageSeen = data.totalPage;
+                break;
+              case 2:
+                  this.notifiListAnswered = data.listNotification;
+                  this.totalPageAnswered = data.totalPage;
+                break;
+            }
+            this.dataSourceSent.data = this.notifiListSent;
+            this.dataSourceSeen.data = this.notifiListSeen;
+            this.dataSourceAnswered.data = this.notifiListAnswered;
           }
-          this.dataSourceSent.data = this.notifiListSent;
-          this.dataSourceSeen.data = this.notifiListSeen;
-          this.dataSourceAnswered.data = this.notifiListAnswered;
         } else {
-          console.log(response.message)
           this.showErr(response.message);
         }
         this.removeLoading();
@@ -129,15 +124,14 @@ export class ToNotificationComponent implements OnInit, OnDestroy {
     if(status == 0){
       this.service.updateStatus({ id: row.id, status : status+1}).subscribe(
         res => {
+
           let response = JSON.parse('' + res);
           if (response.type == 1) {
                 this.notifiListSent[index].status = 1;
                 this.notifiListSeen.unshift(this.notifiListSent[index]);
                 this.notifiListSent.splice(index,1);
-                this.totalPageSent = Math.ceil(this.notifiListSent.length / this.perPage);
-                this.toArray(this.totalPageSent, status);
-                this.totalPageSeen = Math.ceil(this.notifiListSeen.length / this.perPage);
-                this.toArray(this.totalPageSeen, status+1);
+                this.totalPageSent =this.notifiListSent.length;
+                this.totalPageSeen = this.notifiListSeen.length;
           }
 
           this.dataSourceSent.data = this.notifiListSent;
@@ -194,87 +188,22 @@ export class ToNotificationComponent implements OnInit, OnDestroy {
     });
   }
 
- //paging
-  toArray = function (num: number, status: number) {
-  switch(status){
-    case 0:
-        this.pageNumbersSent = [];
-        for (let i = 1; i <= num; i++) {
-          this.pageNumbersSent[i - 1] = i;
-        }
+  pageChanged(page, status) {
+    switch(status){
+      case 0:
+            this.currentPageSent = page;
+            this.getNotificationByStatus(status, this.currentPageSent);
       break;
     case 1:
-        this.pageNumbersSeen = [];
-        for (let i = 1; i <= num; i++) {
-          this.pageNumbersSeen[i - 1] = i;
-        }
+          this.currentPageSeen = page;
+          this.getNotificationByStatus(status, this.currentPageSeen);
       break;
     case 2:
-        this.pageNumbersAnswered = [];
-        for (let i = 1; i <= num; i++) {
-          this.pageNumbersAnswered[i - 1] = i;
-        }
+          this.currentPageAnswered = page;
+          this.getNotificationByStatus(status,this.currentPageAnswered);
       break;
     }
 
-  }
-  goToPage(status:number, page: any) {
-    switch(status){
-      case 0:
-        this.currentPageSent = page;
-      break;
-    case 1:
-        this.currentPageSeen = page;
-      break;
-    case 2:
-        this.currentPageAnswered = page;
-      break;
-    }
-    this.getNotificationByStatus(status, page);
-  }
-  prePage(status:number) {
-    switch(status){
-      case 0:
-          if (this.currentPageSent > 1) {
-            this.currentPageSent = this.currentPageSent - 1;
-            this.getNotificationByStatus(status, this.currentPageSent);
-          }
-      break;
-    case 1:
-        if (this.currentPageSeen > 1) {
-          this.currentPageSeen = this.currentPageSeen - 1;
-          this.getNotificationByStatus(status, this.currentPageSeen);
-        }
-      break;
-    case 2:
-        if (this.currentPageAnswered > 1) {
-          this.currentPageAnswered = this.currentPageAnswered - 1;
-          this.getNotificationByStatus(status,this.currentPageAnswered);
-        }
-      break;
-    }
-  }
-  nextPage(status:number) {
-    switch(status){
-      case 0:
-          if (this.currentPageSent < this.totalPageSent) {
-            this.currentPageSent = this.currentPageSent + 1;
-            this.getNotificationByStatus(status, this.currentPageSent);
-          }
-      break;
-    case 1:
-        if (this.currentPageSeen < this.totalPageSeen) {
-          this.currentPageSeen = this.currentPageSeen + 1;
-          this.getNotificationByStatus(status, this.currentPageSeen);
-        }
-      break;
-    case 2:
-        if (this.currentPageAnswered < this.totalPageAnswered) {
-          this.currentPageAnswered = this.currentPageAnswered + 1;
-          this.getNotificationByStatus(status,this.currentPageAnswered);
-        }
-      break;
-    }
   }
 
   addLoading() {
@@ -292,6 +221,8 @@ export class ToNotificationComponent implements OnInit, OnDestroy {
 
     this.parent.flag = 1;
     this.parent.currentNotifi = e;
+    this.parent.listDataSet.push({ name: e.userFrom.name, option: 'user', id: e.userFrom.id });
+    this.parent.dataSourceSent.data = this.parent.listDataSet;
     this.parent.createNotifiFormGroup.get('userTo').setValue(e.userFrom.id);
     this.parent.createNotifiFormGroup.get('userToText').setValue(e.userFrom.name);
     this.parent.createNotifiFormGroup.get('subject').setValue(null);
@@ -310,10 +241,8 @@ export class ToNotificationComponent implements OnInit, OnDestroy {
           this.notifiListSeen[this.currentIndex].status = 2;
           this.notifiListAnswered.unshift(this.notifiListSeen[this.currentIndex]);
           this.notifiListSeen.splice(this.currentIndex,1);
-          this.totalPageSent = Math.ceil(this.notifiListSent.length / this.perPage);
-          this.toArray(this.totalPageSeen, this.currentNotifi.status);
-          this.totalPageSeen = Math.ceil(this.notifiListSeen.length / this.perPage);
-          this.toArray(this.totalPageAnswered, this.currentNotifi.status+1);
+          this.totalPageSent = this.notifiListSent.length;
+          this.totalPageSeen = this.notifiListSeen.length;
         }
 
         this.dataSourceSent.data = this.notifiListSent;
@@ -327,11 +256,5 @@ export class ToNotificationComponent implements OnInit, OnDestroy {
       }
     );
   }
-
-  // test(){
-  //   this.subscription = this.service.update.subscribe((data) => {
-  //     this.updateStatus();
-  //   })
-  // }
 
 }

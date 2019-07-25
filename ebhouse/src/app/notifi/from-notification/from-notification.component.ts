@@ -13,6 +13,7 @@ import { Notification } from 'src/app/models/notification';
 
 import { ISubscription } from "rxjs/Subscription";
 import { ToastrService } from 'ngx-toastr';
+import { CommmonFunction } from '../../shared/common-function';
 @Component({
   selector: 'app-from-notification',
   templateUrl: './from-notification.component.html',
@@ -25,22 +26,19 @@ export class FromNotificationComponent implements OnInit,OnDestroy{
   notifiListAnswered: any[] = [];
   notifiList: any[];
   currentNotifi: any;
-  //paging
-  perPage: number = 10;
+
+  perPage = 10;
 
   currentPageSent: number = 1;
-  totalPageSent: number;
-  pageNumbersSent: number[] = [];
+  totalNotifiSent: number = 0;
   dataSourceSent = new MatTableDataSource();
 
   currentPageSeen: number = 1;
-  totalPageSeen: number;
-  pageNumbersSeen: number[] = [];
+  totalNotifiSeen: number = 0;
   dataSourceSeen = new MatTableDataSource();
 
   currentPageAnswered: number = 1;
-  totalPageAnswered: number;
-  pageNumbersAnswered: number[] = [];
+  totalNotifiAnswered: number = 0;
   dataSourceAnswered = new MatTableDataSource();
 
   displayedColumns: string[] = ['userTo', 'subject', 'cDate', 'status'];
@@ -84,26 +82,24 @@ export class FromNotificationComponent implements OnInit,OnDestroy{
     this.addLoading();
     this.service.getAllFromNotification({ page: currentPage-1, status : status}).subscribe(
       res => {
-        let response = JSON.parse('' + res);
-        console.log(response);
+        let response = JSON.parse("" + CommmonFunction.escapeSpecialChars(res));
         if (response.type == 1) {
-          let data = JSON.parse(response.data);
-          switch(status){
-            case 0:
-                this.notifiListSent = data.listNotification;
-                this.totalPageSent = Math.ceil(data.totalPage / this.perPage);
-                this.toArray(this.totalPageSent, status);
-              break;
-            case 1:
-                this.notifiListSeen = data.listNotification;
-                this.totalPageSeen = Math.ceil(data.totalPage / this.perPage);
-                this.toArray(this.totalPageSeen, status);
-              break;
-            case 2:
-                this.notifiListAnswered = data.listNotification;
-                this.totalPageAnswered = Math.ceil(data.totalPage / this.perPage);
-                this.toArray(this.totalPageAnswered, status);
-              break;
+          if(response.data != null){
+            let data = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
+            switch(status){
+              case 0:
+                  this.notifiListSent = data.listNotification;
+                  this.totalNotifiSent = data.totalPage;
+                break;
+              case 1:
+                  this.notifiListSeen = data.listNotification;
+                  this.totalNotifiSeen = data.totalPage;
+                break;
+              case 2:
+                  this.notifiListAnswered = data.listNotification;
+                  this.totalNotifiAnswered = data.totalPage;
+                break;
+            }
           }
           this.dataSourceSent.data = this.notifiListSent;
           this.dataSourceSeen.data = this.notifiListSeen;
@@ -163,89 +159,23 @@ export class FromNotificationComponent implements OnInit,OnDestroy{
     });
   }
 
- //paging
-  toArray = function (num: number, status: number) {
-  switch(status){
-    case 0:
-        this.pageNumbersSent = [];
-        for (let i = 1; i <= num; i++) {
-          this.pageNumbersSent[i - 1] = i;
-        }
+  pageChanged(page, status) {
+    switch(status){
+      case 0:
+            this.currentPageSent = page;
+            this.getNotificationByStatus(status, this.currentPageSent);
       break;
     case 1:
-        this.pageNumbersSeen = [];
-        for (let i = 1; i <= num; i++) {
-          this.pageNumbersSeen[i - 1] = i;
-        }
+          this.currentPageSeen = page;
+          this.getNotificationByStatus(status, this.currentPageSeen);
       break;
     case 2:
-        this.pageNumbersAnswered = [];
-        for (let i = 1; i <= num; i++) {
-          this.pageNumbersAnswered[i - 1] = i;
-        }
+          this.currentPageAnswered = page;
+          this.getNotificationByStatus(status,this.currentPageAnswered);
       break;
     }
 
   }
-  goToPage(status:number, page: any) {
-    switch(status){
-      case 0:
-        this.currentPageSent = page;
-      break;
-    case 1:
-        this.currentPageSeen = page;
-      break;
-    case 2:
-        this.currentPageAnswered = page;
-      break;
-    }
-    this.getNotificationByStatus(status, page);
-  }
-  prePage(status:number) {
-    switch(status){
-      case 0:
-          if (this.currentPageSent > 1) {
-            this.currentPageSent = this.currentPageSent - 1;
-            this.getNotificationByStatus(status, this.currentPageSent);
-          }
-      break;
-    case 1:
-        if (this.currentPageSeen > 1) {
-          this.currentPageSeen = this.currentPageSeen - 1;
-          this.getNotificationByStatus(status, this.currentPageSeen);
-        }
-      break;
-    case 2:
-        if (this.currentPageAnswered > 1) {
-          this.currentPageAnswered = this.currentPageAnswered - 1;
-          this.getNotificationByStatus(status,this.currentPageAnswered);
-        }
-      break;
-    }
-  }
-  nextPage(status:number) {
-    switch(status){
-      case 0:
-          if (this.currentPageSent < this.totalPageSent) {
-            this.currentPageSent = this.currentPageSent + 1;
-            this.getNotificationByStatus(status, this.currentPageSent);
-          }
-      break;
-    case 1:
-        if (this.currentPageSeen < this.totalPageSeen) {
-          this.currentPageSeen = this.currentPageSeen + 1;
-          this.getNotificationByStatus(status, this.currentPageSeen);
-        }
-      break;
-    case 2:
-        if (this.currentPageAnswered < this.totalPageAnswered) {
-          this.currentPageAnswered = this.currentPageAnswered + 1;
-          this.getNotificationByStatus(status,this.currentPageAnswered);
-        }
-      break;
-    }
-  }
-
   addLoading() {
     $('.customLoading').addClass('preloader');
     $('.customLoader').addClass('loader');
