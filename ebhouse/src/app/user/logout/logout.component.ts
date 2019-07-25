@@ -16,19 +16,19 @@ export class LogoutComponent implements OnInit {
   ngOnInit() {
     if (this.service.currentUserValue) {
       this.service.logout().subscribe(res => {
-        this.router.navigate(['/login'])
+        this.router.navigate(['/home'])
       }, err => {
-        this.router.navigate(['/login'])
+        this.router.navigate(['/home'])
       });
     } else {
-      this.router.navigate(['/login'])
+      this.router.navigate(['/home'])
     }
     this.showSuccess('Đăng xuất thành công')
 
 
     // location.reload(true);
   }
-  showSuccess(mess) {
+  showSuccess(mess) { 
     this.toastr.success(mess, 'Thành công');
   }
   showErr(mess) {

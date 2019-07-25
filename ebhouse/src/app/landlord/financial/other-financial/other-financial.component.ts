@@ -64,8 +64,6 @@ export class OtherFinancialComponent implements OnInit, OnDestroy {
       this.currentBh = data;
       if (this.currentBh && this.currentBh.id) {
         this.getRoomsFromCurrentBh();
-        
-        
       }
       else if(this.currentBh){
         this.showInfo(CommonMessage.InputBh)

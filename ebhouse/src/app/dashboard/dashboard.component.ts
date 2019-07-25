@@ -29,14 +29,27 @@ export class DashboardComponent implements OnInit {
   }
   deleteDataInLocal() {
     this.authenticationService.removeLocalUser();
-    this.router.navigate(['/home'])
+    this.router.navigate(['/home']);
   }
   ngOnInit() {
     this.checkRole();
     console.log(this.currentUser);
   }
   ngAfterViewInit() {
+<<<<<<< HEAD
 
+=======
+   this.jqueryCode();
+  }
+  jqueryCode(){
+    $(document).scroll(function(){
+      if($(this).scrollTop() >= $('#start-menu-fixed').offset().top) {
+          $(".navbar").addClass("fixed-menu-bg");
+      } else {
+          $(".navbar").removeClass("fixed-menu-bg");
+      }
+  });
+>>>>>>> a0b9cd7eec7ecc1aa9772d75fcc8494bfb81e4f7
   }
   checkRole() {
     if (this.isLandlord) {
@@ -44,7 +57,11 @@ export class DashboardComponent implements OnInit {
         this.router.navigate(['/landlord/profile']);
       }
       else {
+<<<<<<< HEAD
         this.router.navigate(['/landlord/home']);
+=======
+        this.router.navigate(['/landlord/dashboard']);
+>>>>>>> a0b9cd7eec7ecc1aa9772d75fcc8494bfb81e4f7
       }
     }
     else if (this.isTenant) {
