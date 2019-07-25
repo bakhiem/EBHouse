@@ -5,7 +5,7 @@ import { AuthGuard }from '../guard/authRole.guard';
 import { Role }from '../user/models/role';
 
 const routes: Routes = [{
-  path:'landlord',
+  path:'admin',
   component:EquipmentComponent,
   canActivate:[AuthGuard], data: {roles:[Role.Admin] },
   children:[ {

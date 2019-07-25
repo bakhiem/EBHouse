@@ -1,0 +1,59 @@
+table {
+    width: 100%;
+    margin-top: 20px;
+}
+
+table th {
+    font-size: 1.1rem;
+    color: black;
+}
+
+.create-bh {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.form-group.row {
+    margin-bottom: 0;
+}
+
+.text-secondary {
+    cursor: pointer;
+}
+
+.mat-column-select {
+    overflow: initial;
+}
+
+.page-footer {
+    background: #fff;
+    padding-top: 1.1rem;
+}
+
+@media only screen and (max-width: 576px) {
+    .pagination {
+        display: flex;
+        justify-content: center;
+    }
+    table.mat-elevation-z8 td {
+        font-size: 0.6rem;
+        text-align: center;
+    }
+    table.mat-elevation-z8 th {
+        font-size: 0.8rem;
+        text-align: center;
+    }
+    table.mat-elevation-z8 button {
+        font-size: 0.8rem;
+        padding: 4px;
+    }
+    table.mat-elevation-z8 ul {
+        margin-bottom: 0;
+        margin-left: 0.4rem;
+    }
+    #delete-btn {
+        margin-right: 0!important;
+        margin-bottom: 0.5rem;
+    }
+}

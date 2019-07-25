@@ -1,3 +1,193 @@
-<p>
-  equipment works!
-</p>
+<div class="customLoading">
+    <div class="customLoader"></div>
+</div>
+<div class="row mt-3 justify-content-end">
+    <button type="button" class="btn btn-primary mr-3 col-sm-3  col-lg-2 col-5" (click)="creatEquiment()">
+          Tạo Tiện Ích
+      </button>
+</div>
+<div class="row">
+    <table *ngIf="dataSourceEquipment" mat-table [dataSource]="dataSourceEquipment" class="mat-elevation-z8">
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Tên</th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+        <ng-container matColumnDef="cDate">
+            <th mat-header-cell *matHeaderCellDef>Ngày Tạo</th>
+            <td mat-cell *matCellDef="let element"> {{element.create_date | date:"dd/MM/yyyy"}} </td>
+        </ng-container>
+        <ng-container matColumnDef="mDate">
+            <th mat-header-cell *matHeaderCellDef>Ngày Cập Nhật</th>
+            <td mat-cell *matCellDef="let element"> {{element.modify_date | date:"dd/MM/yyyy"}} </td>
+        </ng-container>
+        <ng-container matColumnDef="status" [ngSwitch]="true">
+            <th mat-header-cell *matHeaderCellDef>Trạng Thái</th>
+            <td mat-cell *matCellDef="let element">
+                <span *ngIf='element.status == 1' class="status-p bg-success">Có hiệu lực</span>
+                <span *ngIf='element.status == 0' class="status-p bg-danger">Vô hiệu hoá</span>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+                <ul class="d-flex justify-content-center">
+                    <li class="mr-3"><a class="text-secondary" (click)="editEquipment(row)"><i class="fa fa-edit"></i></a>
+                    </li>
+                    <li><a class="text-danger" (click)="deleteEquipment(row)"><i class="ti-trash"></i></a></li>
+                </ul>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+</div>
+<div class="row page-footer">
+    <div class="col-sm-5 col-12">Tổng số phòng : {{ totalEquipment }}</div>
+    <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalEquipment" [(page)]="currentPage" [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event)">
+    </ngb-pagination>
+</div>
+<!-- <div class="modal fade bd-example-modal-lg one-room">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <form [formGroup]="createRoomFormGroup" (ngSubmit)="onSubmit()">
+                <div class="modal-header">
+                    <h5 *ngIf="isEdit == 0; else edit" class="modal-title">Tạo phòng trọ</h5>
+                    <ng-template #edit>
+                        <h5 *ngIf="isEdit == 1" class="modal-title">Sửa thông tin phòng trọ</h5>
+                    </ng-template>
+
+                    <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-sm-4">
+                            <label for="input-bhouse" class="col-form-label">Nhà trọ</label>
+                            <input class="form-control boarding-house" id='input-bhouse' type="text" disabled>
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="col-form-label required">Loại phòng </label>
+                            <select class="custom-select" formControlName="roomType">
+                              <option *ngFor="let type of rtList" [ngValue]="type">
+                                  {{type.name}}
+                              </option>
+                          </select>
+                            <div *ngIf="createRoomFormGroup.controls['roomType'].hasError('required')  && (createRoomFormGroup.controls['roomType'].dirty || createRoomFormGroup.controls['roomType'].touched)" class="alert alert-danger">
+                                Vui lòng chọn loại phòng
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-4">
+                            <label for="example-text-input" class="col-form-label required">Tên phòng</label>
+                            <input class="form-control" type="text" id="example-text-input" formControlName="name">
+                            <div *ngIf="createRoomFormGroup.controls['name'].hasError('required')  && (createRoomFormGroup.controls['name'].dirty || createRoomFormGroup.controls['name'].touched)" class="alert alert-danger">
+                                Vui lòng nhập tên phòng
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label for="example-tel-input" class="col-form-label">Mô tả</label>
+                            <textarea class="form-control" rows="3" formControlName="description"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Trở về</button>
+                    <button class="btn btn-info mb-3" type="submit" id="myButton" [disabled]="createRoomFormGroup.invalid"> Lưu</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-lg multi-room">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <form [formGroup]="createMultiRoomFormGroup" (ngSubmit)="onSubmitMultiRoom()">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tạo nhiều phòng trọ</h5>
+                    <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                </div>
+                <div class="modal-body">
+
+
+                    <div class="form-group row">
+                        <div class="col-sm-4">
+                            <label for="input-bdhouse" class="col-form-label required">Nhà trọ</label>
+                            <input class="form-control boarding-house" id='input-bdhouse' type="text" disabled>
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="col-form-label required">Loại phòng </label>
+                            <select class="custom-select" formControlName="roomType">
+                              <option *ngFor="let type of rtList" [ngValue]="type">
+                                  {{type.name}}
+                              </option>
+                          </select>
+                            <div *ngIf="createRoomFormGroup.controls['roomType'].hasError('required') && (createRoomFormGroup.controls['roomType'].dirty || createRoomFormGroup.controls['roomType'].touched)" class="alert alert-danger">
+                                Vui lòng chọn loại phòng
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active show" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Nhập nhiều phòng</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Nhập phòng bắt đầu
+                                      và phòng kết thúc</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content mt-3" id="myTabContent" formGroupName="name">
+                                <div class="tab-pane fade active show" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                    <label for="example-text-input" class="col-form-label required">Tên phòng( Ngăn
+                                      cách bởi dấu phẩy, ví dụ : P101,P102)</label>
+                                    <input class="form-control" type="text" id="example-text-input" formControlName="nameFormat">
+                                    <div *ngIf="createMultiRoomFormGroup.get('name.nameFormat')?.errors?.pattern && (createMultiRoomFormGroup.get('name.nameFormat').dirty || createMultiRoomFormGroup.get('name.nameFormat').touched)" class="alert alert-danger">
+                                        Tên các phòng ngăn cách bởi dấu phẩy
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                    <label for="example-text-input" class="col-form-label required">Phòng bắt
+                                      đầu(Nhập số, ví dụ : 1)</label>
+                                    <input class="form-control" type="number" pattern="[0-9]*" onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))" id="example-text-input" formControlName="nameBegin">
+                                    <div *ngIf="createMultiRoomFormGroup.get('name.nameBegin')?.errors?.pattern && (createMultiRoomFormGroup.get('name.nameBegin').dirty || createMultiRoomFormGroup.get('name.nameBegin').touched)" class="alert alert-danger">
+                                        Tên phòng bao gồm các số
+                                    </div>
+                                    <label for="example-text-input" class="col-form-label required">Phòng kết
+                                      thúc(Nhập số, ví dụ : 10)</label>
+                                    <input class="form-control" pattern="[0-9]*" type="number" id="example-text-input" onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))" formControlName="nameEnd">
+                                    <div *ngIf="createMultiRoomFormGroup.get('name.nameEnd')?.errors?.pattern && (createMultiRoomFormGroup.get('name.nameEnd').dirty || createMultiRoomFormGroup.get('name.nameEnd').touched)" class="alert alert-danger">
+                                        Tên phòng bao gồm các số
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Trở về</button>
+                    <button class="btn btn-info mb-3" type="submit" id="myButton" [disabled]="createMultiRoomFormGroup.invalid"> Lưu</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div> -->
