@@ -27,7 +27,7 @@ export class FromNotificationComponent implements OnInit,OnDestroy{
   notifiList: any[];
   currentNotifi: any;
 
-  perPage = 10;
+  perPage = 3;
 
   currentPageSent: number = 1;
   totalNotifiSent: number = 0;

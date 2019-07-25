@@ -31,7 +31,7 @@ export class ToNotificationComponent implements OnInit, OnDestroy {
   currentNotifi: any;
   currentIndex: any;
 
-  perPage = 10;
+  perPage =3;
 
   currentPageSent: number = 1;
   totalPageSent: number =0;

@@ -12,7 +12,7 @@
             <!-- header area start -->
             <app-header></app-header>
             <!-- page title area end -->
-            <div class="main-content-inner"  [ngClass]="{'no-padding-home': isLandingPage()}">
+            <div class="main-content-inner"  [ngClass]="{'no-padding-home': isLandingPage() || (isLoggedIn$ | async) == false }">
                     <div toastContainer></div>
                 <router-outlet></router-outlet>
             </div>
