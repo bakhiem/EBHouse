@@ -36,7 +36,7 @@ export class DashboardComponent implements OnInit {
     console.log(this.currentUser);
   }
   ngAfterViewInit() {
-   
+
   }
   checkRole() {
     if (this.isLandlord) {
@@ -44,7 +44,7 @@ export class DashboardComponent implements OnInit {
         this.router.navigate(['/landlord/profile']);
       }
       else {
-        this.router.navigate(['/landlord/bh-info']);
+        this.router.navigate(['/landlord/home']);
       }
     }
     else if (this.isTenant) {
