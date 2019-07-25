@@ -37,6 +37,7 @@ import { ToastrModule, ToastContainerModule } from 'ngx-toastr';
 import {NotifiModule }from './notifi/notifi.module';
 import { ResetPasswordComponent } from './user/reset-password/reset-password.component';
 import { LandingComponent } from './landing/landing.component';
+import { AdminModule } from './admin/admin.module'
 @NgModule( {
   declarations:[
     AppComponent,
@@ -68,6 +69,7 @@ import { LandingComponent } from './landing/landing.component';
     HttpClientModule,
     LandlordModule,
     TenantModule,
+    AdminModule,
     BrowserAnimationsModule,
     MatDialogModule,
     NgbModule,
