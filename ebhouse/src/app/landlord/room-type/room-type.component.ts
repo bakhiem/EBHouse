@@ -30,7 +30,7 @@ export class RoomTypeComponent implements OnInit {
   dataEquipment: any[];
 
   //paging
-  perPage: number = 10;
+  perPage: number = 5;
   currentPage: number = 1;
   totalPage: number = 0;
   dataSource = new MatTableDataSource();
