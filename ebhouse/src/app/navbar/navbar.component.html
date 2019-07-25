@@ -21,7 +21,7 @@
                             <li routerLink="/landlord/utility" routerLinkActive="active" class='custom-expand-menu'><a
                                     href="javascript:void(0)">Dịch vụ</a></li>
                         </ul>
-                       
+
                     </li>
                     <li>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-home"></i><span>Phòng & loại phòng</span></a>
@@ -33,7 +33,7 @@
                                     href="javascript:void(0)">Thông tin phòng</a></li>
                             <li routerLink="/landlord/room-activity" routerLinkActive="active"
                                 class='custom-expand-menu'><a href="javascript:void(0)">Hoạt động phòng</a></li>
-                           
+
                         </ul>
                     </li>
                     <li>
@@ -144,4 +144,29 @@
             </nav>
         </div>
     </div>
+</div>
+
+<div class="sidebar-menu" [ngClass]="{'hide': role == 'tenant' || role == 'landlord' || isLandingPage()}">
+  <div class="sidebar-header">
+      <div class="logo">
+          <a routerLink="/admin/dashboard"><img src="assets/images/logo/logo_transparent_white.png" alt="logo"></a>
+      </div>
+  </div>
+  <div class="main-menu">
+      <div class="menu-inner">
+          <nav>
+              <ul class="metismenu" *ngIf='role == "admin"' id="menu" #myMenu>
+                  <li routerLink="/admin/dashboard" routerLinkActive="active" class='custom-expand-menu'>
+                      <a href="javascript:void(0)"><i class="fa fa-building-o"></i><span>Dashboard
+                          </span></a>
+                  </li>
+                  <li routerLink="/admin/equipment" routerLinkActive="active" class='custom-expand-menu'>
+                      <a href="javascript:void(0)" ><i class="fa fa-building-o"></i><span>Thông
+                              tin các phòng
+                          </span></a>
+                  </li>
+              </ul>
+          </nav>
+      </div>
+  </div>
 </div>

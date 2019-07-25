@@ -24,6 +24,9 @@ export class DashboardComponent implements OnInit {
   get isTenant() {
     return (this.currentUser && this.currentUser.role === Role.Tenant);
   }
+  get isAdmin(){
+    return(this.currentUser && this.currentUser.role === Role.Admin);
+  }
   deleteDataInLocal() {
     this.authenticationService.removeLocalUser();
     this.router.navigate(['/home'])
@@ -49,8 +52,9 @@ export class DashboardComponent implements OnInit {
         this.router.navigate(['/tenant/bh-info']);
       }
     }
-    else {
-      console.log("delete in dashboard")
+    else if(this.isAdmin){
+      this.router.navigate(['/admin/equipment']);
+    }else{
       this.deleteDataInLocal();
     }
   }

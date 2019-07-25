@@ -9,7 +9,7 @@ const routes: Routes = [{
   component:EquipmentComponent,
   canActivate:[AuthGuard], data: {roles:[Role.Admin] },
   children:[ {
-    path:'dashboard',
+    path:'equipment',
     component:EquipmentComponent
   }]
 }];

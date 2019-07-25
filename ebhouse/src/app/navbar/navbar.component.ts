@@ -34,11 +34,13 @@ export class NavbarComponent implements OnInit, AfterViewInit {
     else if (this.currentUser && this.currentUser.role === Role.Tenant) {
       this.role = 'tenant';
     }
-    else {
+    else if (this.currentUser && this.currentUser.role === Role.Admin) {
+      this.role = 'admin';
+    }else {
       this.role = ''
     }
   }
-  
+
   jqueryCode() {
     $('.custom-expand-menu').on('click', function () {
       if ($('.page-container').hasClass("sbar_collapsed")) {
@@ -62,7 +64,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
       this.getRole();
     });
 
-    
+
 
     // if (this.isLandlord) {
     //   if (this.currentUser.user.status == this.statusUpdateProfile) {
