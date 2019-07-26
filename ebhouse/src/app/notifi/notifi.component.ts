@@ -15,10 +15,9 @@ declare var $: JQueryStatic;
 @Component({
   selector: 'app-notifi',
   templateUrl: './notifi.component.html',
-  styleUrls: ['./notifi.component.css']
+  styleUrls: ['./notifi.component.css'],
 })
 export class NotifiComponent implements OnInit {
-
   public createNotifiFormGroup: FormGroup;
   public flag: any = 0;
   newNotifi: Notification = new Notification();
@@ -27,7 +26,8 @@ export class NotifiComponent implements OnInit {
   listUser: any[] = [];
   listBH: any[] = [];
   listRoom: any[] = [];
-  option_send: String = "user";
+  flagLoadUser: any = 0;
+  option_send: String = 'user';
   public currentNotifi: Notification;
   role: string = '';
   currentUser: any;
@@ -42,7 +42,7 @@ export class NotifiComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private service: NotifiService,
     private toastr: ToastrService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.authenticationService.currentUser.subscribe(data => {
@@ -53,7 +53,7 @@ export class NotifiComponent implements OnInit {
       userToText: this.fb.control(''),
       userTo: this.fb.control(''),
       subject: this.fb.control('', Validators.compose([Validators.required])),
-      content: this.fb.control('', Validators.compose([Validators.required]))
+      content: this.fb.control('', Validators.compose([Validators.required])),
     });
   }
 
@@ -66,59 +66,60 @@ export class NotifiComponent implements OnInit {
   getRole() {
     if (this.currentUser && this.currentUser.role === Role.Lanlord) {
       this.role = 'landlord';
-    }
-    else if (this.currentUser && this.currentUser.role === Role.Tenant) {
+    } else if (this.currentUser && this.currentUser.role === Role.Tenant) {
       this.role = 'tenant';
+    } else {
+      this.role = '';
     }
-    else {
-      this.role = ''
-    }
-
   }
 
   creatNotification() {
+    this.addLoading();
     this.createNotifiFormGroup.reset();
+    this.dataSourceSent.data = [];
+    this.listDataSet = [];
+    $('#myInput').removeAttr('disabled');
     $('#myDropdown').removeClass('show-s');
-    this.service.getUserSend().subscribe(
-      res => {
-        let response = JSON.parse('' + res);
-        if (response.type == 1) {
-          let data = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
-          this.listUser = data.listUser;
-          if (data.listBoardingHouse != undefined) {
-            this.listBH = data.listBoardingHouse;
+    console.log(this.flagLoadUser);
+    if (this.flagLoadUser == 0) {
+      this.service.getUserSend().subscribe(
+        res => {
+          let response = JSON.parse('' + res);
+          if (response.type == 1) {
+            let data = JSON.parse('' + CommmonFunction.escapeSpecialChars(response.data));
+            this.listUser = data.listUser;
+            if (data.listBoardingHouse != undefined) {
+              this.listBH = data.listBoardingHouse;
+            }
+            if (data.listRoom != undefined) {
+              this.listRoom = data.listRoom;
+            }
 
-          }
-          if (data.listRoom != undefined) {
-            this.listRoom = data.listRoom;
-          }
-
-          if (data.listBoardingHouse != undefined && data.listRoom != undefined) {
-            this.listBH.forEach(bh => {
-              this.listRoom.forEach(room => {
-                if (room.boardinghouse_id == bh.id) {
-                  room['bh_name'] = bh.name;
-                }
+            if (data.listBoardingHouse != undefined && data.listRoom != undefined) {
+              this.listBH.forEach(bh => {
+                this.listRoom.forEach(room => {
+                  if (room.boardinghouse_id == bh.id) {
+                    room['bh_name'] = bh.name;
+                  }
+                });
               });
-            });
+            }
+            this.flagLoadUser = 1;
+            $('#modalNotification').modal('show');
+          } else {
+            this.showErr(response.message);
           }
-          this.dataSourceSent.data = [];
-          this.createNotifiFormGroup.get('userTo').setValue(null);
-          this.createNotifiFormGroup.get('userToText').setValue(null);
-          this.createNotifiFormGroup.get('subject').setValue(null);
-          this.createNotifiFormGroup.get('content').setValue(null);
-          $('#modalNotification').modal('show');
-        } else {
-          this.showErr(response.message)
-
+          this.removeLoading();
+        },
+        err => {
+          this.showErr(CommonMessage.defaultErrMess);
+          this.removeLoading();
         }
-        this.removeLoading();
-      },
-      err => {
-        this.showErr(CommonMessage.defaultErrMess)
-        this.removeLoading();
-      }
-    );
+      );
+    }else{
+      $('#modalNotification').modal('show');
+      this.removeLoading();
+    }
   }
 
   myFunction() {
@@ -161,39 +162,46 @@ export class NotifiComponent implements OnInit {
         });
       }
 
-      this.service.sendNotification({ notification: this.newNotifi, list_bh: listBhSent, list_room: listRoomSent, list_user: listUserSent, list_admin: listAdminSent }).subscribe(
-        res => {
-          this.removeLoading();
-          let response = JSON.parse('' + res);
-          if (response.type == 1) {
-            this.showSuccess(response.message)
-          } else {
-            this.showErr(response.message)
-          }
-          this.service.listNotification.next(1);
-          if (this.flag == 1) {
-            this.service.updateStatus({ id: this.currentNotifi.id, status: this.currentNotifi.status + 1 }).subscribe(
-              res => {
-                let response = JSON.parse('' + res);
-                if (response.type == 1) {
-                  this.service.listNotification.next(1);
+      this.service
+        .sendNotification({
+          notification: this.newNotifi,
+          list_bh: listBhSent,
+          list_room: listRoomSent,
+          list_user: listUserSent,
+          list_admin: listAdminSent,
+        })
+        .subscribe(
+          res => {
+            this.removeLoading();
+            let response = JSON.parse('' + res);
+            if (response.type == 1) {
+              this.showSuccess(response.message);
+            } else {
+              this.showErr(response.message);
+            }
+            this.service.listNotification.next(1);
+            if (this.flag == 1) {
+              this.service.updateStatus({ id: this.currentNotifi.id, status: this.currentNotifi.status + 1 }).subscribe(
+                res => {
+                  let response = JSON.parse('' + res);
+                  if (response.type == 1) {
+                    this.service.listNotification.next(1);
+                  }
+                },
+                err => {
+                  this.showErr(CommonMessage.defaultErrMess);
+                  this.removeLoading();
                 }
-              },
-              err => {
-                this.showErr(CommonMessage.defaultErrMess)
-                this.removeLoading();
-              }
-            );
+              );
+            }
+            $('#myDropdown').removeClass('show-s');
+          },
+          err => {
+            this.showErr(CommonMessage.defaultErrMess);
           }
-        },
-        err => {
-
-          this.showErr(CommonMessage.defaultErrMess)
-        }
-      );
+        );
     } else {
-
-      this.showErr(CommonMessage.inputAllFiel)
+      this.showErr(CommonMessage.inputAllFiel);
     }
   }
 
@@ -221,20 +229,20 @@ export class NotifiComponent implements OnInit {
     return false;
   }
 
-  forcus() { }
+  forcus() {}
 
   filterFunction() {
     var input, filter, ul, li, a, i, div, txtValue;
-    input = document.getElementById("myInput");
+    input = document.getElementById('myInput');
     filter = input.value.toUpperCase();
-    div = document.getElementById("myDropdown");
-    a = div.getElementsByTagName("a");
+    div = document.getElementById('myDropdown');
+    a = div.getElementsByTagName('a');
     for (i = 0; i < a.length; i++) {
       txtValue = a[i].textContent || a[i].innerText;
       if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        a[i].style.display = "";
+        a[i].style.display = '';
       } else {
-        a[i].style.display = "none";
+        a[i].style.display = 'none';
       }
     }
   }

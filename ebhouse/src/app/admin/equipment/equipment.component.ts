@@ -25,12 +25,14 @@ import { from } from 'rxjs';
 })
 export class EquipmentComponent implements OnInit {
 
+  createEquipmentFormGroup: FormGroup;
   dataSourceEquipment = new MatTableDataSource();
   displayedColumns: string[] = ['name', 'cDate', 'mDate', 'status', 'action'];
   listEquipment: any[] = [];
   totalEquipment: number = 0;
   currentPage: number = 1;
   perPage: number = 5;
+  isEdit: number = 0;
 
   private subscription: ISubscription;
   constructor(
@@ -71,12 +73,12 @@ export class EquipmentComponent implements OnInit {
     )
   }
 
-  creatEquiment(){
+  onSubmit(){
 
   }
 
   editEquipment(row){
-
+    this.isEdit = 1;
   }
 
   deleteEquipment(row){

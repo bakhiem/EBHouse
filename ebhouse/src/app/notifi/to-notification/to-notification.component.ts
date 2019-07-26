@@ -216,6 +216,11 @@ export class ToNotificationComponent implements OnInit, OnDestroy {
   }
 
   creatNotifications(e : any, i: any){
+    this.addLoading();
+    this.parent.createNotifiFormGroup.reset();
+    this.parent.dataSourceSent.data = [];
+    this.parent.listDataSet = [];
+    $("#myInput").removeAttr('disabled');
     this.currentNotifi = e;
     this.currentIndex = i;
 
@@ -229,7 +234,7 @@ export class ToNotificationComponent implements OnInit, OnDestroy {
     this.parent.createNotifiFormGroup.get('content').setValue(null);
     $("#myInput").attr('disabled','disabled');
     $('#modalNotification').modal('show');
-
+    this.removeLoading();
   }
 
   public updateStatus(){
