@@ -16,7 +16,7 @@ import { RoomTypeComponent } from './room-type/room-type.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule } from '@angular/material';
-import { ImageUploadModule } from 'ng2-imageupload';
+import { ImageToDataUrlModule } from "ngx-image2dataurl";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CreateContractComponent } from './contract/create-contract/create-contract.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -61,7 +61,7 @@ import { ChartsModule } from 'ng2-charts';
     LandlordRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    ImageUploadModule,
+    ImageToDataUrlModule,
     NgbModule,
     MatFormFieldModule,
     MatInputModule,

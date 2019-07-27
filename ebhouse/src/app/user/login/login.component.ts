@@ -81,17 +81,13 @@ export class LoginComponent implements OnInit,OnDestroy {
           let mess: any;
           mess = JSON.parse("" + res[0]);
           if (mess.type == 1) {
+            this.removeLoading();
+            this.router.navigate(['/']);  
             this.showSuccess(mess.message)
           }
           else if (mess.type == 0) {
             this.removeLoading();
             this.showErr(mess.message)
-          }
-          if (res[1]) {
-            // window.location.reload();
-            this.removeLoading();
-           
-            this.router.navigate(['/']);  
           }
         },
         err => {

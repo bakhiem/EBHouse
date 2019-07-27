@@ -15,7 +15,7 @@ import {SharedModule} from '../shared/shared.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material';
-import { ImageUploadModule } from 'ng2-imageupload';
+import { ImageToDataUrlModule } from "ngx-image2dataurl";
 import { BhInfoComponent } from './bh-info/bh-info.component';
 import { ContractComponent } from './contract/contract.component';
 import { ContractViewComponent } from './contract/contract-view/contract-view.component';
@@ -50,7 +50,7 @@ import { RoomsInfoComponent } from './rooms-info/rooms-info.component';
     TenantRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    ImageUploadModule 
+    ImageToDataUrlModule 
   ]
 })
 export class TenantModule { }

@@ -7,7 +7,6 @@ import { ToNotificationComponent } from './to-notification/to-notification.compo
 import { FromNotificationComponent } from './from-notification/from-notification.component';
 import { MatNativeDateModule, MatDatepickerModule, MatCheckboxModule, MatAutocompleteModule, MatSelectModule, MatInputModule, MatFormFieldModule, MatTableModule } from '@angular/material';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ImageUploadModule } from 'ng2-imageupload';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
@@ -23,7 +22,6 @@ import { BrowserModule } from '@angular/platform-browser';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    ImageUploadModule,
     NgbModule,
     MatFormFieldModule,
     MatInputModule,
