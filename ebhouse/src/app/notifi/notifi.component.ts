@@ -194,7 +194,7 @@ export class NotifiComponent implements OnInit {
                 }
               );
             }
-            $('#myDropdown').removeClass('show-s');
+            $('#modalNotification').modal('hide');
           },
           err => {
             this.showErr(CommonMessage.defaultErrMess);

@@ -21,14 +21,24 @@ const httpOptions =  {
 export class AdminService {
 
   private baseUrl: string = environment.baseUrl;
-  currentContract: BehaviorSubject<Equipment>;
+  listEquipment: BehaviorSubject<any>;
   constructor(private http: HttpClient) {
-    this.currentContract = new BehaviorSubject<any>(null)
+    this.listEquipment = new BehaviorSubject<any>(null)
   }
-  changeCOntract(contract) {
-    this.currentContract.next(contract);
-  }
+
   getEquipmentByPage(page : any) : Observable<Equipment[]> {
     return this.http.post<Equipment[]>(`${this.baseUrl}/api/admin/equipment`, page, httpOptions);
+  }
+
+  addOrUpdateEquipment(equipment : any) : Observable<Equipment> {
+    return this.http.post<any>(`${this.baseUrl}/api/admin/equipment/add`, equipment, httpOptions);
+  }
+
+  deleteOrActiveEquipment(equipment : any) : Observable<Equipment> {
+    return this.http.post<any>(`${this.baseUrl}/api/admin/equipment/status/change`, equipment, httpOptions);
+  }
+
+  activeEquipment(equipment : any) : Observable<Equipment> {
+    return this.http.post<any>(`${this.baseUrl}/api/admin/equipment/delete`, equipment, httpOptions);
   }
 }
