@@ -173,7 +173,7 @@ export class UpdateContractComponent implements OnInit,OnDestroy {
       maxHeight: 1000,
       maxWidth: 1000
     },
-    allowedExtensions: ['JPG', 'PnG']
+    allowedExtensions: ['JPG', 'PnG', 'JPEG']
   };
   isDisable = false;
   private subscription: ISubscription;

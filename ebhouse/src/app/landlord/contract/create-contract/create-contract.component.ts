@@ -186,7 +186,7 @@ export class CreateContractComponent implements OnInit, OnDestroy {
       maxHeight: 1000,
       maxWidth: 10000
     },
-    allowedExtensions: ['JPG', 'PnG']
+    allowedExtensions: ['JPG', 'PnG', 'JPEG']
   };
 
   //extra fee
@@ -536,7 +536,6 @@ export class CreateContractComponent implements OnInit, OnDestroy {
         this.listImg.splice(src, 1);
       }
     });
-
   }
   viewImg(src) {
     $(".modalImg").attr("src", src);
