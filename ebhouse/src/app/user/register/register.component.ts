@@ -13,7 +13,7 @@ import {CommonMessage} from '../../models/message';
   styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent implements OnInit {
-  roleDefault: number = 1;
+  roleDefault: number = 2;
   CommonMessage = CommonMessage;
   userFormGroup: FormGroup;
   phonePattern = '((09|03|07|08|05)+([0-9]{8}))';
