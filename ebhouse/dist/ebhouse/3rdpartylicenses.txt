@@ -573,8 +573,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ng2-charts
 ISC
 
-ng2-imageupload
-MIT
+ngx-image2dataurl
 
 ngx-toastr
 MIT
