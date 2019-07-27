@@ -24,8 +24,8 @@ export class DashboardComponent implements OnInit {
   get isTenant() {
     return (this.currentUser && this.currentUser.role === Role.Tenant);
   }
-  get isAdmin(){
-    return(this.currentUser && this.currentUser.role === Role.Admin);
+  get isAdmin() {
+    return (this.currentUser && this.currentUser.role === Role.Admin);
   }
   deleteDataInLocal() {
     this.authenticationService.removeLocalUser();
@@ -36,16 +36,18 @@ export class DashboardComponent implements OnInit {
     console.log(this.currentUser);
   }
   ngAfterViewInit() {
-   this.jqueryCode();
+    this.jqueryCode();
   }
-  jqueryCode(){
-    $(document).scroll(function(){
-      if($(this).scrollTop() >= $('#start-menu-fixed').offset().top) {
+  jqueryCode() {
+    $(document).scroll(function () {
+      if ($('#start-menu-fixed') && $('#start-menu-fixed').offset()) {
+        if ($(this).scrollTop() >= $('#start-menu-fixed').offset().top) {
           $(".navbar").addClass("fixed-menu-bg");
-      } else {
+        } else {
           $(".navbar").removeClass("fixed-menu-bg");
+        }
       }
-  });
+    });
   }
   checkRole() {
     if (this.isLandlord) {
@@ -64,9 +66,9 @@ export class DashboardComponent implements OnInit {
         this.router.navigate(['/tenant/bh-info']);
       }
     }
-    else if(this.isAdmin){
+    else if (this.isAdmin) {
       this.router.navigate(['/admin/equipment']);
-    }else{
+    } else {
       this.deleteDataInLocal();
     }
   }

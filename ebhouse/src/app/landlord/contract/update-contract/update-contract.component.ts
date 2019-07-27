@@ -12,7 +12,7 @@ import { CommonMessage } from '../../../models/message';
 
 
 //image
-import { ImageResult, ResizeOptions } from 'ng2-imageupload';
+import { Options, ImageResult } from "ngx-image2dataurl";
 
 import { ISubscription } from "rxjs/Subscription";
 //date picker angular
@@ -168,9 +168,12 @@ export class UpdateContractComponent implements OnInit,OnDestroy {
   listTenant = [];
   dataSource = new MatTableDataSource()
   //resize image
-  resizeOptions: ResizeOptions = {
-    resizeMaxHeight: 1000,
-    resizeMaxWidth: 1000
+  options: Options = {
+    resize: {
+      maxHeight: 1000,
+      maxWidth: 1000
+    },
+    allowedExtensions: ['JPG', 'PnG', 'JPEG']
   };
   isDisable = false;
   private subscription: ISubscription;

@@ -134,6 +134,7 @@ export class LandlordProfileComponent implements OnInit {
         break;
       }
     }
+    this.removeLoading();
   }
 
   getProvince() {
@@ -145,7 +146,6 @@ export class LandlordProfileComponent implements OnInit {
       this.dataProvince = arr;
       this.getProfile();
     });
-
   }
 
   getDistric(province: any): any[] {

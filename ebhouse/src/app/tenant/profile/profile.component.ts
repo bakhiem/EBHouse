@@ -14,12 +14,16 @@ import { User } from '../../user/models/user';
 import { Tenant } from '../../models/tenant';
 import * as $ from 'jquery';
 //image
-import { ImageResult, ResizeOptions } from 'ng2-imageupload';
+import { Options, ImageResult } from "ngx-image2dataurl";
+import {
+  createImageFromDataUrl, getImageTypeFromDataUrl, ImageFileProcessor
+} from "ngx-image2dataurl";
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
+ 
 })
 export class TenantProfileComponent implements OnInit {
   roleDefault: number = 1;
@@ -33,13 +37,15 @@ export class TenantProfileComponent implements OnInit {
   tenant: Tenant;
   check: number = 0;
   user: User;
-
   //resize image
-  resizeOptions: ResizeOptions = {
-    resizeMaxHeight: 1000,
-    resizeMaxWidth: 1000,
+  options: Options = {
+    resize: {
+      maxHeight: 1000,
+      maxWidth: 1000
+    },
+    allowedExtensions: ['JPG', 'PnG', 'JPEG']
   };
-
+  rotateImageFileProcessor = new RotateImageFileProcessor();
   constructor(
     private fb: FormBuilder,
     private data: DataService,
@@ -48,7 +54,7 @@ export class TenantProfileComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private service: TenantServiceService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getProvince();
@@ -86,14 +92,14 @@ export class TenantProfileComponent implements OnInit {
           // }
           this.getAddress();
           this.profileFormGroup.get('name').setValue(this.tenant.user.name != ' ' ? this.tenant.user.name.trim() : ' ');
-          this.profileFormGroup .get('phone').setValue(this.tenant.user.phone != ' ' ? this.tenant.user.phone.trim() : ' ');
+          this.profileFormGroup.get('phone').setValue(this.tenant.user.phone != ' ' ? this.tenant.user.phone.trim() : ' ');
           this.profileFormGroup.get('phone').disable();
           if (this.tenant.user.dateOfBirth != 'null') {
             this.profileFormGroup.get('date').setValue(this.tenant.user.dateOfBirth);
           }
           this.profileFormGroup.get('sex').setValue(this.tenant.user.sex);
-          this.imgArnFront = this.tenant.imgArnFront != ' ' ? this.tenant.imgArnFront.trim()+ "?date=" + new Date().getTime() : '';
-          this.imgArnBack = this.tenant.imgArnBack != ' ' ? this.tenant.imgArnBack.trim()+ "?date=" + new Date().getTime() : '';
+          this.imgArnFront = this.tenant.imgArnFront != ' ' ? this.tenant.imgArnFront.trim() + "?date=" + new Date().getTime() : '';
+          this.imgArnBack = this.tenant.imgArnBack != ' ' ? this.tenant.imgArnBack.trim() + "?date=" + new Date().getTime() : '';
         } else {
           this.showErr(response.message)
         }
@@ -146,6 +152,7 @@ export class TenantProfileComponent implements OnInit {
         break;
       }
     }
+    this.removeLoading();
   }
 
   getProvince() {
@@ -219,6 +226,7 @@ export class TenantProfileComponent implements OnInit {
             }
           },
           err => {
+            this.removeLoading();
             this.showErr(CommonMessage.defaultErrMess);
           }
         );
@@ -252,33 +260,43 @@ export class TenantProfileComponent implements OnInit {
       this.tenant.user.dateOfBirth = this.profileFormGroup.value.date
       check = true;
     }
-    if(this.tenant.user.address != address){
+    if (this.tenant.user.address != address) {
       this.tenant.user.address = address
       check = true;
     }
-    if(this.profileFormGroup.value.imgArnFront != ''){
+    if (this.profileFormGroup.value.imgArnFront != '') {
       this.tenant.imgArnFront = this.imgArnFront.split(',')[1];
       check = true;
-    }else{
+    } else {
       this.tenant.imgArnFront = '';
     }
 
-    if(this.profileFormGroup.value.imgArnBack != ''){
+    if (this.profileFormGroup.value.imgArnBack != '') {
       this.tenant.imgArnBack = this.imgArnBack.split(',')[1];
       check = true;
-    }else{
+    } else {
       this.tenant.imgArnBack = '';
     }
     console.log(address);
     console.log(this.tenant.user.address);
     return check;
   }
-
+  
   uploadFrontID(imageResult: ImageResult) {
-    this.imgArnFront = (imageResult.resized && imageResult.resized.dataURL) || imageResult.dataURL;
+    if (imageResult.error) {
+      this.showErr('Vui lòng tải lên đúng định dạng ảnh')
+    }
+    else {
+      this.imgArnFront = (imageResult.resized && imageResult.resized.dataURL) || imageResult.dataURL;
+    }
   }
   uploadBackID(imageResult: ImageResult) {
-    this.imgArnBack = (imageResult.resized && imageResult.resized.dataURL) || imageResult.dataURL;
+    if (imageResult.error) {
+      this.showErr('Vui lòng tải lên đúng định dạng ảnh')
+    }
+    else {
+      this.imgArnBack = (imageResult.resized && imageResult.resized.dataURL) || imageResult.dataURL;
+    }
   }
 
   addLoading() {
@@ -290,3 +308,26 @@ export class TenantProfileComponent implements OnInit {
     $('.customLoader').removeClass('loader');
   }
 }
+export class RotateImageFileProcessor implements ImageFileProcessor {
+  async process(dataURL: string): Promise<string> {
+    const canvas = document.createElement('canvas');
+    const image = await createImageFromDataUrl(dataURL);
+    canvas.width = image.height;
+    canvas.height = image.width;
+    console.log(image);
+    if(image.height > image.width * 1.5){
+      const ctx = canvas.getContext("2d");
+      ctx.save();
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.drawImage(image, -image.width / 2, -image.height / 2);
+      ctx.restore();
+      return canvas.toDataURL(getImageTypeFromDataUrl(dataURL));
+    }
+    else{
+      return dataURL;
+    }
+
+  }
+}
+

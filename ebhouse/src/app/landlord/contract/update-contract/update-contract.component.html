@@ -156,7 +156,7 @@
                             <div class="custom-file col-sm-5">
                                 <input type="file" imageUpload accept="image/*" class="custom-file-input"
                                     id="customFile" (imageSelected)="uploadImage($event)"
-                                    [resizeOptions]="resizeOptions" multiple [disabled]='isDisable'>
+                                    [imageToDataUrl]="options" multiple [disabled]='isDisable'>
                                 <label class="custom-file-label" for="customFile">Tải lên ảnh hợp đồng(Tối đa 5
                                     ảnh)</label>
 

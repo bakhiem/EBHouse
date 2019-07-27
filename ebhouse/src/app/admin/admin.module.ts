@@ -10,7 +10,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule } from '@angular/material';
-import { ImageUploadModule } from 'ng2-imageupload';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDatepickerModule, MatNativeDateModule } from '@angular/material';
@@ -33,7 +32,6 @@ import {ChartsModule} from 'ng2-charts';
     SharedModule,
     ReactiveFormsModule,
     FormsModule,
-    ImageUploadModule,
     NgbModule,
     MatFormFieldModule,
     MatInputModule,

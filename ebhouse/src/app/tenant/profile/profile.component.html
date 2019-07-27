@@ -104,12 +104,12 @@
                         <!-- begin upload and preview image -->
                         <div class="row ml-1">
                             <div class="custom-file col-sm-5 mr-3 image-container">
-                                <input type="file" imageUpload accept="image/*" class="custom-file-input" id="customFile" (imageSelected)="uploadFrontID($event)" formControlName="imgArnFront" [resizeOptions]="resizeOptions">
+                                <input type="file" imageUpload accept="image/*" class="custom-file-input" id="customFile" (imageSelected)="uploadFrontID($event)" formControlName="imgArnFront"  [imageToDataUrl]="options">
                                 <label class="custom-file-label" for="customFile">Ảnh chứng minh thư mặt trước</label>
                                 <img [src]="imgArnFront" class="previewImg" alt="" data-toggle="modal" data-target="#modal1">
                             </div>
                             <div class="custom-file col-sm-5 mr-3 image-container">
-                                <input type="file" imageUpload accept="image/*" class="custom-file-input" id="customFile2" (imageSelected)="uploadBackID($event)" formControlName="imgArnBack" [resizeOptions]="resizeOptions">
+                                <input type="file" imageUpload accept="image/*" class="custom-file-input" id="customFile2" (imageSelected)="uploadBackID($event)" formControlName="imgArnBack" [imageToDataUrl]="options">
                                 <label class="custom-file-label" for="customFile2">Ảnh chứng minh thư mặt sau</label>
                                 <img [src]="imgArnBack" class="previewImg" alt="" data-toggle="modal" data-target="#modal2">
                             </div>

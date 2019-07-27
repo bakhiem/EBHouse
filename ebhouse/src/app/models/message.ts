@@ -25,7 +25,7 @@ export enum CommonMessage {
   InputUserName = 'Vui lòng nhập họ và tên',
   InputPhone = 'Vui lòng nhập số điện thoại',
   InputPassword = 'Vui lòng nhập mật khẩu',
-  InvalidPassword = 'Mật khẩu nhiều hơn 7 kí tự',
+  InvalidPassword = 'Mật khẩu ít nhất 8 kí tự',
   InvalidPhone = 'Số điện thoại gồm 10 chữ số',
   PasswordNotMatch = 'Mật khẩu cần trùng nhau',
 

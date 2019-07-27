@@ -16,7 +16,7 @@ import { Observable, throwError } from 'rxjs';
 import { Contract, Tenant, ContractTenant, User } from '../../../models/contract';
 
 //image
-import { ImageResult, ResizeOptions } from 'ng2-imageupload';
+import { Options, ImageResult } from "ngx-image2dataurl";
 
 import { ISubscription } from "rxjs/Subscription";
 //date picker angular
@@ -181,9 +181,12 @@ export class CreateContractComponent implements OnInit, OnDestroy {
   listTenant = [];
   dataSource = new MatTableDataSource()
   //resize image
-  resizeOptions: ResizeOptions = {
-    resizeMaxHeight: 1000,
-    resizeMaxWidth: 1000
+  options: Options = {
+    resize: {
+      maxHeight: 1000,
+      maxWidth: 10000
+    },
+    allowedExtensions: ['JPG', 'PnG', 'JPEG']
   };
 
   //extra fee
@@ -533,7 +536,6 @@ export class CreateContractComponent implements OnInit, OnDestroy {
         this.listImg.splice(src, 1);
       }
     });
-
   }
   viewImg(src) {
     $(".modalImg").attr("src", src);
