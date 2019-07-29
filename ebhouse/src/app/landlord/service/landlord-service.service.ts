@@ -119,6 +119,7 @@ export class LandlordService {
   }
 
   // extra fee
+ 
   getExtrafee(data : any) : Observable<Landlord>{
     return this.http.post<any>(`${this.baseUrl}/api/landlord/extraFee/`, data, httpOptions);
   }

@@ -15,15 +15,14 @@ import { Tenant } from '../../models/tenant';
 import * as $ from 'jquery';
 //image
 import { Options, ImageResult } from "ngx-image2dataurl";
-import {
-  createImageFromDataUrl, getImageTypeFromDataUrl, ImageFileProcessor
-} from "ngx-image2dataurl";
+import { RotateImageFileProcessor } from '../../shared/image-rotate'
+
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
- 
+
 })
 export class TenantProfileComponent implements OnInit {
   roleDefault: number = 1;
@@ -281,13 +280,19 @@ export class TenantProfileComponent implements OnInit {
     console.log(this.tenant.user.address);
     return check;
   }
-  
+
   uploadFrontID(imageResult: ImageResult) {
     if (imageResult.error) {
       this.showErr('Vui lòng tải lên đúng định dạng ảnh')
     }
     else {
-      this.imgArnFront = (imageResult.resized && imageResult.resized.dataURL) || imageResult.dataURL;
+      let image = (imageResult.resized && imageResult.resized.dataURL) || imageResult.dataURL;
+
+      this.getOrientation(imageResult.file, (orientation) => {
+        this.rotateImageFileProcessor.process(image, orientation).then(res => {
+          this.imgArnFront = res;
+        });
+      });
     }
   }
   uploadBackID(imageResult: ImageResult) {
@@ -295,10 +300,48 @@ export class TenantProfileComponent implements OnInit {
       this.showErr('Vui lòng tải lên đúng định dạng ảnh')
     }
     else {
-      this.imgArnBack = (imageResult.resized && imageResult.resized.dataURL) || imageResult.dataURL;
+      let image = (imageResult.resized && imageResult.resized.dataURL) || imageResult.dataURL;
+      this.getOrientation(imageResult.file, (orientation) => {
+        this.rotateImageFileProcessor.process(image, orientation).then(res => {
+          this.imgArnBack = res;
+        });
+      });
+
     }
   }
+  getOrientation(file, callback) {
 
+    var reader: any,
+    target: EventTarget;
+    reader = new FileReader();
+    reader.onload = (event) => {
+      var view = new DataView(event.target.result);
+      if (view.getUint16(0, false) != 0xFFD8) return callback(-2);
+      var length = view.byteLength,
+        offset = 2;
+      while (offset < length) {
+        var marker = view.getUint16(offset, false);
+        offset += 2;
+        if (marker == 0xFFE1) {
+          if (view.getUint32(offset += 2, false) != 0x45786966) {
+            return callback(-1);
+          }
+          var little = view.getUint16(offset += 6, false) == 0x4949;
+          offset += view.getUint32(offset + 4, little);
+          var tags = view.getUint16(offset, little);
+          offset += 2;
+
+          for (var i = 0; i < tags; i++)
+            if (view.getUint16(offset + (i * 12), little) == 0x0112)
+              return callback(view.getUint16(offset + (i * 12) + 8, little));
+        }
+        else if ((marker & 0xFF00) != 0xFF00) break;
+        else offset += view.getUint16(offset, false);
+      }
+      return callback(-1);
+    };
+    reader.readAsArrayBuffer(file.slice(0, 64 * 1024));
+  };
   addLoading() {
     $('.customLoading').addClass('preloader');
     $('.customLoader').addClass('loader');
@@ -308,26 +351,5 @@ export class TenantProfileComponent implements OnInit {
     $('.customLoader').removeClass('loader');
   }
 }
-export class RotateImageFileProcessor implements ImageFileProcessor {
-  async process(dataURL: string): Promise<string> {
-    const canvas = document.createElement('canvas');
-    const image = await createImageFromDataUrl(dataURL);
-    canvas.width = image.height;
-    canvas.height = image.width;
-    console.log(image);
-    if(image.height > image.width * 1.5){
-      const ctx = canvas.getContext("2d");
-      ctx.save();
-      ctx.translate(canvas.width / 2, canvas.height / 2);
-      ctx.rotate(-Math.PI / 2);
-      ctx.drawImage(image, -image.width / 2, -image.height / 2);
-      ctx.restore();
-      return canvas.toDataURL(getImageTypeFromDataUrl(dataURL));
-    }
-    else{
-      return dataURL;
-    }
 
-  }
-}
 

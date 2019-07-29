@@ -1,0 +1,64 @@
+
+.mat-datepicker-toggle{
+    font-size: 2rem
+  }
+  table {
+    width: 100%;
+    margin-top: 20px;
+  }
+  table th{
+    font-size: 1.1rem;
+    color: black;
+  }
+  .example-full-width {
+    width: 100%;
+  }
+ 
+  small{
+    color: midnightblue;
+  }
+
+@media only screen and (max-width: 600px) {
+  table td{
+    font-size: 0.6rem;
+  }
+  table th{
+    font-size: 0.8rem;
+    text-align: center;
+  }
+  .example-full-width {
+    width: 50%;
+  }
+  .searchBox{
+    margin-top: 5px;
+  }
+  table ul{
+    margin : 0;
+  }
+
+  table ul li:first-child{
+    margin-right :5px!important;
+    margin-left :5px!important;
+  }
+  .example-full-width{
+    margin-left: 5px;
+  }
+} 
+
+.page-footer{
+  background: #fff;
+  padding-top: 1.1rem;
+  margin: 0 auto;
+}
+
+@media only screen and (max-width: 600px) {
+.pagination{
+  display: flex;
+  justify-content: center;
+}
+} 
+@media only screen and (max-width: 768px) {
+  .mat-form-field{
+    width: 10rem;
+  }
+}
