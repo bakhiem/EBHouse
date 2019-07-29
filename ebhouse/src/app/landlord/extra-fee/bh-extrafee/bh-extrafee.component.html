@@ -3,7 +3,6 @@
 </div>
 <div class="extrafee">
   <div class="row input-date ml-3">
-
     <div class="col-sm-4 ">
       <label for="example-text-input" class="col-form-label"> Chọn Tháng</label>
       <div class="input-group">
@@ -16,31 +15,12 @@
         </mat-form-field>
       </div>
     </div>
-    <div class="col-sm-3">
-      <label class="col-form-label">Chọn phòng</label>
-      <mat-form-field class="example-full-width">
-        <input type="text" placeholder="Điền tên phòng" aria-label="Assignee" matInput [matAutocomplete]="auto"
-          [formControl]="roomControl">
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-            {{option.name}}
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
-    </div>
-    <div class="col-sm-3 searchBox">
-      <button type="button" class="btn btn-secondary mt-3" (click)="searchByRoom()">
-        <span _ngcontent-fdu-c2="" class="ti-search"></span> Tìm kiếm
-      </button>
-    </div>
+    
+   
     <div class="col-sm-4 col-md-2"><input class="btn btn-primary float-right mt-3" type="submit"
-        value="Tạo chi phí phát sinh" (click)="createExtrafee()"> </div>
+        value="Tạo chi phí khu trọ" (click)="createExtrafee()"> </div>
   </div>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-    <ng-container matColumnDef="room">
-      <th mat-header-cell *matHeaderCellDef>Phòng</th>
-      <td mat-cell *matCellDef="let element"> {{element.roomObj.name}} </td>
-    </ng-container>
     <ng-container matColumnDef="amount">
       <th mat-header-cell *matHeaderCellDef>Số tiền</th>
       <td mat-cell *matCellDef="let element"> {{element.amount | currency}} </td>
@@ -64,15 +44,11 @@
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;">
-
     </tr>
   </table>
-
-
-
 </div>
 <div class="row page-footer">
-  <div class="col-sm-5 col-12">Tổng số chi phí phát sinh : {{totalPage}}</div>
+  <div class="col-sm-5 col-12">Tổng số chi phí khu trọ : {{totalPage}}</div>
   <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalPage" [(page)]="currentPage"
     [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event)">
   </ngb-pagination>
@@ -83,19 +59,14 @@
 
       <form [formGroup]="createEFFormGroup" (ngSubmit)="onSubmit()">
         <div class="modal-header">
-          <h5 *ngIf="isEdit == 0; else edit" class="modal-title">Tạo chi phí khác</h5>
+          <h5 *ngIf="isEdit == 0; else edit" class="modal-title">Tạo chi phí khu trọ</h5>
           <ng-template #edit>
-            <h5 *ngIf="isEdit == 1 || isEdit == 3" class="modal-title">Sửa chi phí khác</h5>
+            <h5 *ngIf="isEdit == 1 || isEdit == 3" class="modal-title">Sửa chi phí khu trọ</h5>
           </ng-template>
           <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
         </div>
         <div class="modal-body">
-
-
-
-
           <!-- Textual inputs start -->
-
           <div class="form-group row">
               <div class="col-sm-4">
                   <label class="col-form-label required">Ngày tạo</label>
@@ -105,21 +76,7 @@
 
           </div>
           <div class="form-group row">
-            <div class="col-sm-4">
-
-              <label class="col-form-label required">Chọn phòng</label>
-              <mat-form-field class="example-full-width">
-                <input type="text" id='room-name' placeholder="Điền tên phòng" aria-label="Assignee" matInput
-                  [matAutocomplete]="auto1" [formControl]="roomControlCreate">
-                <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayFn"
-                  (optionSelected)="onChooseRoom($event.option.value)">
-                  <mat-option *ngFor="let option of filteredOptionsCreate | async" [value]="option">
-                    {{option.name}}
-                  </mat-option>
-                </mat-autocomplete>
-              </mat-form-field>
-
-            </div>
+            
             <div class="col-sm-6">
               <label for="input-price" class="col-form-label required">Số tiền</label>
               <div><small>Số tiền sẽ được tăng hoặc giảm vào tài chính tháng này</small></div>
@@ -144,22 +101,6 @@
                 *ngIf="createEFFormGroup.controls['price'].hasError('required') && (createEFFormGroup.controls['price'].dirty || createEFFormGroup.controls['price'].touched)"
                 class="alert alert-danger">
                 Số tiền là bắt buộc
-              </div>
-            </div>
-          </div>
-          <div class="form-group row">
-            <div class="col-sm-12">
-              <label class="col-form-label required">Người chịu chi phí</label>
-              <div><small id='haveTenantMessage'></small></div>
-              <div class="input-group">
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input type="radio" checked="" id="landlord" name="customRadio3" class="custom-control-input">
-                  <label class="custom-control-label" for="landlord">Chủ trọ</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input type="radio" id="tenant" name="customRadio3" class="custom-control-input">
-                  <label class="custom-control-label" for="tenant">Khách thuê</label>
-                </div>
               </div>
             </div>
           </div>

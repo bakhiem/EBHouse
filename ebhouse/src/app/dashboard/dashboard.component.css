@@ -75,10 +75,9 @@ ul.social-buttons li a {
 }
 .navbar{
     top: 0;
-    position: fixed;    
+    position: absolute;    
     z-index: 99;
     width: 100%;
-    
 }
 .navbar-brand span{
     color: #fff;
@@ -311,6 +310,8 @@ section.customer-feedback{
 }
 
 .fixed-menu-bg{
+  position : fixed;
+  transition-duration: 1s;
   background-color: #8f86ee;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }

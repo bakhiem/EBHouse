@@ -32,6 +32,9 @@ import { SharedModule } from '../shared/shared.module';
 import { RoomActivityComponent } from './room/room-activity/room-activity.component';
 import { ManageTenantComponent } from './manage-tenant/manage-tenant.component';
 import { ChartsModule } from 'ng2-charts';
+import { WaterComponent } from './water/water.component';
+
+import { BhExtrafeeComponent } from './extra-fee/bh-extrafee/bh-extrafee.component';
 @NgModule({
   declarations: [
     LandlordComponent,
@@ -49,7 +52,9 @@ import { ChartsModule } from 'ng2-charts';
     FinancialComponent,
     OtherFinancialComponent,
     RoomActivityComponent,
-    ManageTenantComponent
+    ManageTenantComponent,
+    BhExtrafeeComponent,
+    WaterComponent
   ],
   imports: [
     BrowserModule,

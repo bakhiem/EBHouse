@@ -584,7 +584,7 @@ export class CreateContractComponent implements OnInit, OnDestroy {
     if (this.checkRoomValid()) {
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
         width: '400px',
-        data: "Bạn chắc chắn muốn lưu thay đổi không ?"
+        data: "Bạn chắc chắn muốn lưu thông tin hợp đồng ?"
       });
       dialogRef.afterClosed().subscribe(result => {
         if (result) {

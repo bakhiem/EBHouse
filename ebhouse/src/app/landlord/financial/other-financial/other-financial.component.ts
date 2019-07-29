@@ -33,9 +33,13 @@ export class OtherFinancialComponent implements OnInit, OnDestroy {
 
   dataSourceExtra = new MatTableDataSource();
   dataSourceElectric = new MatTableDataSource();
+  dataSourceBh = new MatTableDataSource();
   //paging electric
   currentPageElectric: number = 1;
   totalPageElectric: number = 0;
+
+  currentPageBh: number = 1;
+  totalPageBh: number = 0;
 
   private subscription: ISubscription;
   currentBh: any;
@@ -58,12 +62,14 @@ export class OtherFinancialComponent implements OnInit, OnDestroy {
   pMonth = this.maxDate.getMonth() + 1;
   displayedColumnsExtraFee: string[] = ['room', 'amount', 'description', 'date'];
   displayedColumnsElectric: string[] = ['room', 'eLast', 'ePresent', 'usage', 'amount'];
+  displayedColumnsBh: string[] = ['amount', 'description', 'date'];
   ngOnInit() {
     this.month = new FormControl({ value: new Date(), disabled: true });
     this.subscription = this.shareService.currentBh.subscribe((data) => {
       this.currentBh = data;
       if (this.currentBh && this.currentBh.id) {
         this.getRoomsFromCurrentBh();
+        this.getBhExtraFee()
       }
       else if(this.currentBh){
         this.showInfo(CommonMessage.InputBh)
@@ -83,6 +89,7 @@ export class OtherFinancialComponent implements OnInit, OnDestroy {
     this.month.setValue(params);
     this.eMonth = params.getMonth();
     this.pMonth = params.getMonth() + 1;
+    this.getBhExtraFee();
     this.getFinancial();
     datepicker.close();
   }
@@ -117,6 +124,38 @@ export class OtherFinancialComponent implements OnInit, OnDestroy {
   }
   showInfo(mess) {
     this.toastr.info(mess, 'Thông báo !');
+  }
+
+  private getBhExtraFee() {
+    if (!this.currentBh.id) {
+      return;
+    }
+    let data: any = {
+      boardingHouseID: this.currentBh.id,
+      date: this.formatDate() + '-01',
+      page: this.currentPageBh, 
+      roomID: -1
+    }
+    console.log(data);
+    this.addLoading();
+    this.service.getExtrafee(data).subscribe(
+      res => {
+        this.removeLoading();
+        let response = JSON.parse("" + res);
+        console.log
+        if (response.type == 1) {
+          let resData = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data))
+          this.dataSourceBh.data = resData.extraFee;
+          this.totalPageBh = resData.totalPage;
+        }
+        else {
+          this.showErr(CommonMessage.defaultErrMess);
+        }
+      }, err => {
+        this.showErr(CommonMessage.defaultErrMess);
+        this.removeLoading();
+        console.log(err);
+      })
   }
   getFinancial() {
     if(!this.currentBh.id){
@@ -433,5 +472,10 @@ export class OtherFinancialComponent implements OnInit, OnDestroy {
   pageChangedElectric(page) {
     this.currentPageElectric = page;
     this.getFinancialElectric();
+  }
+  //paging bg
+  pageChangedBh(page) {
+    this.currentPageBh = page;
+    this.getBhExtraFee();
   }
 }

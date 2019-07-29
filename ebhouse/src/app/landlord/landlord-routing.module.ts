@@ -19,6 +19,8 @@ import { FinancialComponent } from './financial/financial.component';
 import { OtherFinancialComponent } from './financial/other-financial/other-financial.component';
 import { RoomActivityComponent } from './room/room-activity/room-activity.component';
 import { ManageTenantComponent } from './manage-tenant/manage-tenant.component';
+import { WaterComponent } from './water/water.component';
+import { BhExtrafeeComponent } from './extra-fee/bh-extrafee/bh-extrafee.component';
 const LandlordChildRouters:Routes = [ {
     path:'landlord',
     component:LandlordComponent,
@@ -80,6 +82,17 @@ const LandlordChildRouters:Routes = [ {
         path: 'tenant',
         component: ManageTenantComponent
       }
+      ,
+      {
+        path: 'boardinghouse-extrafee',
+        component: BhExtrafeeComponent
+      }
+      ,
+      {
+        path: 'water',
+        component: WaterComponent
+      }
+      
     ]
   }
 ];
