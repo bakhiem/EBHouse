@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-// import * as jwt from 'jwt-simple';
+import * as jwt from 'angular2-jwt-simple';
 // import * as bcrypt from 'bcrypt';
 const httpOptions = {
   headers: new HttpHeaders({
@@ -30,30 +30,35 @@ export class UserService {
   login(user: any): Observable<String> {
     return this.http.post<String>(`${this.baseUrl}/api/login`, user, httpOptions)
   };
-  // resetPass(user: any): any {
-  //   bcrypt.genSalt(10, function (err, salt) {
-  //     bcrypt.hash('66668888666688886666888866668888', salt, function (err, hash) {
-  //       var payload = {
-  //         USERNAME: user.phone,
-  //         PRIVATE_KEY: '66668888666688886666888866668888'
-  //       };
-  //       var secret = '68686868686868688686868686868686';
-  //       var token = jwt.encode(payload, secret);
+  resetPass(user: any): any {
+    var payload = {
+      username: user.phone,
+      private_key: '66668888666688886666888866668888'
+    };
+    var secret = '68686868686868688686868686868686';
+    var token = jwt.encode(payload, secret);
+    let httpOptionsReset = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': token
+      }),
+      withCredentials: true,
+      responseType: 'text' as 'json'
+    };
+    console.log(token);
+    // return this.http.post<String>(`${this.baseUrl}/api/password/reset`, user, httpOptionsReset)
 
-  //       console.log(token);
-  //     });
-  //   });
 
-  //   // let httpOptionsReset = {
-  //   //   headers: new HttpHeaders({
-  //   //     'Content-Type': 'application/json',
-  //   //     'Authorization' : 'asd'
-  //   //   }),
-  //   //   withCredentials: true,
-  //   //   responseType: 'text' as 'json'
-  //   // };
-  //   // return this.http.post<String>(`${this.baseUrl}/api/password/reset`, user, httpOptionsReset)
-  // };
+    // let httpOptionsReset = {
+    //   headers: new HttpHeaders({
+    //     'Content-Type': 'application/json',
+    //     'Authorization' : 'asd'
+    //   }),
+    //   withCredentials: true,
+    //   responseType: 'text' as 'json'
+    // };
+    // return this.http.post<String>(`${this.baseUrl}/api/password/reset`, user, httpOptionsReset)
+  };
   // Login (user : User): Observable<Response> {
   //   console.log(user);
   //   return this.http
