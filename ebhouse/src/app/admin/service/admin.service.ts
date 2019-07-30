@@ -27,7 +27,7 @@ export class AdminService {
   }
 
   getEquipmentByPage(page : any) : Observable<Equipment[]> {
-    return this.http.post<Equipment[]>(`${this.baseUrl}/api/admin/equipment`, page, httpOptions);
+    return this.http.post<Equipment[]>(`${this.baseUrl}/api/equipment`, page, httpOptions);
   }
 
   addOrUpdateEquipment(equipment : any) : Observable<Equipment> {
@@ -40,5 +40,9 @@ export class AdminService {
 
   activeEquipment(equipment : any) : Observable<Equipment> {
     return this.http.post<any>(`${this.baseUrl}/api/admin/equipment/delete`, equipment, httpOptions);
+  }
+
+  dashboard(data : any) : Observable<Equipment> {
+    return this.http.post<any>(`${this.baseUrl}/api/admin/dashboard`, data, httpOptions);
   }
 }
