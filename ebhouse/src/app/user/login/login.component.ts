@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone,OnDestroy } from '@angular/core';
+import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { UserService } from '../service/user.service';
 import { User } from '../models/user';
@@ -7,14 +7,16 @@ import { DataService } from '../service/data.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from "../service/authentication.service";
 import { ToastrService } from 'ngx-toastr';
-import {CommonMessage} from '../../models/message';
+import { CommonMessage } from '../../models/message';
 import { ISubscription } from "rxjs/Subscription";
+import { MatDialog, MatCheckboxModule } from '@angular/material';
+import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit,OnDestroy {
+export class LoginComponent implements OnInit, OnDestroy {
   CommonMessage = CommonMessage;
   roleDefault: number = 1;
   phonePattern = "((09|03|07|08|05)+([0-9]{8}))";
@@ -23,24 +25,26 @@ export class LoginComponent implements OnInit,OnDestroy {
 
   private subscription: ISubscription;
   constructor(
+    public dialog: MatDialog,
     private ngZone: NgZone,
     private userService: UserService,
     private fb: FormBuilder,
     private authenticationService: AuthenticationService,
     private router: Router,
     private data: DataService,
-    private toastr: ToastrService,) {
+    private toastr: ToastrService, ) {
     if (this.authenticationService.currentUserValue) {
       this.router.navigate(['/']);
     }
   }
   ngOnDestroy() {
-    if(this.subscription){
+
+    if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }
   ngOnInit() {
-    this.subscription =   this.data.currentUser.subscribe(user => this.user = user);
+    this.subscription = this.data.currentUser.subscribe(user => this.user = user);
     this.loginFormGroup = this.fb.group({
       phone: this.fb.control((this.user) ? this.user.phone : "", Validators.compose([
         Validators.required,
@@ -70,24 +74,36 @@ export class LoginComponent implements OnInit,OnDestroy {
   }
   onSubmit() {
     let rememberPassword = 0;
-    if($('#customControlAutosizing').prop("checked")){
-       rememberPassword = 1;
+    if ($('#customControlAutosizing').prop("checked")) {
+      rememberPassword = 1;
     }
     this.addLoading();
     this.authenticationService
-      .login(toUser(this.loginFormGroup.value),rememberPassword)
+      .login(toUser(this.loginFormGroup.value), rememberPassword)
       .subscribe(
         res => {
           let mess: any;
           mess = JSON.parse("" + res[0]);
           if (mess.type == 1) {
             this.removeLoading();
-            this.router.navigate(['/']);  
+            this.router.navigate(['/']);
             this.showSuccess(mess.message)
           }
           else if (mess.type == 0) {
             this.removeLoading();
             this.showErr(mess.message)
+          }
+          else if (mess.type == 3) {
+            this.removeLoading();
+            const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+              width: '400px',
+              data: mess.message
+            });
+            dialogRef.afterClosed().subscribe(result => {
+              if (result) {
+                this.router.navigate(['/verify', this.loginFormGroup.value.phone]);
+              }
+            });
           }
         },
         err => {

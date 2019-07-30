@@ -12,14 +12,19 @@ import { ResetPasswordComponent } from './user/reset-password/reset-password.com
 
 import { LandingComponent } from './landing/landing.component';
 const routes: Routes = [
-  { path: '',   redirectTo: '/home', pathMatch: 'full' },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: DashboardComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'verify', component: ConfirmPhoneComponent },
+
+  {
+    path: 'verify/:phone',
+    component: ConfirmPhoneComponent
+  },
   { path: 'logout', component: LogoutComponent },
   { path: 'reset-pass', component: ResetPasswordComponent },
-  { path: '**', component: NotFoundComponent}
+  { path: '**', component: NotFoundComponent }
 ];
 
 @NgModule({

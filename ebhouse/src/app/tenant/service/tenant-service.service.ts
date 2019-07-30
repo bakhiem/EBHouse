@@ -54,8 +54,8 @@ export class TenantServiceService {
   getRoomsInfo(data : any) : Observable<Tenant>{
     return this.http.post<Tenant>(`${this.baseUrl}/api/tenant/roomInfo`, data, httpOptions);
   }
-  public getEquipment(): Observable<any> {
-    return this.http.get("../../assets/equipment.json");
+  getEquipment():Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/api/equipment/all`, null, httpOptions);
   }
   
 

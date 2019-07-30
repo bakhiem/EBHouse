@@ -253,8 +253,8 @@ export class ElectricComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '400px',
-      data: "Bạn chắc chắn muốn lưu thay đổi không ?"
+      width: '450px',
+      data: "Bạn chắc chắn muốn lưu thay đổi không?"
     });
     dialogRef.afterClosed().subscribe(result => {
       if(result){

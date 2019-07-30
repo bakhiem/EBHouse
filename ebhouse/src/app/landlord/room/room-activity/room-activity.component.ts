@@ -83,14 +83,23 @@ export class RoomActivityComponent implements OnInit,OnDestroy {
   }
   
    getEquipment() {
-    this.equipService.getEquipment().subscribe(response => {
-      var arr = [];
-      for (var key in response) {
-        arr.push(response[key])
+    this.addLoading();
+    this.equipService.getEquipment().subscribe(res => {
+      this.removeLoading();
+      let response = JSON.parse("" + res);
+      if (response.type == 1) {
+        this.dataEquipment = JSON.parse(response.data);
+        this.getRoomsInfo();
       }
-      this.dataEquipment = arr;
-      console.log(this.dataEquipment)
-      this.getRoomsInfo();
+      else{
+        this.dataEquipment = [];
+        this.getRoomsInfo();
+      }
+    },
+    err =>{
+      this.removeLoading();
+      console.log(err);
+      this.showErr(CommonMessage.defaultErrMess);
     });
   }
   getEquipmentName(id) :string{
@@ -105,12 +114,19 @@ export class RoomActivityComponent implements OnInit,OnDestroy {
   getStringEquipment() {
     this.listRooms.forEach(element => {
       let stringEquip = '';
-      let arrEquip = element.equipmentID.split(',');
-      arrEquip.forEach(equipmentID => {
-        if(equipmentID.length > 0)
-        stringEquip += this.getEquipmentName(equipmentID) + " - ";
-      });
-      element.equipments = stringEquip.substring(0, stringEquip.length - 2);
+      if(element.equipmentID && element.equipmentID.length > 0){
+        let arrEquip = element.equipmentID.split(',');
+        arrEquip.forEach(equipmentID => {
+          if(equipmentID.length > 0)
+          stringEquip += this.getEquipmentName(equipmentID) + " - ";
+        });
+        element.equipments = stringEquip.substring(0, stringEquip.length - 2);
+      }
+      else{
+        element.equipments = stringEquip;
+      }
+      
+      
     });
     this.dataSource.data = this.listRooms;
   }
@@ -140,6 +156,7 @@ export class RoomActivityComponent implements OnInit,OnDestroy {
         let response = JSON.parse("" + res);
         if (response.type == 1) {
          if (response.data.length > 0) {
+           console.log(response.data)
           let totalPage = response.data.pop();
           this.listRooms = response.data;
           this.totalPage = totalPage.totalRecord;

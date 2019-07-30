@@ -15,7 +15,7 @@
                                 <label for="example-text-input" class="col-form-label">Họ tên</label>
                                 <input class="form-control" type="text" id="example-text-input" formControlName="name" maxlength="255">
                                 <div *ngIf="profileFormGroup.controls['name'].hasError('required') && (profileFormGroup.controls['name'].dirty || profileFormGroup.controls['name'].touched)" class="alert alert-danger">
-                                    Họ tên là bắt buộc
+                                    Vui lòng nhập họ tên
                                 </div>
                             </div>
                         </div>
@@ -24,10 +24,10 @@
                                 <label for="example-tel-input" class="col-form-label">Số điện thoại</label>
                                 <input class="form-control" type="tel" id="example-tel-input" formControlName="phone">
                                 <div *ngIf="profileFormGroup.controls['phone'].hasError('required') && (profileFormGroup.controls['phone'].dirty || profileFormGroup.controls['phone'].touched)" class="alert alert-danger">
-                                    Số điện thoại là bắt buộc
+                                    Vui lòng nhập số điện thoại
                                 </div>
                                 <div *ngIf="profileFormGroup.controls['phone'].hasError('pattern') && (profileFormGroup.controls['phone'].dirty || profileFormGroup.controls['phone'].touched)" class="alert alert-danger">
-                                    Số điện thoại không đúng định dạng
+                                    Số điện thoại bao gồm 10 số
                                 </div>
                             </div>
 
@@ -37,7 +37,7 @@
                                 <label for="example-date-input" class="col-form-label .col-required">Ngày sinh</label>
                                 <input class="form-control" type="date" id="example-date-input" formControlName="date">
                                 <div *ngIf="profileFormGroup.controls['date'].hasError('required') && (profileFormGroup.controls['date'].dirty || profileFormGroup.controls['date'].touched)" class="alert alert-danger">
-                                    Ngày sinh là bắt buộc
+                                    Vui lòng nhập ngày sinh
                                 </div>
                             </div>
 
@@ -67,7 +67,7 @@
                                     </option>
                                 </select>
                                 <div *ngIf="profileFormGroup.controls['province'].hasError('required') && (profileFormGroup.controls['province'].dirty || profileFormGroup.controls['province'].touched)" class="alert alert-danger">
-                                    Tỉnh / Thành phố là bắt buộc
+                                   Vui lòng nhập Tỉnh / Thành phố
                                 </div>
                             </div>
                             <div class="col-sm-3">
@@ -78,7 +78,7 @@
                                     </option>
                                 </select>
                                 <div *ngIf="profileFormGroup.controls['distric'].hasError('required') && (profileFormGroup.controls['distric'].dirty || profileFormGroup.controls['distric'].touched)" class="alert alert-danger">
-                                    Quận / Huyện là bắt buộc
+                                    Vui lòng nhập Quận / Huyện
                                 </div>
                             </div>
                             <div class="col-sm-3">
@@ -89,7 +89,7 @@
                                     </option>
                                 </select>
                                 <div *ngIf="profileFormGroup.controls['wards'].hasError('required') && (profileFormGroup.controls['wards'].dirty || profileFormGroup.controls['wards'].touched)" class="alert alert-danger">
-                                    Xã / Phường là bắt buộc
+                                    Vui lòng nhập Xã / Phường
                                 </div>
                             </div>
                         </div>
@@ -98,7 +98,7 @@
                                 <label for="example-tel-input" class="col-form-label">Thôn xóm/ Số nhà</label>
                                 <input class="form-control" type="text" id="example-tel-input" formControlName="address">
                                 <div *ngIf="profileFormGroup.controls['address'].hasError('required') && (profileFormGroup.controls['address'].dirty || profileFormGroup.controls['address'].touched)" class="alert alert-danger">
-                                    Thôn xóm/ số nhà không được để trống
+                                    Vui lòng nhập Thôn xóm/ số nhà
                                 </div>
                             </div>
                         </div>

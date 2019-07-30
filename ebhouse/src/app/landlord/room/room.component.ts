@@ -202,8 +202,8 @@ export class RoomComponent implements OnInit, OnDestroy {
   onSubmit() {
     if (this.isEdit == 1) {
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-        width: '400px',
-        data: "Bạn chắc chắn muốn lưu thay đổi không ?"
+        width: '450px',
+        data: "Bạn chắc chắn muốn lưu thay đổi không?"
       });
       dialogRef.afterClosed().subscribe(result => {
         if(result){
@@ -239,8 +239,8 @@ export class RoomComponent implements OnInit, OnDestroy {
     else if (this.isEdit == 0) {
 
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-        width: '400px',
-        data: "Bạn chắc chắn muốn tạo phòng không không ?"
+        width: '450px',
+        data: "Bạn chắc chắn muốn tạo phòng không không?"
       });
       dialogRef.afterClosed().subscribe(result => {
         if(result){
@@ -290,8 +290,8 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
     else {
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-        width: '400px',
-        data: "Bạn chắc chắn muốn tạo phòng trọ không ?"
+        width: '450px',
+        data: "Bạn chắc chắn muốn tạo phòng trọ không?"
       });
       dialogRef.afterClosed().subscribe(result => {
         if(result){
@@ -382,8 +382,8 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   deleteRoom(obj) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '400px',
-      data: "Bạn chắc chắn muốn xóa phòng trọ không ?"
+      width: '450px',
+      data: "Bạn chắc chắn muốn xóa phòng trọ không?"
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -405,8 +405,8 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
   deleteMultiRoom() {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '400px',
-      data: "Bạn chắc chắn muốn xóa phòng trọ không ?"
+      width: '450px',
+      data: "Bạn chắc chắn muốn xóa phòng trọ không?"
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {

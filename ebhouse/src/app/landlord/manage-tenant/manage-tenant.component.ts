@@ -122,7 +122,16 @@ export class ManageTenantComponent implements OnInit, OnDestroy {
     let year = this.month.value.getFullYear();
     return year + '-' + month
   }
+  resetModal(){
+    $('#tenant-detail-name').val('');
+    $('#tenant-phone').val('');
+    $('#tenant-address').val('');
+    $('#tenant-rooms').val('');
+    $('#imgArnFront').attr('src','');
+    $('#imgArnBack').attr('src','');
+  }
   viewDetail(data) {
+    this.resetModal();
     $('#tenant-detail-name').val(data.name);
     $('#tenant-phone').val(data.phone);
     $('#tenant-address').val(data.address);

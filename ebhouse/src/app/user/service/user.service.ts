@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import * as jwt from 'angular2-jwt-simple';
+import * as bcrypt from 'bcryptjs';
 // import * as bcrypt from 'bcrypt';
 const httpOptions = {
   headers: new HttpHeaders({
@@ -18,6 +19,8 @@ const httpOptions = {
 })
 export class UserService {
   private baseUrl: string = environment.baseUrl;
+  private secret = '68686868686868688686868686868686';
+
   constructor(private http: HttpClient) { }
   register(user: any): Observable<String> {
     return this.http.post<String>(`${this.baseUrl}/api/register`, user, httpOptions)
@@ -28,15 +31,15 @@ export class UserService {
   };
 
   login(user: any): Observable<String> {
+    console.log(httpOptions)
     return this.http.post<String>(`${this.baseUrl}/api/login`, user, httpOptions)
   };
-  resetPass(user: any): any {
+  resetPass(user: any, hash: any): Observable<any> {
     var payload = {
       username: user.phone,
-      private_key: '66668888666688886666888866668888'
+      private_key: hash
     };
-    var secret = '68686868686868688686868686868686';
-    var token = jwt.encode(payload, secret);
+    let token = jwt.encode(payload, this.secret);
     let httpOptionsReset = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -45,19 +48,10 @@ export class UserService {
       withCredentials: true,
       responseType: 'text' as 'json'
     };
-    console.log(token);
-    // return this.http.post<String>(`${this.baseUrl}/api/password/reset`, user, httpOptionsReset)
-
-
-    // let httpOptionsReset = {
-    //   headers: new HttpHeaders({
-    //     'Content-Type': 'application/json',
-    //     'Authorization' : 'asd'
-    //   }),
-    //   withCredentials: true,
-    //   responseType: 'text' as 'json'
-    // };
-    // return this.http.post<String>(`${this.baseUrl}/api/password/reset`, user, httpOptionsReset)
+    let data = {
+      new_pass :  user.password
+    }
+    return this.http.post<any>(`${this.baseUrl}/api/pass/reset`, data, httpOptionsReset);
   };
   // Login (user : User): Observable<Response> {
   //   console.log(user);

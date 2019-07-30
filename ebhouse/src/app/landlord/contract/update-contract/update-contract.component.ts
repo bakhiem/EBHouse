@@ -395,8 +395,8 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
   }
   deleteRoom(obj) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '400px',
-      data: 'Bạn chắc chắn muốn xóa khách thuê không ?'
+      width: '450px',
+      data: 'Bạn chắc chắn muốn xóa khách thuê không?'
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -409,6 +409,14 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+  removeFieldModal(){
+    $('#tenant-name').val('');
+    $('#tenant-phone').val('');
+    $('#tenant-address').val('');
+    $('#tenant-sex').val('');
+    $('#imgArnFront').attr('src','');
+    $('#imgArnBack').attr('src','');
   }
   searchByPhone() {
     if (!this.capacity) {
@@ -426,6 +434,7 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
           this.removeLoading();
           let response = JSON.parse("" + res);
           if (response.type == 1) {
+            this.removeFieldModal();
             let data = JSON.parse(response.data);
             $('#tenant-name').val(data.user.name);
             $('#tenant-phone').val(data.user.phone);
@@ -505,8 +514,8 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
   }
   deleteImage(src) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '400px',
-      data: 'Bạn chắc chắn muốn xóa ảnh hợp đồng không ?'
+      width: '450px',
+      data: 'Bạn chắc chắn muốn xóa ảnh hợp đồng không?'
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -566,8 +575,8 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
     }
 
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '400px',
-      data: "Bạn chắc chắn muốn lưu thay đổi không ?"
+      width: '450px',
+      data: "Bạn chắc chắn muốn lưu thay đổi không?"
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {

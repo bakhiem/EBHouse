@@ -76,10 +76,7 @@ export class ContractComponent implements OnInit, OnDestroy {
       } else if (this.currentBh) {
         this.showInfo(CommonMessage.InputBh)
       }
-
-
     })
-
   }
 
   showSuccess(mess) {
@@ -299,7 +296,7 @@ export class ContractComponent implements OnInit, OnDestroy {
   }
   deleteContract(obj) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '400px',
+      width: '450px',
       data: "Bạn chắc chắn muốn xóa hợp đồng không ?"
     });
     dialogRef.afterClosed().subscribe(result => {

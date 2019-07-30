@@ -10,6 +10,7 @@ import "firebase/firestore";
 import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { ISubscription } from "rxjs/Subscription";
 import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-confirm-phone',
   templateUrl: './confirm-phone.component.html',
@@ -21,10 +22,10 @@ export class ConfirmPhoneComponent implements OnInit, OnDestroy {
   phoneNumber: string;
   verificationCode: string;
   user: User;
-  userPhone : string;
+  userPhone: string;
   verifyFormGroup: FormGroup;
   phonePattern = '((09|03|07|08|05)+([0-9]{8}))';
-  fromRegis : boolean = false;
+  fromRegis: boolean = false;
   private subscription: ISubscription;
   constructor(private win: WindowService,
     private router: Router,
@@ -32,12 +33,13 @@ export class ConfirmPhoneComponent implements OnInit, OnDestroy {
     private data: DataService,
     private userService: UserService,
     private toastr: ToastrService,
+    private route: ActivatedRoute
   ) { }
   ngAfterViewInit() {
     disableButtonOTPBeforeVerify();
   }
   ngOnDestroy() {
-    if(this.subscription){
+    if (this.subscription) {
       this.subscription.unsubscribe();
     }
     this.reset();
@@ -50,11 +52,14 @@ export class ConfirmPhoneComponent implements OnInit, OnDestroy {
     this.toastr.error(mess, 'Lỗi !');
   }
   ngOnInit() {
-   this.subscription =  this.data.currentUser.subscribe(user => {
+
+    let phone = this.route.snapshot.paramMap.get('phone');
+
+    this.subscription = this.data.currentUser.subscribe(user => {
       this.user = user
       if (this.user == null) {
         this.verifyFormGroup = this.fb.group({
-          phone: this.fb.control('', Validators.compose([Validators.required, Validators.pattern(this.phonePattern)])),
+          phone: this.fb.control(phone ? phone : '', Validators.compose([Validators.required, Validators.pattern(this.phonePattern)])),
           otpcode: ''
         });
       }
@@ -95,10 +100,6 @@ export class ConfirmPhoneComponent implements OnInit, OnDestroy {
       this.windowRef.recaptchaVerifier.render();
     });
     //after register, add user to data service, if don't have data service is fake url and redirect to login.
-
-
-
-
   }
   sendLoginCode() {
     if (this.verifyFormGroup.get('phone').value) {
@@ -115,7 +116,7 @@ export class ConfirmPhoneComponent implements OnInit, OnDestroy {
           .catch(error => console.log(error));
       }
       else {
-        this.showErr('Số điện thoại không đúng định dạng')
+        this.showErr('Số điện thoại bao gồm 10 số')
       }
 
     }
@@ -123,7 +124,14 @@ export class ConfirmPhoneComponent implements OnInit, OnDestroy {
       this.showErr('Mời nhập vào số điện thoại')
     }
   }
-
+  addLoading() {
+    $('.customLoading').addClass('preloader');
+    $('.customLoader').addClass('loader');
+  }
+  removeLoading() {
+    $('.customLoading').removeClass('preloader');
+    $('.customLoader').removeClass('loader');
+  }
   verifyLoginCode() {
     if (this.verifyFormGroup.value.otpcode.length == 0) {
       this.showErr("Điền vào phần nhập mã OTP")
@@ -133,30 +141,32 @@ export class ConfirmPhoneComponent implements OnInit, OnDestroy {
       .confirm(this.verifyFormGroup.value.otpcode)
       .then(result => {
         if (result.user != null) {
-          if(this.fromRegis){
+          if (this.fromRegis) {
             this.submit();
           }
-          else{
+          else {
             this.sendToChangePassword();
           }
         }
       })
       .catch(error => {
-        this.showErr( "Sai mã OTP")
+        this.showErr("Sai mã OTP")
         console.log(error, "Incorrect code entered?");
       });
   }
   submit() {
+    this.addLoading();
     this.userService
       .submit(toUserSend(this.user))
       .subscribe(
         res => {
+          this.removeLoading();
           let mess: any;
           mess = JSON.parse("" + res);
           if (mess.type == 1) {
             this.showSuccess(mess.message)
             this.reset();
-            this.data.changeUser(null);
+            this.data.changeUser(this.user);
             this.router.navigate(['/login']);
           }
           if (mess.type == 0) {
@@ -164,14 +174,15 @@ export class ConfirmPhoneComponent implements OnInit, OnDestroy {
           }
         },
         err => {
+          this.removeLoading();
           console.log(err);
-          this.showErr( "Có lỗi xảy ra")
+          this.showErr("Có lỗi xảy ra")
         }
       );
   }
-  sendToChangePassword(){
+  sendToChangePassword() {
     let user = {
-      phone : this.userPhone
+      phone: this.userPhone
     }
     this.data.changeUserReset(user);
     this.router.navigate(['/reset-pass']);
@@ -190,28 +201,29 @@ function toUserSend(r: any) {
       password: r.password,
       phone: r.phone
     },
-    role: r.role
+    role: r.role,
+    status: 2
   };
   return userSend;
 }
 let countdownNum = 30;
+
 function disableButtonOTPBeforeVerify() {
-  $('button.btn.btn-outline-secondary').prop('disabled', true);
+  $('.btn-send').prop('disabled', true);
   $('.otpInput').hide();
 }
-
 function enableButtonOTPBeforeVerify() {
-  $('button.btn.btn-outline-secondary').prop('disabled', false);
+  $('.btn-send').prop('disabled', false);
   $('#recaptcha-container').hide();
 
 }
 
 var otpTimeOut, buttonTimeOut;
 function disableButton() {
-  $('button.btn.btn-outline-secondary').prop('disabled', true);
+  $('.btn-send').prop('disabled', true);
   incTimer();
   buttonTimeOut = setTimeout(function () {
-    $('button.btn.btn-outline-secondary').prop('disabled', false);
+    $('.btn-send').prop('disabled', false);
     $('#recaptcha-container').show();
     $('.otpInput').hide();
   }, 30000);

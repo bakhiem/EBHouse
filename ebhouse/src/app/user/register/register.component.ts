@@ -68,6 +68,7 @@ export class RegisterComponent implements OnInit {
         this.removeLoading()
         let mess: any;
         mess = JSON.parse('' + res);
+        console.log(mess)
         if (mess.type == 1) {
           this.showSuccess(mess.message)
           let userShare = toUser(this.userFormGroup.value);

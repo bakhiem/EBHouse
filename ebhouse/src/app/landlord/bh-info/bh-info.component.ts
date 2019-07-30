@@ -133,7 +133,7 @@ export class BhInfoComponent implements OnInit {
     let fullAddress = address.trim() + "-" + this.createbhFormGroup.value.wards.name + "-" + this.createbhFormGroup.value.distric.name + "-" + this.createbhFormGroup.value.province.name;
     if (this.isEdit == 1) {
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-        width: '400px',
+        width: '450px',
         data: "Bạn chắc chắn muốn lưu thay đổi không ?"
       });
       dialogRef.afterClosed().subscribe(result => {
@@ -164,7 +164,7 @@ export class BhInfoComponent implements OnInit {
     }
     else {
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-        width: '400px',
+        width: '450px',
         data: "Bạn chắc chắn muốn tạo nhà trọ không ?"
       });
       dialogRef.afterClosed().subscribe(result => {
@@ -187,7 +187,7 @@ export class BhInfoComponent implements OnInit {
               this.getBoardingHouses();
               this.shareService.getAllBoardingHouses(this.createbhFormGroup.value.name.trim()).subscribe();
               const dialogRefElectric = this.dialog.open(RedirectDialogComponent, {
-                width: '400px',
+                width: '450px',
                 data: CommonMessage.RedirectUtility
               });
               dialogRefElectric.afterClosed().subscribe(result => {
@@ -283,7 +283,7 @@ export class BhInfoComponent implements OnInit {
   }
   deleteBh(obj) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '400px',
+      width: '450px',
       data: "Bạn chắc chắn muốn xóa nhà trọ không ?"
     });
     dialogRef.afterClosed().subscribe(result => {

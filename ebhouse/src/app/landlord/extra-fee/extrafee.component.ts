@@ -493,8 +493,8 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
     }
     if (this.checkRoomValid()) {
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-        width: '400px',
-        data: "Bạn chắc chắn muốn lưu không ?"
+        width: '450px',
+        data: "Bạn chắc chắn muốn lưu không?"
       });
       dialogRef.afterClosed().subscribe(result => {
         if(result){
@@ -571,8 +571,8 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
   }
   deleteEF(index) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '400px',
-      data: "Bạn chắc chắn muốn xóa chi phí khác không ?"
+      width: '450px',
+      data: "Bạn chắc chắn muốn xóa chi phí khác không?"
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {

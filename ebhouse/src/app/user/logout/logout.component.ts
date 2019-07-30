@@ -12,20 +12,31 @@ export class LogoutComponent implements OnInit {
   constructor(private service: AuthenticationService,
     private router: Router,
     private toastr: ToastrService) { }
-
+    addLoading() {
+      $('.customLoading').addClass('preloader');
+      $('.customLoader').addClass('loader');
+    }
+    removeLoading() {
+      $('.customLoading').removeClass('preloader');
+      $('.customLoader').removeClass('loader');
+    }
   ngOnInit() {
+    this.addLoading();
     if (this.service.currentUserValue) {
       this.service.logout().subscribe(res => {
-        this.router.navigate(['/home'])
+        this.removeLoading();
+        this.router.navigate(['/home']);
+        this.showSuccess('Đăng xuất thành công')
       }, err => {
-        this.router.navigate(['/home'])
+        this.removeLoading();
+        this.router.navigate(['/home']);
+        this.showSuccess('Đăng xuất thành công')
       });
     } else {
-      this.router.navigate(['/home'])
+      this.removeLoading();
+      this.router.navigate(['/home']);
+      this.showSuccess('Đăng xuất thành công')
     }
-    this.showSuccess('Đăng xuất thành công')
-
-
     // location.reload(true);
   }
   showSuccess(mess) { 

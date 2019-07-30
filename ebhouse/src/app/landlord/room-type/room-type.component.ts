@@ -27,7 +27,7 @@ export class RoomTypeComponent implements OnInit {
   currentRt: RoomType;
 
   //equipment
-  dataEquipment: any[];
+  dataEquipment: any[] = [];
 
   //paging
   perPage: number = 5;
@@ -106,14 +106,26 @@ export class RoomTypeComponent implements OnInit {
   }
 
   private getEquipment() {
-    this.equipmentService.getEquipment().subscribe(response => {
-      var arr = [];
-      for (var key in response) {
-        arr.push(response[key])
+    this.addLoading();
+    this.equipmentService.getEquipment().subscribe(res => {
+      this.removeLoading();
+      let response = JSON.parse("" + res);
+      console.log(response)
+      if (response.type == 1) {
+        this.dataEquipment = JSON.parse(response.data);
+          this.addCheckboxes();
+          this.getRoomTypes();
       }
-      this.dataEquipment = arr;
-      this.addCheckboxes();
-      this.getRoomTypes();
+      else{
+        this.dataEquipment = [];
+        this.addCheckboxes();
+        this.getRoomTypes();
+      }
+    },
+    err =>{
+      this.removeLoading();
+      console.log(err);
+      this.showErr(CommonMessage.defaultErrMess);
     });
   }
   private addCheckboxes() {
@@ -127,7 +139,6 @@ export class RoomTypeComponent implements OnInit {
     let page: any = {
       page: this.currentPage
     }
-    this.addLoading();
     this.service.getRoomTypes(page).subscribe(
       res => {
         this.removeLoading();
@@ -157,7 +168,7 @@ export class RoomTypeComponent implements OnInit {
       });
       element.equipments = stringEquip.substring(0, stringEquip.length - 2);
     });
-    this.dataSource.data= this.rtList;
+    this.dataSource.data = this.rtList;
     console.log(this.rtList);
   }
 
@@ -196,30 +207,61 @@ export class RoomTypeComponent implements OnInit {
     let formatPrice = this.createRtFormGroup.value.price.split('.').join('');
     if (this.isEdit == 1) {
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-        width: '400px',
-        data: "Bạn chắc chắn muốn lưu thay đổi không ?"
+        width: '450px',
+        data: "Bạn chắc chắn muốn lưu thay đổi không?"
       });
       dialogRef.afterClosed().subscribe(result => {
-        if(result){
-        let sendToServer = {
-          roomType: [{
-            id: this.createRtFormGroup.value.id,
-            name: this.createRtFormGroup.value.name,
-            area: this.createRtFormGroup.value.area,
-            price: formatPrice,
-            capacity: this.createRtFormGroup.value.capacity,
-            description: this.createRtFormGroup.value.description ? this.createRtFormGroup.value.description : '',
-          }],
-          equipment: this.listEquipmentOnSubmit()
+        if (result) {
+          let sendToServer = {
+            roomType: [{
+              id: this.createRtFormGroup.value.id,
+              name: this.createRtFormGroup.value.name,
+              area: this.createRtFormGroup.value.area,
+              price: formatPrice,
+              capacity: this.createRtFormGroup.value.capacity,
+              description: this.createRtFormGroup.value.description ? this.createRtFormGroup.value.description : '',
+            }],
+            equipment: this.listEquipmentOnSubmit()
+          }
+          console.log(sendToServer)
+          let newRt = sendToServer.roomType[0];
+          if (newRt.area == this.currentRt.area && newRt.name == this.currentRt.name && newRt.price == this.currentRt.price && newRt.capacity == this.currentRt.capacity && newRt.description == this.currentRt.description && JSON.stringify(this.currentRt['checked']) == JSON.stringify(this.createRtFormGroup.controls.dataEquipment.value)) {
+            this.showErr(CommonMessage.notChangeMess);
+          }
+          else {
+            this.addLoading();
+            this.service.editRt(sendToServer).subscribe(
+              res => {
+                this.successRequestHandle(res);
+              },
+              err => {
+                this.errRequestHandle(err);
+              }
+            )
+          }
         }
-        console.log(sendToServer)
-        let newRt = sendToServer.roomType[0];
-        if (newRt.area == this.currentRt.area && newRt.name == this.currentRt.name && newRt.price == this.currentRt.price && newRt.capacity == this.currentRt.capacity && newRt.description == this.currentRt.description && JSON.stringify(this.currentRt['checked']) == JSON.stringify(this.createRtFormGroup.controls.dataEquipment.value)) {
-          this.showErr(CommonMessage.notChangeMess);
-        }
-        else {
+      })
+    }
+    else if (this.isEdit == 0) {
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        width: '450px',
+        data: "Bạn chắc chắn muốn tạo loại phòng không?"
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          let sendToServer = {
+            roomType: [{
+              name: this.createRtFormGroup.value.name,
+              area: this.createRtFormGroup.value.area,
+              price: formatPrice,
+              capacity: this.createRtFormGroup.value.capacity,
+              description: this.createRtFormGroup.value.description ? this.createRtFormGroup.value.description : '',
+            }],
+            equipment: this.listEquipmentOnSubmit()
+          }
+          console.log(sendToServer)
           this.addLoading();
-          this.service.editRt(sendToServer).subscribe(
+          this.service.createRt(sendToServer).subscribe(
             res => {
               this.successRequestHandle(res);
             },
@@ -228,36 +270,7 @@ export class RoomTypeComponent implements OnInit {
             }
           )
         }
-     } })
-    }
-    else if (this.isEdit == 0) {
-      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-        width: '400px',
-        data: "Bạn chắc chắn muốn tạo loại phòng không ?"
-      });
-      dialogRef.afterClosed().subscribe(result => {
-        if(result){
-        let sendToServer = {
-          roomType: [{
-            name: this.createRtFormGroup.value.name,
-            area: this.createRtFormGroup.value.area,
-            price: formatPrice,
-            capacity: this.createRtFormGroup.value.capacity,
-            description: this.createRtFormGroup.value.description ? this.createRtFormGroup.value.description : '',
-          }],
-          equipment: this.listEquipmentOnSubmit()
-        }
-        console.log(sendToServer)
-        this.addLoading();
-        this.service.createRt(sendToServer).subscribe(
-          res => {
-            this.successRequestHandle(res);
-          },
-          err => {
-            this.errRequestHandle(err);
-          }
-        )
-     } })
+      })
 
     }
   }
@@ -309,8 +322,8 @@ export class RoomTypeComponent implements OnInit {
   }
   deleteBh(obj) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      width: '400px',
-      data: "Bạn chắc chắn muốn xóa loại phòng chứ ?"
+      width: '450px',
+      data: "Bạn chắc chắn muốn xóa loại phòng chứ?"
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
