@@ -21,7 +21,7 @@
   .modal-content img{
     max-height: 90vh;
   }
-
+  #modal4 .modal-dialog{text-align:left;}
 .modal-dialog{text-align:center;}
 .modal-content{display:inline-block;}
 .example-month-picker .mat-calendar-period-button {

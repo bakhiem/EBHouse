@@ -95,7 +95,7 @@
                         <div class="form-group row">
                             <div class="col-sm-6">
                                 <label for="example-tel-input" class="col-form-label">Thôn xóm/ Số nhà</label>
-                                <input class="form-control" type="tel" id="example-tel-input" formControlName="address">
+                                <input class="form-control" type="text" id="example-tel-input" formControlName="address">
                                 <div *ngIf="profileFormGroup.controls['address'].hasError('required') && (profileFormGroup.controls['address'].dirty || profileFormGroup.controls['address'].touched)" class="alert alert-danger">
                                     Thôn xóm/ số nhà không được để trống
                                 </div>

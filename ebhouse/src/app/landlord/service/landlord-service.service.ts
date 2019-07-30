@@ -68,12 +68,12 @@ export class LandlordService {
   getRoomsAvailable(data:any):Observable < any[] >  {
     return this.http.post < any[] > (`${this.baseUrl}/api/landlord/room/all`, data, httpOptions);
   }
-  getRoomsNoContract(data:any):Observable < any[] >  {
-    return this.http.post < any[] > (`${this.baseUrl}/api/landlord/room/available`, data, httpOptions);
-  } 
-  getRoomsExitsContract(data:any):Observable < any[] >  {
-    return this.http.post < any[] > (`${this.baseUrl}/api/landlord/room/existContract`, data, httpOptions);
-  }
+  // getRoomsNoContract(data:any):Observable < any[] >  {
+  //   return this.http.post < any[] > (`${this.baseUrl}/api/landlord/room/available`, data, httpOptions);
+  // } 
+  // getRoomsExitsContract(data:any):Observable < any[] >  {
+  //   return this.http.post < any[] > (`${this.baseUrl}/api/landlord/room/existContract`, data, httpOptions);
+  // }
   searchTenantByPhone(data:any):Observable < any[] >  {
     return this.http.post < any[] > (`${this.baseUrl}/api/landlord/contract/getTenant`, data, httpOptions);
   }

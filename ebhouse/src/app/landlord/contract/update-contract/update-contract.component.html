@@ -79,7 +79,7 @@
                                 </select>
                                 <div *ngIf="createContractFormGroup.controls['owner'].hasError('required') && (createContractFormGroup.controls['owner'].dirty || createContractFormGroup.controls['owner'].touched)"
                                     class="alert alert-danger">
-                                    {{CommonMessage.InputRequire}} người đại diện.
+                                    Vui lòng chọn người đại diện.
                                 </div>
                             </div>
                             <div class="col-sm-4">
@@ -285,6 +285,109 @@
                     thuê</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
             </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bd-example-modal-lg" id='modal4'>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form [formGroup]="createTenantFormGroup" (ngSubmit)="onSubmitTenant()">
+                <div class="modal-header">
+                    <h5 class="modal-title">Thêm khách thuê</h5>
+                    <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="example-text-input" class="col-form-label required">Họ và tên khách thuê</label>
+                            <input class="form-control" type="text" id="example-text-input" formControlName="name">
+                            <div *ngIf="createTenantFormGroup.controls['name'].hasError('required') && (createTenantFormGroup.controls['name'].dirty || createTenantFormGroup.controls['name'].touched)"
+                                class="alert alert-danger">
+                                {{CommonMessage.InputRequire}}tên khách thuê
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="example-number-input" class="col-form-label required">Số điện thoại</label>
+                            <input class="form-control" type="number" id="example-number-input" formControlName="phone">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-4">
+                            <label for="example-number-input" class="col-form-label">Ngày sinh</label>
+                            <mat-form-field>
+                                <input matInput [matDatepicker]="dp" [max]='minDate' placeholder="Ngày sinh"
+                                    formControlName="dateOfBirth">
+                                <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                                <mat-datepicker #dp></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+                    <div class="form-group row ml-2">
+                        <label for="example-number-input" class="col-form-label input-group">Giới tính</label>
+                        <div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="customRadio1" class="custom-control-input" value="1"
+                                    formControlName="sex">
+                                <label class="custom-control-label" for="customRadio1">Nam</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="customRadio2" class="custom-control-input" value="2"
+                                    formControlName="sex">
+                                <label class="custom-control-label" for="customRadio2">Nữ</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="customRadio3" class="custom-control-input" value="0"
+                                    formControlName="sex">
+                                <label class="custom-control-label" for="customRadio3">Khác</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-3">
+                            <label class="col-form-label">Tỉnh / Thành phố </label>
+                            <select class="custom-select" formControlName="province" (change)="onChangeProvince()">
+                                <option *ngFor="let aprovince of dataProvince" [ngValue]="aprovince">
+                                    {{aprovince.name}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="col-form-label">Quận / Huyện</label>
+                            <select class="custom-select" formControlName="distric" (change)="onChangeDistric()">
+                                <option *ngFor="let adistric of dataDistric" [ngValue]="adistric">
+                                    {{adistric.name}}
+                                </option>
+                            </select>
+
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="col-form-label">Xã / Phường</label>
+                            <select class="custom-select" formControlName="wards">
+                                <option *ngFor="let awards of dataWards" [ngValue]="awards">
+                                    {{awards.name}}
+                                </option>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label for="example-tel-input" class="col-form-label">Thôn xóm/ Số nhà</label>
+                            <input class="form-control" type="text" id="example-tel-input" formControlName="address">
+                        </div>
+                    </div>
+
+                    <!-- [disabled]="createTenantFormGroup.invalid" -->
+                </div>
+                <!-- Textual inputs end -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Trở về</button>
+                    <button class="btn btn-info mb-3" type="submit" id="myButton"
+                        [disabled]="createTenantFormGroup.invalid">Lưu khách thuê</button>
+                </div>
+
+            </form>
         </div>
     </div>
 </div>

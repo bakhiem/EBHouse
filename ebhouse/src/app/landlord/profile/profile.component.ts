@@ -136,7 +136,6 @@ export class LandlordProfileComponent implements OnInit {
     }
     this.removeLoading();
   }
-
   getProvince() {
     this.placeService.getProvince().subscribe(response => {
       let arr = [];
@@ -147,7 +146,6 @@ export class LandlordProfileComponent implements OnInit {
       this.getProfile();
     });
   }
-
   getDistric(province: any): any[] {
     let arr = [];
     this.placeService.getDistric(province.code).subscribe(response => {
@@ -158,7 +156,6 @@ export class LandlordProfileComponent implements OnInit {
     });
     return arr;
   }
-
   getWards(distric: any): any[] {
     let arr = [];
     this.placeService.getWards(distric.code).subscribe(response => {
@@ -169,7 +166,6 @@ export class LandlordProfileComponent implements OnInit {
     });
     return arr;
   }
-
   onChangeProvince() {
     this.placeService.getDistric(this.profileFormGroup.value.province.code).subscribe(response => {
       var arr = [];
@@ -181,7 +177,6 @@ export class LandlordProfileComponent implements OnInit {
       this.onChangeDistric();
     });
   }
-
   onChangeDistric() {
     this.placeService.getWards(this.profileFormGroup.value.distric.code).subscribe(response => {
       var arr = [];
@@ -192,9 +187,9 @@ export class LandlordProfileComponent implements OnInit {
       this.profileFormGroup.get('wards').setValue(arr[0]);
     });
   }
-
   onSubmit() {
     if (!this.profileFormGroup.invalid) {
+      console.log(this.landlord.user);
       this.checkChangeData();
       if (this.check == 1) {
         this.addLoading();

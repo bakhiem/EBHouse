@@ -128,7 +128,9 @@ export class BhInfoComponent implements OnInit {
       this.showErr('Bạn chỉ được tạo tối đa 1000 phòng, vui lòng liên hệ với admin để tạo thêm');
       return;
     }
-    let fullAddress = this.createbhFormGroup.value.address + "-" + this.createbhFormGroup.value.wards.name + "-" + this.createbhFormGroup.value.distric.name + "-" + this.createbhFormGroup.value.province.name;
+    let address = this.createbhFormGroup.value.address.replace(/-/g, ' ');
+    console.log(address)
+    let fullAddress = address.trim() + "-" + this.createbhFormGroup.value.wards.name + "-" + this.createbhFormGroup.value.distric.name + "-" + this.createbhFormGroup.value.province.name;
     if (this.isEdit == 1) {
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
         width: '400px',
@@ -161,7 +163,6 @@ export class BhInfoComponent implements OnInit {
       })
     }
     else {
-
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
         width: '400px',
         data: "Bạn chắc chắn muốn tạo nhà trọ không ?"

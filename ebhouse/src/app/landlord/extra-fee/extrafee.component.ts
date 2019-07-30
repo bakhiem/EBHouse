@@ -519,6 +519,7 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
               amount: amount,
               cDate: this.createEFFormGroup.value.cDate
             },
+            boardingHouseID: this.currentBh.id,
             isLandlord: $('#landlord').is(':checked')
           }
         }
@@ -530,6 +531,7 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
               description: this.createEFFormGroup.value.description.trim(),
               amount: amount
             },
+            boardingHouseID: this.currentBh.id,
             isLandlord: $('#landlord').is(':checked')
           }
         }

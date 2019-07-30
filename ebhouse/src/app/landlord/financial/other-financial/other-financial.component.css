@@ -25,6 +25,12 @@
   }
   
   @media only screen and (max-width: 600px) {
+    #searchBtn{
+      margin-top: 0!important;
+    }
+    #createBtn{
+      margin-top: 0.5rem!important;
+    }
   .pagination{
     display: flex;
     justify-content: center;

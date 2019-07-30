@@ -19,6 +19,13 @@
   }
 
 @media only screen and (max-width: 600px) {
+  #searchBtn{
+    margin-top: 0!important;
+  }
+  #createBtn{
+    margin-top: 0.5rem!important;
+  }
+
   table td{
     font-size: 0.6rem;
   }
@@ -28,9 +35,6 @@
   }
   .example-full-width {
     width: 50%;
-  }
-  .searchBox{
-    margin-top: 5px;
   }
   table ul{
     margin : 0;
