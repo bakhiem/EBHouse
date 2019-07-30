@@ -21,7 +21,22 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private data: DataService,
     private userService: UserService,
-    private toastr: ToastrService,) { }
+    private toastr: ToastrService,) {
+      this.userFormGroup = this.fb.group({
+        pw: this.fb.group(
+          {
+            passwordConfirm: this.fb.control('', Validators.minLength(8)),
+            password: this.fb.control('', Validators.compose([Validators.required, Validators.minLength(8)])),
+          },
+          {
+            validator: passwordMatch,
+          }
+        ),
+        phone: '',
+  
+      });
+
+     }
 
   ngOnInit() {
     this.subscription =  this.data.currentUserResetPass.subscribe(user => {
@@ -30,19 +45,8 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
       }
       else{
         this.user = user;
-        this.userFormGroup = this.fb.group({
-          pw: this.fb.group(
-            {
-              passwordConfirm: this.fb.control('', Validators.minLength(8)),
-              password: this.fb.control('', Validators.compose([Validators.required, Validators.minLength(8)])),
-            },
-            {
-              validator: passwordMatch,
-            }
-          ),
-          phone: { value: (this.user) ? this.user.phone : "", disabled: true },
-    
-        });
+        this.userFormGroup.get('phone').setValue(this.user.phone);
+        this.userFormGroup.controls['phone'].disable();
       }
     })
   }
@@ -60,8 +64,22 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   }
   onSubmit(){
     if(this.userFormGroup.valid){
-      
+
+       
+      let user = {
+        phone : this.userFormGroup.get('phone').value,
+        password : this.userFormGroup.value.password
+      }
+      this.userService.resetPass(user).subscribe(
+        res =>{
+          console.log(res)
+        },
+        err =>{
+          console.log(err)
+        }
+      )
     }
+
   }
 }
 export function passwordMatch(c: AbstractControl) {

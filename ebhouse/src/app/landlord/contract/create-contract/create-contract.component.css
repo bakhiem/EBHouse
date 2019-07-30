@@ -19,6 +19,8 @@
   }
 
 .modal-dialog{text-align:center;}
+#modal4 .modal-dialog{text-align:left;}
+
 .modal-content{display:inline-block;}
 .example-month-picker .mat-calendar-period-button {
   pointer-events: none;

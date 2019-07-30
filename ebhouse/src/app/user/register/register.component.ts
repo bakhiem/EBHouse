@@ -5,7 +5,9 @@ import { User } from '../models/user';
 import { DataService } from '../service/data.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { MatDialog, MatCheckboxModule } from '@angular/material'; 
 
+import { InformationDialogComponent } from '../../shared/info-dialog/information-dialog.component';
 import {CommonMessage} from '../../models/message';
 @Component({
   selector: 'app-register',
@@ -23,7 +25,9 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder,
     private data: DataService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    public dialog: MatDialog,
+
   ) {}
 
   ngOnInit() {
@@ -58,6 +62,7 @@ export class RegisterComponent implements OnInit {
   }
   onSubmit() {
     this.addLoading();
+    console.log(toUserSend(this.userFormGroup.value))
     this.userService.register(toUserSend(this.userFormGroup.value)).subscribe(
       res => {
         this.removeLoading()
@@ -72,6 +77,12 @@ export class RegisterComponent implements OnInit {
         }
         if (mess.type == 0) {
           this.showErr(mess.message);
+        }
+        if (mess.type == 2) {   
+          this.dialog.open(InformationDialogComponent, {
+            width: '500px',
+            data: mess.message
+          });
         }
       },
       err => {
@@ -98,6 +109,7 @@ function toUserSend(r: any) {
       password: r.pw.password,
       phone: r.phone,
     },
+    role : r.role
   };
   return userSend;
 }

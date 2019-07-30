@@ -15,7 +15,7 @@ import { Tenant } from '../../models/tenant';
 import * as $ from 'jquery';
 //image
 import { Options, ImageResult } from "ngx-image2dataurl";
-import { RotateImageFileProcessor } from '../../shared/image-rotate'
+import { RotateImageFileProcessor } from '../../shared/image-rotate';
 
 
 @Component({
@@ -289,7 +289,7 @@ export class TenantProfileComponent implements OnInit {
       let image = (imageResult.resized && imageResult.resized.dataURL) || imageResult.dataURL;
 
       this.getOrientation(imageResult.file, (orientation) => {
-        this.rotateImageFileProcessor.process(image, orientation).then(res => {
+        this.rotateImageFileProcessor.process(orientation +','+image).then(res => {
           this.imgArnFront = res;
         });
       });
@@ -302,7 +302,7 @@ export class TenantProfileComponent implements OnInit {
     else {
       let image = (imageResult.resized && imageResult.resized.dataURL) || imageResult.dataURL;
       this.getOrientation(imageResult.file, (orientation) => {
-        this.rotateImageFileProcessor.process(image, orientation).then(res => {
+        this.rotateImageFileProcessor.process(orientation +','+ image).then(res => {
           this.imgArnBack = res;
         });
       });
@@ -310,7 +310,6 @@ export class TenantProfileComponent implements OnInit {
     }
   }
   getOrientation(file, callback) {
-
     var reader: any,
     target: EventTarget;
     reader = new FileReader();

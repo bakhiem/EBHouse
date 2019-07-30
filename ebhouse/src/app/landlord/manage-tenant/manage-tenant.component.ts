@@ -51,8 +51,8 @@ export class ManageTenantComponent implements OnInit, OnDestroy {
   private subscription: ISubscription;
   //search
   month: FormControl;
-  roomList : any[];
-  roomControl  = new FormControl();
+  roomList: any[];
+  roomControl = new FormControl();
   tenantControl = new FormControl();
   filteredOptions: Observable<any[]>;
   filteredOptionsRoom: Observable<any[]>;
@@ -128,13 +128,13 @@ export class ManageTenantComponent implements OnInit, OnDestroy {
     $('#tenant-address').val(data.address);
     $('#tenant-rooms').val(data.listRoom);
     if (data.imgArnFront) {
-      $('#imgArnFront').attr('src', data.imgArnFront.trim()+ "?date=" + new Date().getTime());
+      $('#imgArnFront').attr('src', data.imgArnFront.trim() + "?date=" + new Date().getTime());
     }
     if (data.imgArnBack) {
-      $('#imgArnBack').attr('src', data.imgArnBack.trim()+ "?date=" + new Date().getTime());
+      $('#imgArnBack').attr('src', data.imgArnBack.trim() + "?date=" + new Date().getTime());
     }
     $('#modal2').modal('show');
-  
+
   }
 
   getTenant() {
@@ -160,7 +160,7 @@ export class ManageTenantComponent implements OnInit, OnDestroy {
               this.handlelistTenantDisplay();
               this.totalPage = totalPage.totalRecord;
             }
-            else{
+            else {
               this.listTenantDisplay = [];
               this.dataSource.data = [];
             }
@@ -215,7 +215,7 @@ export class ManageTenantComponent implements OnInit, OnDestroy {
 
         }
       }, err => {
-       
+
         console.log(err);
       })
   }
@@ -283,14 +283,14 @@ export class ManageTenantComponent implements OnInit, OnDestroy {
     this.getTenant();
   }
   searchByTenant() {
-    if(this.isValidRoom() == true && this.isValidTenant() == true){
+    if (this.isValidRoom() == true && this.isValidTenant() == true) {
       this.resetFormAndGetTenant()
     }
-    else{
+    else {
       this.displayDialog('Mời chọn phòng & khách thuê trong danh sách')
     }
   }
-  isValidTenant() : boolean{
+  isValidTenant(): boolean {
     let isvalid = false;
     if (!this.tenantControl.value) {
       this.tenantControl.setValue(this.listTenant[0]);
@@ -306,7 +306,7 @@ export class ManageTenantComponent implements OnInit, OnDestroy {
     });
     return isvalid;
   }
-  isValidRoom() :boolean{
+  isValidRoom(): boolean {
     let isvalid = false;
     if (!this.roomControl.value) {
       this.roomControl.setValue(this.roomList[0]);
@@ -317,10 +317,10 @@ export class ManageTenantComponent implements OnInit, OnDestroy {
       if (element.name == this.roomControl.value || element.name == this.roomControl.value.name) {
         this.roomControl.setValue(element);
         isvalid = true;
-      return isvalid;
+        return isvalid;
       }
     });
-      return isvalid;
+    return isvalid;
   }
   handlelistTenantDisplay() {
     this.listTenantDisplay.forEach(tenant => {
@@ -332,7 +332,13 @@ export class ManageTenantComponent implements OnInit, OnDestroy {
       }
       let formatRooms = roomStr.substring(0, roomStr.length - 1);
       tenant.listRoom = formatRooms;
-
+      if(tenant.address && tenant.address.length > 0){
+        let address = tenant.address.split('-');
+        if (address[0].length == 0) {
+          tenant.address = address[1] + '-' + address[2] + '-' + address[3]
+        }
+      }
+     
     });
     this.dataSource.data = this.listTenantDisplay;
   }

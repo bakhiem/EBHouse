@@ -137,7 +137,6 @@ export class OtherFinancialComponent implements OnInit, OnDestroy {
       roomID: -1
     }
     console.log(data);
-    this.addLoading();
     this.service.getExtrafee(data).subscribe(
       res => {
         this.removeLoading();
@@ -153,7 +152,6 @@ export class OtherFinancialComponent implements OnInit, OnDestroy {
         }
       }, err => {
         this.showErr(CommonMessage.defaultErrMess);
-        this.removeLoading();
         console.log(err);
       })
   }

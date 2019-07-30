@@ -95,16 +95,6 @@ export class EquipmentComponent implements OnInit {
               let response = JSON.parse('' + res);
               if (response.type == 1) {
                 this.service.listEquipment.next(1);
-                this.equipmentService.getEquipment().subscribe(response => {
-                  var arr = [];
-                  for (var key in response) {
-                    arr.push(response[key])
-                  }
-                  this.listDataEquipment = arr;
-                  console.log(this.listDataEquipment);
-                  this.equipmentService.putEquipment(this.listDataEquipment).subscribe(response => {
-                  });
-                });
                 $("#creatEquipment").modal('toggle');
                 this.showSuccess(response.message);
               } else {
@@ -131,6 +121,8 @@ export class EquipmentComponent implements OnInit {
     this.isEdit = 0;
     this.check = 0;
     this.isEdit = flag;
+    this.equipment.id = null;
+    this.equipment.name = "";
     if(flag == 1){
       this.equipment.id = row.id;
       this.equipment.name = row.name;

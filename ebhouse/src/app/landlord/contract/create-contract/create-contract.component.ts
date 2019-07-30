@@ -27,6 +27,10 @@ import { CustomDateAdapter } from '../customDate'
 
 import { SharedServiceService } from '../../../service/shared-service.service';
 
+//add new tenant
+import { PlaceService } from '../../../service/place.service';
+import { UserService } from '../../../user/service/user.service';
+import { RotateImageFileProcessor } from '../../../shared/image-rotate';
 @Component({
   selector: 'app-create-contract',
   templateUrl: './create-contract.component.html',
@@ -41,6 +45,11 @@ export class CreateContractComponent implements OnInit, OnDestroy {
   endDateSrt: any;
   minDate = new Date();
   CommonMessage = CommonMessage;
+  dataDistric: any[];
+  dataWards: any[];
+  dataProvince: any[];
+ rotateImageFileProcessor = new RotateImageFileProcessor();
+  createTenantFormGroup: FormGroup;
   //Message
   monthStartSelected(params, datepicker) {
     params.setDate(1);
@@ -203,7 +212,9 @@ export class CreateContractComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private service: LandlordService,
     private router: Router,
-    private toastr: ToastrService) {
+    private toastr: ToastrService,
+    private placeService : PlaceService,
+    private userService: UserService,) {
     this.createContractFormGroup = this.fb.group({
       room: this.fb.control('', Validators.compose([
         Validators.required
@@ -219,8 +230,25 @@ export class CreateContractComponent implements OnInit, OnDestroy {
       beginDate: this.fb.control({ value: '', disabled: true }, Validators.required),
       endDate: this.fb.control({ value: '', disabled: true }, Validators.required),
       period: '',
-      description: ''
+      description: '',
+      sex : ''
     });
+
+    this.createTenantFormGroup = this.fb.group({
+      name: this.fb.control('', Validators.compose([
+        Validators.required
+      ])),
+      id: '',
+      phone: '',
+      province: '',
+      distric: '',
+      wards: '',
+      address: '',
+      dateOfBirth :'',
+      sex : ''
+    });
+
+
   }
 
   ngOnInit() {
@@ -236,6 +264,15 @@ export class CreateContractComponent implements OnInit, OnDestroy {
     })
     this.formatCurrency();
     this.jqueryCode();
+
+    this.placeService.getProvince().subscribe(response => {
+      var arr = [];
+      for (var key in response) {
+        arr.push(response[key])
+      }
+      this.dataProvince = arr;
+      this.dataWards = null;
+    });
   }
   ngOnDestroy() {
     if (this.subscription) {
@@ -380,8 +417,7 @@ export class CreateContractComponent implements OnInit, OnDestroy {
       return;
     }
     this.currentTenant = '';
-    var reg = new RegExp(this.phonePattern);
-    if (reg.test(this.createContractFormGroup.value.tenantSearch)) {
+    if (!this.createContractFormGroup.controls['tenantSearch'].hasError('pattern')) {
       let data: any = {
         phone: this.createContractFormGroup.value.tenantSearch
       }
@@ -394,34 +430,63 @@ export class CreateContractComponent implements OnInit, OnDestroy {
             let data = JSON.parse(response.data);
             $('#tenant-name').val(data.user.name);
             $('#tenant-phone').val(data.user.phone);
-            $('#tenant-address').val(data.user.address);
-            if(data.user.sex == 0){
+            if(data.user.address){
+              //xoa - o thon-xom
+              let remove = data.user.address.split('-');
+              if(remove[0].length == 0 && remove[1].length > 0){
+                $('#tenant-address').val(remove[1] +'-'+ remove[2] +'-'+ remove[3]);
+              }
+              else{
+                $('#tenant-address').val(data.user.address);
+              }
+            }
+            if (data.user.sex == 0) {
               $('#tenant-sex').val('Giới tính khác');
             }
-            if(data.user.sex == 1){
+            if (data.user.sex == 1) {
               $('#tenant-sex').val('Nam');
             }
-            if(data.user.sex == 2){
+            if (data.user.sex == 2) {
               $('#tenant-sex').val('Nữ');
             }
             if (data.imgArnFront) {
-              $('#imgArnFront').attr('src', data.imgArnFront.trim()+ "?date=" + new Date().getTime());
+              $('#imgArnFront').attr('src', data.imgArnFront.trim() + "?date=" + new Date().getTime());
             }
             if (data.imgArnBack) {
-              $('#imgArnBack').attr('src', data.imgArnBack.trim()+ "?date=" + new Date().getTime());
+              $('#imgArnBack').attr('src', data.imgArnBack.trim() + "?date=" + new Date().getTime());
             }
             $('#modal2').modal('show');
             this.currentTenant = data;
           }
           else if (response.type == 2) {
-            this.displayDialog(CommonMessage.NoTenant);
+            const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+              width: '400px',
+              data: 'Không tìm thấy khách thuê!!! Bạn có muốn thêm khách thuê có số điện thoại ' + this.createContractFormGroup.value.tenantSearch + ' không?'
+            });
+            dialogRef.afterClosed().subscribe(result => {
+              if (result) {
+                this.createTenantFormGroup.reset();
+                this.createTenantFormGroup.get('phone').setValue(this.createContractFormGroup.value.tenantSearch);
+                this.createTenantFormGroup.controls['phone'].disable();
+                $('#modal4').modal('show');
+              }
+            });
+
           }
         }, err => {
           this.removeLoading();
           console.log(err);
         })
     }
+    else{
+      this.showErr('Vui lòng nhập đúng số điện thoại')
+    }
   }
+
+
+
+
+
   formatCurrency() {
     var $input = $(".input-price");
     $input.on("keyup", function (event) {
@@ -588,8 +653,6 @@ export class CreateContractComponent implements OnInit, OnDestroy {
       });
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
-
-
           let formatRoomPrice = this.createContractFormGroup.value.price.toString().split('.').join('');
           let roomPrice = Number(formatRoomPrice);
           let deposit = 0;
@@ -635,7 +698,6 @@ export class CreateContractComponent implements OnInit, OnDestroy {
             extraFeeUpdate: listExtraFeeSend,
           }
           console.log(JSON.stringify(data))
-
           this.addLoading();
           this.service.addContract(data).subscribe(
             res => {
@@ -674,14 +736,122 @@ export class CreateContractComponent implements OnInit, OnDestroy {
   }
   uploadImage(imageResult: ImageResult) {
     if (this.listImg.length < 5) {
-      this.listImg.push(imageResult.resized && imageResult.resized.dataURL || imageResult.dataURL);
+      if (imageResult.error) {
+        this.showErr('Vui lòng tải lên đúng định dạng ảnh')
+      }
+      else {
+        let image = (imageResult.resized && imageResult.resized.dataURL) || imageResult.dataURL;
+        this.getOrientation(imageResult.file, (orientation) => {
+          this.rotateImageFileProcessor.process(orientation +','+image).then(res => {
+            this.listImg.push(res);
+          });
+        });
+      }
     }
-
   }
+  getOrientation(file, callback) {
+    var reader: any,
+    target: EventTarget;
+    reader = new FileReader();
+    reader.onload = (event) => {
+      var view = new DataView(event.target.result);
+      if (view.getUint16(0, false) != 0xFFD8) return callback(-2);
+      var length = view.byteLength,
+        offset = 2;
+      while (offset < length) {
+        var marker = view.getUint16(offset, false);
+        offset += 2;
+        if (marker == 0xFFE1) {
+          if (view.getUint32(offset += 2, false) != 0x45786966) {
+            return callback(-1);
+          }
+          var little = view.getUint16(offset += 6, false) == 0x4949;
+          offset += view.getUint32(offset + 4, little);
+          var tags = view.getUint16(offset, little);
+          offset += 2;
+
+          for (var i = 0; i < tags; i++)
+            if (view.getUint16(offset + (i * 12), little) == 0x0112)
+              return callback(view.getUint16(offset + (i * 12) + 8, little));
+        }
+        else if ((marker & 0xFF00) != 0xFF00) break;
+        else offset += view.getUint16(offset, false);
+      }
+      return callback(-1);
+    };
+    reader.readAsArrayBuffer(file.slice(0, 64 * 1024));
+  };
 
   private _filter(name: string): any[] {
     const filterValue = name.toLowerCase();
     return this.roomList.filter(roomList => roomList.name.toLowerCase().indexOf(filterValue) === 0);
   }
-
+  // add tenant 
+  onChangeProvince() {
+    this.placeService.getDistric(this.createTenantFormGroup.value.province.code).subscribe(response => {
+      var arr = [];
+      for (var key in response) {
+        arr.push(response[key])
+      }
+      this.createTenantFormGroup.get('distric').setValue(arr[0]);
+      this.onChangeDistric();
+      this.dataDistric = arr;
+    });
+  };
+  onChangeDistric() {
+    this.placeService.getWards(this.createTenantFormGroup.value.distric.code).subscribe(response => {
+      var arr = [];
+      for (var key in response) {
+        arr.push(response[key])
+      }
+      this.createTenantFormGroup.get('wards').setValue(arr[0]);
+      this.dataWards = arr;
+    });
+  };
+  onSubmitTenant(){
+    let address = '';
+    if(this.createTenantFormGroup.value.address){
+      let address = this.createTenantFormGroup.value.address.replace(/-/g, ' ');
+    }
+    let fullAddress = '';
+    if(this.createTenantFormGroup.value.wards){
+      fullAddress  = address.trim() + "-" + this.createTenantFormGroup.value.wards.name + "-" + this.createTenantFormGroup.value.distric.name + "-" + this.createTenantFormGroup.value.province.name;
+    }
+    
+    let tenant = {
+      user : {
+        name  : this.createTenantFormGroup.value.name,
+        phone : this.createTenantFormGroup.get('phone').value,
+        address : fullAddress,
+        dateOfBirth : this.createTenantFormGroup.value.dateOfBirth ?  this.formatDate(this.createTenantFormGroup.value.dateOfBirth) : null,
+        sex : this.createTenantFormGroup.value.sex,
+      },
+      role :2,
+      status :3
+    }
+    
+    console.log(tenant);
+    this.addLoading();
+    this.userService.submit(tenant).subscribe(
+      res => {
+        this.removeLoading();
+        let mess: any;
+        mess = JSON.parse("" + res);
+        console.log(mess)
+        if (mess.type == 1) {
+          this.showSuccess(mess.message);
+          $('#modal4').modal('hide');
+          this.searchByPhone();
+        }
+        if (mess.type == 0) {
+          this.showErr(mess.message)
+        }
+      },
+      err => {
+        this.removeLoading();
+        console.log(err);
+        this.showErr(CommonMessage.defaultErrMess)
+      }
+    );
+  }
 }

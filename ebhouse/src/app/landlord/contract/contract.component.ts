@@ -133,7 +133,7 @@ export class ContractComponent implements OnInit, OnDestroy {
             this.listContract = data.contract;
             this.handleListContract();
             this.totalPage = data.totalPage
-
+            console.log(this.listContract)
           } catch (error) {
             console.log(response)
             this.errRequestHandle(error);

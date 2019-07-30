@@ -12,7 +12,7 @@ export class EquipmentServiceService {
   }
 
   public putEquipment(list:any): Observable<any> {
-    return this.http.put("../../assets/equipment.json", list);
+    return this.http.post("../../assets/equipment.json", list);
   }
 
 }

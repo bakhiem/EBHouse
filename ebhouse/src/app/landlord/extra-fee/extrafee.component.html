@@ -28,12 +28,12 @@
         </mat-autocomplete>
       </mat-form-field>
     </div>
-    <div class="col-sm-3 searchBox">
-      <button type="button" class="btn btn-secondary mt-3" (click)="searchByRoom()">
+    <div class="col-sm-3 mt-5" id='searchBtn'>
+      <button type="button" class="btn btn-secondary" (click)="searchByRoom()">
         <span _ngcontent-fdu-c2="" class="ti-search"></span> Tìm kiếm
       </button>
     </div>
-    <div class="col-sm-4 col-md-2"><input class="btn btn-primary float-right mt-3" type="submit"
+    <div class="col-sm-4 col-md-2 mt-5" id='createBtn'><input class="btn btn-primary float-right" type="submit"
         value="Tạo chi phí phát sinh" (click)="createExtrafee()"> </div>
   </div>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">

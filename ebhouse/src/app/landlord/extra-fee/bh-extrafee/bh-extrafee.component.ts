@@ -123,10 +123,9 @@ export class BhExtrafeeComponent implements OnInit, OnDestroy {
     let data: any = {
       boardingHouseID: this.currentBh.id,
       date: this.formatDate() + '-01',
-      page: this.currentPage, 
+      page: this.currentPage,
       roomID: -1
     }
-    console.log(data);
     this.addLoading();
     this.service.getExtrafee(data).subscribe(
       res => {
@@ -138,6 +137,7 @@ export class BhExtrafeeComponent implements OnInit, OnDestroy {
           this.listExtrafee = resData.extraFee;
           this.totalPage = resData.totalPage;
           this.dataSource.data = this.listExtrafee;
+          console.log(this.listExtrafee);
         }
         else {
           this.showErr(CommonMessage.defaultErrMess);
@@ -176,7 +176,7 @@ export class BhExtrafeeComponent implements OnInit, OnDestroy {
       this.createEFFormGroup.get('price').setValue(currency);
     }
     //last month and can't edit
-    if (obj.status == 1) {
+    if (obj.status == 13) {
       this.disableForm();
       this.isEdit = 3;
     }
@@ -193,14 +193,14 @@ export class BhExtrafeeComponent implements OnInit, OnDestroy {
     this.createEFFormGroup.get('description').enable();
     this.createEFFormGroup.get('price').enable();
   }
-  disableForm() {
-      this.createEFFormGroup.get('cDate').disable();
-      this.createEFFormGroup.get('description').disable();
-      this.createEFFormGroup.get('price').disable();
-      $("#decrease").attr('disabled', 'true');
-      $("#increase").attr('disabled', 'true');
-  }
 
+  disableForm() {
+    this.createEFFormGroup.get('cDate').disable();
+    this.createEFFormGroup.get('description').disable();
+    this.createEFFormGroup.get('price').disable();
+    $("#decrease").attr('disabled', 'true');
+    $("#increase").attr('disabled', 'true');
+  }
 
   addLoading() {
     $('.customLoading').addClass('preloader');
@@ -243,18 +243,17 @@ export class BhExtrafeeComponent implements OnInit, OnDestroy {
     this.isEdit = 0;
     $('.bd-example-modal-lg').modal('show');
   }
-
   onSubmit() {
     if (this.createEFFormGroup.invalid) {
       this.displayDialog(CommonMessage.inputAllFiel)
       return;
     }
-      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-        width: '400px',
-        data: "Bạn chắc chắn muốn lưu không ?"
-      });
-      dialogRef.afterClosed().subscribe(result => {
-        if(result){
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '400px',
+      data: "Bạn chắc chắn muốn lưu không ?"
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
         var amount = 0;
         if ($('#extraFee').val()) {
           let formatPrice = $('#extraFee').val().toString().split('.').join('');
@@ -276,7 +275,7 @@ export class BhExtrafeeComponent implements OnInit, OnDestroy {
               cDate: this.createEFFormGroup.value.cDate
             },
             isLandlord: true,
-            boardingHouseID :this.currentBh.id,
+            boardingHouseID: this.currentBh.id,
           }
         }
         else if (this.isEdit == 0) {
@@ -288,7 +287,7 @@ export class BhExtrafeeComponent implements OnInit, OnDestroy {
               amount: amount
             },
             isLandlord: true,
-            boardingHouseID :this.currentBh.id
+            boardingHouseID: this.currentBh.id
           }
         }
         console.log(JSON.stringify(data));
@@ -299,7 +298,8 @@ export class BhExtrafeeComponent implements OnInit, OnDestroy {
           }, err => {
             this.errRequestHandle(err);
           })
-     } })
+      }
+    })
 
   }
 
