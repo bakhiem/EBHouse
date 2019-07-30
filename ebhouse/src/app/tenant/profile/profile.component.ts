@@ -211,7 +211,7 @@ export class TenantProfileComponent implements OnInit {
   }
 
   onSubmit() {
-    if (!this.profileFormGroup.invalid) {
+    if (!this.profileFormGroup.invalid && this.profileFormGroup.value.name.trim() != "" && this.profileFormGroup.value.address.trim() != "") {
       if (this.checkChangeData()) {
         this.addLoading();
         this.service.updateProfile({ user: this.tenant.user, tenant: this.tenant }).subscribe(

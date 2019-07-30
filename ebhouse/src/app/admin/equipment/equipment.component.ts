@@ -13,7 +13,7 @@ import { AuthenticationService } from '../../user/service/authentication.service
 import { CommmonFunction } from '../../shared/common-function';
 import { CommonMessage, Message } from '../../models/message';
 import { ISubscription } from "rxjs/Subscription";
-
+import { EquipmentServiceService } from "../../landlord/service/equipment-service.service"
 import { SharedServiceService } from '../../service/shared-service.service';
 import { from } from 'rxjs';
 
@@ -35,6 +35,7 @@ export class EquipmentComponent implements OnInit {
   myDate: Date = new Date();
   equipment: Equipment = new Equipment();
   check: number = 0;
+  listDataEquipment: any[];
 
   private subscription: ISubscription;
 
@@ -44,6 +45,7 @@ export class EquipmentComponent implements OnInit {
     public dialog: MatDialog,
     private authenticationService: AuthenticationService,
     private service: AdminService,
+    private equipmentService: EquipmentServiceService,
     private toastr : ToastrService
   ) {
   }
@@ -83,7 +85,7 @@ export class EquipmentComponent implements OnInit {
   }
 
   onSubmit(){
-    if (!this.createEquipmentFormGroup.invalid) {
+    if (!this.createEquipmentFormGroup.invalid && this.createEquipmentFormGroup.value.name.trim() != "") {
       this.addLoading();
       if(this.equipment.name != this.createEquipmentFormGroup.value.name){
         this.equipment.name = this.createEquipmentFormGroup.value.name;
@@ -93,6 +95,16 @@ export class EquipmentComponent implements OnInit {
               let response = JSON.parse('' + res);
               if (response.type == 1) {
                 this.service.listEquipment.next(1);
+                this.equipmentService.getEquipment().subscribe(response => {
+                  var arr = [];
+                  for (var key in response) {
+                    arr.push(response[key])
+                  }
+                  this.listDataEquipment = arr;
+                  console.log(this.listDataEquipment);
+                  this.equipmentService.putEquipment(this.listDataEquipment).subscribe(response => {
+                  });
+                });
                 $("#creatEquipment").modal('toggle');
                 this.showSuccess(response.message);
               } else {

@@ -10,5 +10,9 @@ export class EquipmentServiceService {
   public getEquipment(): Observable<any> {
     return this.http.get("../../assets/equipment.json");
   }
-  
+
+  public putEquipment(list:any): Observable<any> {
+    return this.http.put("../../assets/equipment.json", list);
+  }
+
 }

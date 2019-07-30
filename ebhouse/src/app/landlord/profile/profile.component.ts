@@ -62,10 +62,6 @@ export class LandlordProfileComponent implements OnInit {
         let response = JSON.parse('' + res);
         if (response.type == 1) {
           this.landlord = JSON.parse(response.data);
-          // let arr = null;
-          // if (this.landlord.user.address != ' ') {
-          //   arr = this.landlord.user.address.split('-');
-          // }
           this.getAddress();
           this.profileFormGroup
             .get('name')
@@ -194,7 +190,7 @@ export class LandlordProfileComponent implements OnInit {
   }
 
   onSubmit() {
-    if (!this.profileFormGroup.invalid) {
+    if (!this.profileFormGroup.invalid && this.profileFormGroup.value.name.trim() != "" && this.profileFormGroup.value.address.trim() != "") {
       this.checkChangeData();
       if (this.check == 1) {
         this.addLoading();

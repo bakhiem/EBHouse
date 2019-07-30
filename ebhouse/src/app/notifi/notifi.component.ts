@@ -131,7 +131,7 @@ export class NotifiComponent implements OnInit {
   }
 
   public onSubmit() {
-    if (!this.createNotifiFormGroup.invalid) {
+    if (!this.createNotifiFormGroup.invalid && this.createNotifiFormGroup.value.subject.trim() != "" && this.createNotifiFormGroup.value.content.trim() != "" && this.listDataSet.length > 0) {
       this.addLoading();
 
       this.newNotifi.subject = this.createNotifiFormGroup.value.subject;
