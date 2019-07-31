@@ -369,9 +369,12 @@ export class FinancialComponent implements OnInit, OnDestroy {
     let utilityFee = Number(data.InternetFee) + Number(data.WaterFee) + Number(data.CleaningFee);
     let lstExtraFee = JSON.parse(CommmonFunction.escapeSpecialChars(data.lstExtraFee));
     let oldDebt = 0;
+    
+    let oldPayment = 0;
     if (data.financialOld.length > 0) {
       let financialOld = JSON.parse(CommmonFunction.escapeSpecialChars(data.financialOld));
-      oldDebt = financialOld.total
+      oldDebt = financialOld.total;
+      oldPayment = financialOld.payment;
     }
     let extraFee = 0;
     this.listExtraFee = [];
@@ -384,9 +387,9 @@ export class FinancialComponent implements OnInit, OnDestroy {
       };
       this.listExtraFee.push(element);
     }
-    this.createEFFormGroup.get('total').setValue(this.convertCurrency(financialNew.total));
-    this.createEFFormGroup.get('oldDebt').setValue(this.convertCurrency(oldDebt));
-    this.createEFFormGroup.get('money').setValue(this.convertCurrency(Number(financialNew.total) + Number(oldDebt)));
+    this.createEFFormGroup.get('total').setValue(this.convertCurrency(financialNew.total - (oldDebt- oldPayment)));
+    this.createEFFormGroup.get('oldDebt').setValue(this.convertCurrency(oldDebt - oldPayment));
+    this.createEFFormGroup.get('money').setValue(this.convertCurrency(Number(financialNew.total)));
     //edit payment
     if (Number(financialNew.payment) > 0) {
       this.isEdit = 1;
@@ -420,7 +423,7 @@ export class FinancialComponent implements OnInit, OnDestroy {
     $('#electric-fee').html(this.convertCurrency(electricFee));
     $('#utility-fee').html(this.convertCurrency(utilityFee));
     $('#extra-fee').html(this.convertCurrency(extraFee));
-    $('#total-money').html(this.convertCurrency(financialNew.total));
+    $('#total-money').html(this.convertCurrency(financialNew.total - (oldDebt- oldPayment)));
     $('#electric-fee').click(() => {
       if (isCollapShow1 == 0) {
         $('#accordionElectric').collapse('show');

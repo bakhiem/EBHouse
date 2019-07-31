@@ -445,9 +445,10 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
           if (listContract.length > 0) {
             for (let index = 0; index < listContract.length; index++) {
               const element = listContract[index];
-              let toDay = new Date();
+              let toDay = new Date(this.month.value);
               let startDate = new Date(element.startDate);
               let endDate = new Date(element.endDate);
+              console.log(toDay)
               toDay.setHours(0);
               toDay.setSeconds(0);
               toDay.setMilliseconds(0);
@@ -479,7 +480,7 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
   }
   handleAvailable(name) {
     if (this.haveContractInMonth == false) {
-      $('#haveTenantMessage').html('Phòng ' + name + ' không tồn tại khách thuê trong tháng này');
+      $('#haveTenantMessage').html('Phòng ' + name + ' không tồn tại khách thuê trong tháng' + this.month.value.getMonth + 1);
       $('#landlord').prop('checked', true);
       $("#landlord").attr('disabled', 'true');
       $("#tenant").attr('disabled', 'true');
