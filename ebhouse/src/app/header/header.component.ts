@@ -41,6 +41,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.isLoggedIn$ = this.authService.isLoggedIn;
     this.authService.currentUser.subscribe(data => {
+      console.log(data)
       this.currentUser = data;
       this.getRole();
       if (this.role == 'landlord') {
@@ -83,7 +84,7 @@ export class HeaderComponent implements OnInit {
   }
   getBoardingHousesTenant() {
    this.service.getAllBoardingHousesTenant().subscribe();
-  this.service.currentBh.subscribe((data) => {
+   this.service.currentBh.subscribe((data) => {
       this.currentBh = data;
       this.bhList = this.service.bhList;
       console.log(this.bhList)
@@ -92,8 +93,10 @@ export class HeaderComponent implements OnInit {
   getBoardingHouses() {
   this.service.getAllBoardingHouses().subscribe();
    this.service.currentBh.subscribe((data) => {
+     console.log(data)
       this.currentBh = data;
       this.bhList = this.service.bhList;
+      console.log(this.bhList)
     })
   }
   onChangeBh() {

@@ -19,3 +19,5 @@
   }
 .modal-dialog{text-align:center;}
 .modal-content{display:inline-block;}
+
+#modal3 .modal-dialog{text-align:left;}

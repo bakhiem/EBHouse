@@ -2,7 +2,7 @@
     <div class="customLoading">
         <div class="customLoader"></div>
     </div>
-    <form [formGroup]="profileFormGroup" (ngSubmit)="onSubmit()">
+    <form [formGroup]="profileFormGroup" >
         <div class="row">
             <!-- Textual inputs start -->
             <div class="col-12 mt-5">
@@ -104,8 +104,9 @@
                         </div>
 
                         <!-- end upload and preview image -->
-                        <div class="mt-3 float-right col-sm-4 text-center">
-                            <input class="btn btn-info mb-3" type="submit" value="Lưu">
+                        <div class="mt-3 float-right col-sm-5 text-center">
+                            <button class="btn btn-primary mb-3 mr-3" (click)='changePassword()'>Đổi mật khẩu</button>
+                            <input class="btn btn-info mb-3" type="submit" value="Lưu" (click)='onSubmit()' >
                         </div>
                         <!-- [disabled]="profileFormGroup.invalid" -->
                     </div>
@@ -120,3 +121,50 @@
 
 </div>
 <!-- profile area end -->
+
+
+<div class="modal fade bd-example-modal-lg" id='modal2'>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h5>Đổi mật khẩu</h5>
+                    <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <label for="old-pass" class="col-form-label required">Mật khẩu cũ</label>
+                            <input class="form-control" type="text" id="old-pass" >
+                        </div>
+                       
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <label for="new-pass" class="col-form-label required">Mật khẩu mới</label>
+                            <input class="form-control" type="text" id="new-pass" >
+                        </div>
+                       
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <label for="re-new-pass" class="col-form-label required">Nhập lại mật khẩu mới</label>
+                            <input class="form-control" type="text" id="re-new-pass" >
+                        </div>
+                       
+                    </div>
+
+
+  
+               
+                </div>
+                <!-- Textual inputs end -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Trở về</button>
+                    <button class="btn btn-info mb-3" (click)='changePasswordSubmit()'>Đổi mật khẩu</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

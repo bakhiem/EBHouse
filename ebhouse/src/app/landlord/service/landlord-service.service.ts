@@ -171,4 +171,9 @@ export class LandlordService {
     return this.http.post<any>(`${this.baseUrl}/api/landlord/bh/getReportContract`, data, httpOptions);
   }
 
+  //reset pass
+  resetPass(data : any) : Observable<any>{
+    return this.http.post<any>(`${this.baseUrl}/api/pass/change`, data, httpOptions);
+  }
+
 }

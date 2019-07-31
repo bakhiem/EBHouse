@@ -31,6 +31,7 @@ export class SharedServiceService {
   getAllBoardingHouses(bhName ?: string) : Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/api/landlord/bh/all`, null, httpOptions)
     .pipe(map(res => {
+      console.log('0')
       let response = JSON.parse("" + res);
       if (response.type == 1) {
         let data = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
@@ -45,10 +46,13 @@ export class SharedServiceService {
         }
          else if (this.bhList.length > 0 && this.currentBh.value == null) {
          this.currentBh.next(this.bhList[0]);
+         console.log('2')
         }
         else if(data.boardingHouse.length == 0){
           this.currentBh.next({});
+          console.log('3')
         }
+        console.log('4')
       }
     }, err => {
       console.log(err);

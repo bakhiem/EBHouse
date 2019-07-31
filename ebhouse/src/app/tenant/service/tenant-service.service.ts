@@ -57,6 +57,9 @@ export class TenantServiceService {
   getEquipment():Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/api/equipment/all`, null, httpOptions);
   }
-  
+    //reset pass
+    resetPass(data : any) : Observable<any>{
+      return this.http.post<any>(`${this.baseUrl}/api/pass/change`, data, httpOptions);
+    }
 
 }

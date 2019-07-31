@@ -126,6 +126,18 @@ export class AuthenticationService {
             this.removeLocalUser()
         }))
     }
+    changeToken(token){
+        let newUser = this.currentUserSubject.value;
+        newUser.user.token = token;
+        if (sessionStorage.getItem('currentUser')){
+            sessionStorage.setItem('currentUser', JSON.stringify(newUser));
+        }
+        if (localStorage.getItem('currentUser')){
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
+        }
+        console.log(newUser)
+        this.currentUserSubject.next(newUser);
+    }
 
 
     // remove user from local storage to log user out

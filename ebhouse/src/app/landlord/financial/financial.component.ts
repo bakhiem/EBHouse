@@ -396,7 +396,13 @@ export class FinancialComponent implements OnInit, OnDestroy {
     }
     else {
       this.isEdit = 0;
-      this.createEFFormGroup.get('createDate').setValue(this.formatDateFull(new Date(), 1));
+      if(obj.status == 1){
+        this.createEFFormGroup.get('createDate').setValue('');
+      }
+      else{
+        this.createEFFormGroup.get('createDate').setValue(this.formatDateFull(new Date(), 1));
+      }
+      
     }
     $('#payment').on("keyup", (event) => {
       let input = $('#payment').val();

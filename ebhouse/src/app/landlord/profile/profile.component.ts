@@ -6,6 +6,8 @@ import { PlaceService } from '../../service/place.service';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
+import * as $AB from 'jquery';
+import * as bootstrap from "bootstrap";
 import { CommmonFunction } from '../../shared/common-function';
 import { ToastrService } from 'ngx-toastr';
 import { CommonMessage } from '../../models/message';
@@ -13,7 +15,6 @@ import { LandlordService } from '../service/landlord-service.service';
 import { AuthenticationService } from '../../user/service/authentication.service';
 import { User } from '../../user/models/user';
 import { Landlord } from '../../models/landlord';
-import * as $ from 'jquery';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -38,7 +39,7 @@ export class LandlordProfileComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private service: LandlordService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.removeLoading();
@@ -193,7 +194,7 @@ export class LandlordProfileComponent implements OnInit {
       this.checkChangeData();
       if (this.check == 1) {
         this.addLoading();
-        this.service.updateProfile({ user: this.landlord.user, landlord: this.landlord}).subscribe(
+        this.service.updateProfile({ user: this.landlord.user, landlord: this.landlord }).subscribe(
           res => {
             this.removeLoading();
             let response = JSON.parse('' + res);
@@ -237,12 +238,67 @@ export class LandlordProfileComponent implements OnInit {
       this.landlord.user.dateOfBirth = this.profileFormGroup.value.date
       this.check = 1;
     }
-    if(this.landlord.user.address != address){
+    if (this.landlord.user.address != address) {
       this.landlord.user.address = address
       this.check = 1;
     }
   }
+  changePasswordSubmit() {
+    let new_pass = $('#new-pass').val().toString().trim();
+    let old_pass = $('#old-pass').val().toString().trim();
+    let re_new_pass = $('#re-new-pass').val().toString().trim();
+    if (new_pass && old_pass && re_new_pass) {
+      if (new_pass.length >= 8 && old_pass.length >= 8 && re_new_pass.length >= 8) {
+        if (new_pass == old_pass) {
+          this.showErr('Mật khấu cũ cần khác mật khẩu mới');
+        }
+        else {
+          if (new_pass == re_new_pass) {
+            let data = {
+              new_pass: new_pass,
+              old_pass: old_pass
+            }
+            this.addLoading();
+            this.service.resetPass(data).subscribe(
+              res => {
+                this.removeLoading();
+                let response = JSON.parse('' + res);
+                if (response.type == 1) {
+                  console.log(response)
+                  let token = response.data;
+                  this.authenticationService.changeToken(token);
+                  this.showSuccess(response.message);
+                  $('#modal2').modal('hide');
+                } else {
+                  this.showErr(response.message)
+                }
+              },
+              err => {
+                this.showErr(CommonMessage.defaultErrMess)
+              }
+            )
+          }
+          else {
+            this.showErr('Mật khẩu mới và nhập lại mật khẩu mới cần trùng nhau');
+          }
+        }
+      }
+      else {
+        this.showErr('Mật khẩu cần ít nhất 8 ký tự');
+      }
+    }
+    else {
+      this.showErr('Vui lòng điền vào tất cả các trường');
+    }
 
+  }
+  changePassword() {
+    $('#new-pass').val('');
+    $('#re-new-pass').val('');
+    $('#old-pass').val('');
+    $('#modal2').modal('show');
+
+  }
   addLoading() {
     $('.customLoading').addClass('preloader');
     $('.customLoader').addClass('loader');

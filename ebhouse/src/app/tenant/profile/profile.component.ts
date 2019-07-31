@@ -12,7 +12,6 @@ import { TenantServiceService } from '../service/tenant-service.service';
 import { AuthenticationService } from '../../user/service/authentication.service';
 import { User } from '../../user/models/user';
 import { Tenant } from '../../models/tenant';
-import * as $ from 'jquery';
 //image
 import { Options, ImageResult } from "ngx-image2dataurl";
 import { RotateImageFileProcessor } from '../../shared/image-rotate';
@@ -341,6 +340,65 @@ export class TenantProfileComponent implements OnInit {
     };
     reader.readAsArrayBuffer(file.slice(0, 64 * 1024));
   };
+
+  changePasswordSubmit() {
+    let new_pass = $('#new-pass').val().toString().trim();
+    let old_pass = $('#old-pass').val().toString().trim();
+    let re_new_pass = $('#re-new-pass').val().toString().trim();
+    if (new_pass && old_pass && re_new_pass) {
+      if (new_pass.length >= 8 && old_pass.length >= 8 && re_new_pass.length >= 8) {
+        if (new_pass == old_pass) {
+          this.showErr('Mật khấu cũ cần khác mật khẩu mới');
+        }
+        else {
+          if (new_pass == re_new_pass) {
+            let data = {
+              new_pass: new_pass,
+              old_pass: old_pass
+            }
+            this.addLoading();
+            this.service.resetPass(data).subscribe(
+              res => {
+                this.removeLoading();
+                let response = JSON.parse('' + res);
+                if (response.type == 1) {
+                  console.log(response)
+                  let token = response.data;
+                  this.authenticationService.changeToken(token);
+                  this.showSuccess(response.message);
+                  $('#modal3').modal('hide');
+                } else {
+                  this.showErr(response.message)
+                }
+              },
+              err => {
+                this.showErr(CommonMessage.defaultErrMess)
+              }
+            )
+          }
+          else {
+            this.showErr('Mật khẩu mới và nhập lại mật khẩu mới cần trùng nhau');
+          }
+        }
+      }
+      else {
+        this.showErr('Mật khẩu cần ít nhất 8 ký tự');
+      }
+    }
+    else {
+      this.showErr('Vui lòng điền vào tất cả các trường');
+    }
+
+  }
+  changePassword() {
+    $('#new-pass').val('');
+    $('#re-new-pass').val('');
+    $('#old-pass').val('');
+    $('#modal3').modal('show');
+
+  }
+
+
   addLoading() {
     $('.customLoading').addClass('preloader');
     $('.customLoader').addClass('loader');
