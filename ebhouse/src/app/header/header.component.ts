@@ -17,7 +17,7 @@ export class HeaderComponent implements OnInit {
   isLoggedIn$: Observable<boolean>;
   bhList: BoardingHouse[];
   currentBh: BoardingHouse;
-  listUrlHidden = ['/landlord/bh-info','/landlord/room-type','/notification/from','/notification/to','/landlord/profile','/tenant/profile','/landlord/dashboard']
+  listUrlHidden = ['/landlord/bh-info','/landlord/room-type','/notification/from','/notification/to','/landlord/profile','/tenant/profile','/landlord/dashboard','/admin/equipment','/admin/dashboard']
   listUrlDisable = ['/landlord/contract-update','/tenant/contract-view']
 
   isLandlingPage : boolean = true;

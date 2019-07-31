@@ -241,7 +241,7 @@ export class TenantProfileComponent implements OnInit {
   checkChangeData(): any {
     let check = false;
     let address =
-      this.profileFormGroup.value.address +
+      this.profileFormGroup.value.address.replace(/-/g, ' ') +
       '-' +
       this.profileFormGroup.value.wards.name +
       '-' +

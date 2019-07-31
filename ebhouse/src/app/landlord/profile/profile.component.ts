@@ -216,7 +216,7 @@ export class LandlordProfileComponent implements OnInit {
 
   checkChangeData() {
     let address =
-      this.profileFormGroup.value.address +
+      this.profileFormGroup.value.address.replace(/-/g, ' ') +
       '-' +
       this.profileFormGroup.value.wards.name +
       '-' +

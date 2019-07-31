@@ -154,13 +154,15 @@ export class ElectricComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
-  focusoutFunction(id) {
+  focusoutFunction(id,type ?: string) {
 
     if (Number($('#present-' + id).val()) < Number($('#last-' + id).val())) {
       $('#present-' + id).val(Number($('#last-' + id).val()));
       $('#usage-' + id).html('' + 0);
       $('#amount-' + id).html('' + 0);
-      this.displayDialog(CommonMessage.Electric);
+      if(type == '1'){
+        this.displayDialog(CommonMessage.Electric);
+      }
     }
     else {
       let usage = Number($('#present-' + id).val()) - Number($('#last-' + id).val());

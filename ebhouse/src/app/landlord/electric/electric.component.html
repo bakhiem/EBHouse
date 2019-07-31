@@ -35,7 +35,7 @@
               onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))"
               pattern="[0-9]*" class='form-control' id="last-{{electric.id}}" [value]='electric.eBefore'
               [disabled]='electric.disabledBefore'></td>
-          <td><input type="number" inputmode="numeric" (focusout)="focusoutFunction(electric.id)"
+          <td><input type="number" inputmode="numeric" (focusout)="focusoutFunction(electric.id,1)"
               onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))"
               pattern="[0-9]*" class='form-control' id="present-{{electric.id}}" [value]='electric.eNow'
               [disabled]='electric.disabledNow'></td>
