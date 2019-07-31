@@ -16,10 +16,16 @@ import { LandlordService } from '../service/landlord-service.service';
 import { AuthenticationService } from '../../user/service/authentication.service';
 import { User } from '../../user/models/user';
 import { Landlord } from '../../models/landlord';
+import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
+import { CustomDateAdapter } from '../contract/customDate';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css'],
+  styleUrls: ['./profile.component.css'], 
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'vi-vn' },
+    { provide: DateAdapter, useClass: CustomDateAdapter }
+  ],
 })
 export class LandlordProfileComponent implements OnInit {
   roleDefault: number = 1;
@@ -31,7 +37,7 @@ export class LandlordProfileComponent implements OnInit {
   landlord: Landlord;
   user: User;
   check: number = 0;
-
+  maxDate = new Date();
   constructor(
     private fb: FormBuilder,
     private data: DataService,
@@ -213,8 +219,19 @@ export class LandlordProfileComponent implements OnInit {
       this.showErr('Vui lòng kiểm tra lại!')
     }
   }
+    formatDate(date) {
+      var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
 
+      if (month.length < 2) month = '0' + month;
+      if (day.length < 2) day = '0' + day;
+
+      return [year, month, day].join('-');
+    }
   checkChangeData() {
+    let dateOfBirth = this.formatDate(this.profileFormGroup.value.date);
     let address =
       this.profileFormGroup.value.address.replace(/-/g, ' ') +
       '-' +
@@ -231,8 +248,8 @@ export class LandlordProfileComponent implements OnInit {
       this.landlord.user.sex = this.profileFormGroup.value.sex
       this.check = 1;
     }
-    if (this.landlord.user.dateOfBirth != this.profileFormGroup.value.date) {
-      this.landlord.user.dateOfBirth = this.profileFormGroup.value.date
+    if (this.landlord.user.dateOfBirth != dateOfBirth) {
+      this.landlord.user.dateOfBirth = dateOfBirth
       this.check = 1;
     }
     if (this.landlord.user.address != address) {
@@ -267,7 +284,6 @@ export class LandlordProfileComponent implements OnInit {
                     this.removeLoading();
                     let response = JSON.parse('' + res);
                     if (response.type == 1) {
-                      console.log(response)
                       let token = response.data;
                       this.authenticationService.changeToken(token);
                       this.showSuccess(response.message);

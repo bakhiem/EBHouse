@@ -32,14 +32,20 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-sm-6">
-                                <label for="example-date-input" class="col-form-label">Ngày sinh</label>
-                                <input class="form-control" type="date" id="example-date-input" formControlName="date">
-                                <div *ngIf="profileFormGroup.controls['date'].hasError('required') && (profileFormGroup.controls['date'].dirty || profileFormGroup.controls['date'].touched)" class="alert alert-danger">
-                                    Vui lòng nhập ngày sinh
+                                <div class="col-sm-6">
+                                    <label for="example-date-input" class="col-form-label required input-group">Ngày sinh</label>
+                                    <mat-form-field>
+                                            <input matInput [matDatepicker]="dp" [max]='maxDate' placeholder="Chọn ngày sinh"
+                                                formControlName="date">
+                                            <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                                            <mat-datepicker #dp></mat-datepicker>
+                                        </mat-form-field>
+                                    <div *ngIf="profileFormGroup.controls['date'].hasError('required') && (profileFormGroup.controls['date'].dirty || profileFormGroup.controls['date'].touched)" class="alert alert-danger">
+                                        Vui lòng nhập ngày sinh
+                                    </div>
                                 </div>
+    
                             </div>
-                        </div>
                         <!-- begin radio -->
 
                         <b class="text-muted mb-3 mt-4 d-block">Giới tính :</b>

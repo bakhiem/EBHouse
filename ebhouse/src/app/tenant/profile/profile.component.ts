@@ -16,12 +16,17 @@ import { Tenant } from '../../models/tenant';
 //image
 import { Options, ImageResult } from "ngx-image2dataurl";
 import { RotateImageFileProcessor } from '../../shared/image-rotate';
-
+import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
+import { CustomDateAdapter } from '../financial/customDate';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css'],
+  styleUrls: ['./profile.component.css'], 
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'vi-vn' },
+    { provide: DateAdapter, useClass: CustomDateAdapter }
+  ],
 
 })
 export class TenantProfileComponent implements OnInit {
@@ -44,6 +49,7 @@ export class TenantProfileComponent implements OnInit {
     },
     allowedExtensions: ['JPG', 'PnG', 'JPEG']
   };
+  maxDate = new Date();
   rotateImageFileProcessor = new RotateImageFileProcessor();
   constructor(
     private fb: FormBuilder,
@@ -237,9 +243,20 @@ export class TenantProfileComponent implements OnInit {
       this.showErr(CommonMessage.inputAllFiel);
     }
   }
+  formatDate(date) {
+    var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
 
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+  }
   checkChangeData(): any {
     let check = false;
+    let dateOfBirth = this.formatDate(this.profileFormGroup.value.date);
     let address =
       this.profileFormGroup.value.address.replace(/-/g, ' ') +
       '-' +
@@ -256,8 +273,8 @@ export class TenantProfileComponent implements OnInit {
       this.tenant.user.sex = this.profileFormGroup.value.sex
       check = true;
     }
-    if (this.tenant.user.dateOfBirth != this.profileFormGroup.value.date) {
-      this.tenant.user.dateOfBirth = this.profileFormGroup.value.date
+    if (this.tenant.user.dateOfBirth != dateOfBirth) {
+      this.tenant.user.dateOfBirth = dateOfBirth
       check = true;
     }
     if (this.tenant.user.address != address) {
