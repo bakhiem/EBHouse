@@ -29,10 +29,6 @@ table {
 }
 
 @media only screen and (max-width: 576px) {
-  .pagination{
-    display: flex;
-    justify-content: center;
-  }
   table.mat-elevation-z8 td{
     font-size: 0.6rem;
   }

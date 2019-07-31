@@ -15,7 +15,8 @@
     <div class="col-sm-3">
         <label class="col-form-label">Chọn phòng</label>
         <mat-form-field class="example-full-width">
-            <input type="text" id='room-name' placeholder="Điền tên phòng" aria-label="Assignee" matInput [matAutocomplete]="auto" [formControl]="roomControl">
+            <input type="text" id='room-name' placeholder="Điền tên phòng" aria-label="Assignee" matInput
+                [matAutocomplete]="auto" [formControl]="roomControl">
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
                 <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                     {{option.name}}
@@ -72,7 +73,8 @@
             <td mat-cell *matCellDef="let element">
                 <span *ngIf='element.status == 1' class="status-p bg-success">{{element.statusStr}}</span>
                 <span *ngIf='element.status == 3' class="status-p bg-primary">{{element.statusStr}}</span>
-                <span *ngIf='element.status == 2 || element.status == 4' class="status-p bg-danger">{{element.statusStr}}</span>
+                <span *ngIf='element.status == 2 || element.status == 4'
+                    class="status-p bg-danger">{{element.statusStr}}</span>
             </td>
         </ng-container>
         <ng-container matColumnDef="customColumn">
@@ -97,7 +99,9 @@
 
 </div>
 <div class="row page-footer">
-    <div class="col-sm-5 col-12">Tổng số : {{totalPage}} hợp đồng</div>
-    <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalPage" [(page)]="currentPage" [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event)">
-    </ngb-pagination>
+        <div class="col-12">Tổng số : {{totalPage}} hợp đồng</div>
+        <ngb-pagination class='col-12 d-flex justify-content-center' [collectionSize]="totalPage" [(page)]="currentPage"
+            [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event)">
+        </ngb-pagination>
+
 </div>

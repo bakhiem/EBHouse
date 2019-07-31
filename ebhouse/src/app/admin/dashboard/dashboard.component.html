@@ -1,0 +1,46 @@
+<div class="customLoading">
+    <div class="customLoader"></div>
+</div>
+<div class="row mt-12 ">
+    <p>Tổng số chủ trọ: {{ totalLandlord }}</p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <p>Tổng số phòng trong hệ thống: {{ totalRoom }}</p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <p>Tổng số người dùng trong hệ thống: {{ totalTenant }}</p>
+</div>
+<div class="row">
+    <table *ngIf="dataSource" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Tên</th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+        <ng-container matColumnDef="phone">
+            <th mat-header-cell *matHeaderCellDef>Số điện thoại</th>
+            <td mat-cell *matCellDef="let element"> {{element.phone}} </td>
+        </ng-container>
+        <ng-container matColumnDef="address">
+            <th mat-header-cell *matHeaderCellDef>Địa chỉ</th>
+            <td mat-cell *matCellDef="let element"> {{element.address}} </td>
+        </ng-container>
+        <ng-container matColumnDef="total_room_register">
+            <th mat-header-cell *matHeaderCellDef>Tổng phòng đăng kí</th>
+            <td mat-cell *matCellDef="let element">
+                <span *ngIf='!element.total_room_register'>0</span>
+                <span *ngIf='element.total_room_register'>{{ element.total_room_register}}</span>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="total_room">
+            <th mat-header-cell *matHeaderCellDef>Số phòng đang thuê</th>
+            <td mat-cell *matCellDef="let element"> {{element.total_room}} </td>
+        </ng-container>
+        <ng-container matColumnDef="total_user">
+            <th mat-header-cell *matHeaderCellDef>Tổng số khách thuê</th>
+            <td mat-cell *matCellDef="let element"> {{element.total_user}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
+<div class="row page-footer">
+    <div class="col-sm-5 col-12">Tổng số chủ trọ: {{ totalLandlord }}</div>
+    <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalLandlord" [(page)]="currentPage" [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event)">
+    </ngb-pagination>
+</div>

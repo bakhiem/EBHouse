@@ -88,10 +88,12 @@
 
 </div>
 <div class="row page-footer">
-  <div class="col-sm-5 col-12">Tổng số : {{totalPage}} khách thuê</div>
-  <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalPage" [(page)]="currentPage"
-    [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event)">
-  </ngb-pagination>
+      <div class="col-12">Tổng số : {{totalPage}} khách thuê</div>
+      <ngb-pagination class='col-12 d-flex justify-content-center' [collectionSize]="totalPage" [(page)]="currentPage"
+      [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event)">
+    </ngb-pagination>
+ 
+ 
 </div>
 
 <!-- modal view profile tenant -->

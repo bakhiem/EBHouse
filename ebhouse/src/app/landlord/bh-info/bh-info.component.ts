@@ -284,7 +284,7 @@ export class BhInfoComponent implements OnInit {
   deleteBh(obj) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '450px',
-      data: "Bạn chắc chắn muốn xóa nhà trọ không ?"
+      data: "Bạn chắc chắn muốn xóa nhà trọ không?"
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {

@@ -8,13 +8,10 @@ table {
   }
   .create-bh{
     justify-content:space-between;
-    
   }
   .form-group.row{
     margin-bottom: 0;
   }
-  
-
 .mat-column-select {
   overflow: initial;
 }
@@ -30,10 +27,6 @@ table {
 }
 
 @media only screen and (max-width: 576px) {
-  .pagination{
-    display: flex;
-    justify-content: center;
-  }
   table.mat-elevation-z8 td{
     font-size: 0.6rem;
   }

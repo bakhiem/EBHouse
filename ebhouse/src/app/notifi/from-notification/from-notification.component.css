@@ -7,7 +7,9 @@ table.mat-elevation-z8 th {
     font-size: 1.1rem;
     color: black;
 }
-
+table td{
+    cursor: pointer;
+}
 .single-table th {
     font-size: 13px;
     text-transform: none;
@@ -21,15 +23,7 @@ table.mat-elevation-z8 th {
     cursor: pointer;
 }
 
-.page .pagination {
-    justify-content: center;
-}
-
-a.page-link.disabled {
-    background: #007bff;
-    color: white;
-}
-
-.page {
-    margin: 0 auto;
-}
+.page-footer{
+    background: #fff;
+    padding-top: 1.1rem;
+  }

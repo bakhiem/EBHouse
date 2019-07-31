@@ -21,7 +21,7 @@
   .page-footer{
     background: #fff;
     padding-top: 1.1rem;
-    margin: 0 auto;
+    
   }
   
   @media only screen and (max-width: 600px) {
@@ -31,10 +31,6 @@
     #createBtn{
       margin-top: 0.5rem!important;
     }
-  .pagination{
-    display: flex;
-    justify-content: center;
-  }
   table td{
     font-size: 0.75rem;
   

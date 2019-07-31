@@ -56,8 +56,8 @@
 
 
   <div class="row page-footer">
-    <div class="col-sm-5 col-12">Tổng số bản ghi : {{totalPage}}</div>
-    <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalPage" [(page)]="currentPage"
+    <div class="ccol-12">Tổng số bản ghi : {{totalPage}}</div>
+    <ngb-pagination class='col-12 d-flex justify-content-center' [collectionSize]="totalPage" [(page)]="currentPage"
       [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event)">
     </ngb-pagination>
   </div>

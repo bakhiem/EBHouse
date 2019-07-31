@@ -41,11 +41,17 @@
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;let i = index;" (click)="notificationDetail(0 ,i, row)"></tr>
                     </table>
-                    <div class="row page-footer">
-                        <div class="col-sm-5 col-12">Tổng số : {{ totalPageSent }} thông báo</div>
-                        <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalPageSent" [(page)]="currentPageSent" [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event,0)">
-                        </ngb-pagination>
+                    <div class="page-footer">
+                            <div class="row">
+                                    <div class="col-sm-5 col-12">Tổng số : {{ totalPageSent }} thông báo</div>
+                            </div>
+                       <div class="row">
+                            <ngb-pagination class='col-12 d-flex justify-content-center' [collectionSize]="totalPageSent" [(page)]="currentPageSent" [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event,0)">
+                                </ngb-pagination>
+                       </div>
+                        
                     </div>
+                  
                 </div>
                 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                     <table mat-table [dataSource]="dataSourceSeen" class="mat-elevation-z8">
@@ -76,11 +82,20 @@
                         <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns2;let i = index;"></tr>
                     </table>
-                    <div class="row page-footer">
-                        <div class="col-sm-5 col-12">Tổng số : {{ totalPageSeen }} thông báo</div>
-                        <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalPageSent" [(page)]="currentPageSeen" [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event,0)">
-                        </ngb-pagination>
+                    <div class=" page-footer">
+                            <div class="row">
+                                    <div class="ml-3">Tổng số : {{ totalPageSeen }} thông báo</div>
+                            </div>
+                            <div class="row">
+                                    <ngb-pagination class='col-12 d-flex justify-content-center' [collectionSize]="totalPageSent" [(page)]="currentPageSeen" [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event,0)">
+                                        </ngb-pagination>
+                            </div>
+                      
                     </div>
+
+
+
+
                 </div>
                 <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
                     <table mat-table [dataSource]="dataSourceAnswered" class="mat-elevation-z8">
@@ -108,11 +123,17 @@
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;let i = index;" (click)="notificationDetail(2 ,i, row)"></tr>
                     </table>
-                    <div class="row page-footer">
-                        <div class="col-sm-5 col-12">Tổng số : {{ totalPageAnswered }} thông báo</div>
-                        <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalPageAnswered" [(page)]="currentPageAnswered" [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event,0)">
-                        </ngb-pagination>
+                    <div class=" page-footer">
+                        <div class="row">
+                                <div class="ml-3">Tổng số : {{ totalPageAnswered }} thông báo</div>
+                        </div>
+                        <div class="row">
+                                <ngb-pagination class='col-12 d-flex justify-content-center' [collectionSize]="totalPageAnswered" [(page)]="currentPageAnswered" [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event,0)">
+                                    </ngb-pagination>
+                        </div>
+                      
                     </div>
+
                 </div>
             </div>
         </div>

@@ -33,12 +33,12 @@
                                 <input class="form-control" type="text" id="example-text-input" formControlName="name">
                                 <div *ngIf="createbhFormGroup.controls['name'].hasError('required') && (createbhFormGroup.controls['name'].dirty || createbhFormGroup.controls['name'].touched)"
                                     class="alert alert-danger">
-                                   {{CommonMessage.InputRequire}}tên nhà trọ
+                                    {{CommonMessage.InputRequire}}tên nhà trọ
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <label for="example-number-input" class="col-form-label required">Số lượng phòng</label>
-                                <input  class="form-control" type="number" id="example-number-input"
+                                <input class="form-control" type="number" id="example-number-input"
                                     onkeydown="javascript: return event.keyCode === 8 || event.keyCode === 46 ? true : !isNaN(Number(event.key))"
                                     formControlName="numberOfRoom">
                                 <div *ngIf="createbhFormGroup.controls['numberOfRoom'].hasError('required') && (createbhFormGroup.controls['numberOfRoom'].dirty || createbhFormGroup.controls['numberOfRoom'].touched)"
@@ -47,7 +47,7 @@
                                 </div>
                                 <div *ngIf="createbhFormGroup.controls['numberOfRoom'].hasError('pattern') && (createbhFormGroup.controls['numberOfRoom'].dirty || createbhFormGroup.controls['numberOfRoom'].touched)"
                                     class="alert alert-danger">
-                                   {{CommonMessage.InvalidInput}}
+                                    {{CommonMessage.InvalidInput}}
                                 </div>
                             </div>
                         </div>
@@ -75,7 +75,7 @@
                                 </select>
                                 <div *ngIf="createbhFormGroup.controls['distric'].hasError('required') && (createbhFormGroup.controls['distric'].dirty || createbhFormGroup.controls['distric'].touched)"
                                     class="alert alert-danger">
-                                   {{CommonMessage.InputRequire}}Quận / Huyện
+                                    {{CommonMessage.InputRequire}}Quận / Huyện
                                 </div>
                             </div>
                             <div class="col-sm-3">
@@ -155,8 +155,8 @@
 
 </div>
 <div class="row page-footer">
-    <div class="col-sm-5 col-12">Tổng số : {{totalPage}} nhà trọ</div>
-    <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalPage" [(page)]="currentPage"
+    <div class="col-12">Tổng số : {{totalPage}} nhà trọ</div>
+    <ngb-pagination class='col-12 d-flex justify-content-center' [collectionSize]="totalPage" [(page)]="currentPage"
         [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event)">
     </ngb-pagination>
 </div>

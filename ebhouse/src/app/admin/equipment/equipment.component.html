@@ -1,3 +1,98 @@
-<p>
-  equipment works!
-</p>
+<div class="customLoading">
+    <div class="customLoader"></div>
+</div>
+<div class="row mt-3 justify-content-end">
+    <button type="button" class="btn btn-primary mr-3 col-sm-3  col-lg-2 col-5" (click)="addOrEditEquipment(0, null,null)">
+          Tạo Tiện Ích
+    </button>
+</div>
+<div class="row">
+    <table *ngIf="dataSourceEquipment" mat-table [dataSource]="dataSourceEquipment" class="mat-elevation-z8">
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Tên</th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+        <ng-container matColumnDef="cDate">
+            <th mat-header-cell *matHeaderCellDef>Ngày Tạo</th>
+            <td mat-cell *matCellDef="let element"> {{element.cDate | date:"dd/MM/yyyy"}} </td>
+        </ng-container>
+        <ng-container matColumnDef="mDate">
+            <th mat-header-cell *matHeaderCellDef>Ngày Cập Nhật</th>
+            <td mat-cell *matCellDef="let element"> {{element.mDate | date:"dd/MM/yyyy"}} </td>
+        </ng-container>
+        <ng-container matColumnDef="status" [ngSwitch]="true">
+            <th mat-header-cell *matHeaderCellDef>Trạng Thái</th>
+            <td mat-cell *matCellDef="let element">
+                <span *ngIf='element.status == 1' class="status-p bg-success">Có hiệu lực</span>
+                <span *ngIf='element.status == 0' class="status-p bg-danger">Vô hiệu hoá</span>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row;let index;">
+                <ul class="d-flex justify-content-center">
+                    <li class="mr-3"><a class="text-secondary" (click)="addOrEditEquipment(1, row, index)"><i class="fa fa-edit"></i></a>
+                    </li>
+                    <li *ngIf="row.status == 1"><a class="text-danger" (click)="deleteOrActiveEquipment(row, index)"><i class="ti-trash"></i></a></li>
+                    <li *ngIf="row.status == 0"><a class="text-success" (click)="deleteOrActiveEquipment(row, index)"><i class="ti-arrow-circle-down"></i></a></li>
+                </ul>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
+<div class="row page-footer">
+    <div class="col-sm-5 col-12">Tổng số phòng : {{ totalEquipment }}</div>
+    <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalEquipment" [(page)]="currentPage" [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event)">
+    </ngb-pagination>
+</div>
+<div class="modal fade bd-example-modal-lg one-room" id="creatEquipment">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form [formGroup]="createEquipmentFormGroup" (ngSubmit)="onSubmit()">
+                <div class="modal-header">
+                    <h5 *ngIf="isEdit == 0; else edit" class="modal-title">Tạo tiện ích</h5>
+                    <ng-template #edit>
+                        <h5 *ngIf="isEdit == 1" class="modal-title">Sửa thông tin tiện ích</h5>
+                    </ng-template>
+                    <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label for="input-bhouse" class="col-form-label">Tên: </label>
+                            <input class="form-control boarding-house" id='input-bhouse' formControlName="name" type="text">
+                            <input formControlName="id" type="hidden">
+                            <div *ngIf="createEquipmentFormGroup.controls['name'].hasError('required')  && (createEquipmentFormGroup.controls['name'].dirty || createEquipmentFormGroup.controls['name'].touched)" class="alert alert-danger">
+                                Vui lòng không để trống thông tin!
+                            </div>
+                            <div *ngIf="check == 1" class="alert alert-danger">
+                                Thông tin chưa được thay đổi!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <div *ngIf="isEdit == 0; else edit2">
+                                <label class="col-form-label">Ngày tạo: </label>
+                                <p>{{ myDate | date:"dd/MM/yyyy"}}</p>
+                            </div>
+                            <ng-template #edit2>
+                                <div *ngIf="isEdit == 1">
+                                    <label class="col-form-label">Ngày cập nhật:</label>
+                                    <p>{{ myDate | date:"dd/MM/yyyy"}}</p>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Trở về</button>
+                    <button class="btn btn-info mb-3" type="submit" id="myButton" [disabled]="createEquipmentFormGroup.invalid"> Lưu</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

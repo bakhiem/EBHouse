@@ -40,9 +40,3 @@ table {
   padding-top: 1.1rem;
 }
 
-@media only screen and (max-width: 600px) {
-.pagination{
-  display: flex;
-  justify-content: center;
-}
-} 

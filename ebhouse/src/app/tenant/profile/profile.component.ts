@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 
 import { DataService } from '../../user/service/data.service';
 import { PlaceService } from '../../service/place.service';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
-
+import { MatDialog } from '@angular/material';
 import { ToastrService } from 'ngx-toastr';
 import { CommonMessage, Message } from '../../models/message';
 import { TenantServiceService } from '../service/tenant-service.service';
@@ -51,7 +52,8 @@ export class TenantProfileComponent implements OnInit {
     private placeService: PlaceService,
     private authenticationService: AuthenticationService,
     private service: TenantServiceService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    public dialog: MatDialog,
   ) { }
 
   ngOnInit() {
@@ -210,7 +212,7 @@ export class TenantProfileComponent implements OnInit {
   }
 
   onSubmit() {
-    if (!this.profileFormGroup.invalid) {
+    if (!this.profileFormGroup.invalid && this.profileFormGroup.value.name.trim() != "" && this.profileFormGroup.value.address.trim() != "") {
       if (this.checkChangeData()) {
         this.addLoading();
         this.service.updateProfile({ user: this.tenant.user, tenant: this.tenant }).subscribe(
@@ -342,52 +344,63 @@ export class TenantProfileComponent implements OnInit {
   };
 
   changePasswordSubmit() {
-    let new_pass = $('#new-pass').val().toString().trim();
-    let old_pass = $('#old-pass').val().toString().trim();
-    let re_new_pass = $('#re-new-pass').val().toString().trim();
-    if (new_pass && old_pass && re_new_pass) {
-      if (new_pass.length >= 8 && old_pass.length >= 8 && re_new_pass.length >= 8) {
-        if (new_pass == old_pass) {
-          this.showErr('Mật khấu cũ cần khác mật khẩu mới');
-        }
-        else {
-          if (new_pass == re_new_pass) {
-            let data = {
-              new_pass: new_pass,
-              old_pass: old_pass
+
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '450px',
+      data: "Bạn chắc chắn đổi mật khẩu không?"
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        let new_pass = $('#new-pass').val().toString().trim();
+        let old_pass = $('#old-pass').val().toString().trim();
+        let re_new_pass = $('#re-new-pass').val().toString().trim();
+        if (new_pass && old_pass && re_new_pass) {
+          if (new_pass.length >= 8 && old_pass.length >= 8 && re_new_pass.length >= 8) {
+            if (new_pass == old_pass) {
+              this.showErr('Mật khấu cũ cần khác mật khẩu mới');
             }
-            this.addLoading();
-            this.service.resetPass(data).subscribe(
-              res => {
-                this.removeLoading();
-                let response = JSON.parse('' + res);
-                if (response.type == 1) {
-                  console.log(response)
-                  let token = response.data;
-                  this.authenticationService.changeToken(token);
-                  this.showSuccess(response.message);
-                  $('#modal3').modal('hide');
-                } else {
-                  this.showErr(response.message)
+            else {
+              if (new_pass == re_new_pass) {
+                let data = {
+                  new_pass: new_pass,
+                  old_pass: old_pass
                 }
-              },
-              err => {
-                this.showErr(CommonMessage.defaultErrMess)
+                this.addLoading();
+                this.service.resetPass(data).subscribe(
+                  res => {
+                    this.removeLoading();
+                    let response = JSON.parse('' + res);
+                    if (response.type == 1) {
+                      console.log(response)
+                      let token = response.data;
+                      this.authenticationService.changeToken(token);
+                      this.showSuccess(response.message);
+                      $('#modal3').modal('hide');
+                    } else {
+                      this.showErr(response.message)
+                    }
+                  },
+                  err => {
+                    this.showErr(CommonMessage.defaultErrMess)
+                  }
+                )
               }
-            )
+              else {
+                this.showErr('Mật khẩu mới và nhập lại mật khẩu mới cần trùng nhau');
+              }
+            }
           }
           else {
-            this.showErr('Mật khẩu mới và nhập lại mật khẩu mới cần trùng nhau');
+            this.showErr('Mật khẩu cần ít nhất 8 ký tự');
           }
         }
+        else {
+          this.showErr('Vui lòng điền vào tất cả các trường');
+        }
       }
-      else {
-        this.showErr('Mật khẩu cần ít nhất 8 ký tự');
-      }
-    }
-    else {
-      this.showErr('Vui lòng điền vào tất cả các trường');
-    }
+    });
+
+    
 
   }
   changePassword() {

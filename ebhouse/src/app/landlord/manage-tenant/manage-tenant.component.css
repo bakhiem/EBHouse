@@ -46,10 +46,6 @@
   .status-p{
     padding: 0rem 0.5rem!important;
   }
-.pagination{
-  display: flex;
-  justify-content: center;
-}
 table td{
   font-size: 0.65rem;
 

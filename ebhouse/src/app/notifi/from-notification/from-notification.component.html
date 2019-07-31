@@ -6,13 +6,16 @@
         <div class="card-body">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active show" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Đã gửi</a>
+                    <a class="nav-link active show" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                        aria-controls="home" aria-selected="true">Đã gửi</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Đã xem</a>
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+                        aria-controls="profile" aria-selected="false">Đã xem</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Đã trả lời</a>
+                    <a class="nav-link " id="contact-tab" data-toggle="tab" href="#contact" role="tab"
+                        aria-controls="contact" aria-selected="false">Đã trả lời</a>
                 </li>
             </ul>
             <div class="tab-content mt-3" id="myTabContent">
@@ -39,13 +42,22 @@
                             </td>
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;let i = index;" (click)="notificationDetail(0 ,i, row)"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;let i = index;"
+                            (click)="notificationDetail(0 ,i, row)"></tr>
                     </table>
-                    <div class="row page-footer">
-                        <div class="col-sm-5 col-12">Tổng số : {{ totalNotifiSent }} thông báo</div>
-                        <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalNotifiSent" [(page)]="currentPageSent" [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event,0)">
-                        </ngb-pagination>
+
+                    <div class="page-footer">
+                        <div class="row">
+                            <div class="ml-3">Tổng số : {{ totalNotifiSent }} thông báo</div>
+                        </div>
+                        <div class="row">
+                            <ngb-pagination class='col-12 d-flex justify-content-center'
+                                [collectionSize]="totalNotifiSent" [(page)]="currentPageSent" [maxSize]="perPage"
+                                [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event,0)">
+                            </ngb-pagination>
+                        </div>
                     </div>
+
                 </div>
                 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                     <table mat-table [dataSource]="dataSourceSeen" class="mat-elevation-z8">
@@ -70,12 +82,19 @@
                             </td>
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;let i = index;" (click)="notificationDetail(1 ,i, row)"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;let i = index;"
+                            (click)="notificationDetail(1 ,i, row)"></tr>
                     </table>
-                    <div class="row page-footer">
-                        <div class="col-sm-5 col-12">Tổng số : {{ totalNotifiSeen }} thông báo</div>
-                        <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalNotifiSeen" [(page)]="currentPageSeen" [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event,1)">
-                        </ngb-pagination>
+                    <div class="page-footer">
+                        <div class="row">
+                            <div class="ml-3">Tổng số : {{ totalNotifiSeen }} thông báo</div>
+                        </div>
+                        <div class="row">
+                            <ngb-pagination class='col-12 d-flex justify-content-center'
+                                [collectionSize]="totalNotifiSeen" [(page)]="currentPageSeen" [maxSize]="perPage"
+                                [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event,1)">
+                            </ngb-pagination>
+                        </div>
                     </div>
                 </div>
                 <div class="tab-pane fade " id="contact" role="tabpanel" aria-labelledby="contact-tab">
@@ -101,13 +120,21 @@
                             </td>
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;let i = index;" (click)="notificationDetail(2 ,i, row)"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;let i = index;"
+                            (click)="notificationDetail(2 ,i, row)"></tr>
                     </table>
-                    <div class="row page-footer">
-                        <div class="col-sm-5 col-12">Tổng số : {{ totalNotifiAnswered }} thông báo</div>
-                        <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalNotifiAnswered" [(page)]="currentPageAnswered" [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event,2)">
-                        </ngb-pagination>
-                    </div>
+                    
+                    <div class="page-footer">
+                            <div class="row">
+                                <div class="ml-3">Tổng số : {{ totalNotifiAnswered }} thông báo</div>
+                            </div>
+                            <div class="row">
+                                <ngb-pagination class='col-12 d-flex justify-content-center'
+                                    [collectionSize]="totalNotifiAnswered" [(page)]="currentPageAnswered" [maxSize]="perPage"
+                                    [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event,2)">
+                                </ngb-pagination>
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>
