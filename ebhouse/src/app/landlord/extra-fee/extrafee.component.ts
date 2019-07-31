@@ -448,6 +448,10 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
               let toDay = new Date();
               let startDate = new Date(element.startDate);
               let endDate = new Date(element.endDate);
+              toDay.setHours(0);
+              toDay.setSeconds(0);
+              toDay.setMilliseconds(0);
+              toDay.setMinutes(0);
               if (startDate.getTime() <= toDay.getTime() && endDate.getTime() >= toDay.getTime()) {
                 if (response.data.availableInThisMonth == true) {
                   this.haveContractInMonth = true;
