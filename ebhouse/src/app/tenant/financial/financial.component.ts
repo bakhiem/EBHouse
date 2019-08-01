@@ -212,7 +212,7 @@ export class FinancialComponent implements OnInit, OnDestroy {
       };
       this.listExtraFee.push(element);
     }
-    this.createEFFormGroup.get('total').setValue(this.convertCurrency(financialNew.total - (oldDebt- oldPayment)));
+    this.createEFFormGroup.get('total').setValue(this.convertCurrency(financialNew.total));
     if(oldDebt < 0){
       $('#old-debt').html('Số dư tháng trước')
       this.createEFFormGroup.get('oldDebt').setValue(this.convertCurrency((oldDebt - oldPayment)*-1));
@@ -224,13 +224,14 @@ export class FinancialComponent implements OnInit, OnDestroy {
     else {
       $('#old-debt').html('Dư/ nợ')
     }
-    this.createEFFormGroup.get('money').setValue(this.convertCurrency(Number(financialNew.total)));
+    this.createEFFormGroup.get('money').setValue(this.convertCurrency(Number(financialNew.total + (oldDebt- oldPayment)) ));
     //edit payment
     if (Number(financialNew.payment) > 0) {
       this.isEdit = 1;
       this.createEFFormGroup.get('createDate').setValue(this.formatDateFull(new Date(financialNew.paymentDate), 1));
       this.createEFFormGroup.get('payment').setValue(this.convertCurrency(financialNew.payment));
-      let newDebt = Number(financialNew.total) - Number(financialNew.payment) + Number(oldDebt);
+      let newDebt = Number(financialNew.total) - Number(financialNew.payment) + + Number(oldDebt - oldPayment);
+      this.createEFFormGroup.get('description').setValue(financialNew.description);
       if(newDebt < 0){
         $('#new-debt').html('Số dư tháng này')
       }
@@ -255,7 +256,7 @@ export class FinancialComponent implements OnInit, OnDestroy {
     $('#electric-fee').html(this.convertCurrency(electricFee));
     $('#utility-fee').html(this.convertCurrency(utilityFee));
     $('#extra-fee').html(this.convertCurrency(extraFee));
-    $('#total-money').html(this.convertCurrency(financialNew.total- (oldDebt- oldPayment)));
+    $('#total-money').html(this.convertCurrency(financialNew.total));
     $('#electric-fee').click(() => {
       if (isCollapShow1 == 0) {
         $('#accordionElectric').collapse('show');
