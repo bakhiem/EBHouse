@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  baseUrl : "http://localhost:8084/CapstoneProject"
+  // baseUrl : "http://localhost:8084/CapstoneProject"
   // baseUrl : "http://ebhouse-backup.kilatiron.com/eb"
   // baseUrl : "http://ebhouse-backup.kilatiron.com/eb"
   baseUrl : "https://ebhouse.cf/backend/ebhouse"
