@@ -213,11 +213,11 @@ export class FinancialComponent implements OnInit, OnDestroy {
       this.listExtraFee.push(element);
     }
     this.createEFFormGroup.get('total').setValue(this.convertCurrency(financialNew.total - (oldDebt- oldPayment)));
-    if(oldDebt < 0){
+    if((oldDebt - oldPayment) < 0){
       $('#old-debt').html('Số dư tháng trước')
       this.createEFFormGroup.get('oldDebt').setValue(this.convertCurrency((oldDebt - oldPayment)*-1));
     }
-    else if(oldDebt > 0){
+    else if((oldDebt - oldPayment) > 0){
       $('#old-debt').html('Số nợ tháng trước')
       this.createEFFormGroup.get('oldDebt').setValue(this.convertCurrency((oldDebt - oldPayment)));
     }
@@ -230,7 +230,7 @@ export class FinancialComponent implements OnInit, OnDestroy {
       this.isEdit = 1;
       this.createEFFormGroup.get('createDate').setValue(this.formatDateFull(new Date(financialNew.paymentDate), 1));
       this.createEFFormGroup.get('payment').setValue(this.convertCurrency(financialNew.payment));
-      let newDebt = Number(financialNew.total) - Number(financialNew.payment) + Number(oldDebt);
+      let newDebt = Number(financialNew.total) - Number(financialNew.payment);
       if(newDebt < 0){
         $('#new-debt').html('Số dư tháng này')
       }
@@ -256,6 +256,7 @@ export class FinancialComponent implements OnInit, OnDestroy {
     $('#utility-fee').html(this.convertCurrency(utilityFee));
     $('#extra-fee').html(this.convertCurrency(extraFee));
     $('#total-money').html(this.convertCurrency(financialNew.total- (oldDebt- oldPayment)));
+    this.createEFFormGroup.get('description').setValue(financialNew.description);
     $('#electric-fee').click(() => {
       if (isCollapShow1 == 0) {
         $('#accordionElectric').collapse('show');

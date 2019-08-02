@@ -204,13 +204,6 @@ export class FinancialComponent implements OnInit, OnDestroy {
 
   ngAfterViewInit() {
     this.formatCurrency();
-    this.jqueryCode();
-  }
-
-  jqueryCode() {
-    $('#payment').on("keyup", function (event) {
-      $('#myButton').prop('disabled', false);
-    })
   }
   //send notification
   sendNoti() {
@@ -351,10 +344,12 @@ export class FinancialComponent implements OnInit, OnDestroy {
     if (obj.status == 1) {
       this.createEFFormGroup.get('payment').disable();
       this.isInvalid = true;
+      $('#myButton').prop('disabled', true);
     }
     else {
       this.createEFFormGroup.get('payment').enable();
       this.isInvalid = false;
+      $('#myButton').prop('disabled', false);
     }
     $('.input-price').val('');
     this.createEFFormGroup.get('status').setValue(obj.status);
@@ -364,7 +359,7 @@ export class FinancialComponent implements OnInit, OnDestroy {
     this.currentRoom = obj.roomObj;
     let financialNew = JSON.parse(CommmonFunction.escapeSpecialChars(data.financialNew));
     $('.bd-example-modal-lg').modal('show');
-    $('#myButton').prop('disabled', true);
+    
     let electricFee = ((Number(data.electricityNew) - Number(data.electricityOld)) * Number(data.valuePerElectricity));
     let utilityFee = Number(data.InternetFee) + Number(data.WaterFee) + Number(data.CleaningFee);
     let lstExtraFee = JSON.parse(CommmonFunction.escapeSpecialChars(data.lstExtraFee));
@@ -387,15 +382,16 @@ export class FinancialComponent implements OnInit, OnDestroy {
       };
       this.listExtraFee.push(element);
     }
-    this.createEFFormGroup.get('total').setValue(this.convertCurrency(financialNew.total - (oldDebt- oldPayment)));
+    this.createEFFormGroup.get('total').setValue(this.convertCurrency(financialNew.total - (oldDebt - oldPayment)));
     this.createEFFormGroup.get('oldDebt').setValue(this.convertCurrency(oldDebt - oldPayment));
     this.createEFFormGroup.get('money').setValue(this.convertCurrency(Number(financialNew.total)));
+    this.createEFFormGroup.get('description').setValue(financialNew.description);
     //edit payment
     if (Number(financialNew.payment) > 0) {
       this.isEdit = 1;
       this.createEFFormGroup.get('createDate').setValue(this.formatDateFull(new Date(financialNew.paymentDate), 1));
       this.createEFFormGroup.get('payment').setValue(this.convertCurrency(financialNew.payment));
-      this.createEFFormGroup.get('newDebt').setValue(this.convertCurrency(Number(financialNew.total) - Number(financialNew.payment) + Number(oldDebt)));
+      this.createEFFormGroup.get('newDebt').setValue(this.convertCurrency(Number(financialNew.total) - Number(financialNew.payment)));
     }
     else {
       this.isEdit = 0;
@@ -423,7 +419,7 @@ export class FinancialComponent implements OnInit, OnDestroy {
     $('#electric-fee').html(this.convertCurrency(electricFee));
     $('#utility-fee').html(this.convertCurrency(utilityFee));
     $('#extra-fee').html(this.convertCurrency(extraFee));
-    $('#total-money').html(this.convertCurrency(financialNew.total - (oldDebt- oldPayment)));
+    $('#total-money').html(this.convertCurrency(financialNew.total - (oldDebt - oldPayment)));
     $('#electric-fee').click(() => {
       if (isCollapShow1 == 0) {
         $('#accordionElectric').collapse('show');
@@ -480,7 +476,6 @@ export class FinancialComponent implements OnInit, OnDestroy {
   }
   //add money to payment
   addMoney() {
-    $('#myButton').prop('disabled', false);
     let money = $('.input-price:nth-child(1)').val();
     let convertMoney = this.convertToNumberPrice(money);
     let payment = this.convertToNumberPrice($('#payment').val());
@@ -514,7 +509,7 @@ export class FinancialComponent implements OnInit, OnDestroy {
           id: this.createEFFormGroup.get('id').value,
           room: { id: this.createEFFormGroup.get('room').value },
           description: this.createEFFormGroup.value.description ? this.createEFFormGroup.value.description.trim() : '',
-          total: this.convertToNumberPrice(this.createEFFormGroup.get('total').value),
+          total: this.convertToNumberPrice(this.createEFFormGroup.get('money').value),
           payment: this.convertToNumberPrice(this.createEFFormGroup.get('payment').value),
           paymentDate: paymentDate,
           cDate: this.createEFFormGroup.get('cDate').value,
