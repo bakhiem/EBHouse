@@ -21,7 +21,7 @@ import { CustomDateAdapter } from '../contract/customDate';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css'], 
+  styleUrls: ['./profile.component.css'],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'vi-vn' },
     { provide: DateAdapter, useClass: CustomDateAdapter }
@@ -55,7 +55,7 @@ export class LandlordProfileComponent implements OnInit {
     this.profileFormGroup = this.fb.group({
       name: this.fb.control('', Validators.compose([Validators.required])),
       phone: this.fb.control('', Validators.compose([Validators.required, Validators.pattern(this.phonePattern)])),
-      date: this.fb.control('', Validators.compose([Validators.required])),
+      date: this.fb.control({ value: '', disabled: true }, Validators.compose([Validators.required])),
       sex: this.fb.control(0, Validators.compose([Validators.required])),
       province: this.fb.control('', Validators.compose([Validators.required])),
       distric: this.fb.control('', Validators.compose([Validators.required])),
@@ -193,45 +193,58 @@ export class LandlordProfileComponent implements OnInit {
     });
   }
   onSubmit() {
-    if (!this.profileFormGroup.invalid && this.profileFormGroup.value.name.trim() != "" && this.profileFormGroup.value.address.trim() != "") {
-      this.checkChangeData();
-      if (this.check == 1) {
-        this.addLoading();
-        this.service.updateProfile({ user: this.landlord.user, landlord: this.landlord }).subscribe(
-          res => {
-            this.removeLoading();
-            let response = JSON.parse('' + res);
-            if (response.type == 1) {
-              this.showSuccess(response.message)
-            } else {
-              this.showErr(response.message)
-            }
-          },
-          err => {
-            this.showErr(CommonMessage.defaultErrMess)
+    if (!this.profileFormGroup.get('date').value) {
+      this.showErr('Vui lòng nhập ngày sinh');
+      return;
+    }
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '450px',
+      data: "Bạn chắc chắn muốn lưu thông tin không?"
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        if (!this.profileFormGroup.invalid && this.profileFormGroup.value.name.trim() != "" && this.profileFormGroup.value.address.trim() != "") {
+          this.checkChangeData();
+          if (this.check == 1) {
+            this.addLoading();
+            this.service.updateProfile({ user: this.landlord.user, landlord: this.landlord }).subscribe(
+              res => {
+                this.removeLoading();
+                let response = JSON.parse('' + res);
+                if (response.type == 1) {
+                  this.showSuccess(response.message)
+                } else {
+                  this.showErr(response.message)
+                }
+              },
+              err => {
+                this.showErr(CommonMessage.defaultErrMess)
+              }
+            );
+          } else {
+            this.showErr('Vui lòng thay đổi thông tin nếu bạn muốn cập nhật thông tin!')
+    
           }
-        );
-      } else {
-        this.showErr('Vui lòng thay đổi thông tin nếu bạn muốn cập nhật thông tin!')
-
+        } else {
+          this.showErr('Vui lòng kiểm tra lại!')
+        }
       }
-    } else {
-      this.showErr('Vui lòng kiểm tra lại!')
-    }
+    })
+   
   }
-    formatDate(date) {
-      var d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
+  formatDate(date) {
+    var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
 
-      if (month.length < 2) month = '0' + month;
-      if (day.length < 2) day = '0' + day;
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
 
-      return [year, month, day].join('-');
-    }
+    return [year, month, day].join('-');
+  }
   checkChangeData() {
-    let dateOfBirth = this.formatDate(this.profileFormGroup.value.date);
+    let dateOfBirth = this.formatDate(this.profileFormGroup.get('date').value);
     let address =
       this.profileFormGroup.value.address.replace(/-/g, ' ') +
       '-' +

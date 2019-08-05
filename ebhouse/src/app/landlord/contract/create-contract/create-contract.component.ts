@@ -416,6 +416,7 @@ export class CreateContractComponent implements OnInit, OnDestroy {
     $('#tenant-phone').val('');
     $('#tenant-address').val('');
     $('#tenant-sex').val('');
+    $('#tenant-date').val('');
     $('#imgArnFront').attr('src','');
     $('#imgArnBack').attr('src','');
   }
@@ -425,7 +426,8 @@ export class CreateContractComponent implements OnInit, OnDestroy {
       return;
     }
     this.currentTenant = '';
-    if (!this.createContractFormGroup.controls['tenantSearch'].hasError('pattern')) {
+    console.log(this.createContractFormGroup.get('tenantSearch').value == null)
+    if (!this.createContractFormGroup.controls['tenantSearch'].hasError('pattern') && this.createContractFormGroup.get('tenantSearch').value) {
       let data: any = {
         phone: this.createContractFormGroup.value.tenantSearch
       }
@@ -433,6 +435,7 @@ export class CreateContractComponent implements OnInit, OnDestroy {
       this.service.searchTenantByPhone(data).subscribe(
         res => {
           this.removeLoading();
+      
           let response = JSON.parse("" + res);
           if (response.type == 1) {
             this.removeFieldModal();
@@ -464,6 +467,7 @@ export class CreateContractComponent implements OnInit, OnDestroy {
             if (data.imgArnBack) {
               $('#imgArnBack').attr('src', data.imgArnBack.trim() + "?date=" + new Date().getTime());
             }
+            $('#tenant-date').val(this.formatDateDisplay(data.user.dateOfBirth));
             $('#modal2').modal('show');
             this.currentTenant = data;
           }

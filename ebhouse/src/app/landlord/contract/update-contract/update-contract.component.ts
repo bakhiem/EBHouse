@@ -463,6 +463,7 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
             if (data.imgArnBack) {
               $('#imgArnBack').attr('src', data.imgArnBack.trim() + "?date=" + new Date().getTime());
             }
+            $('#tenant-date').val(this.formatDateDisplay(data.user.dateOfBirth));
             $('#modal2').modal('show');
             this.currentTenant = data;
           }

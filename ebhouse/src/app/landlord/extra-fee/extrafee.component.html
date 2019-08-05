@@ -92,9 +92,9 @@
 
       <form [formGroup]="createEFFormGroup" (ngSubmit)="onSubmit()">
         <div class="modal-header">
-          <h5 *ngIf="isEdit == 0; else edit" class="modal-title">Tạo chi phí khác</h5>
+          <h5 *ngIf="isEdit == 0; else edit" class="modal-title">Tạo chi phí phát sinh</h5>
           <ng-template #edit>
-            <h5 *ngIf="isEdit == 1 || isEdit == 3" class="modal-title">Sửa chi phí khác</h5>
+            <h5 *ngIf="isEdit == 1 || isEdit == 3" class="modal-title">Sửa chi phí phát sinh</h5>
           </ng-template>
           <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
         </div>
