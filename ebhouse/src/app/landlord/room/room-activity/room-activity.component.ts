@@ -32,7 +32,7 @@ export class RoomActivityComponent implements OnInit,OnDestroy {
   currentBh: any;
   dataSource = new MatTableDataSource();
   listRooms: any[];
-  roomStatus: number = 1;
+  roomStatus: number = 3;
   constructor(private equipService : EquipmentServiceService,
     private service: LandlordService,
     private shareService: SharedServiceService,

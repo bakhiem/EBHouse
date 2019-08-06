@@ -13,7 +13,9 @@ import { TenantServiceService } from '../service/tenant-service.service';
 import { AuthenticationService } from '../../user/service/authentication.service';
 import { User } from '../../user/models/user';
 import { Tenant } from '../../models/tenant';
+import { CommmonFunction } from '../../shared/common-function';
 //image
+
 import { Options, ImageResult } from "ngx-image2dataurl";
 import { RotateImageFileProcessor } from '../../shared/image-rotate';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -22,7 +24,7 @@ import { CustomDateAdapter } from '../financial/customDate';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css'], 
+  styleUrls: ['./profile.component.css'],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'vi-vn' },
     { provide: DateAdapter, useClass: CustomDateAdapter }
@@ -67,7 +69,7 @@ export class TenantProfileComponent implements OnInit {
     this.profileFormGroup = this.fb.group({
       name: this.fb.control('', Validators.compose([Validators.required])),
       phone: this.fb.control('', Validators.compose([Validators.required, Validators.pattern(this.phonePattern)])),
-      date: this.fb.control('', Validators.compose([Validators.required])),
+      date: this.fb.control({ value: '', disabled: true }, Validators.compose([Validators.required])),
       sex: this.fb.control(0, Validators.compose([Validators.required])),
       province: this.fb.control('', Validators.compose([Validators.required])),
       distric: this.fb.control('', Validators.compose([Validators.required])),
@@ -84,14 +86,12 @@ export class TenantProfileComponent implements OnInit {
     this.toastr.error(mess, 'Lỗi !');
   }
   getProfile() {
-    console.log(this.tenant);
     this.addLoading();
     this.service.getProfile().subscribe(
       res => {
         let response = JSON.parse('' + res);
         if (response.type == 1) {
-          this.tenant = JSON.parse(response.data);
-          console.log(this.tenant);
+          this.tenant = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
           // let arr = null;
           // if (this.tenant.user.address != ' ') {
           //   arr = this.tenant.user.address.split('-');
@@ -218,30 +218,44 @@ export class TenantProfileComponent implements OnInit {
   }
 
   onSubmit() {
-    if (!this.profileFormGroup.invalid && this.profileFormGroup.value.name.trim() != "" && this.profileFormGroup.value.address.trim() != "") {
-      if (this.checkChangeData()) {
-        this.addLoading();
-        this.service.updateProfile({ user: this.tenant.user, tenant: this.tenant }).subscribe(
-          res => {
-            this.removeLoading();
-            let response = JSON.parse('' + res);
-            if (response.type == 1) {
-              this.showSuccess(response.message);
-            } else {
-              this.showErr(response.message)
-            }
-          },
-          err => {
-            this.removeLoading();
-            this.showErr(CommonMessage.defaultErrMess);
-          }
-        );
-      } else {
-        this.showErr(CommonMessage.notChangeMess);
-      }
-    } else {
-      this.showErr(CommonMessage.inputAllFiel);
+    if (!this.profileFormGroup.get('date').value) {
+      this.showErr('Vui lòng nhập ngày sinh');
+      return;
     }
+
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '450px',
+      data: "Bạn chắc chắn muốn lưu thông tin không?"
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) { 
+        if (!this.profileFormGroup.invalid && this.profileFormGroup.value.name.trim() != "" && this.profileFormGroup.value.address.trim() != "") {
+          if (this.checkChangeData()) {
+            this.addLoading();
+            this.service.updateProfile({ user: this.tenant.user, tenant: this.tenant }).subscribe(
+              res => {
+                this.removeLoading();
+                let response = JSON.parse('' + res);
+                if (response.type == 1) {
+                  this.showSuccess(response.message);
+                } else {
+                  this.showErr(response.message)
+                }
+              },
+              err => {
+                this.removeLoading();
+                this.showErr(CommonMessage.defaultErrMess);
+              }
+            );
+          } else {
+            this.showErr(CommonMessage.notChangeMess);
+          }
+        } else {
+          this.showErr(CommonMessage.inputAllFiel);
+        }
+      }
+    })
+
   }
   formatDate(date) {
     var d = new Date(date),
@@ -256,9 +270,9 @@ export class TenantProfileComponent implements OnInit {
   }
   checkChangeData(): any {
     let check = false;
-    let dateOfBirth = this.formatDate(this.profileFormGroup.value.date);
+    let dateOfBirth = this.formatDate(this.profileFormGroup.get('date').value);
     let address =
-      this.profileFormGroup.value.address.replace(/-/g, ' ') +
+      this.profileFormGroup.value.address.replace(/-/g, ' ').trim().replace(/"/g, "\\\"") +
       '-' +
       this.profileFormGroup.value.wards.name +
       '-' +
@@ -266,7 +280,7 @@ export class TenantProfileComponent implements OnInit {
       '-' +
       this.profileFormGroup.value.province.name;
     if (this.tenant.user.name != this.profileFormGroup.value.name) {
-      this.tenant.user.name = this.profileFormGroup.value.name
+      this.tenant.user.name = this.profileFormGroup.value.name.trim().replace(/"/g, "\\\"")
       check = true;
     }
     if (this.tenant.user.sex != this.profileFormGroup.value.sex) {
@@ -294,8 +308,6 @@ export class TenantProfileComponent implements OnInit {
     } else {
       this.tenant.imgArnBack = '';
     }
-    console.log(address);
-    console.log(this.tenant.user.address);
     return check;
   }
 
@@ -307,7 +319,7 @@ export class TenantProfileComponent implements OnInit {
       let image = (imageResult.resized && imageResult.resized.dataURL) || imageResult.dataURL;
 
       this.getOrientation(imageResult.file, (orientation) => {
-        this.rotateImageFileProcessor.process(orientation +','+image).then(res => {
+        this.rotateImageFileProcessor.process(orientation + ',' + image).then(res => {
           this.imgArnFront = res;
         });
       });
@@ -320,7 +332,7 @@ export class TenantProfileComponent implements OnInit {
     else {
       let image = (imageResult.resized && imageResult.resized.dataURL) || imageResult.dataURL;
       this.getOrientation(imageResult.file, (orientation) => {
-        this.rotateImageFileProcessor.process(orientation +','+ image).then(res => {
+        this.rotateImageFileProcessor.process(orientation + ',' + image).then(res => {
           this.imgArnBack = res;
         });
       });
@@ -329,7 +341,7 @@ export class TenantProfileComponent implements OnInit {
   }
   getOrientation(file, callback) {
     var reader: any,
-    target: EventTarget;
+      target: EventTarget;
     reader = new FileReader();
     reader.onload = (event) => {
       var view = new DataView(event.target.result);
@@ -388,7 +400,6 @@ export class TenantProfileComponent implements OnInit {
                     this.removeLoading();
                     let response = JSON.parse('' + res);
                     if (response.type == 1) {
-                      console.log(response)
                       let token = response.data;
                       this.authenticationService.changeToken(token);
                       this.showSuccess(response.message);
@@ -416,19 +427,13 @@ export class TenantProfileComponent implements OnInit {
         }
       }
     });
-
-    
-
   }
   changePassword() {
     $('#new-pass').val('');
     $('#re-new-pass').val('');
     $('#old-pass').val('');
     $('#modal3').modal('show');
-
   }
-
-
   addLoading() {
     $('.customLoading').addClass('preloader');
     $('.customLoader').addClass('loader');

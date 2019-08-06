@@ -215,11 +215,11 @@ export class RoomTypeComponent implements OnInit {
           let sendToServer = {
             roomType: [{
               id: this.createRtFormGroup.value.id,
-              name: this.createRtFormGroup.value.name,
+              name: this.createRtFormGroup.value.name.trim().replace(/"/g, "\\\""),
               area: this.createRtFormGroup.value.area,
               price: formatPrice,
               capacity: this.createRtFormGroup.value.capacity,
-              description: this.createRtFormGroup.value.description ? this.createRtFormGroup.value.description : '',
+              description: this.createRtFormGroup.value.description ? this.createRtFormGroup.value.description.trim().replace(/"/g, "\\\"") : '',
             }],
             equipment: this.listEquipmentOnSubmit()
           }
@@ -251,11 +251,11 @@ export class RoomTypeComponent implements OnInit {
         if (result) {
           let sendToServer = {
             roomType: [{
-              name: this.createRtFormGroup.value.name,
+              name: this.createRtFormGroup.value.name.trim().replace(/"/g, "\\\""),
               area: this.createRtFormGroup.value.area,
               price: formatPrice,
               capacity: this.createRtFormGroup.value.capacity,
-              description: this.createRtFormGroup.value.description ? this.createRtFormGroup.value.description : '',
+              description: this.createRtFormGroup.value.description ? this.createRtFormGroup.value.description.trim().replace(/"/g, "\\\"") : '',
             }],
             equipment: this.listEquipmentOnSubmit()
           }

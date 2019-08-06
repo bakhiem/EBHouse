@@ -114,14 +114,12 @@ export class FinancialComponent implements OnInit, OnDestroy {
     else {
       this.isSelectAllStatus = 0;
     }
-    console.log(data)
     this.addLoading();
     this.service.getFinancial(data).subscribe(
       res => {
         this.removeLoading();
         let response = JSON.parse("" + res);
         if (response.type == 1) {
-         console.log(response)
          if (response.data.length > 0) {
           let totalPage = response.data.pop();
           this.listFinancial = response.data;
@@ -132,7 +130,6 @@ export class FinancialComponent implements OnInit, OnDestroy {
           this.listFinancial = [];
           this.dataSource.data =[];
         }
-          console.log(this.listFinancial)
         }
       }, err => {
         this.showErr(CommonMessage.defaultErrMess);
@@ -190,7 +187,7 @@ export class FinancialComponent implements OnInit, OnDestroy {
     this.currentRoom = obj.roomName;
     let financialNew = JSON.parse(CommmonFunction.escapeSpecialChars(data.financialNew));
     $('.bd-example-modal-lg').modal('show');
-    let electricFee = ((Number(data.electricityNew) - Number(data.electricityOld)) * Number(data.valuePerElectricity));
+    let electricFee = Number(data.ElectricityFee);
     let utilityFee = Number(data.InternetFee) + Number(data.WaterFee) + Number(data.CleaningFee);
     let lstExtraFee = JSON.parse(CommmonFunction.escapeSpecialChars(data.lstExtraFee));
     let oldDebt = 0;
@@ -241,27 +238,30 @@ export class FinancialComponent implements OnInit, OnDestroy {
         $('#new-debt').html('Dư/ nợ')
       }
       this.createEFFormGroup.get('newDebt').setValue(this.convertCurrency(Math.abs(newDebt)) );
-      
     }
     else {
       this.isEdit = 0;
       this.createEFFormGroup.get('createDate').setValue('');
     }
-
     let isCollapShow1 = 0;
     let isCollapShow2 = 0;
     let isCollapShow3= 0;
     $('#room-fee').html(this.convertCurrency(data.roomPrice));
-    $('#electric-fee').html(this.convertCurrency(electricFee));
-    $('#utility-fee').html(this.convertCurrency(utilityFee));
-    $('#extra-fee').html(this.convertCurrency(extraFee));
+    $('#electric-fee span').html(this.convertCurrency(electricFee));
+    $('#utility-fee span').html(this.convertCurrency(utilityFee));
+    if(extraFee != 0){
+      $('#extra-fee').html('<span>'+ this.convertCurrency(extraFee)+'</span><i class="fa fa-sort float-right" style="font-size:24px"></i>');
+    }
+    else{
+      $('#extra-fee').html('<span>'+ this.convertCurrency(extraFee)+'</span>');
+    }
     $('#total-money').html(this.convertCurrency(financialNew.total- (oldDebt- oldPayment)));
     this.createEFFormGroup.get('description').setValue(financialNew.description);
     $('#electric-fee').click(() => {
       if (isCollapShow1 == 0) {
         $('#accordionElectric').collapse('show');
-        $('#e-last').html('' + data.electricityOld)
-        $('#e-present').html('' + data.electricityNew)
+        $('#e-last').html(data.electricityOld)
+        $('#e-present').html(data.electricityNew)
         isCollapShow1 = 1;
       }
       else {
@@ -313,7 +313,6 @@ export class FinancialComponent implements OnInit, OnDestroy {
       date: this.formatDate() + '-01',
       roomID: obj.room_id
     }
-    console.log(data)
     this.addLoading();
     this.service.getOneFinancial(data).subscribe(
       res => {
@@ -322,14 +321,11 @@ export class FinancialComponent implements OnInit, OnDestroy {
           let response = JSON.parse("" + res);
           if (response.type == 1) {
             let data = response.data;
-            console.log(data)
             this.createExtrafee(data, obj);
           }
         } catch (error) {
-          console.log(error)
         }
       }, err => {
-        console.log(err);
       })
 
   }

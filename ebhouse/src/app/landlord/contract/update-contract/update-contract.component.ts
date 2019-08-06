@@ -6,6 +6,7 @@ import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog
 import { InformationDialogComponent } from '../../../shared/info-dialog/information-dialog.component';
 import { LandlordService } from '../../service/landlord-service.service';
 
+import { CommmonFunction } from '../../../shared/common-function';
 
 import { ToastrService } from 'ngx-toastr';
 import { CommonMessage } from '../../../models/message';
@@ -226,7 +227,7 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
       distric: '',
       wards: '',
       address: '',
-      dateOfBirth :'',
+      dateOfBirth :{ value: '', disabled: true },
       sex : ''
     });
 
@@ -435,7 +436,7 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
           let response = JSON.parse("" + res);
           if (response.type == 1) {
             this.removeFieldModal();
-            let data = JSON.parse(response.data);
+            let data = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
             $('#tenant-name').val(data.user.name);
             $('#tenant-phone').val(data.user.phone);
             if(data.user.address){
@@ -463,13 +464,14 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
             if (data.imgArnBack) {
               $('#imgArnBack').attr('src', data.imgArnBack.trim() + "?date=" + new Date().getTime());
             }
+            $('#tenant-date').val(this.formatDateDisplay(data.user.dateOfBirth));
             $('#modal2').modal('show');
             this.currentTenant = data;
           }
           else if (response.type == 2) {
             const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
               width: '400px',
-              data: 'Không tìm thấy khách thuê!!! Bạn có muốn thêm khách thuê có số điện thoại ' + this.createContractFormGroup.value.tenantSearch + ' không?'
+              data: 'Không tìm thấy khách thuê! Bạn có muốn thêm khách thuê có số điện thoại ' + this.createContractFormGroup.value.tenantSearch + ' không?'
             });
             dialogRef.afterClosed().subscribe(result => {
               if (result) {
@@ -611,7 +613,7 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
             deposit: deposit,
             startDate: this.startDateStr,
             endDate: this.endDateSrt,
-            description: this.createContractFormGroup.value.description ? this.createContractFormGroup.value.description : ''
+            description: this.createContractFormGroup.value.description ? this.createContractFormGroup.value.description.trim().replace(/"/g, "\\\"") : ''
           }],
           room: [{
             id: this.currentContract.room.id
@@ -633,7 +635,6 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
               setTimeout(() => { this.router.navigate(['/landlord/contract']) }, 1500);
             }
             else {
-
               this.showErr(response.message);
               this.displayDialog(response.message);
             }
@@ -722,7 +723,7 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
   onSubmitTenant() {
     let address = '';
     if (this.createTenantFormGroup.value.address) {
-      let address = this.createTenantFormGroup.value.address.replace(/-/g, ' ');
+     address = this.createTenantFormGroup.value.address.replace(/-/g, ' ').replace(/"/g, "\\\"");
     }
     let fullAddress = '';
     if (this.createTenantFormGroup.value.wards) {
@@ -734,7 +735,7 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
         name: this.createTenantFormGroup.value.name,
         phone: this.createTenantFormGroup.get('phone').value,
         address: fullAddress,
-        dateOfBirth: this.createTenantFormGroup.value.dateOfBirth ? this.formatDate(this.createTenantFormGroup.value.dateOfBirth) : null,
+        dateOfBirth: this.createTenantFormGroup.get('dateOfBirth').value ? this.formatDate(this.createTenantFormGroup.get('dateOfBirth').value) : null,
         sex: this.createTenantFormGroup.value.sex,
       },
       role: 2,

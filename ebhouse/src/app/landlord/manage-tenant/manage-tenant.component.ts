@@ -64,7 +64,7 @@ export class ManageTenantComponent implements OnInit, OnDestroy {
     private toastr: ToastrService) {
 
   }
-  displayedColumns = ['name', 'phone', 'room', 'sex', 'address', 'customColumn'];
+  displayedColumns = ['name', 'phone', 'room', 'sex','date', 'address', 'customColumn'];
 
   chooseMonth(params, datepicker) {
     params.setDate(1);
@@ -122,6 +122,17 @@ export class ManageTenantComponent implements OnInit, OnDestroy {
     let year = this.month.value.getFullYear();
     return year + '-' + month
   }
+  formatDateFull(date) {
+    var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [day, month, year].join('-');
+  }
   resetModal(){
     $('#tenant-detail-name').val('');
     $('#tenant-phone').val('');
@@ -129,6 +140,7 @@ export class ManageTenantComponent implements OnInit, OnDestroy {
     $('#tenant-rooms').val('');
     $('#imgArnFront').attr('src','');
     $('#imgArnBack').attr('src','');
+    $('#tenant-date').val('');
   }
   viewDetail(data) {
     this.resetModal();
@@ -136,6 +148,7 @@ export class ManageTenantComponent implements OnInit, OnDestroy {
     $('#tenant-phone').val(data.phone);
     $('#tenant-address').val(data.address);
     $('#tenant-rooms').val(data.listRoom);
+    $('#tenant-date').val(this.formatDateFull(data.date_of_birth));
     if (data.imgArnFront) {
       $('#imgArnFront').attr('src', data.imgArnFront.trim() + "?date=" + new Date().getTime());
     }
@@ -168,6 +181,7 @@ export class ManageTenantComponent implements OnInit, OnDestroy {
               this.listTenantDisplay = response.data;
               this.handlelistTenantDisplay();
               this.totalPage = totalPage.totalRecord;
+              console.log(this.listTenantDisplay)
             }
             else {
               this.listTenantDisplay = [];

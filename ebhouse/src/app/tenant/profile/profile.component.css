@@ -21,3 +21,6 @@
 .modal-content{display:inline-block;}
 
 #modal3 .modal-dialog{text-align:left;}
+.mat-datepicker-toggle{
+  font-size: 2rem
+}

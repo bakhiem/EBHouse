@@ -130,7 +130,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       res => {
         let response = JSON.parse("" + res);
         if (response.type == 1) {
-          let data = JSON.parse(response.data);
+          let data = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
           this.rtList = data.roomType;
         }
       }, err => {
@@ -212,8 +212,8 @@ export class RoomComponent implements OnInit, OnDestroy {
           roomTypeID: this.createRoomFormGroup.value.roomType.id,
           room: {
             id: this.currentRoom.id,
-            name: this.createRoomFormGroup.value.name,
-            description: this.createRoomFormGroup.value.description ? this.createRoomFormGroup.value.description : ''
+            name: this.createRoomFormGroup.value.name.trim().replace(/"/g, "\\\""),
+            description: this.createRoomFormGroup.value.description ? this.createRoomFormGroup.value.description.trim().replace(/"/g, "\\\"") : ''
           }
         }
         if (room.roomTypeID == this.currentRoom.roomType.id && room.room.name == this.currentRoom.name && room.room.description == this.currentRoom.description) {
@@ -247,8 +247,8 @@ export class RoomComponent implements OnInit, OnDestroy {
         let room: any = {
           boardingHouseID: Number(this.currentBh.id),
           roomTypeID: this.createRoomFormGroup.value.roomType.id,
-          roomName: this.createRoomFormGroup.value.name,
-          description: this.createRoomFormGroup.value.description ? this.createRoomFormGroup.value.description : ''
+          roomName: this.createRoomFormGroup.value.name.trim().replace(/"/g, "\\\""),
+          description: this.createRoomFormGroup.value.description ? this.createRoomFormGroup.value.description.trim().replace(/"/g, "\\\"") : ''
         }
 
         this.addLoading();
@@ -306,7 +306,7 @@ export class RoomComponent implements OnInit, OnDestroy {
             boardingHouseID: Number(this.currentBh.id),
             roomTypeID: this.createMultiRoomFormGroup.value.roomType.id,
             roomName: this.createMultiRoomFormGroup.value.name.nameFormat,
-            description: this.createMultiRoomFormGroup.value.description ? this.createMultiRoomFormGroup.value.description : ''
+            description: this.createMultiRoomFormGroup.value.description ? this.createMultiRoomFormGroup.value.description.trim().replace(/"/g, "\\\"") : ''
           }
         }
         else {
@@ -331,7 +331,7 @@ export class RoomComponent implements OnInit, OnDestroy {
             boardingHouseID: Number(this.currentBh.id),
             roomTypeID: this.createMultiRoomFormGroup.value.roomType.id,
             roomName: arrRoom,
-            description: this.createMultiRoomFormGroup.value.description ? this.createMultiRoomFormGroup.value.description : ''
+            description: this.createMultiRoomFormGroup.value.description ? this.createMultiRoomFormGroup.value.description.trim().replace(/"/g, "\\\"") : ''
           }
         }
 

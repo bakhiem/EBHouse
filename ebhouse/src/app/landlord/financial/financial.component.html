@@ -19,7 +19,7 @@
       <select class="custom-select mt-2" [(ngModel)]="financialStatus" (change)='getFinancial()'>
         <option value="1">Chưa Thanh toán</option>
         <option value="2">Đã Thanh Toán</option>
-        <option value="3"  selected="selected">Tất cả</option>
+        <option value="3" selected="selected">Tất cả</option>
       </select>
     </div>
 
@@ -87,14 +87,14 @@
 
 
   <div class="row page-footer">
-        <div class="col-12">Tổng số bản ghi : {{totalPage}}</div>
-   
-   
-        <ngb-pagination class='col-12 d-flex justify-content-center' [collectionSize]="totalPage" [(page)]="currentPage"
-        [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event)">
-      </ngb-pagination>
-   
-   
+    <div class="col-12">Tổng số bản ghi : {{totalPage}}</div>
+
+
+    <ngb-pagination class='col-12 d-flex justify-content-center' [collectionSize]="totalPage" [(page)]="currentPage"
+      [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event)">
+    </ngb-pagination>
+
+
   </div>
 
 </div>
@@ -131,15 +131,17 @@
                   <th scope="col">Tiền phòng</th>
                   <th scope="col">Tiền điện</th>
                   <th scope="col">Tiền dịch vụ</th>
-                  <th scope="col">Chi phí khác</th>
+                  <th scope="col">Chi phí phát sinh</th>
                   <th scope="col">Tổng tiền</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td id='room-fee'></td>
-                  <td id='electric-fee' class='can-click'></td>
-                  <td id='utility-fee' class='can-click'></td>
+                  <td id='electric-fee' class='can-click'><span></span><i class="fa fa-sort float-right"
+                      style="font-size:24px"></i></td>
+                  <td id='utility-fee' class='can-click'><span></span><i class="fa fa-sort float-right"
+                      style="font-size:24px"></i></td>
                   <td id='extra-fee' class='can-click'></td>
                   <td id='total-money'></td>
                 </tr>
@@ -183,69 +185,64 @@
               </table>
             </div>
             <div id="accordionExtraFee" class="collapse">
-            
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th scope="col">Số tiền</th>
-                      <th scope="col">Thời gian</th>
-                      <th scope="col">Mô tả</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let extrafee of listExtraFee ">
-                      <td> {{extrafee.amount | currency}}</td>
-                      <td> {{extrafee.date | date:"dd/MM/yyyy" }}</td>
-                      <td>{{extrafee.description |  maxLength : 20}}</td>
-                    </tr>
 
-                  </tbody>
-                </table>
-              
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th scope="col">Số tiền</th>
+                    <th scope="col">Thời gian</th>
+                    <th scope="col">Mô tả</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let extrafee of listExtraFee ">
+                    <td> {{extrafee.amount | currency}}</td>
+                    <td> {{extrafee.date | date:"dd/MM/yyyy" }}</td>
+                    <td>{{extrafee.description |  maxLength : 20}}</td>
+                  </tr>
+
+                </tbody>
+              </table>
+
             </div>
           </div>
-          <div class="form-group row">
-            <div class="col-sm-4">
-              <label class="col-form-label ml-3">Tổng tiền</label>
-              <input type="text" class="form-control" formControlName="total">
-            </div>
-            <div class="col-2 col-md-3"></div>
-            <div class="col-sm-4">
-              <label class="col-form-label ml-3 required">Thanh toán</label>
-              <input type="text" id='payment' class="form-control input-price" formControlName="payment">
-            </div>
-          </div>
-
-          <div class="form-group row" [ngClass]="{'hide': isInvalid}">
-              <div class="col-sm-4">
-                  <label class="col-form-label ml-3">Dư/nợ cũ</label>
-                  <input type="text" class="form-control" formControlName="oldDebt">
+          <div class="row">
+              <div class="col-sm-6">
+                  <div class="col-12">
+                    <label class="col-form-label ml-3">Tổng tiền</label>
+                    <input type="text" class="form-control" formControlName="total">
+                  </div>
+                  <div class="col-12 mt-3">
+                    <label class="col-form-label ml-3">Dư/nợ cũ</label>
+                    <input type="text" class="form-control" formControlName="oldDebt">
+                  </div>
+                  <div class="col-12">
+                    <label class="col-form-label ml-3">Thành tiền</label>
+      
+                    <input type="text" class="form-control" id='money' formControlName="money">
+                  </div>
                 </div>
-                <div class="col-2 col-md-3"></div>
-            <div class="col-md-4">
-              <label class="col-form-label">Thanh toán thêm</label>
-              <small style="display: block;">Nhập số tiền thanh toán thêm và nhấn nút "Cộng"</small>
-              <div class="col-12">
-                <input class="form-control col-7 mr-3 input-price" style="display: inline-block;" type="text" >
-                <button type="button" class="btn btn-warning mb-2" style="display: inline-block;" (click)='addMoney()' >Cộng</button>
-              </div>
-            </div>
-          </div>
-
-
-          <div class="form-group row">
-              <div class="col-sm-4">
-                  <label class="col-form-label ml-3">Thành tiền</label>
-    
-                  <input type="text" class="form-control" id='money' formControlName="money">
+      
+                <div class="col-sm-6">
+                  <div class="col-12">
+                    <label class="col-form-label ml-3 required">Thanh toán</label>
+                    <input type="text" id='payment' class="form-control input-price" formControlName="payment">
+                  </div>
+                  <div class="col-12" [ngClass]="{'hide': isInvalid}">
+                    <label class="col-form-label">Thanh toán thêm</label>
+                    <small style="display: block;">Nhập số tiền thanh toán thêm và nhấn nút "Cộng"</small>
+                    <div class="col-12">
+                      <input class="form-control col-7 mr-3 input-price" style="display: inline-block;" type="text">
+                      <button type="button" class="btn btn-warning mb-2" style="display: inline-block;"
+                        (click)='addMoney()'>Cộng</button>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <label class="col-form-label ml-3">Dư/nợ mới</label>
+                    <input type="text" class="form-control" id='newDebt' formControlName="newDebt">
+                  </div>
                 </div>
-            <div class="col-2 col-md-3"></div>
-            <div class="col-sm-4">
-              <label class="col-form-label ml-3">Dư/nợ mới</label>
-              <input type="text" class="form-control" id='newDebt' formControlName="newDebt">
-            </div>
           </div>
-
 
           <div class="form-group row">
             <div class="col-sm-12">

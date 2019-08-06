@@ -88,7 +88,7 @@ export class EquipmentComponent implements OnInit {
     if (!this.createEquipmentFormGroup.invalid && this.createEquipmentFormGroup.value.name.trim() != "") {
       this.addLoading();
       if(this.equipment.name != this.createEquipmentFormGroup.value.name){
-        this.equipment.name = this.createEquipmentFormGroup.value.name;
+        this.equipment.name = this.createEquipmentFormGroup.value.name.replace(/"/g, "\\\"");
         this.service.addOrUpdateEquipment({equipment: this.equipment}).subscribe(
             res => {
               this.removeLoading();

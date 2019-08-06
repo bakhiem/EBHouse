@@ -11,6 +11,8 @@ import { CustomDateAdapterMonth } from '../financial/customDate';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { SharedServiceService } from '../../service/shared-service.service';
+import { CommmonFunction } from '../../shared/common-function';
+
 
 @Component({
   selector: 'app-rooms-info',
@@ -29,7 +31,7 @@ export class RoomsInfoComponent implements OnInit,OnDestroy {
   private subscription: ISubscription;
   currentBh: any;
   listRooms: any[];
-  roomStatus: number = 1;
+  roomStatus: number = 3;
   dataSource = new MatTableDataSource();
   constructor(private service: TenantServiceService,
     private shareService: SharedServiceService,
@@ -84,10 +86,9 @@ export class RoomsInfoComponent implements OnInit,OnDestroy {
     this.service.getEquipment().subscribe(res => {
       this.removeLoading();
       let response = JSON.parse("" + res);
-      console.log(response)
       
       if (response.type == 1) {
-        this.dataEquipment = JSON.parse(response.data);
+        this.dataEquipment = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
         this.getRoomsInfo();
       }
       else{
@@ -147,7 +148,6 @@ export class RoomsInfoComponent implements OnInit,OnDestroy {
     else {
       this.isSelectAllStatus = 0;
     }
-    console.log(data)
     this.addLoading();
     this.service.getRoomsInfo(data).subscribe(
       res => {
@@ -164,7 +164,6 @@ export class RoomsInfoComponent implements OnInit,OnDestroy {
         else{
           this.listRooms = [];
         }
-          console.log(this.listRooms)
         }
       }, err => {
         this.showErr(CommonMessage.defaultErrMess);

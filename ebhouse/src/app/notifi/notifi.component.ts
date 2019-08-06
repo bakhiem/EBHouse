@@ -134,8 +134,8 @@ export class NotifiComponent implements OnInit {
     if (!this.createNotifiFormGroup.invalid && this.createNotifiFormGroup.value.subject.trim() != "" && this.createNotifiFormGroup.value.content.trim() != "" && this.listDataSet.length > 0) {
       this.addLoading();
 
-      this.newNotifi.subject = this.createNotifiFormGroup.value.subject;
-      this.newNotifi.content = this.createNotifiFormGroup.value.content;
+      this.newNotifi.subject = this.createNotifiFormGroup.value.subject.trim().replace(/"/g, "\\\"");
+      this.newNotifi.content = this.createNotifiFormGroup.value.content.trim().replace(/"/g, "\\\"");
 
       let listBhSent = [];
       let listRoomSent = [];

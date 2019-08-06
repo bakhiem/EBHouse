@@ -26,7 +26,7 @@ import { Router } from '@angular/router';
 import { CustomDateAdapter } from '../customDate'
 
 import { SharedServiceService } from '../../../service/shared-service.service';
-
+import { CommmonFunction } from '../../../shared/common-function';
 //add new tenant
 import { PlaceService } from '../../../service/place.service';
 import { UserService } from '../../../user/service/user.service';
@@ -244,7 +244,7 @@ export class CreateContractComponent implements OnInit, OnDestroy {
       distric: '',
       wards: '',
       address: '',
-      dateOfBirth :'',
+      dateOfBirth :{ value: '', disabled: true },
       sex : ''
     });
 
@@ -416,6 +416,7 @@ export class CreateContractComponent implements OnInit, OnDestroy {
     $('#tenant-phone').val('');
     $('#tenant-address').val('');
     $('#tenant-sex').val('');
+    $('#tenant-date').val('');
     $('#imgArnFront').attr('src','');
     $('#imgArnBack').attr('src','');
   }
@@ -425,7 +426,8 @@ export class CreateContractComponent implements OnInit, OnDestroy {
       return;
     }
     this.currentTenant = '';
-    if (!this.createContractFormGroup.controls['tenantSearch'].hasError('pattern')) {
+    console.log(this.createContractFormGroup.get('tenantSearch').value == null)
+    if (!this.createContractFormGroup.controls['tenantSearch'].hasError('pattern') && this.createContractFormGroup.get('tenantSearch').value) {
       let data: any = {
         phone: this.createContractFormGroup.value.tenantSearch
       }
@@ -433,10 +435,11 @@ export class CreateContractComponent implements OnInit, OnDestroy {
       this.service.searchTenantByPhone(data).subscribe(
         res => {
           this.removeLoading();
+      
           let response = JSON.parse("" + res);
           if (response.type == 1) {
             this.removeFieldModal();
-            let data = JSON.parse(response.data);
+            let data = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
             $('#tenant-name').val(data.user.name);
             $('#tenant-phone').val(data.user.phone);
             if(data.user.address){
@@ -464,13 +467,14 @@ export class CreateContractComponent implements OnInit, OnDestroy {
             if (data.imgArnBack) {
               $('#imgArnBack').attr('src', data.imgArnBack.trim() + "?date=" + new Date().getTime());
             }
+            $('#tenant-date').val(this.formatDateDisplay(data.user.dateOfBirth));
             $('#modal2').modal('show');
             this.currentTenant = data;
           }
           else if (response.type == 2) {
             const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
               width: '400px',
-              data: 'Không tìm thấy khách thuê!!! Bạn có muốn thêm khách thuê có số điện thoại ' + this.createContractFormGroup.value.tenantSearch + ' không?'
+              data: 'Không tìm thấy khách thuê! Bạn có muốn thêm khách thuê có số điện thoại ' + this.createContractFormGroup.value.tenantSearch + ' không?'
             });
             dialogRef.afterClosed().subscribe(result => {
               if (result) {
@@ -588,7 +592,7 @@ export class CreateContractComponent implements OnInit, OnDestroy {
         let response = JSON.parse("" + res);
 
         if (response.type == 1) {
-          this.extraFeeList = JSON.parse("" + response.data);
+          this.extraFeeList = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
           console.log(this.extraFeeList)
         }
         else {
@@ -692,7 +696,7 @@ export class CreateContractComponent implements OnInit, OnDestroy {
               deposit: deposit,
               startDate: this.startDateStr,
               endDate: this.endDateSrt,
-              description: this.createContractFormGroup.value.description ? this.createContractFormGroup.value.description.trim() : '',
+              description: this.createContractFormGroup.value.description ? this.createContractFormGroup.value.description.trim().replace(/"/g, "\\\"") : '',
 
             }],
             room: [{
@@ -820,7 +824,7 @@ export class CreateContractComponent implements OnInit, OnDestroy {
   onSubmitTenant(){
     let address = '';
     if(this.createTenantFormGroup.value.address){
-      let address = this.createTenantFormGroup.value.address.replace(/-/g, ' ');
+      address = this.createTenantFormGroup.value.address.replace(/-/g, ' ').replace(/"/g, "\\\"");
     }
     let fullAddress = '';
     if(this.createTenantFormGroup.value.wards){
@@ -829,10 +833,10 @@ export class CreateContractComponent implements OnInit, OnDestroy {
     
     let tenant = {
       user : {
-        name  : this.createTenantFormGroup.value.name,
+        name  : this.createTenantFormGroup.value.name.trim().replace(/"/g, "\\\""),
         phone : this.createTenantFormGroup.get('phone').value,
         address : fullAddress,
-        dateOfBirth : this.createTenantFormGroup.value.dateOfBirth ?  this.formatDate(this.createTenantFormGroup.value.dateOfBirth) : null,
+        dateOfBirth : this.createTenantFormGroup.get('dateOfBirth').value ?  this.formatDate(this.createTenantFormGroup.get('dateOfBirth').value) : null,
         sex : this.createTenantFormGroup.value.sex,
       },
       role :2,

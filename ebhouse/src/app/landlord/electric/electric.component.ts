@@ -157,7 +157,7 @@ export class ElectricComponent implements OnInit, AfterViewInit, OnDestroy {
   focusoutFunction(id,type ?: string) {
 
     if (Number($('#present-' + id).val()) < Number($('#last-' + id).val())) {
-      $('#present-' + id).val(Number($('#last-' + id).val()));
+      // $('#present-' + id).val(Number($('#last-' + id).val()));
       $('#usage-' + id).html('' + 0);
       $('#amount-' + id).html('' + 0);
       if(type == '1'){
@@ -220,7 +220,6 @@ export class ElectricComponent implements OnInit, AfterViewInit, OnDestroy {
       if ($.inArray(event.keyCode, [38, 40, 37, 39]) !== -1) {
         return;
       }
-
       var $this = $(this);
       // Get the value.
       let input = $this.val();
@@ -246,10 +245,10 @@ export class ElectricComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   save() {
     //da check rui
-    // if (this.checkValidBeforeSubmit() == false) {
-    //   this.displayDialog(CommonMessage.Electric);
-    //   return;
-    // }
+    if (this.checkValidBeforeSubmit() == false) {
+      this.displayDialog(CommonMessage.Electric);
+      return;
+    }
     if (!this.currentBh.id) {
       this.showErr(CommonMessage.InputBh);
       return;

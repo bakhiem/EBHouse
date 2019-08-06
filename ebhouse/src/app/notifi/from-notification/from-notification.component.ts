@@ -82,7 +82,7 @@ export class FromNotificationComponent implements OnInit,OnDestroy{
     this.addLoading();
     this.service.getAllFromNotification({ page: currentPage-1, status : status}).subscribe(
       res => {
-        let response = JSON.parse("" + CommmonFunction.escapeSpecialChars(res));
+        let response = JSON.parse('' + res);
         if (response.type == 1) {
           if(response.data != null){
             let data = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));

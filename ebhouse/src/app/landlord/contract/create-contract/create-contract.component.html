@@ -286,6 +286,12 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                    <label for="tenant-address" class="col-sm-2 col-form-label">Ngày sinh</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" type="text" id="tenant-date" disabled>
+                    </div>
+                </div>
+                <div class="form-group row">
                     <label for="tenant-address" class="col-sm-2 col-form-label">Địa chỉ</label>
                     <div class="col-sm-10">
                         <input class="form-control" type="text" id="tenant-address" disabled>
@@ -383,10 +389,10 @@
                         <div class="col-sm-4">
                             <label for="example-number-input" class="col-form-label">Ngày sinh</label>
                             <mat-form-field>
-                                <input matInput [matDatepicker]="dp" [max]='minDate' placeholder="Ngày sinh"
+                                <input matInput [matDatepicker]="dp" [max]='minDate' placeholder="Chọn ngày"
                                     formControlName="dateOfBirth">
                                 <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
-                                <mat-datepicker #dp></mat-datepicker>
+                                <mat-datepicker #dp disabled='false'></mat-datepicker>
                             </mat-form-field>
                         </div>
 
