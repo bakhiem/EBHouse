@@ -27,7 +27,7 @@ export class AdminService {
   }
 
   getEquipmentByPage(page : any) : Observable<Equipment[]> {
-    return this.http.post<Equipment[]>(`${this.baseUrl}/api/equipment`, page, httpOptions);
+    return this.http.post<Equipment[]>(`${this.baseUrl}/api/admin/equipment`, page, httpOptions);
   }
 
   addOrUpdateEquipment(equipment : any) : Observable<Equipment> {
