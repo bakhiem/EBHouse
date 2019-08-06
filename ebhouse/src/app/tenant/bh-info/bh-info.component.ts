@@ -92,7 +92,6 @@ export class BhInfoComponent implements OnInit, OnDestroy {
         let response = JSON.parse("" + res);
         if (response.type == 1) {
           let resData = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
-          console.log(resData)
           this.list = resData;
           //if have list utility
           if (this.list.length > 0) {

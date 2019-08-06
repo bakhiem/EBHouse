@@ -114,14 +114,12 @@ export class FinancialComponent implements OnInit, OnDestroy {
     else {
       this.isSelectAllStatus = 0;
     }
-    console.log(data)
     this.addLoading();
     this.service.getFinancial(data).subscribe(
       res => {
         this.removeLoading();
         let response = JSON.parse("" + res);
         if (response.type == 1) {
-         console.log(response)
          if (response.data.length > 0) {
           let totalPage = response.data.pop();
           this.listFinancial = response.data;
@@ -132,7 +130,6 @@ export class FinancialComponent implements OnInit, OnDestroy {
           this.listFinancial = [];
           this.dataSource.data =[];
         }
-          console.log(this.listFinancial)
         }
       }, err => {
         this.showErr(CommonMessage.defaultErrMess);
@@ -316,7 +313,6 @@ export class FinancialComponent implements OnInit, OnDestroy {
       date: this.formatDate() + '-01',
       roomID: obj.room_id
     }
-    console.log(data)
     this.addLoading();
     this.service.getOneFinancial(data).subscribe(
       res => {
@@ -325,14 +321,11 @@ export class FinancialComponent implements OnInit, OnDestroy {
           let response = JSON.parse("" + res);
           if (response.type == 1) {
             let data = response.data;
-            console.log(data)
             this.createExtrafee(data, obj);
           }
         } catch (error) {
-          console.log(error)
         }
       }, err => {
-        console.log(err);
       })
 
   }

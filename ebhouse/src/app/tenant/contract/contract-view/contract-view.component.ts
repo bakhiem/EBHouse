@@ -87,7 +87,6 @@ export class ContractViewComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.service.currentContract.subscribe(contract => {
       this.currentContract = contract;
-      console.log(this.currentContract)
     });
     if (this.currentContract == null) {
       this.router.navigate(['/tenant/contract']);

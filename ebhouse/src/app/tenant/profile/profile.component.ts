@@ -86,14 +86,12 @@ export class TenantProfileComponent implements OnInit {
     this.toastr.error(mess, 'Lỗi !');
   }
   getProfile() {
-    console.log(this.tenant);
     this.addLoading();
     this.service.getProfile().subscribe(
       res => {
         let response = JSON.parse('' + res);
         if (response.type == 1) {
           this.tenant = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
-          console.log(this.tenant);
           // let arr = null;
           // if (this.tenant.user.address != ' ') {
           //   arr = this.tenant.user.address.split('-');
@@ -310,8 +308,6 @@ export class TenantProfileComponent implements OnInit {
     } else {
       this.tenant.imgArnBack = '';
     }
-    console.log(address);
-    console.log(this.tenant.user.address);
     return check;
   }
 
@@ -404,7 +400,6 @@ export class TenantProfileComponent implements OnInit {
                     this.removeLoading();
                     let response = JSON.parse('' + res);
                     if (response.type == 1) {
-                      console.log(response)
                       let token = response.data;
                       this.authenticationService.changeToken(token);
                       this.showSuccess(response.message);

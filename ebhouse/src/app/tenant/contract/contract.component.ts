@@ -98,7 +98,6 @@ export class ContractComponent implements OnInit, OnDestroy {
     this.service.getContract(page).subscribe(
       res => {
         let response = JSON.parse("" + res);
-        console.log(response)
         if (response.type == 1) {
           try {
 
@@ -115,7 +114,6 @@ export class ContractComponent implements OnInit, OnDestroy {
             }
 
           } catch (error) {
-            console.log(response)
             this.errRequestHandle(error);
           }
         }
@@ -169,7 +167,6 @@ export class ContractComponent implements OnInit, OnDestroy {
 
     });
     this.dataSource.data = this.listContractFormat;
-    console.log(this.listContract)
   }
   calPeriod(startMonth, endMonth) {
     let monthBegin = startMonth.split('-');

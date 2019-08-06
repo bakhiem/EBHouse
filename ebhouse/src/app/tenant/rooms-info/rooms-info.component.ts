@@ -86,7 +86,6 @@ export class RoomsInfoComponent implements OnInit,OnDestroy {
     this.service.getEquipment().subscribe(res => {
       this.removeLoading();
       let response = JSON.parse("" + res);
-      console.log(response)
       
       if (response.type == 1) {
         this.dataEquipment = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
@@ -149,7 +148,6 @@ export class RoomsInfoComponent implements OnInit,OnDestroy {
     else {
       this.isSelectAllStatus = 0;
     }
-    console.log(data)
     this.addLoading();
     this.service.getRoomsInfo(data).subscribe(
       res => {
@@ -166,7 +164,6 @@ export class RoomsInfoComponent implements OnInit,OnDestroy {
         else{
           this.listRooms = [];
         }
-          console.log(this.listRooms)
         }
       }, err => {
         this.showErr(CommonMessage.defaultErrMess);
