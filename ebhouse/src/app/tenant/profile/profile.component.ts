@@ -280,7 +280,7 @@ export class TenantProfileComponent implements OnInit {
       '-' +
       this.profileFormGroup.value.province.name;
     if (this.tenant.user.name != this.profileFormGroup.value.name) {
-      this.tenant.user.name = this.profileFormGroup.value.name.trim().replace(/"/g, "\\\"")
+      this.tenant.user.name = this.profileFormGroup.value.name.trim().replace(/"/g, "")
       check = true;
     }
     if (this.tenant.user.sex != this.profileFormGroup.value.sex) {

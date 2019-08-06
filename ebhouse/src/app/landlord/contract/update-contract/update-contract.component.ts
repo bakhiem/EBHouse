@@ -732,7 +732,7 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
 
     let tenant = {
       user: {
-        name: this.createTenantFormGroup.value.name,
+        name: this.createTenantFormGroup.value.name.replace(/"/g, ""),
         phone: this.createTenantFormGroup.get('phone').value,
         address: fullAddress,
         dateOfBirth: this.createTenantFormGroup.get('dateOfBirth').value ? this.formatDate(this.createTenantFormGroup.get('dateOfBirth').value) : null,

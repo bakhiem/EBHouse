@@ -255,7 +255,7 @@ export class LandlordProfileComponent implements OnInit {
       '-' +
       this.profileFormGroup.value.province.name;
     if (this.landlord.user.name != this.profileFormGroup.value.name) {
-      this.landlord.user.name = this.profileFormGroup.value.name.trim().replace(/"/g, "\\\"")
+      this.landlord.user.name = this.profileFormGroup.value.name.trim().replace(/"/g, "")
       this.check = 1;
     }
     if (this.landlord.user.sex != this.profileFormGroup.value.sex) {

@@ -833,7 +833,7 @@ export class CreateContractComponent implements OnInit, OnDestroy {
     
     let tenant = {
       user : {
-        name  : this.createTenantFormGroup.value.name.trim().replace(/"/g, "\\\""),
+        name  : this.createTenantFormGroup.value.name.trim().replace(/"/g, ""),
         phone : this.createTenantFormGroup.get('phone').value,
         address : fullAddress,
         dateOfBirth : this.createTenantFormGroup.get('dateOfBirth').value ?  this.formatDate(this.createTenantFormGroup.get('dateOfBirth').value) : null,

@@ -309,7 +309,7 @@ export class ContractComponent implements OnInit, OnDestroy {
               id: this.listContract[obj].id,
               roomPrice: this.listContract[obj].roomPrice,
               deposit: this.listContract[obj].deposit,
-              description: this.listContract[obj].description,
+              description: this.listContract[obj].description.trim().replace(/"/g, "\\\""),
               startDate: this.listContract[obj].startDate,
               contractImg : this.listContract[obj].contractImg,
               endDate: this.listContract[obj].endDate,
