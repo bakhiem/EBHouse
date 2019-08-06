@@ -18,6 +18,7 @@ import { User } from '../../user/models/user';
 import { Landlord } from '../../models/landlord';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { CustomDateAdapter } from '../contract/customDate';
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -70,7 +71,7 @@ export class LandlordProfileComponent implements OnInit {
         this.removeLoading();
         let response = JSON.parse('' + res);
         if (response.type == 1) {
-          this.landlord = JSON.parse(response.data);
+          this.landlord = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
           this.getAddress();
           this.profileFormGroup
             .get('name')
@@ -246,7 +247,7 @@ export class LandlordProfileComponent implements OnInit {
   checkChangeData() {
     let dateOfBirth = this.formatDate(this.profileFormGroup.get('date').value);
     let address =
-      this.profileFormGroup.value.address.replace(/-/g, ' ') +
+      this.profileFormGroup.value.address.trim().replace(/-/g, ' ').replace(/"/g, "\\\"") +
       '-' +
       this.profileFormGroup.value.wards.name +
       '-' +
@@ -254,7 +255,7 @@ export class LandlordProfileComponent implements OnInit {
       '-' +
       this.profileFormGroup.value.province.name;
     if (this.landlord.user.name != this.profileFormGroup.value.name) {
-      this.landlord.user.name = this.profileFormGroup.value.name
+      this.landlord.user.name = this.profileFormGroup.value.name.trim().replace(/"/g, "\\\"")
       this.check = 1;
     }
     if (this.landlord.user.sex != this.profileFormGroup.value.sex) {
@@ -277,9 +278,9 @@ export class LandlordProfileComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        let new_pass = $('#new-pass').val().toString().trim();
-        let old_pass = $('#old-pass').val().toString().trim();
-        let re_new_pass = $('#re-new-pass').val().toString().trim();
+        let new_pass = $('#new-pass').val().toString().trim().replace(/"/g, "\\\"");
+        let old_pass = $('#old-pass').val().toString().trim().replace(/"/g, "\\\"");
+        let re_new_pass = $('#re-new-pass').val().toString().trim().replace(/"/g, "\\\"");
         if (new_pass && old_pass && re_new_pass) {
           if (new_pass.length >= 8 && old_pass.length >= 8 && re_new_pass.length >= 8) {
             if (new_pass == old_pass) {

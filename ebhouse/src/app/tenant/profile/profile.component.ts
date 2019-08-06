@@ -13,7 +13,9 @@ import { TenantServiceService } from '../service/tenant-service.service';
 import { AuthenticationService } from '../../user/service/authentication.service';
 import { User } from '../../user/models/user';
 import { Tenant } from '../../models/tenant';
+import { CommmonFunction } from '../../shared/common-function';
 //image
+
 import { Options, ImageResult } from "ngx-image2dataurl";
 import { RotateImageFileProcessor } from '../../shared/image-rotate';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -90,7 +92,7 @@ export class TenantProfileComponent implements OnInit {
       res => {
         let response = JSON.parse('' + res);
         if (response.type == 1) {
-          this.tenant = JSON.parse(response.data);
+          this.tenant = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
           console.log(this.tenant);
           // let arr = null;
           // if (this.tenant.user.address != ' ') {
@@ -272,7 +274,7 @@ export class TenantProfileComponent implements OnInit {
     let check = false;
     let dateOfBirth = this.formatDate(this.profileFormGroup.get('date').value);
     let address =
-      this.profileFormGroup.value.address.replace(/-/g, ' ') +
+      this.profileFormGroup.value.address.replace(/-/g, ' ').trim().replace(/"/g, "\\\"") +
       '-' +
       this.profileFormGroup.value.wards.name +
       '-' +
@@ -280,7 +282,7 @@ export class TenantProfileComponent implements OnInit {
       '-' +
       this.profileFormGroup.value.province.name;
     if (this.tenant.user.name != this.profileFormGroup.value.name) {
-      this.tenant.user.name = this.profileFormGroup.value.name
+      this.tenant.user.name = this.profileFormGroup.value.name.trim().replace(/"/g, "\\\"")
       check = true;
     }
     if (this.tenant.user.sex != this.profileFormGroup.value.sex) {
@@ -430,19 +432,13 @@ export class TenantProfileComponent implements OnInit {
         }
       }
     });
-
-
-
   }
   changePassword() {
     $('#new-pass').val('');
     $('#re-new-pass').val('');
     $('#old-pass').val('');
     $('#modal3').modal('show');
-
   }
-
-
   addLoading() {
     $('.customLoading').addClass('preloader');
     $('.customLoader').addClass('loader');

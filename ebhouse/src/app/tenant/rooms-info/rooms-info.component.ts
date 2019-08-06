@@ -11,6 +11,8 @@ import { CustomDateAdapterMonth } from '../financial/customDate';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { SharedServiceService } from '../../service/shared-service.service';
+import { CommmonFunction } from '../../shared/common-function';
+
 
 @Component({
   selector: 'app-rooms-info',
@@ -29,7 +31,7 @@ export class RoomsInfoComponent implements OnInit,OnDestroy {
   private subscription: ISubscription;
   currentBh: any;
   listRooms: any[];
-  roomStatus: number = 1;
+  roomStatus: number = 3;
   dataSource = new MatTableDataSource();
   constructor(private service: TenantServiceService,
     private shareService: SharedServiceService,
@@ -87,7 +89,7 @@ export class RoomsInfoComponent implements OnInit,OnDestroy {
       console.log(response)
       
       if (response.type == 1) {
-        this.dataEquipment = JSON.parse(response.data);
+        this.dataEquipment = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
         this.getRoomsInfo();
       }
       else{

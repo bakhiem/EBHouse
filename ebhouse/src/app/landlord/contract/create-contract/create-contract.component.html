@@ -389,10 +389,10 @@
                         <div class="col-sm-4">
                             <label for="example-number-input" class="col-form-label">Ngày sinh</label>
                             <mat-form-field>
-                                <input matInput [matDatepicker]="dp" [max]='minDate' placeholder="Ngày sinh"
+                                <input matInput [matDatepicker]="dp" [max]='minDate' placeholder="Chọn ngày"
                                     formControlName="dateOfBirth">
                                 <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
-                                <mat-datepicker #dp></mat-datepicker>
+                                <mat-datepicker #dp disabled='false'></mat-datepicker>
                             </mat-form-field>
                         </div>
 

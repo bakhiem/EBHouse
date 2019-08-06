@@ -513,7 +513,7 @@ export class FinancialComponent implements OnInit, OnDestroy {
         let data = {
           id: this.createEFFormGroup.get('id').value,
           room: { id: this.createEFFormGroup.get('room').value },
-          description: this.createEFFormGroup.value.description ? this.createEFFormGroup.value.description.trim() : '',
+          description: this.createEFFormGroup.value.description ? this.createEFFormGroup.value.description.trim().replace(/"/g, "\\\"") : '',
           total: this.convertToNumberPrice(this.createEFFormGroup.get('money').value),
           payment: this.convertToNumberPrice(this.createEFFormGroup.get('payment').value),
           paymentDate: paymentDate,

@@ -130,8 +130,9 @@ export class BhInfoComponent implements OnInit {
     }
     let address = this.createbhFormGroup.value.address.replace(/-/g, ' ');
     console.log(address)
-    let fullAddress = address.trim() + "-" + this.createbhFormGroup.value.wards.name + "-" + this.createbhFormGroup.value.distric.name + "-" + this.createbhFormGroup.value.province.name;
+    let fullAddress = address.trim().replace(/"/g, "\\\"") + "-" + this.createbhFormGroup.value.wards.name + "-" + this.createbhFormGroup.value.distric.name + "-" + this.createbhFormGroup.value.province.name;
     if (this.isEdit == 1) {
+      console.log(this.createbhFormGroup.value.description.replace(/"/g, "\\\""))
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
         width: '450px',
         data: "Bạn chắc chắn muốn lưu thay đổi không ?"
@@ -140,12 +141,14 @@ export class BhInfoComponent implements OnInit {
         if (result) {
           let bh: BoardingHouse = {
             id: this.createbhFormGroup.value.id,
-            name: this.createbhFormGroup.value.name,
+            name: this.createbhFormGroup.value.name.trim().replace(/"/g, "\\\""),
             address: fullAddress,
             numberOfRoom: this.createbhFormGroup.value.numberOfRoom,
-            description: this.createbhFormGroup.value.description ? this.createbhFormGroup.value.description : ''
+            description: this.createbhFormGroup.value.description ?  this.createbhFormGroup.value.description.trim().replace(/"/g, "\\\"") : ''
           }
-          if (bh.address == this.currentBh.address && bh.name == this.currentBh.name && bh.numberOfRoom == this.currentBh.numberOfRoom && bh.description == this.currentBh.description) {
+          console.log(bh)
+          console.log(this.currentBh)
+          if (bh.address == this.currentBh.address && this.createbhFormGroup.value.name == this.currentBh.name && bh.numberOfRoom == this.currentBh.numberOfRoom && this.createbhFormGroup.value.description == this.currentBh.description) {
             this.showErr(CommonMessage.notChangeMess);
           }
           else {
@@ -163,6 +166,7 @@ export class BhInfoComponent implements OnInit {
       })
     }
     else {
+    
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
         width: '450px',
         data: "Bạn chắc chắn muốn tạo nhà trọ không ?"
@@ -170,10 +174,10 @@ export class BhInfoComponent implements OnInit {
       dialogRef.afterClosed().subscribe(result => {
         if(result){
         let bh: BoardingHouse = {
-          name: this.createbhFormGroup.value.name.trim(),
+          name: this.createbhFormGroup.value.name.trim().replace(/"/g, "\\\""),
           numberOfRoom: this.createbhFormGroup.value.numberOfRoom,
           address: fullAddress,
-          description: this.createbhFormGroup.value.description ? this.createbhFormGroup.value.description : ''
+          description: this.createbhFormGroup.value.description ? this.createbhFormGroup.value.description.trim().replace(/"/g, "\\\"") : ''
         }
         this.addLoading();
         this.service.createBh(bh).subscribe(

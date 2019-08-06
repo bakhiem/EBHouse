@@ -480,7 +480,7 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
   }
   handleAvailable(name) {
     if (this.haveContractInMonth == false) {
-      $('#haveTenantMessage').html('Phòng ' + name + ' không tồn tại khách thuê trong tháng' + this.month.value.getMonth + 1);
+      $('#haveTenantMessage').html('Phòng ' + name + ' không tồn tại khách thuê trong tháng ' + (Number(this.month.value.getMonth()) + 1));
       $('#landlord').prop('checked', true);
       $("#landlord").attr('disabled', 'true');
       $("#tenant").attr('disabled', 'true');
@@ -520,7 +520,7 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
             extraFee: {
               id: this.createEFFormGroup.value.id,
               room: { id: this.roomControlCreate.value.id },
-              description: this.createEFFormGroup.value.description.trim(),
+              description: this.createEFFormGroup.value.description.trim().replace(/"/g, "\\\""),
               amount: amount,
               cDate: this.createEFFormGroup.value.cDate
             },
@@ -533,7 +533,7 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
             extraFee: {
               id: 0,
               room: { id: this.roomControlCreate.value.id },
-              description: this.createEFFormGroup.value.description.trim(),
+              description: this.createEFFormGroup.value.description.trim().replace(/"/g, "\\\""),
               amount: amount
             },
             boardingHouseID: this.currentBh.id,

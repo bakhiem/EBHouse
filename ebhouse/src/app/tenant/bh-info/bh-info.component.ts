@@ -15,7 +15,7 @@ import { Calculating, Utility } from '../../models/utility';
 import { ToastrService } from 'ngx-toastr';
 import * as $ from 'jquery';
 import { ISubscription } from "rxjs/Subscription";
-
+import { CommmonFunction } from '../../shared/common-function';
 import { SharedServiceService } from '../../service/shared-service.service';
 @Component({
   selector: 'app-bh-info',
@@ -91,7 +91,7 @@ export class BhInfoComponent implements OnInit, OnDestroy {
         this.removeLoading();
         let response = JSON.parse("" + res);
         if (response.type == 1) {
-          let resData = JSON.parse(response.data);
+          let resData = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
           console.log(resData)
           this.list = resData;
           //if have list utility

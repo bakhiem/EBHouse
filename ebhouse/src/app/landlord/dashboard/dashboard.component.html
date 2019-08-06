@@ -38,8 +38,7 @@
         </mat-form-field>
         <div class="chart">
           <canvas baseChart width="100%" height="120%" [data]="pieChartData" [labels]="pieChartLabels"
-            [chartType]="pieChartType" [options]="pieChartOptions"  [colors]="pieChartColors"
-            [legend]="pieChartLegend">
+            [chartType]="pieChartType" [options]="pieChartOptions" [colors]="pieChartColors" [legend]="pieChartLegend">
           </canvas>
         </div>
       </div>
@@ -49,11 +48,13 @@
 
 
 <div class="row mt-3">
-  <div class="col-sm-6 col-12">
+  <div class="col-sm-6 col-12" style="
+  height: 700px;
+  overflow-y: scroll;">
     <div class="card">
       <div class="card-header">Danh sách phòng sắp hết hạn hợp đồng</div>
       <div class="card-body no-padding-top">
-        <div class="row"> 
+        <div class="row">
           <select class="custome-select border-0 pr-3 mb-2 col-6 col-sm-4" [(ngModel)]="currentBhContract"
             (change)="onChangeBhContract()">
             <option *ngFor="let bh of listBh" [ngValue]="bh">
@@ -61,29 +62,29 @@
             </option>
           </select>
           <mat-form-field class='col-6 col-sm-4 month-contract'>
-              <input matInput [matDatepicker]="picker3" [formControl]="monthContract">
-              <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
-              <mat-datepicker #picker3 (monthSelected)="chooseMonthContract($event,picker3)" startView="multi-year"
-                disabled="false">
-              </mat-datepicker>
-            </mat-form-field>
+            <input matInput [matDatepicker]="picker3" [formControl]="monthContract">
+            <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+            <mat-datepicker #picker3 (monthSelected)="chooseMonthContract($event,picker3)" startView="multi-year"
+              disabled="false">
+            </mat-datepicker>
+          </mat-form-field>
           <table mat-table [dataSource]="listContract" class="mat-elevation-z8">
-              <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef>Tên phòng</th>
-                <td mat-cell *matCellDef="let element"> {{element.roomName}} </td>
-              </ng-container>
-              <ng-container matColumnDef="startDate">
-                <th mat-header-cell *matHeaderCellDef>Ngày bắt đầu</th>
-                <td mat-cell *matCellDef="let element"> {{element.start_date | date:"dd/MM/yyyy" }} </td>
-              </ng-container>
-              <ng-container matColumnDef="endDate">
-                <th mat-header-cell *matHeaderCellDef>Ngày hết hạn</th>
-                <td mat-cell *matCellDef="let element"> {{element.end_date | date:"dd/MM/yyyy" }}</td>
-              </ng-container>
-    
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Tên phòng</th>
+              <td mat-cell *matCellDef="let element"> {{element.roomName}} </td>
+            </ng-container>
+            <ng-container matColumnDef="startDate">
+              <th mat-header-cell *matHeaderCellDef>Ngày bắt đầu</th>
+              <td mat-cell *matCellDef="let element"> {{element.start_date | date:"dd/MM/yyyy" }} </td>
+            </ng-container>
+            <ng-container matColumnDef="endDate">
+              <th mat-header-cell *matHeaderCellDef>Ngày hết hạn</th>
+              <td mat-cell *matCellDef="let element"> {{element.end_date | date:"dd/MM/yyyy" }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
 
         </div>
 
@@ -91,5 +92,5 @@
       </div>
     </div>
   </div>
- 
+
 </div>

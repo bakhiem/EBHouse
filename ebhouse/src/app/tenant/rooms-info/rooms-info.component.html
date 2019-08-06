@@ -17,9 +17,9 @@
   <div class="form-group col-sm-5 col-md-3">
     <label class="col-form-label">Trạng thái phòng</label>
     <select class="custom-select mt-2" [(ngModel)]="roomStatus" (change)='getRoomsInfo()'>
-      <option value="1" selected="selected">Phòng trống</option>
+      <option value="1">Phòng trống</option>
       <option value="2">Phòng đã có người</option>
-      <option value="3">Tất cả</option>
+      <option value="3"  selected="selected" >Tất cả</option>
     </select>
   </div>
 </div>

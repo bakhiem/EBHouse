@@ -270,7 +270,7 @@ export class BhExtrafeeComponent implements OnInit, OnDestroy {
             extraFee: {
               id: this.createEFFormGroup.value.id,
               room: { id: -1 },
-              description: this.createEFFormGroup.value.description.trim(),
+              description: this.createEFFormGroup.value.description.trim().replace(/"/g, "\\\""),
               amount: amount,
               cDate: this.createEFFormGroup.value.cDate
             },
@@ -283,7 +283,7 @@ export class BhExtrafeeComponent implements OnInit, OnDestroy {
             extraFee: {
               id: 0,
               room: { id: -1 },
-              description: this.createEFFormGroup.value.description.trim(),
+              description: this.createEFFormGroup.value.description.trim().replace(/"/g, "\\\""),
               amount: amount
             },
             isLandlord: true,
