@@ -585,7 +585,7 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
         let element = this.listExtrafee[index];
         let data = {
           amount: element.amount,
-          description: element.description,
+          description: element.description.trim().replace(/"/g, "\\\""),
           cDate: element.cDate,
           id: element.id,
           status: element.status,
