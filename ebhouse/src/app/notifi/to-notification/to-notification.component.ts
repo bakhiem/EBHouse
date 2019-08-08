@@ -86,11 +86,9 @@ export class ToNotificationComponent implements OnInit, OnDestroy {
     this.addLoading();
     this.service.getAllToNotification({ page: currentPage-1, status : status}).subscribe(
       res => {
-        console.log(res)
         let response = JSON.parse("" + res);
         if (response.type == 1) {
           if(response.data != null){
-            console.log(response.data)
             let data = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
             switch(status){
               case 0:
