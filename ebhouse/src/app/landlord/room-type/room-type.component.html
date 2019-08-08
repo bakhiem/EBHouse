@@ -17,28 +17,28 @@
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>Tên loại phòng</th>
-            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            <td mat-cell *matCellDef="let element" (click)="editBh(element)"> {{element.name}} </td>
         </ng-container>
         <ng-container matColumnDef="area">
             <th mat-header-cell *matHeaderCellDef>Diện tích(m²)</th>
-            <td mat-cell *matCellDef="let element"> {{element.area}} </td>
+            <td mat-cell *matCellDef="let element" (click)="editBh(element)"> {{element.area}} </td>
         </ng-container>
         <ng-container matColumnDef="capacity">
             <th mat-header-cell *matHeaderCellDef>Số người tối đa</th>
-            <td mat-cell *matCellDef="let element"> {{element.capacity}} </td>
+            <td mat-cell *matCellDef="let element" (click)="editBh(element)"> {{element.capacity}} </td>
         </ng-container>
         <ng-container matColumnDef="price">
             <th mat-header-cell *matHeaderCellDef>Giá</th>
-            <td mat-cell *matCellDef="let element"> {{element.price | currency}} </td>
+            <td mat-cell *matCellDef="let element" (click)="editBh(element)"> {{element.price | currency}} đ</td>
         </ng-container>
         <ng-container matColumnDef="description">
             <th mat-header-cell *matHeaderCellDef>Mô tả</th>
-            <td mat-cell *matCellDef="let element"> {{element.description | maxLength : 5}} </td>
+            <td mat-cell *matCellDef="let element" (click)="editBh(element)"> {{element.description | maxLength : 15}} </td>
         </ng-container>
         <ng-container matColumnDef="equipment">
             <th mat-header-cell *matHeaderCellDef>Tiện ích</th>
             <td mat-cell *matCellDef="let element">
-                <button type="button" class="btn btn-outline-secondary" ngbPopover="{{element.equipments}}"
+                <button type="button" class="btn btn-secondary" ngbPopover="{{element.equipments}}"
                     popoverClass="my-custom-class">
                     Chi tiết
                 </button>
@@ -54,7 +54,7 @@
             </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" title="Bấm để xem chi tiết"></tr>
     </table>
 
 </div>

@@ -87,7 +87,10 @@ table{
   margin-left: -0.5rem;
 }
 } 
-
+table tr.mat-row:hover{
+  cursor: pointer;
+  background: #ececec;
+}
 #modal2 img{
   margin: 0 auto;
   max-width: 550px;
@@ -96,5 +99,5 @@ table{
 }
 
 #modal2 input:disabled{
-  background: #fff;
+  cursor: auto;
 }

@@ -23,39 +23,45 @@
               <fieldset disabled="">
                 <div class="row">
                   <div class="form-group col-md-5 col-12">
-                    <label for="bh-name">Tên nhà trọ</label>
-                    <input type="text" id="bh-name" class="form-control">
+                    <label for="bh-name">Tên nhà trọ:</label>
+                    <p id="bh-name" class="ml-2"></p>
+                    <!-- <input type="text" id="bh-name" class="form-control"> -->
                   </div>
                   <div class="col-md-2"></div>
                   <div class="form-group col-md-5 col-12">
-                    <label for="bh-address">Địa chỉ nhà trọ</label>
-                    <input type="text" id="bh-address" class="form-control">
+                    <label for="bh-address">Địa chỉ nhà trọ:</label>
+                    <p id="bh-address" class="ml-2"></p>
+                    <!-- <input type="text" id="" class="form-control"> -->
                   </div>
                 </div>
 
                 <div class="row">
                   <div class="form-group col-md-5 col-12">
-                    <label for="bh-landlord-name">Tên chủ trọ</label>
-                    <input type="text" id="bh-landlord-name" class="form-control">
+                    <label for="bh-landlord-name">Tên chủ trọ:</label>
+                    <p id="bh-landlord-name" class="ml-2"></p>
+                    <!-- <input type="text" id="bh-landlord-name" class="form-control"> -->
                   </div>
                   <div class="col-md-2"></div>
                   <div class="form-group col-md-5 col-12">
-                    <label for="bh-landlord-phone">Số điện thoại chủ trọ</label>
-                    <input type="text" id="bh-landlord-phone" class="form-control">
+                    <label for="bh-landlord-phone">Số điện thoại chủ trọ:</label>
+                    <p id="bh-landlord-phone" class="ml-2"></p>
+                    <!-- <input type="text" id="bh-landlord-phone" class="form-control"> -->
                   </div>
                 </div>
 
                 <div class="row">
                   <div class="form-group col-md-6 col-12">
-                    <label for="bh-landlord-address">Địa chỉ chủ trọ</label>
-                    <input type="text" id="bh-landlord-address" class="form-control">
+                    <label for="bh-landlord-address">Địa chỉ chủ trọ:</label>
+                    <!-- <input type="text" id="bh-landlord-address" class="form-control"> -->
+                    <p id='bh-landlord-address' class="ml-2"></p>
                   </div>
                 </div>
 
                 <div class="row">
                   <div class="form-group col-md-8 col-12">
-                    <label for="bh-description">Mô tả nhà trọ</label>
-                    <textarea class="form-control" id="bh-description" rows="3"></textarea>
+                    <label for="bh-description">Mô tả nhà trọ:</label>
+                    <p id='bh-description' class="ml-2"></p>
+                    <!-- <textarea class="form-control" id="bh-description" rows="3"></textarea> -->
                   </div>
                 </div>
 
@@ -80,12 +86,9 @@
               <tbody>
                 <tr *ngFor="let utility of listUtility,let i = index">
                   <th scope="row">{{utility.name}}</th>
-                  <td><input type="text" class='form-control input-price' id="price-{{utility.id}}"></td>
-                  <td><select class="form-control" id='select-{{utility.id}}'>
-                      <option *ngFor="let calculating of utility.calculating" [value]='calculating.id'>
-                        {{calculating.name}}
-                      </option>
-                    </select>
+                  <td> <span id='price-{{utility.id}}'></span></td>
+                  <td>
+                    <span id='select-{{utility.id}}'></span>
                   </td>
                 </tr>
 

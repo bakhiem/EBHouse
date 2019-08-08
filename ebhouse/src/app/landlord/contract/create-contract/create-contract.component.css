@@ -18,7 +18,6 @@
     max-height: 90vh;
   }
 
-.modal-dialog{text-align:center;}
 #modal4 .modal-dialog{text-align:left;}
 
 .modal-content{display:inline-block;}

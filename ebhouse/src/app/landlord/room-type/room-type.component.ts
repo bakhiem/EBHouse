@@ -212,6 +212,11 @@ export class RoomTypeComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
+          if(this.createRtFormGroup.value.area == 0){
+            this.showErr('Diện tích phải lớn hơn 0');
+            return;
+          }
+          
           let sendToServer = {
             roomType: [{
               id: this.createRtFormGroup.value.id,
@@ -249,6 +254,10 @@ export class RoomTypeComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
+          if(this.createRtFormGroup.value.area == 0){
+            this.showErr('Diện tích phải lớn hơn 0');
+            return;
+          }
           let sendToServer = {
             roomType: [{
               name: this.createRtFormGroup.value.name.trim().replace(/"/g, "\\\""),

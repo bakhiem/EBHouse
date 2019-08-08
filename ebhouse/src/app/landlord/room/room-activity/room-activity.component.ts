@@ -51,10 +51,10 @@ export class RoomActivityComponent implements OnInit,OnDestroy {
 
   getDisplayedColumns(): string[] {
     if (this.isSelectAllStatus == 1) {
-      return [ 'room','roomType', 'price', 'numberTenant',  'listEquip','status', 'description'];
+      return [ 'room','roomType', 'price','area', 'numberTenant',  'listEquip','status', 'description'];
     }
     else {
-      return [ 'room','roomType', 'price', 'numberTenant', 'listEquip', 'description'];
+      return [ 'room','roomType', 'price','area', 'numberTenant', 'listEquip', 'description'];
     }
   }
   ngOnInit() {

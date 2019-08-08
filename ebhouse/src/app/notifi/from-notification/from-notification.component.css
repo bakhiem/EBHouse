@@ -27,3 +27,6 @@ table td{
     background: #fff;
     padding-top: 1.1rem;
   }
+  table tr.mat-row:hover{
+    background: #ececec;
+  }

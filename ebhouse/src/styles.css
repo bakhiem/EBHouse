@@ -34,3 +34,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     background-color: #fff;
     color : red;
   }
+
+  input:disabled.input-date{
+    cursor: pointer;
+    color: #757575;
+  }

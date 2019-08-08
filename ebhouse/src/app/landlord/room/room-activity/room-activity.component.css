@@ -13,7 +13,9 @@ table {
     margin-bottom: 0;
   }
   
-
+  table tr.mat-row:hover{
+    background: #ececec;
+  }
 .mat-column-select {
   overflow: initial;
 }

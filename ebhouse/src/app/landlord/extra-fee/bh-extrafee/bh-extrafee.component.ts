@@ -324,7 +324,7 @@ export class BhExtrafeeComponent implements OnInit, OnDestroy {
   deleteEF(index) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '450px',
-      data: "Bạn chắc chắn muốn xóa chi phí khác không?"
+      data: "Bạn chắc chắn muốn xóa chi phí phát sinh không?"
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {

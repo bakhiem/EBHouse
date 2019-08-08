@@ -134,21 +134,23 @@ export class ManageTenantComponent implements OnInit, OnDestroy {
     return [day, month, year].join('-');
   }
   resetModal(){
-    $('#tenant-detail-name').val('');
-    $('#tenant-phone').val('');
-    $('#tenant-address').val('');
-    $('#tenant-rooms').val('');
+    $('#tenant-detail-name').html('');
+    $('#tenant-phone').html('');
+    $('#tenant-address').html('');
+    $('#tenant-rooms').html('');
     $('#imgArnFront').attr('src','');
     $('#imgArnBack').attr('src','');
-    $('#tenant-date').val('');
+    $('#tenant-date').html('');
   }
   viewDetail(data) {
     this.resetModal();
-    $('#tenant-detail-name').val(data.name);
-    $('#tenant-phone').val(data.phone);
-    $('#tenant-address').val(data.address);
-    $('#tenant-rooms').val(data.listRoom);
-    $('#tenant-date').val(this.formatDateFull(data.date_of_birth));
+    $('#tenant-detail-name').html(data.name);
+    $('#tenant-phone').html(data.phone);
+    $('#tenant-address').html(data.address);
+    $('#tenant-rooms').html(data.listRoom);
+    if(data.date_of_birth && data.date_of_birth.toLowerCase() != 'null'){
+      $('#tenant-date').html(this.formatDateFull(data.date_of_birth));
+    }
     if (data.imgArnFront) {
       $('#imgArnFront').attr('src', data.imgArnFront.trim() + "?date=" + new Date().getTime());
     }

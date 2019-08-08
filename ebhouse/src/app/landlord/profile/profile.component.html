@@ -35,9 +35,9 @@
                         <div class="form-group row">
                             <div class="col-sm-6">
                                 <label for="example-date-input" class="col-form-label required input-group">Ngày sinh</label>
-                                <mat-form-field>
+                                <mat-form-field (click)="dp.open()">
                                         <input matInput [matDatepicker]="dp" [max]='maxDate' placeholder="Chọn ngày sinh"
-                                            formControlName="date">
+                                            formControlName="date" class='input-date' >
                                         <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
                                         <mat-datepicker #dp disabled="false"></mat-datepicker>
                                     </mat-form-field>

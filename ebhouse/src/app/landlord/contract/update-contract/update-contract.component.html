@@ -110,9 +110,9 @@
                             <div class="col-sm-4">
                                 <label for="example-text-input" class="col-form-label required">Thời gian bắt đầu</label>
                                 <div class="input-group">
-                                    <mat-form-field>
+                                    <mat-form-field (click)="picker.open()">
                                         <input matInput [min]="minDate" formControlName="beginDate"
-                                            placeholder="Bấm để chọn" [matDatepicker]="picker">
+                                            placeholder="Bấm để chọn" [matDatepicker]="picker" class="input-date">
                                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                         <mat-datepicker #picker (monthSelected)="monthStartSelected($event,picker)"
                                             startView="multi-year" [disabled]="false || isDisable"></mat-datepicker>
@@ -126,9 +126,9 @@
                             <div class="col-sm-4">
                                 <label for="example-text-input" class="col-form-label required">Thời gian kết thúc</label>
                                 <div class="input-group">
-                                    <mat-form-field>
+                                    <mat-form-field (click)="picker2.open()">
                                         <input matInput [min]="minDate" [matDatepicker]="picker2"
-                                            placeholder="Bấm để chọn" formControlName="endDate">
+                                            placeholder="Bấm để chọn" formControlName="endDate" class="input-date">
                                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                                         <mat-datepicker #picker2 (monthSelected)="monthEndSelected($event,picker2)"
                                             startView="multi-year" [disabled]="false || isDisable"></mat-datepicker>
@@ -243,43 +243,48 @@
 
 <!-- modal view profile tenant -->
 
-<div class="modal fade bd-example-modal-lg text-center" id="modal2">
+<div class="modal fade bd-example-modal-lg" id="modal2">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-body">
 
                 <div class="form-group row">
-                    <label for="tenant-name" class="col-sm-2 col-form-label">Họ tên</label>
+                    <label for="tenant-name" class="col-sm-2 ">Họ tên</label>
                     <div class="col-sm-10">
-                        <input class="form-control" type="text" id="tenant-name" disabled>
+                        <p id='tenant-name'></p>
+                        <!-- <input class="form-control" type="text" id="tenant-name" disabled> -->
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="tenant-phone" class="col-sm-2 col-form-label">Số điện thoại</label>
+                    <label for="tenant-phone" class="col-sm-2 ">Số điện thoại</label>
                     <div class="col-sm-10">
-                        <input class="form-control" type="text" id="tenant-phone" disabled>
+                            <p id='tenant-phone'></p>
+                        <!-- <input class="form-control" type="text" id="tenant-phone" disabled> -->
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="tenant-address" class="col-sm-2 col-form-label">Giới tính</label>
+                    <label for="tenant-address" class="col-sm-2 ">Giới tính</label>
                     <div class="col-sm-10">
-                        <input class="form-control" type="text" id="tenant-sex" disabled>
+                            <p id='tenant-sex'></p>
+                        <!-- <input class="form-control" type="text" id="tenant-sex" disabled> -->
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="tenant-address" class="col-sm-2 col-form-label">Ngày sinh</label>
+                    <label for="tenant-address" class="col-sm-2 ">Ngày sinh</label>
                     <div class="col-sm-10">
-                        <input class="form-control" type="text" id="tenant-date" disabled>
+                            <p id='tenant-date'></p>
+                        <!-- <input class="form-control" type="text" id="tenant-date" disabled> -->
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="tenant-address" class="col-sm-2 col-form-label">Địa chỉ</label>
+                    <label for="tenant-address" class="col-sm-2 ">Địa chỉ</label>
                     <div class="col-sm-10">
-                        <input class="form-control" type="text" id="tenant-address" disabled>
+                            <p id='tenant-address'></p>
+                        <!-- <input class="form-control" type="text" id="tenant-address" disabled> -->
                     </div>
                 </div>
                 <div class="form-group row mt-2">
-                    <label class="col-sm-2 col-form-label">Ảnh chứng minh thư</label>
+                    <label class="col-sm-2 ">Ảnh chứng minh thư</label>
                   </div>
           
                 <img src="" alt="" id='imgArnFront'>

@@ -86,8 +86,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
               this.removeLoading();
               let response = JSON.parse('' + res);
               if (response.type == 1) {
-
-                this.showSuccess(response.mess);
+                this.showSuccess('Thay đổi mật khẩu thành công');
                 this.data.changeUser(user);
                 this.router.navigate(['/login']);
               }

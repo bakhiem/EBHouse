@@ -3,11 +3,11 @@
 </div>
 <div class="extrafee">
   <div class="row input-date">
-    <div class="col-sm-5 col-md-4">
+    <div class="col-sm-5 col-md-4 ml-3">
       <label for="example-text-input" class="col-form-label">Tháng</label>
       <div class="input-group">
-      <mat-form-field>
-        <input matInput [max]='maxDate' [matDatepicker]="picker2" [formControl]="month">
+      <mat-form-field (click)="picker2.open()">
+        <input matInput [max]='maxDate' [matDatepicker]="picker2" [formControl]="month" class='input-date'>
         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
         <mat-datepicker #picker2 (monthSelected)="chooseMonth($event,picker2)" startView="multi-year" disabled="false">
         </mat-datepicker>
@@ -43,13 +43,13 @@
     <ng-container matColumnDef="customColumn">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let row">
-          <ul class="d-flex justify-content-center">
-              <li><a class="text-secondary" (click)="onClickPayment(row)"> <span class="ti-eye"></span></a></li>
-          </ul>
+          <button type="button" class="btn btn-secondary float-right"  (click)="onClickPayment(row)">
+          Chi tiết
+      </button>
       </td>
   </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row (click)='onClickPayment(row)'  *matRowDef="let row; columns: displayedColumns;">
+    <tr mat-row (click)='onClickPayment(row)'  *matRowDef="let row; columns: displayedColumns;" title="Bấm để xem chi tiết">
 
     </tr>
   </table>

@@ -39,4 +39,7 @@ table {
   background: #fff;
   padding-top: 1.1rem;
 }
-
+table tr.mat-row:hover{
+  cursor: pointer;
+  background: #ececec;
+}

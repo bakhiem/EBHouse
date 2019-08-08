@@ -35,7 +35,7 @@
       </div> -->
           <div id="recaptcha-container" data-callback="imNotARobot"></div>
           <div *ngIf="windowRef.recaptchaVerifier ">
-            <button class="btn btn-outline-secondary mb-3 mt-3 btn-send" (click)="sendLoginCode()">Gửi mã OTP về điện
+            <button class="btn btn-secondary mb-3 mt-3 btn-send" (click)="sendLoginCode()">Gửi mã OTP về điện
               thoại</button>
           </div>
           <div class='otpInput'>
@@ -43,7 +43,7 @@
               <label for="exampleInputEmail1">Nhập mã OTP</label>
               <input type="text" class="form-control mt-3" formControlName="otpcode">
             </div>
-            <button class="btn btn-outline-secondary mb-3" (click)="verifyLoginCode()">Xác nhận</button>
+            <button class="btn btn-secondary mb-3" (click)="verifyLoginCode()">Xác nhận</button>
           </div>
         </div>
         <div class="form-footer text-center mt-5">

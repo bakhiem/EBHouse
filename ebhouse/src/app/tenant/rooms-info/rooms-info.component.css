@@ -30,6 +30,9 @@ table {
 .mat-datepicker-toggle{
     font-size: 2rem
   }
+  table tr.mat-row:hover{
+    background: #ececec;
+  }
 @media only screen and (max-width: 576px) {
   .pagination{
     display: flex;

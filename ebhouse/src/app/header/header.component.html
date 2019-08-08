@@ -1,10 +1,10 @@
-<div class="" [ngClass]="{'hide': (isLoggedIn$ | async) == false  || isLandingPage() }" >
+<div class="" [ngClass]="{'hide': (isLoggedIn$ | async) == false  || isLandingPage() }">
   <div class="header-area">
-    <div class="row align-items-center">
+    <div class="row align-items-center justify-content-between">
       <!-- nav and search button -->
-      <div class="col-md-5 col-sm-1 col-1 clearfix">
+      <div>
         <div class="nav-btn pull-left">
-            <!-- <i class="fa fa-arrow-right"></i> -->
+          <!-- <i class="fa fa-arrow-right"></i> -->
           <span></span>
           <span></span>
           <span></span>
@@ -12,23 +12,33 @@
 
       </div>
       <!-- profile info & task notification -->
-      <div class="col-md-7 col-sm-9 col-11 clearfix">
+      <div class="col-11 clearfix">
+        <ul class="notification-area col-12 col-xl-9 pull-right d-flex justify-content-end align-items-center">
+          <select [ngClass]="{'hidden-choose': !isHiddenChooseBh()}" class="custom-select  col-7"
+            [(ngModel)]="currentBh" (change)="onChangeBh()" [disabled]='isDisabled()'>
+            <option *ngFor="let bh of bhList" [ngValue]="bh">
+              {{bh.name}}
+            </option>
+          </select>
          
-        <ul class="notification-area col-12 col-xl-9 pull-right">
-            <select [ngClass]="{'hidden-choose': !isHiddenChooseBh()}"  class="custom-select  col-sm-9 col-7" [(ngModel)]="currentBh" (change)="onChangeBh()" [disabled]='isDisabled()'>
-                <option *ngFor="let bh of bhList" [ngValue]="bh">
-                  {{bh.name}}
-                </option>
-              </select>
-          <li id="full-view"><i class="ti-fullscreen"></i></li>
-          <li id="full-view-exit"><i class="ti-zoom-out"></i></li>
           <li class="dropdown">
-            <i class="fa fa-sign-out" routerLink="/logout">
-            </i>
+            <i class="fa fa-envelope-o"><span>3</span></i>
+          </li>
+          <button type="button" class="btn btn-info custom-logout ml-3" routerLink="/logout"><i class="fa fa-sign-out"></i><span>Đăng xuất</span></button>
+          <!-- <a routerLink="/logout" class="btn btn-info btn-lg custom-logout">
             
-        </li>
+          </a> -->
+          <!-- <li class='custom-logout ml-3'  routerLink="/logout">
+              <i class="fa fa-sign-out"></i>
+              <p>Đăng xuất</p>
+            </li> -->
+
+
         </ul>
       </div>
+
+
+
     </div>
   </div>
   <!-- header area end -->
@@ -40,7 +50,7 @@
       </div>
       <div class="col-sm-4 clearfix">
         <div class="form-group">
-        
+
           <!-- <select class="form-control" id="exampleFormControlSelect1">
                         <option>Khu trọ 1</option>
                         <option>Khu trọ 2</option>

@@ -5,8 +5,8 @@
   <div class="col-xl-9 col-lg-8">
     <div class="card">
       <div class="card-body no-padding-top">
-        <mat-form-field class='col-6 col-sm-3 month-bar'>
-          <input matInput [max]='maxDate' [matDatepicker]="picker" [formControl]="monthBar">
+        <mat-form-field class='col-6 col-sm-3 month-bar' (click)="picker.open()">
+          <input matInput [max]='maxDate' [matDatepicker]="picker" [formControl]="monthBar" class="input-date">
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker (monthSelected)="chooseMonthBar($event,picker)" startView="multi-year"
             disabled="false">
@@ -29,8 +29,8 @@
             {{bh.name}}
           </option>
         </select>
-        <mat-form-field class='col-6 month-pie'>
-          <input matInput [matDatepicker]="picker2" [formControl]="monthPie">
+        <mat-form-field class='col-6 month-pie' (click)="picker2.open()">
+          <input matInput [matDatepicker]="picker2" [formControl]="monthPie" class="input-date">
           <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
           <mat-datepicker #picker2 (monthSelected)="chooseMonthPie($event,picker2)" startView="multi-year"
             disabled="false">
@@ -61,8 +61,8 @@
               {{bh.name}}
             </option>
           </select>
-          <mat-form-field class='col-6 col-sm-4 month-contract'>
-            <input matInput [matDatepicker]="picker3" [formControl]="monthContract">
+          <mat-form-field class='col-6 col-sm-4 month-contract' (click)="picker3.open()">
+            <input matInput [matDatepicker]="picker3" [formControl]="monthContract" class="input-date">
             <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
             <mat-datepicker #picker3 (monthSelected)="chooseMonthContract($event,picker3)" startView="multi-year"
               disabled="false">

@@ -48,7 +48,7 @@ export class CreateContractComponent implements OnInit, OnDestroy {
   dataDistric: any[];
   dataWards: any[];
   dataProvince: any[];
- rotateImageFileProcessor = new RotateImageFileProcessor();
+  rotateImageFileProcessor = new RotateImageFileProcessor();
   createTenantFormGroup: FormGroup;
   //Message
   monthStartSelected(params, datepicker) {
@@ -213,8 +213,8 @@ export class CreateContractComponent implements OnInit, OnDestroy {
     private service: LandlordService,
     private router: Router,
     private toastr: ToastrService,
-    private placeService : PlaceService,
-    private userService: UserService,) {
+    private placeService: PlaceService,
+    private userService: UserService, ) {
     this.createContractFormGroup = this.fb.group({
       room: this.fb.control('', Validators.compose([
         Validators.required
@@ -231,7 +231,7 @@ export class CreateContractComponent implements OnInit, OnDestroy {
       endDate: this.fb.control({ value: '', disabled: true }, Validators.required),
       period: '',
       description: '',
-      sex : ''
+      sex: ''
     });
 
     this.createTenantFormGroup = this.fb.group({
@@ -244,8 +244,8 @@ export class CreateContractComponent implements OnInit, OnDestroy {
       distric: '',
       wards: '',
       address: '',
-      dateOfBirth :{ value: '', disabled: true },
-      sex : ''
+      dateOfBirth: { value: '', disabled: true },
+      sex: ''
     });
 
 
@@ -411,14 +411,15 @@ export class CreateContractComponent implements OnInit, OnDestroy {
     });
 
   }
-  removeFieldModal(){
-    $('#tenant-name').val('');
-    $('#tenant-phone').val('');
-    $('#tenant-address').val('');
-    $('#tenant-sex').val('');
-    $('#tenant-date').val('');
-    $('#imgArnFront').attr('src','');
-    $('#imgArnBack').attr('src','');
+  removeFieldModal() {
+    $('#tenant-name').html('');
+    $('#tenant-phone').html('');
+    $('#tenant-address').html('');
+    $('#tenant-sex').html('');
+    $('#tenant-date').html('');
+    $('#imgArnFront').attr('src', '');
+    $('#imgArnBack').attr('src', '');
+
   }
   searchByPhone() {
     if (!this.capacity) {
@@ -435,31 +436,31 @@ export class CreateContractComponent implements OnInit, OnDestroy {
       this.service.searchTenantByPhone(data).subscribe(
         res => {
           this.removeLoading();
-      
+
           let response = JSON.parse("" + res);
           if (response.type == 1) {
             this.removeFieldModal();
             let data = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
-            $('#tenant-name').val(data.user.name);
-            $('#tenant-phone').val(data.user.phone);
-            if(data.user.address){
+            $('#tenant-name').html(data.user.name);
+            $('#tenant-phone').html(data.user.phone);
+            if (data.user.address) {
               //xoa - o thon-xom
               let remove = data.user.address.split('-');
-              if(remove[0].length == 0 && remove[1].length > 0){
-                $('#tenant-address').val(remove[1] +'-'+ remove[2] +'-'+ remove[3]);
+              if (remove[0].length == 0 && remove[1].length > 0) {
+                $('#tenant-address').html(remove[1] + '-' + remove[2] + '-' + remove[3]);
               }
-              else{
-                $('#tenant-address').val(data.user.address);
+              else {
+                $('#tenant-address').html(data.user.address);
               }
             }
             if (data.user.sex == 0) {
-              $('#tenant-sex').val('Giới tính khác');
+              $('#tenant-sex').html('Giới tính khác');
             }
             if (data.user.sex == 1) {
-              $('#tenant-sex').val('Nam');
+              $('#tenant-sex').html('Nam');
             }
             if (data.user.sex == 2) {
-              $('#tenant-sex').val('Nữ');
+              $('#tenant-sex').html('Nữ');
             }
             if (data.imgArnFront) {
               $('#imgArnFront').attr('src', data.imgArnFront.trim() + "?date=" + new Date().getTime());
@@ -467,7 +468,9 @@ export class CreateContractComponent implements OnInit, OnDestroy {
             if (data.imgArnBack) {
               $('#imgArnBack').attr('src', data.imgArnBack.trim() + "?date=" + new Date().getTime());
             }
-            $('#tenant-date').val(this.formatDateDisplay(data.user.dateOfBirth));
+            if(data.user.dateOfBirth && data.user.dateOfBirth.toLowerCase() != 'null'){
+              $('#tenant-date').html(this.formatDateDisplay(data.user.dateOfBirth));
+            }
             $('#modal2').modal('show');
             this.currentTenant = data;
           }
@@ -491,7 +494,7 @@ export class CreateContractComponent implements OnInit, OnDestroy {
           console.log(err);
         })
     }
-    else{
+    else {
       this.showErr('Vui lòng nhập đúng số điện thoại')
     }
   }
@@ -747,24 +750,35 @@ export class CreateContractComponent implements OnInit, OnDestroy {
     }
     return false;
   }
+  isMorethan5Image = false;
   uploadImage(imageResult: ImageResult) {
     if (this.listImg.length < 5) {
       if (imageResult.error) {
         this.showErr('Vui lòng tải lên đúng định dạng ảnh')
       }
       else {
+        this.isMorethan5Image = false;
         let image = (imageResult.resized && imageResult.resized.dataURL) || imageResult.dataURL;
         this.getOrientation(imageResult.file, (orientation) => {
-          this.rotateImageFileProcessor.process(orientation +','+image).then(res => {
+          this.rotateImageFileProcessor.process(orientation + ',' + image).then(res => {
             this.listImg.push(res);
           });
         });
       }
     }
+    else {
+      if (this.isMorethan5Image) {
+
+      }
+      else {
+        this.isMorethan5Image = true;
+        this.showErr('Tải lên nhiều nhất 5 ảnh')
+      }
+    }
   }
   getOrientation(file, callback) {
     var reader: any,
-    target: EventTarget;
+      target: EventTarget;
     reader = new FileReader();
     reader.onload = (event) => {
       var view = new DataView(event.target.result);
@@ -821,28 +835,28 @@ export class CreateContractComponent implements OnInit, OnDestroy {
       this.dataWards = arr;
     });
   };
-  onSubmitTenant(){
+  onSubmitTenant() {
     let address = '';
-    if(this.createTenantFormGroup.value.address){
+    if (this.createTenantFormGroup.value.address) {
       address = this.createTenantFormGroup.value.address.replace(/-/g, ' ').replace(/"/g, "\\\"");
     }
     let fullAddress = '';
-    if(this.createTenantFormGroup.value.wards){
-      fullAddress  = address.trim() + "-" + this.createTenantFormGroup.value.wards.name + "-" + this.createTenantFormGroup.value.distric.name + "-" + this.createTenantFormGroup.value.province.name;
+    if (this.createTenantFormGroup.value.wards) {
+      fullAddress = address.trim() + "-" + this.createTenantFormGroup.value.wards.name + "-" + this.createTenantFormGroup.value.distric.name + "-" + this.createTenantFormGroup.value.province.name;
     }
-    
+
     let tenant = {
-      user : {
-        name  : this.createTenantFormGroup.value.name.trim().replace(/"/g, ""),
-        phone : this.createTenantFormGroup.get('phone').value,
-        address : fullAddress,
-        dateOfBirth : this.createTenantFormGroup.get('dateOfBirth').value ?  this.formatDate(this.createTenantFormGroup.get('dateOfBirth').value) : null,
-        sex : this.createTenantFormGroup.value.sex,
+      user: {
+        name: this.createTenantFormGroup.value.name.trim().replace(/"/g, ""),
+        phone: this.createTenantFormGroup.get('phone').value,
+        address: fullAddress,
+        dateOfBirth: this.createTenantFormGroup.get('dateOfBirth').value ? this.formatDate(this.createTenantFormGroup.get('dateOfBirth').value) : null,
+        sex: this.createTenantFormGroup.value.sex,
       },
-      role :2,
-      status :3
+      role: 2,
+      status: 3
     }
-    
+
     console.log(tenant);
     this.addLoading();
     this.userService.submit(tenant).subscribe(

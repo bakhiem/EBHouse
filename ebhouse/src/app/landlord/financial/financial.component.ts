@@ -179,7 +179,7 @@ export class FinancialComponent implements OnInit, OnDestroy {
           this.roomID = null;
           for (let index = 0; index < this.listFinancial.length; index++) {
             const element = this.listFinancial[index];
-            if (element.paymentDate == 'null') {
+            if (!element.paymentDate || element.paymentDate == 'null') {
               this.listFinancial[index].paymentDate = ''
             }
             if (element.payment == 0) {
@@ -400,7 +400,6 @@ export class FinancialComponent implements OnInit, OnDestroy {
       else{
         this.createEFFormGroup.get('createDate').setValue(this.formatDateFull(new Date(), 1));
       }
-      
     }
     $('#payment').on("keyup", (event) => {
       let input = $('#payment').val();
@@ -508,8 +507,11 @@ export class FinancialComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        let paymentDateArr = this.createEFFormGroup.get('createDate').value.split('-');
-        let paymentDate = [paymentDateArr[2], paymentDateArr[1], paymentDateArr[0]].join('-');
+        let paymentDate = '';
+        if(this.createEFFormGroup.get('createDate').value && this.createEFFormGroup.get('createDate').value != ''){
+          let paymentDateArr = this.createEFFormGroup.get('createDate').value.split('-');
+          paymentDate = [paymentDateArr[2], paymentDateArr[1], paymentDateArr[0]].join('-');
+        }
         let data = {
           id: this.createEFFormGroup.get('id').value,
           room: { id: this.createEFFormGroup.get('room').value },

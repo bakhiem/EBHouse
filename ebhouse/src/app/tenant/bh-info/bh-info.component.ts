@@ -52,6 +52,14 @@ export class BhInfoComponent implements OnInit, OnDestroy {
       }
     })
   }
+  resetInfo(){
+    $('#bh-name').html('');
+    $('#bh-address').html('');
+    $('#bh-landlord-name').html('');
+    $('#bh-landlord-phone').html('');
+    $('#bh-landlord-address').html('');
+    $('#bh-description').html('');
+  }
   getBhInfo() {
     let data = {
       boardingHouseID: this.currentBh.id
@@ -63,12 +71,12 @@ export class BhInfoComponent implements OnInit, OnDestroy {
         let response = JSON.parse('' + res);
         if (response.type == 1) {
           let resObject = response.data[0];
-          $('#bh-name').val(resObject.bhName);
-          $('#bh-address').val(resObject.bhAddress);
-          $('#bh-landlord-name').val(resObject.landlordName);
-          $('#bh-landlord-phone').val(resObject.landlordPhone);
-          $('#bh-landlord-address').val(resObject.landlordAddress);
-          $('#bh-description').val(resObject.bhDescription);
+          $('#bh-name').html(resObject.bhName);
+          $('#bh-address').html(resObject.bhAddress);
+          $('#bh-landlord-name').html(resObject.landlordName);
+          $('#bh-landlord-phone').html(resObject.landlordPhone);
+          $('#bh-landlord-address').html(resObject.landlordAddress);
+          $('#bh-description').html(resObject.bhDescription);
         } else {
 
         }
@@ -97,8 +105,16 @@ export class BhInfoComponent implements OnInit, OnDestroy {
           if (this.list.length > 0) {
             for (let index = 0; index < this.list.length; index++) {
               let currency = this.list[index].value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
-              $('#price-' + this.list[index].utility).val(currency);
-              $("#select-" + this.list[index].utility).val(this.list[index].calculatingMethod);
+              $('#price-' + this.list[index].utility).html(currency);
+              if(this.list[index].calculatingMethod == 1){
+                $("#select-" + this.list[index].utility).html('Theo phòng');
+              }
+              else if(this.list[index].calculatingMethod == 2){
+                $("#select-" + this.list[index].utility).html('Theo người');
+              }
+              else  if(this.list[index].calculatingMethod == 3){
+                $("#select-" + this.list[index].utility).html('Theo số');
+              }
             }
             $("input[type=submit]").attr("disabled", "disabled");
           }

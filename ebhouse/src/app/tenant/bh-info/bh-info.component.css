@@ -2,7 +2,6 @@
  margin-top: 1rem;   
 }
 input:disabled,textarea:disabled {
-    background: #fff;
     cursor: auto;
 }
 h4{

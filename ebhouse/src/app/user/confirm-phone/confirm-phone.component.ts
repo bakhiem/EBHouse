@@ -11,6 +11,7 @@ import { FormControl, FormGroup, FormBuilder, Validators, AbstractControl } from
 import { ISubscription } from "rxjs/Subscription";
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute } from '@angular/router';
+import { CommonMessage } from '../../models/message';
 @Component({
   selector: 'app-confirm-phone',
   templateUrl: './confirm-phone.component.html',
@@ -104,16 +105,57 @@ export class ConfirmPhoneComponent implements OnInit, OnDestroy {
   sendLoginCode() {
     if (this.verifyFormGroup.get('phone').value) {
       this.userPhone = this.verifyFormGroup.get('phone').value;
+
       if (this.verifyFormGroup.valid) {
-        $('.otpInput').show();
-        disableButton();
-        const appVerifier = this.windowRef.recaptchaVerifier;
-        const num = "" + formatPhone(this.userPhone);
-        firebase.auth().signInWithPhoneNumber(num, appVerifier)
-          .then(result => {
-            this.windowRef.confirmationResult = result;
-          })
-          .catch(error => console.log(error));
+
+        if (this.fromRegis) {
+          $('.otpInput').show();
+          disableButton();
+          const appVerifier = this.windowRef.recaptchaVerifier;
+          const num = "" + formatPhone(this.userPhone);
+          firebase.auth().signInWithPhoneNumber(num, appVerifier)
+            .then(result => {
+              this.windowRef.confirmationResult = result;
+            })
+            .catch(error => console.log(error));
+        }
+        else {
+          let data = {
+            phone : this.userPhone
+          }
+          this.userService.checkExistPhone(data).subscribe(
+            res => {
+              this.removeLoading()
+              let mess: any;
+              mess = JSON.parse('' + res);
+              console.log(mess)
+              if (mess.type == 1) {
+                $('.otpInput').show();
+                disableButton();
+                const appVerifier = this.windowRef.recaptchaVerifier;
+                const num = "" + formatPhone(this.userPhone);
+                firebase.auth().signInWithPhoneNumber(num, appVerifier)
+                  .then(result => {
+                    this.windowRef.confirmationResult = result;
+                  })
+                  .catch(error => console.log(error));
+
+              }
+              if (mess.type == 0) {
+                this.showErr(CommonMessage.defaultErrMess);
+              }
+              if (mess.type == 2) {
+                this.showErr(mess.message);
+              }
+            },
+            err => {
+              this.removeLoading()
+              this.showErr(CommonMessage.defaultErrMess);
+              console.log(err);
+            }
+          );
+        }
+
       }
       else {
         this.showErr('Số điện thoại bao gồm 10 số')
@@ -191,7 +233,7 @@ export class ConfirmPhoneComponent implements OnInit, OnDestroy {
     disableButtonOTPBeforeVerify();
     clearTimeout(otpTimeOut);
     clearTimeout(buttonTimeOut);
-    countdownNum = 30;
+    countdownNum = 60;
   }
 }
 function toUserSend(r: any) {
@@ -206,7 +248,7 @@ function toUserSend(r: any) {
   };
   return userSend;
 }
-let countdownNum = 30;
+let countdownNum = 60;
 
 function disableButtonOTPBeforeVerify() {
   $('.btn-send').prop('disabled', true);
@@ -226,7 +268,7 @@ function disableButton() {
     $('.btn-send').prop('disabled', false);
     $('#recaptcha-container').show();
     $('.otpInput').hide();
-  }, 30000);
+  }, 60000);
 }
 
 function formatPhone(phone: String) {
@@ -242,11 +284,11 @@ function incTimer() {
   otpTimeOut = setTimeout(function () {
     if (countdownNum != 0) {
       countdownNum--;
-      document.querySelector('button.btn.btn-outline-secondary').innerHTML = 'Gửi lại mã sau ' + countdownNum + ' giây';
+      document.querySelector('button.btn.btn-secondary').innerHTML = 'Gửi lại mã sau ' + countdownNum + ' giây';
       incTimer();
     } else {
-      document.querySelector('button.btn.btn-outline-secondary').innerHTML = 'Gửi lại mã';
-      countdownNum = 30;
+      document.querySelector('button.btn.btn-secondary').innerHTML = 'Gửi lại mã';
+      countdownNum = 60;
     }
   }, 1000);
 }

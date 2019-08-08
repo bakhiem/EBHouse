@@ -37,27 +37,27 @@
                     </ng-container> -->
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>Tên phòng</th>
-            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            <td mat-cell *matCellDef="let element" (click)="editRoom(element)"> {{element.name}} </td>
         </ng-container>
         <ng-container matColumnDef="roomType">
             <th mat-header-cell *matHeaderCellDef>Loại phòng</th>
-            <td mat-cell *matCellDef="let element"> {{element.roomType.name}} </td>
+            <td mat-cell *matCellDef="let element" (click)="editRoom(element)"> {{element.roomType.name}} </td>
         </ng-container>
         <ng-container matColumnDef="area">
             <th mat-header-cell *matHeaderCellDef>Diện tích</th>
-            <td mat-cell *matCellDef="let element"> {{element.roomType.area}} </td>
+            <td mat-cell *matCellDef="let element" (click)="editRoom(element)"> {{element.roomType.area}} </td>
         </ng-container>
         <ng-container matColumnDef="capacity">
             <th mat-header-cell *matHeaderCellDef>Số người tối đa</th>
-            <td mat-cell *matCellDef="let element"> {{element.roomType.capacity}} </td>
+            <td mat-cell *matCellDef="let element" (click)="editRoom(element)"> {{element.roomType.capacity}} </td>
         </ng-container>
         <ng-container matColumnDef="price">
             <th mat-header-cell *matHeaderCellDef>Giá</th>
-            <td mat-cell *matCellDef="let element"> {{element.roomType.price | currency}} </td>
+            <td mat-cell *matCellDef="let element" (click)="editRoom(element)"> {{element.roomType.price | currency}} đ</td>
         </ng-container>
         <ng-container matColumnDef="description">
             <th mat-header-cell *matHeaderCellDef>Mô tả</th>
-            <td mat-cell *matCellDef="let element"> {{element.description  | maxLength : 5}} </td>
+            <td mat-cell *matCellDef="let element" (click)="editRoom(element)"> {{element.description  | maxLength : 10}} </td>
         </ng-container>
         <ng-container matColumnDef="customColumn">
             <th mat-header-cell *matHeaderCellDef></th>
@@ -70,7 +70,7 @@
             </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" title="Bấm để xem chi tiết"></tr>
     </table>
 
 </div>

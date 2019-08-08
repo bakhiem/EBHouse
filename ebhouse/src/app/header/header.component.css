@@ -6,6 +6,9 @@
  .hidden-choose{
     visibility: hidden;
  }
+ .notification-area li p{
+     display: inline
+ }
  @media only screen and (max-width: 600px) {
     .header-area{
         padding: 7px 14px;
@@ -16,4 +19,11 @@
     .page-title-area{
         padding: 0;
     }
+    .custom-logout span{
+        display: none!important;
+    }
+    .custom-logout{
+        border: 0!important;
+     }
  } 
+

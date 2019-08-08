@@ -31,8 +31,10 @@ export class UserService {
   };
 
   login(user: any): Observable<String> {
-    console.log(httpOptions)
     return this.http.post<String>(`${this.baseUrl}/api/login`, user, httpOptions)
+  };
+  checkExistPhone(phone: any): Observable<String> {
+    return this.http.post<String>(`${this.baseUrl}/api/register/isExisted`, phone, httpOptions)
   };
   resetPass(user: any, hash: any): Observable<any> {
     var payload = {

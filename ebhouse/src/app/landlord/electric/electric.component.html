@@ -7,8 +7,8 @@
     <div class="col-sm-4">
       <label for="example-text-input" class="col-form-label mr-3">Tháng</label>
 
-      <mat-form-field>
-        <input matInput [max]='maxDate' [matDatepicker]="picker2" [formControl]="month">
+      <mat-form-field (click)="picker2.open()">
+        <input matInput [max]='maxDate' [matDatepicker]="picker2" [formControl]="month" class="input-date">
         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
         <mat-datepicker #picker2 (monthSelected)="chooseMonth($event,picker2)" startView="multi-year" disabled="false">
         </mat-datepicker>

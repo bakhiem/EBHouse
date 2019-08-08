@@ -52,7 +52,7 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
     private toastr: ToastrService) { }
   month: FormControl;
   haveContractInMonth = false;
-  displayedColumns: string[] = ['room', 'amount', 'description', 'date', 'customColumn'];
+  displayedColumns: string[] = ['room', 'amount', 'description', 'date', 'payer','customColumn'];
 
   ngOnInit() {
     this.month = new FormControl({ value: new Date(), disabled: true });
@@ -404,7 +404,6 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
       this.showErr(CommonMessage.InputRoom);
       return;
     }
-
     $('#haveTenantMessage').html('');
     $('#date-create').val(this.formatDateStr('', 2));
     this.createEFFormGroup.reset();
@@ -577,7 +576,7 @@ export class ExtraFeeComponent implements OnInit, OnDestroy {
   deleteEF(index) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '450px',
-      data: "Bạn chắc chắn muốn xóa chi phí khác không?"
+      data: "Bạn chắc chắn muốn xóa chi phí phát sinh không?"
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {

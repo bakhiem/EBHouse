@@ -412,12 +412,13 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
     });
   }
   removeFieldModal(){
-    $('#tenant-name').val('');
-    $('#tenant-phone').val('');
-    $('#tenant-address').val('');
-    $('#tenant-sex').val('');
+    $('#tenant-name').html('');
+    $('#tenant-phone').html('');
+    $('#tenant-address').html('');
+    $('#tenant-sex').html('');
     $('#imgArnFront').attr('src','');
     $('#imgArnBack').attr('src','');
+    $('#tenant-date').html('');
   }
   searchByPhone() {
     if (!this.capacity) {
@@ -437,26 +438,26 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
           if (response.type == 1) {
             this.removeFieldModal();
             let data = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
-            $('#tenant-name').val(data.user.name);
-            $('#tenant-phone').val(data.user.phone);
+            $('#tenant-name').html(data.user.name);
+            $('#tenant-phone').html(data.user.phone);
             if(data.user.address){
               //xoa - o thon-xom
               let remove = data.user.address.split('-');
               if(remove[0].length == 0 && remove[1].length > 0){
-                $('#tenant-address').val(remove[1] +'-'+ remove[2] +'-'+ remove[3]);
+                $('#tenant-address').html(remove[1] +'-'+ remove[2] +'-'+ remove[3]);
               }
               else{
-                $('#tenant-address').val(data.user.address);
+                $('#tenant-address').html(data.user.address);
               }
             }
             if (data.user.sex == 0) {
-              $('#tenant-sex').val('Giới tính khác');
+              $('#tenant-sex').html('Giới tính khác');
             }
             if (data.user.sex == 1) {
-              $('#tenant-sex').val('Nam');
+              $('#tenant-sex').html('Nam');
             }
             if (data.user.sex == 2) {
-              $('#tenant-sex').val('Nữ');
+              $('#tenant-sex').html('Nữ');
             }
             if (data.imgArnFront) {
               $('#imgArnFront').attr('src', data.imgArnFront.trim() + "?date=" + new Date().getTime());
@@ -464,7 +465,10 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
             if (data.imgArnBack) {
               $('#imgArnBack').attr('src', data.imgArnBack.trim() + "?date=" + new Date().getTime());
             }
-            $('#tenant-date').val(this.formatDateDisplay(data.user.dateOfBirth));
+            if(data.user.dateOfBirth && data.user.dateOfBirth.toLowerCase() != 'null'){
+              $('#tenant-date').html(this.formatDateDisplay(data.user.dateOfBirth));
+            }
+            
             $('#modal2').modal('show');
             this.currentTenant = data;
           }
@@ -648,12 +652,14 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
     })
 
   }
+  isMorethan5Image = false;
   uploadImage(imageResult: ImageResult) {
     if (this.listImg.length < 5) {
       if (imageResult.error) {
         this.showErr('Vui lòng tải lên đúng định dạng ảnh')
       }
       else {
+        this.isMorethan5Image = false;
         let image = (imageResult.resized && imageResult.resized.dataURL) || imageResult.dataURL;
         this.getOrientation(imageResult.file, (orientation) => {
           this.rotateImageFileProcessor.process(orientation +','+image).then(res => {
@@ -662,6 +668,16 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
         });
       }
     }
+    else{
+      if(this.isMorethan5Image){
+
+      }
+      else{
+        this.isMorethan5Image = true;
+        this.showErr('Tải lên nhiều nhất 5 ảnh')
+      }
+    }
+    
   }
 
   getOrientation(file, callback) {

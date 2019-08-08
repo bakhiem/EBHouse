@@ -27,7 +27,9 @@ table {
   background: #fff;
   padding-top: 1.1rem;
 }
-
+table tr.mat-row:hover{
+  background: #ececec;
+}
 @media only screen and (max-width: 576px) {
   table.mat-elevation-z8 td{
     font-size: 0.6rem;

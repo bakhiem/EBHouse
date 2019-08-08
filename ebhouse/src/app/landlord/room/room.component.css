@@ -28,7 +28,10 @@ table {
     background: #fff;
     padding-top: 1.1rem;
 }
-
+table tr.mat-row:hover{
+  background: #ececec;
+  cursor: pointer;
+}
 @media only screen and (max-width: 576px) {
   .pagination{
     display: flex;

@@ -56,7 +56,10 @@
   padding-top: 1.1rem;
   margin: 0 auto;
 }
-
+table tr.mat-row:hover{
+  cursor: pointer;
+  background: #ececec;
+}
 
 @media only screen and (max-width: 768px) {
   .mat-form-field{

@@ -43,7 +43,7 @@
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;let i = index;"
-                            (click)="notificationDetail(0 ,i, row)"></tr>
+                            (click)="notificationDetail(0 ,i, row)" title="Bấm để xem chi tiết"></tr>
                     </table>
 
                     <div class="page-footer">
@@ -83,7 +83,7 @@
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;let i = index;"
-                            (click)="notificationDetail(1 ,i, row)"></tr>
+                            (click)="notificationDetail(1 ,i, row)" title="Bấm để xem chi tiết"></tr>
                     </table>
                     <div class="page-footer">
                         <div class="row">
@@ -121,7 +121,7 @@
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;let i = index;"
-                            (click)="notificationDetail(2 ,i, row)"></tr>
+                            (click)="notificationDetail(2 ,i, row)" title="Bấm để xem chi tiết"></tr>
                     </table>
                     
                     <div class="page-footer">
