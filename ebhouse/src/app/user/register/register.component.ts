@@ -18,7 +18,8 @@ export class RegisterComponent implements OnInit {
   roleDefault: number = 2;
   CommonMessage = CommonMessage;
   userFormGroup: FormGroup;
-  phonePattern = '((09|03|07|08|05)+([0-9]{8}))';
+  phonePattern = '((09|03|07|08|05)([0-9]{8}))';
+  namePattern = '[a-zA-Z][^#&<>\"~;$^%{}?]+';
   //passwordPattern = '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}';
   constructor(
     private userService: UserService,
@@ -27,7 +28,6 @@ export class RegisterComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     public dialog: MatDialog,
-
   ) {}
 
   ngOnInit() {
@@ -43,7 +43,7 @@ export class RegisterComponent implements OnInit {
       ),
       role: [this.roleDefault],
       phone: this.fb.control('', Validators.compose([Validators.required, Validators.pattern(this.phonePattern)])),
-      fullname: this.fb.control('', Validators.required),
+      fullname: this.fb.control('', Validators.compose([Validators.required, Validators.pattern(this.namePattern)])),
     });
   }
   showSuccess(mess) {
@@ -61,6 +61,10 @@ export class RegisterComponent implements OnInit {
     $('.customLoader').removeClass('loader');
   }
   onSubmit() {
+    if(/\s/.test(this.userFormGroup.value.pw.password)){
+      this.showErr('Mật khẩu không bao gồm khoảng trắng');
+      return;
+    }
     this.addLoading();
     console.log(toUserSend(this.userFormGroup.value))
     this.userService.register(toUserSend(this.userFormGroup.value)).subscribe(

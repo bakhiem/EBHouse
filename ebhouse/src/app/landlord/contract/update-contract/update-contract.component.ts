@@ -44,7 +44,7 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
   CommonMessage = CommonMessage;
   availableInThisMonth: boolean = true;
   rotateImageFileProcessor = new RotateImageFileProcessor();
-
+  namePattern = '[a-zA-Z][^#&<>\"~;$^%{}?]+';
   dataDistric: any[];
   dataWards: any[];
   dataProvince: any[];
@@ -166,7 +166,7 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
   }
   createContractFormGroup: FormGroup;
   currentTenant: any;
-  phonePattern = '((09|03|07|08|05)+([0-9]{8}))';
+  phonePattern = '((09|03|07|08|05)([0-9]{8}))';
   listImg = [];
   currentContract: Contract;
 
@@ -218,9 +218,7 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
     });
 
     this.createTenantFormGroup = this.fb.group({
-      name: this.fb.control('', Validators.compose([
-        Validators.required
-      ])),
+      name:this.fb.control('', Validators.compose([Validators.required, Validators.pattern(this.namePattern)])),
       id: '',
       phone: '',
       province: '',

@@ -16,14 +16,13 @@ import { NotifiComponent } from '../notifi.component';
 import { ISubscription } from "rxjs/Subscription";
 import { CommmonFunction } from '../../shared/common-function';
 import { ToastrService } from 'ngx-toastr';
+import { SharedServiceService } from '../../service/shared-service.service';
 @Component({
   selector: 'app-to-notification',
   templateUrl: './to-notification.component.html',
   styleUrls: ['./to-notification.component.css']
 })
 export class ToNotificationComponent implements OnInit, OnDestroy {
-
-
   notifiListSent: any[] = [];
   notifiListSeen: any[] = [];
   notifiListAnswered: any[] = [];
@@ -34,7 +33,7 @@ export class ToNotificationComponent implements OnInit, OnDestroy {
   perPage =3;
 
   currentPageSent: number = 1;
-  totalPageSent: number =0;
+  totalPageSent: number = 0;
   dataSourceSent = new MatTableDataSource();
 
   currentPageSeen: number = 1;
@@ -57,7 +56,8 @@ export class ToNotificationComponent implements OnInit, OnDestroy {
     private authenticationService: AuthenticationService,
     private service: NotifiService,
     private parent: NotifiComponent,
-    private toastr :  ToastrService
+    private toastr :  ToastrService,  
+     private shareService: SharedServiceService,
   ) { }
 
   ngOnInit() {
@@ -94,6 +94,8 @@ export class ToNotificationComponent implements OnInit, OnDestroy {
               case 0:
                   this.notifiListSent = data.listNotification;
                   this.totalPageSent = data.totalPage;
+                 
+
                 break;
               case 1:
                   this.notifiListSeen = data.listNotification;
@@ -127,6 +129,7 @@ export class ToNotificationComponent implements OnInit, OnDestroy {
 
           let response = JSON.parse('' + res);
           if (response.type == 1) {
+            this.shareService.getNumberNoti().subscribe();
                 this.notifiListSent[index].status = 1;
                 this.notifiListSeen.unshift(this.notifiListSent[index]);
                 this.notifiListSent.splice(index,1);
