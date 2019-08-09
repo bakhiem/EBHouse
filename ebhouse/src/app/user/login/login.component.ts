@@ -19,7 +19,7 @@ import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/co
 export class LoginComponent implements OnInit, OnDestroy {
   CommonMessage = CommonMessage;
   roleDefault: number = 1;
-  phonePattern = "((09|03|07|08|05)+([0-9]{8}))";
+  phonePattern = "((09|03|07|08|05)([0-9]{8}))";
   loginFormGroup: FormGroup;
   user: User;
 

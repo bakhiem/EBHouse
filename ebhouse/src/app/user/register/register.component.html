@@ -21,6 +21,10 @@
                         class="alert alert-danger">
                        {{CommonMessage.InputUserName}}
                     </div>
+                    <div *ngIf="userFormGroup.controls['fullname'].hasError('pattern') && (userFormGroup.controls['fullname'].dirty || userFormGroup.controls['fullname'].touched)"
+                        class="alert alert-danger">
+                       Vui lòng nhập họ tên hợp lệ
+                    </div>
                     <div *ngIf="userFormGroup.controls['fullname'].hasError('minlength') && (userFormGroup.controls['fullname'].dirty || userFormGroup.controls['fullname'].touched)"
                         class="alert alert-danger">
 

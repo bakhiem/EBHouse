@@ -182,7 +182,7 @@ export class CreateContractComponent implements OnInit, OnDestroy {
   roomList: any[] = [];
   currentBh: BoardingHouse;
   currentTenant: any;
-  phonePattern = '((09|03|07|08|05)+([0-9]{8}))';
+  phonePattern = '((09|03|07|08|05)([0-9]{8}))';
   listImg = [];
   capacity: number;
   isExtraFee = 0;
@@ -197,7 +197,7 @@ export class CreateContractComponent implements OnInit, OnDestroy {
     },
     allowedExtensions: ['JPG', 'PnG', 'JPEG']
   };
-
+  namePattern = '[a-zA-Z][^#&<>\"~;$^%{}?]+';
   //extra fee
   extraFeeList: any[] = [];
   private subscription: ISubscription;
@@ -235,9 +235,7 @@ export class CreateContractComponent implements OnInit, OnDestroy {
     });
 
     this.createTenantFormGroup = this.fb.group({
-      name: this.fb.control('', Validators.compose([
-        Validators.required
-      ])),
+      name: this.fb.control('', Validators.compose([Validators.required, Validators.pattern(this.namePattern)])),
       id: '',
       phone: '',
       province: '',

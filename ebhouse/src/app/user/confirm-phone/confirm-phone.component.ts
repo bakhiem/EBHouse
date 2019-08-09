@@ -25,7 +25,7 @@ export class ConfirmPhoneComponent implements OnInit, OnDestroy {
   user: User;
   userPhone: string;
   verifyFormGroup: FormGroup;
-  phonePattern = '((09|03|07|08|05)+([0-9]{8}))';
+  phonePattern = '((09|03|07|08|05)([0-9]{8}))';
   fromRegis: boolean = false;
   private subscription: ISubscription;
   constructor(private win: WindowService,
@@ -41,9 +41,14 @@ export class ConfirmPhoneComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy() {
     if (this.subscription) {
+      if(this.user){
+        this.user.fromRegister = false;
+        this.data.changeUser(this.user);
+      }
       this.subscription.unsubscribe();
     }
     this.reset();
+    
   }
 
   showSuccess(mess) {
@@ -55,7 +60,6 @@ export class ConfirmPhoneComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     let phone = this.route.snapshot.paramMap.get('phone');
-
     this.subscription = this.data.currentUser.subscribe(user => {
       this.user = user
       if (this.user == null) {
@@ -69,6 +73,13 @@ export class ConfirmPhoneComponent implements OnInit, OnDestroy {
           this.fromRegis = true;
           this.verifyFormGroup = this.fb.group({
             phone: { value: (this.user) ? this.user.phone : "", disabled: true },
+            otpcode: ''
+          });
+        }
+        else{
+          this.fromRegis = false;
+          this.verifyFormGroup = this.fb.group({
+            phone: this.fb.control(phone ? phone : '', Validators.compose([Validators.required, Validators.pattern(this.phonePattern)])),
             otpcode: ''
           });
         }

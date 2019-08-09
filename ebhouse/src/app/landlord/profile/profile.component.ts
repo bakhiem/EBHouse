@@ -33,7 +33,8 @@ export class LandlordProfileComponent implements OnInit {
   dataProvince: any[];
   dataDistric: any[];
   dataWards: any[];
-  phonePattern = '((09|03|07|08|05)+([0-9]{8}))';
+  phonePattern = '((09|03|07|08|05)([0-9]{8}))';
+  namePattern = '[a-zA-Z][^#&<>\"~;$^%{}?]+';
   profileFormGroup: FormGroup;
   landlord: Landlord;
   user: User;
@@ -54,7 +55,7 @@ export class LandlordProfileComponent implements OnInit {
     this.removeLoading();
     this.getProvince();
     this.profileFormGroup = this.fb.group({
-      name: this.fb.control('', Validators.compose([Validators.required])),
+      name: this.fb.control('', Validators.compose([Validators.required, Validators.pattern(this.namePattern)])),
       phone: this.fb.control('', Validators.compose([Validators.required, Validators.pattern(this.phonePattern)])),
       date: this.fb.control({ value: '', disabled: true }, Validators.compose([Validators.required])),
       sex: this.fb.control(0, Validators.compose([Validators.required])),
@@ -278,9 +279,9 @@ export class LandlordProfileComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        let new_pass = $('#new-pass').val().toString().trim().replace(/"/g, "\\\"");
-        let old_pass = $('#old-pass').val().toString().trim().replace(/"/g, "\\\"");
-        let re_new_pass = $('#re-new-pass').val().toString().trim().replace(/"/g, "\\\"");
+        let new_pass = $('#new-pass').val().toString();
+        let old_pass = $('#old-pass').val().toString();
+        let re_new_pass = $('#re-new-pass').val().toString();
         if (new_pass && old_pass && re_new_pass) {
           if (new_pass.length >= 8 && old_pass.length >= 8 && re_new_pass.length >= 8) {
             if (new_pass == old_pass) {
@@ -288,6 +289,10 @@ export class LandlordProfileComponent implements OnInit {
             }
             else {
               if (new_pass == re_new_pass) {
+                if(/\s/.test(new_pass)){
+                  this.showErr('Mật khẩu không bao gồm khoảng trắng');
+                  return;
+                }
                 let data = {
                   new_pass: new_pass,
                   old_pass: old_pass

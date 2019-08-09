@@ -73,6 +73,11 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   }
   onSubmit() {
     if (this.userFormGroup.valid) {
+      if(/\s/.test(this.userFormGroup.value.pw.password)){
+        this.showErr('Mật khẩu không bao gồm khoảng trắng');
+        return;
+      }
+      
       let user = {
         phone: this.userFormGroup.get('phone').value,
         password: this.userFormGroup.value.pw.password

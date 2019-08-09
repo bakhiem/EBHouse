@@ -36,7 +36,8 @@ export class TenantProfileComponent implements OnInit {
   dataProvince: any[];
   dataDistric: any[];
   dataWards: any[];
-  phonePattern = '((09|03|07|08|05)+([0-9]{8}))';
+  phonePattern = '((09|03|07|08|05)([0-9]{8}))';
+  namePattern = '[a-zA-Z][^#&<>\"~;$^%{}?]+';
   imgArnFront: string;
   imgArnBack: string;
   profileFormGroup: FormGroup;
@@ -67,7 +68,7 @@ export class TenantProfileComponent implements OnInit {
   ngOnInit() {
     this.getProvince();
     this.profileFormGroup = this.fb.group({
-      name: this.fb.control('', Validators.compose([Validators.required])),
+      name: this.fb.control('', Validators.compose([Validators.required, Validators.pattern(this.namePattern)])),
       phone: this.fb.control('', Validators.compose([Validators.required, Validators.pattern(this.phonePattern)])),
       date: this.fb.control({ value: '', disabled: true }, Validators.compose([Validators.required])),
       sex: this.fb.control(0, Validators.compose([Validators.required])),
@@ -96,6 +97,7 @@ export class TenantProfileComponent implements OnInit {
           // if (this.tenant.user.address != ' ') {
           //   arr = this.tenant.user.address.split('-');
           // }
+          console.log(response.data)
           this.getAddress();
           this.profileFormGroup.get('name').setValue(this.tenant.user.name != ' ' ? this.tenant.user.name.trim() : ' ');
           this.profileFormGroup.get('phone').setValue(this.tenant.user.phone != ' ' ? this.tenant.user.phone.trim() : ' ');
@@ -222,7 +224,7 @@ export class TenantProfileComponent implements OnInit {
       this.showErr('Vui lòng nhập ngày sinh');
       return;
     }
-
+   
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '450px',
       data: "Bạn chắc chắn muốn lưu thông tin không?"
@@ -373,16 +375,16 @@ export class TenantProfileComponent implements OnInit {
   };
 
   changePasswordSubmit() {
-
+    
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '450px',
       data: "Bạn chắc chắn đổi mật khẩu không?"
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        let new_pass = $('#new-pass').val().toString().trim();
-        let old_pass = $('#old-pass').val().toString().trim();
-        let re_new_pass = $('#re-new-pass').val().toString().trim();
+        let new_pass = $('#new-pass').val().toString();
+        let old_pass = $('#old-pass').val().toString();
+        let re_new_pass = $('#re-new-pass').val().toString();
         if (new_pass && old_pass && re_new_pass) {
           if (new_pass.length >= 8 && old_pass.length >= 8 && re_new_pass.length >= 8) {
             if (new_pass == old_pass) {
@@ -390,6 +392,10 @@ export class TenantProfileComponent implements OnInit {
             }
             else {
               if (new_pass == re_new_pass) {
+                if(/\s/.test(new_pass)){
+                  this.showErr('Mật khẩu không bao gồm khoảng trắng');
+                  return;
+                }
                 let data = {
                   new_pass: new_pass,
                   old_pass: old_pass

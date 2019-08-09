@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient,HttpErrorResponse,HttpHeaders } from '@angular/common/http';
-import {Landlord} from '../models/landlord';
-import {BoardingHouse} from '../models/bh';
-import { Observable, throwError,BehaviorSubject } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Landlord } from '../models/landlord';
+import { BoardingHouse } from '../models/bh';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {Contract} from '../models/contract';
+import { Contract } from '../models/contract';
 import { CommmonFunction } from '../shared/common-function';
 import { environment } from '../../environments/environment';
 const httpOptions = {
@@ -21,59 +21,72 @@ export class SharedServiceService {
 
   private baseUrl: string = environment.baseUrl;
   currentBh: BehaviorSubject<any>;
-  
-  bhList : [{}];
-  
-  constructor(private http: HttpClient) { 
+  totalNoti: BehaviorSubject<any>;
+  bhList: [{}];
+
+  constructor(private http: HttpClient) {
     this.currentBh = new BehaviorSubject<any>(null);
+    this.totalNoti = new BehaviorSubject<any>(null);
   }
-  
-  getAllBoardingHouses(bhName ?: string) : Observable<any> {
+  getNumberNoti(): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/api/notification/total`, null, httpOptions)
+      .pipe(map(res => 
+        { 
+          let response = JSON.parse("" + res);
+          if (response.type == 1) {
+            this.totalNoti.next(response.data);
+          }else{
+            this.totalNoti.next(0);
+          }
+        },
+        err => 
+        { 
+
+        }));
+    ;
+  }
+  getAllBoardingHouses(bhName?: string): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/api/landlord/bh/all`, null, httpOptions)
-    .pipe(map(res => {
-      console.log('0')
-      let response = JSON.parse("" + res);
-      if (response.type == 1) {
-        let data = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
-        this.bhList = data.boardingHouse;
-        if(this.bhList.length > 0 && bhName){
-          for (let index = 0; index < this.bhList.length; index++) {
-            const element = this.bhList[index];
-            if(element['name'] == bhName){
-              this.currentBh.next(element);
+      .pipe(map(res => {
+        let response = JSON.parse("" + res);
+        if (response.type == 1) {
+          let data = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));
+          this.bhList = data.boardingHouse;
+          if (this.bhList.length > 0 && bhName) {
+            for (let index = 0; index < this.bhList.length; index++) {
+              const element = this.bhList[index];
+              if (element['name'] == bhName) {
+                this.currentBh.next(element);
+              }
             }
           }
+          else if (this.bhList.length > 0 && this.currentBh.value == null) {
+            this.currentBh.next(this.bhList[0]);
+          }
+          else if (data.boardingHouse.length == 0) {
+            this.currentBh.next({});
+          }
         }
-         else if (this.bhList.length > 0 && this.currentBh.value == null) {
-         this.currentBh.next(this.bhList[0]);
-         console.log('2')
-        }
-        else if(data.boardingHouse.length == 0){
-          this.currentBh.next({});
-          console.log('3')
-        }
-        console.log('4')
-      }
-    }, err => {
-      console.log(err);
-    }));;
+      }, err => {
+        console.log(err);
+      }));;
   }
-  getAllBoardingHousesTenant() : Observable<any> {
+  getAllBoardingHousesTenant(): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/api/tenant/bhAll`, null, httpOptions)
-    .pipe(map(res => {
-      let response = JSON.parse("" + res);
-      console.log(response)
-      if (response.type == 1) {
-        this.bhList = response.data;
-        if (this.bhList.length > 0 && this.currentBh.value == null) {
-         this.currentBh.next(this.bhList[0]);
+      .pipe(map(res => {
+        let response = JSON.parse("" + res);
+        console.log(response)
+        if (response.type == 1) {
+          this.bhList = response.data;
+          if (this.bhList.length > 0 && this.currentBh.value == null) {
+            this.currentBh.next(this.bhList[0]);
+          }
+          else if (response.data.length == 0) {
+            this.currentBh.next({});
+          }
         }
-        else if(response.data.length == 0){
-          this.currentBh.next({});
-        }
-      }
-    }, err => {
-      console.log(err);
-    }));;
+      }, err => {
+        console.log(err);
+      }));;
   }
 }
