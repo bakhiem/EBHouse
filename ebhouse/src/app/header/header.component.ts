@@ -35,6 +35,9 @@ export class HeaderComponent implements OnInit {
     else if (this.currentUser && this.currentUser.role === Role.Tenant) {
       this.role = 'tenant';
     }
+    else if (this.currentUser && this.currentUser.role === Role.Admin) {
+      this.role = 'admin';
+    }
     else{
       this.role = '';
     }
