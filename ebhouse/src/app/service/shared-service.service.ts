@@ -48,7 +48,6 @@ export class SharedServiceService {
   getAllBoardingHouses(bhName?: string): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/api/landlord/bh/all`, null, httpOptions)
       .pipe(map(res => {
-       
         let response = JSON.parse("" + res);
         if (response.type == 1) {
           let data = JSON.parse("" + CommmonFunction.escapeSpecialChars(response.data));

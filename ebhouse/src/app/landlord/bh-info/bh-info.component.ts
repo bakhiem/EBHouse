@@ -189,7 +189,8 @@ export class BhInfoComponent implements OnInit {
               this.currentBh = null;
               $('.bd-example-modal-lg').modal('hide');
               this.getBoardingHouses();
-              this.shareService.getAllBoardingHouses(this.createbhFormGroup.value.name.trim()).subscribe();
+              let name = this.createbhFormGroup.value.name.replace(/\s\s+/g, ' ');
+              this.shareService.getAllBoardingHouses(name).subscribe();
               const dialogRefElectric = this.dialog.open(RedirectDialogComponent, {
                 width: '450px',
                 data: CommonMessage.RedirectUtility
