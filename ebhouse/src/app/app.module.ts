@@ -17,7 +17,7 @@ import {ErrorInterceptor }from './helpers/error.interceptor';
 import {JwtInterceptor }from './helpers/jwt.interceptor';
 import {NgbModule}from '@ng-bootstrap/ng-bootstrap';
 
-import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { LocationStrategy} from '@angular/common';
 
 //landlord routing
 import {LandlordRoutingModule }from './landlord/landlord-routing.module';
@@ -26,7 +26,7 @@ import {LandlordModule }from './landlord/landlord.module';
 
 import {TenantModule }from './tenant/tenant.module';
 import {BrowserAnimationsModule }from '@angular/platform-browser/animations';
-
+import {CustomHashLocationStrategy} from './customHasLocationStrategy';
 import {ConfirmationDialogComponent }from './shared/confirmation-dialog/confirmation-dialog.component';
 import {InformationDialogComponent }from './shared/info-dialog/information-dialog.component';
 import {RedirectDialogComponent }from './shared/redirect-dialog/redirect-dialog.component';
@@ -37,7 +37,7 @@ import { ToastrModule, ToastContainerModule } from 'ngx-toastr';
 import {NotifiModule }from './notifi/notifi.module';
 import { ResetPasswordComponent } from './user/reset-password/reset-password.component';
 import { LandingComponent } from './landing/landing.component';
-import { AdminModule } from './admin/admin.module'
+import { AdminModule } from './admin/admin.module';
 @NgModule( {
   declarations:[
     AppComponent,
@@ -76,7 +76,7 @@ import { AdminModule } from './admin/admin.module'
     NotifiModule,
     AppRoutingModule
   ],
-  providers:[{provide: LocationStrategy, useClass: HashLocationStrategy}, {provide:HTTP_INTERCEPTORS, useClass:JwtInterceptor, multi:true },  {provide:HTTP_INTERCEPTORS, useClass:ErrorInterceptor, multi:true },
+  providers:[{provide: LocationStrategy, useClass: CustomHashLocationStrategy}, {provide:HTTP_INTERCEPTORS, useClass:JwtInterceptor, multi:true },  {provide:HTTP_INTERCEPTORS, useClass:ErrorInterceptor, multi:true },
     UserService],
   entryComponents:[
     ConfirmationDialogComponent,
