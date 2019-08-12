@@ -43,7 +43,7 @@
     </table>
 </div>
 <div class="row page-footer">
-    <div class="col-sm-5 col-12">Tổng số phòng : {{ totalEquipment }}</div>
+    <div class="col-sm-5 col-12">Tổng số tiện ích : {{ totalEquipment }}</div>
     <ngb-pagination class='col-12 col-sm-7 pagination' [collectionSize]="totalEquipment" [(page)]="currentPage" [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event)">
     </ngb-pagination>
 </div>
