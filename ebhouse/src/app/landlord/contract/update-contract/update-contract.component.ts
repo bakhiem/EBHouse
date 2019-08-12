@@ -424,7 +424,7 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
       return;
     }
     this.currentTenant = '';
-    if (!this.createContractFormGroup.controls['tenantSearch'].hasError('pattern')) {
+    if (!this.createContractFormGroup.controls['tenantSearch'].hasError('pattern') && this.createContractFormGroup.get('tenantSearch').value) {
       let data: any = {
         phone: this.createContractFormGroup.value.tenantSearch
       }
@@ -737,7 +737,7 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
   onSubmitTenant() {
     let address = '';
     if (this.createTenantFormGroup.value.address) {
-     address = this.createTenantFormGroup.value.address.replace(/-/g, ' ').replace(/"/g, "\\\"");
+     address = this.createTenantFormGroup.value.address.trim().replace(/-/g, ' ').replace(/"/g, "\\\"");
     }
     let fullAddress = '';
     if (this.createTenantFormGroup.value.wards) {
@@ -746,7 +746,7 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
 
     let tenant = {
       user: {
-        name: this.createTenantFormGroup.value.name.replace(/"/g, ""),
+        name: this.createTenantFormGroup.value.name.trim().replace(/"/g, ""),
         phone: this.createTenantFormGroup.get('phone').value,
         address: fullAddress,
         dateOfBirth: this.createTenantFormGroup.get('dateOfBirth').value ? this.formatDate(this.createTenantFormGroup.get('dateOfBirth').value) : null,

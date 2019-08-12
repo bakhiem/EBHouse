@@ -11,7 +11,12 @@ p{
   font-family: "Open Sans", sans-serif;
 }
 
-
+.custom-quote{
+  font-style: italic;
+  font-family: auto;
+  font-size: 2.2rem;
+  color: gray;
+}
 /* team */
 .team-member img {
   width: 200px;
