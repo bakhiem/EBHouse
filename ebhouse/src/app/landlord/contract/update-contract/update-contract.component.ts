@@ -44,7 +44,6 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
   CommonMessage = CommonMessage;
   availableInThisMonth: boolean = true;
   rotateImageFileProcessor = new RotateImageFileProcessor();
-  namePattern = '[a-zA-Z][^#&<>\"~;$^%{}?]+';
   dataDistric: any[];
   dataWards: any[];
   dataProvince: any[];
@@ -218,7 +217,7 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
     });
 
     this.createTenantFormGroup = this.fb.group({
-      name:this.fb.control('', Validators.compose([Validators.required, Validators.pattern(this.namePattern)])),
+      name: this.fb.control('', Validators.compose([Validators.required])),
       id: '',
       phone: '',
       province: '',
@@ -736,7 +735,10 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
     if (this.createTenantFormGroup.value.wards) {
       fullAddress = address.trim() + "-" + this.createTenantFormGroup.value.wards.name + "-" + this.createTenantFormGroup.value.distric.name + "-" + this.createTenantFormGroup.value.province.name;
     }
-
+    if (this.createTenantFormGroup.get('name').value.trim() == '') {
+      this.showErr('Vui lòng nhập họ tên hợp lệ');
+      return;
+    }
     let tenant = {
       user: {
         name: this.createTenantFormGroup.value.name.trim().replace(/"/g, ""),

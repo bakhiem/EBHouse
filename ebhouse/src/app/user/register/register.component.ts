@@ -19,7 +19,6 @@ export class RegisterComponent implements OnInit {
   CommonMessage = CommonMessage;
   userFormGroup: FormGroup;
   phonePattern = '((09|03|07|08|05)([0-9]{8}))';
-  namePattern = '[a-zA-Z][^#&<>\"~;$^%{}?]+';
   //passwordPattern = '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}';
   constructor(
     private userService: UserService,
@@ -43,7 +42,7 @@ export class RegisterComponent implements OnInit {
       ),
       role: [this.roleDefault],
       phone: this.fb.control('', Validators.compose([Validators.required, Validators.pattern(this.phonePattern)])),
-      fullname: this.fb.control('', Validators.compose([Validators.required, Validators.pattern(this.namePattern)])),
+      fullname: this.fb.control('', Validators.compose([Validators.required])),
     });
   }
   showSuccess(mess) {
@@ -63,6 +62,10 @@ export class RegisterComponent implements OnInit {
   onSubmit() {
     if(/\s/.test(this.userFormGroup.value.pw.password)){
       this.showErr('Mật khẩu không bao gồm khoảng trắng');
+      return;
+    }
+    if(this.userFormGroup.value.fullname.trim() == ''){
+      this.showErr('Họ tên không hợp lệ');
       return;
     }
     this.addLoading();
@@ -110,7 +113,7 @@ export function passwordMatch(c: AbstractControl) {
 function toUserSend(r: any) {
   let userSend = <any>{
     user: {
-      name: r.fullname,
+      name: r.fullname.trim().replace(/"/g, ""),
       password: r.pw.password,
       phone: r.phone,
     },
@@ -121,7 +124,7 @@ function toUserSend(r: any) {
 
 function toUser(r: any): User {
   let userSend = <User>{
-    name: r.fullname,
+    name: r.fullname.trim().replace(/"/g, ""),
     password: r.pw.password,
     role: r.role,
     phone: r.phone,

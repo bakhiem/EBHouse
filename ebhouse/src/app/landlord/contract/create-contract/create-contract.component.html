@@ -373,9 +373,6 @@
                                 class="alert alert-danger">
                                 {{CommonMessage.InputRequire}}tên khách thuê
                             </div>
-                            <div *ngIf="createTenantFormGroup.controls['name'].hasError('pattern') && (createTenantFormGroup.controls['name'].dirty || createTenantFormGroup.controls['name'].touched)" class="alert alert-danger">
-                                Vui lòng nhập họ tên hợp lệ
-                            </div>
                         </div>
                         <div class="col-sm-4">
                             <label for="example-number-input" class="col-form-label required">Số điện thoại</label>

@@ -197,7 +197,6 @@ export class CreateContractComponent implements OnInit, OnDestroy {
     },
     allowedExtensions: ['JPG', 'PnG', 'JPEG']
   };
-  namePattern = '[a-zA-Z][^#&<>\"~;$^%{}?]+';
   //extra fee
   extraFeeList: any[] = [];
   private subscription: ISubscription;
@@ -235,7 +234,7 @@ export class CreateContractComponent implements OnInit, OnDestroy {
     });
 
     this.createTenantFormGroup = this.fb.group({
-      name: this.fb.control('', Validators.compose([Validators.required, Validators.pattern(this.namePattern)])),
+      name: this.fb.control('', Validators.compose([Validators.required])),
       id: '',
       phone: '',
       province: '',
@@ -834,7 +833,10 @@ export class CreateContractComponent implements OnInit, OnDestroy {
     if (this.createTenantFormGroup.value.wards) {
       fullAddress = address.trim() + "-" + this.createTenantFormGroup.value.wards.name + "-" + this.createTenantFormGroup.value.distric.name + "-" + this.createTenantFormGroup.value.province.name;
     }
-
+    if (this.createTenantFormGroup.get('name').value.trim() == '') {
+      this.showErr('Vui lòng nhập họ tên hợp lệ');
+      return;
+    }
     let tenant = {
       user: {
         name: this.createTenantFormGroup.value.name.trim().replace(/"/g, ""),
