@@ -2,6 +2,7 @@ import { Component,ViewChild,OnInit } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 import { AuthenticationService } from './user/service/authentication.service';
+import { SharedServiceService } from './service/shared-service.service';
 // import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 
 // import { map, filter, scan } from 'rxjs/operators';
@@ -19,6 +20,7 @@ export class AppComponent implements OnInit {
   title = 'ebhouse';
   isLoggedIn$: Observable<boolean>;
   constructor(
+    private shareService : SharedServiceService,
     private authService: AuthenticationService,
     private toastrService: ToastrService,
     private _router: Router
@@ -33,6 +35,4 @@ export class AppComponent implements OnInit {
       return true;
     }
   }
-
-
 }

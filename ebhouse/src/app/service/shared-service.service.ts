@@ -23,7 +23,6 @@ export class SharedServiceService {
   currentBh: BehaviorSubject<any>;
   totalNoti: BehaviorSubject<any>;
   bhList: [{}];
-
   constructor(private http: HttpClient) {
     this.currentBh = new BehaviorSubject<any>(null);
     this.totalNoti = new BehaviorSubject<any>(null);

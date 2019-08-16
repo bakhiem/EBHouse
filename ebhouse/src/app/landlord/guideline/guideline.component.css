@@ -1,0 +1,72 @@
+span.step-icon {
+    width: 50px;
+    height: 50px;
+    display: block;
+    -webkit-box-shadow: 0px 5px 18px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    line-height: 50px;
+    text-align: center;
+    color: #fff;
+    font-weight: bold;
+    margin: 0 auto;
+    position: relative;
+}
+.child-1 .step-icon{
+    background: #0EAD69;
+}
+.child-2 .step-icon{
+    background: #efb700;
+}
+.child-3 .step-icon{
+    background: #d66933;
+}
+.child-2 .step-number, .child-2 .step-text{
+    color: #efb700;
+}
+.child-1 .step-number, .child-1 .step-text{
+    color: #0EAD69;
+}
+.child-3 .step-number, .child-3 .step-text{
+    color: #d66933;
+}
+li.has-line:before {
+    position: absolute;
+    content: "";
+    background: #e5e5e5;
+    width: 100%;
+    height: 5px;
+    top: 18%;
+    left: 47%;
+}
+span.step-number {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 1rem;
+    font-weight: 600;
+}
+.step-number i {
+    margin-right: 10px;
+}
+span.step-text {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 0.98rem;
+}
+
+i.fa.fa-building-o {
+    margin-right: 10px;
+}
+
+.three-step div{
+    margin-left: 1rem;
+}
+.three-step h4{
+    margin-bottom: 0;
+}
+@media only screen and (max-width: 600px) {
+    li.has-line:before {
+        top: 7%;
+    }
+  } 

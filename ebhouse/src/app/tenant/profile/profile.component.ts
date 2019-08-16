@@ -37,7 +37,6 @@ export class TenantProfileComponent implements OnInit {
   dataDistric: any[];
   dataWards: any[];
   phonePattern = '((09|03|07|08|05)([0-9]{8}))';
-  namePattern = '[a-zA-Z][^#&<>\"~;$^%{}?]+';
   imgArnFront: string;
   imgArnBack: string;
   profileFormGroup: FormGroup;
@@ -68,7 +67,7 @@ export class TenantProfileComponent implements OnInit {
   ngOnInit() {
     this.getProvince();
     this.profileFormGroup = this.fb.group({
-      name: this.fb.control('', Validators.compose([Validators.required, Validators.pattern(this.namePattern)])),
+      name: this.fb.control('', Validators.compose([Validators.required])),
       phone: this.fb.control('', Validators.compose([Validators.required, Validators.pattern(this.phonePattern)])),
       date: this.fb.control({ value: '', disabled: true }, Validators.compose([Validators.required])),
       sex: this.fb.control(0, Validators.compose([Validators.required])),
@@ -224,7 +223,10 @@ export class TenantProfileComponent implements OnInit {
       this.showErr('Vui lòng nhập ngày sinh');
       return;
     }
-   
+    if (this.profileFormGroup.get('name').value.trim() == '') {
+      this.showErr('Vui lòng nhập họ tên hợp lệ');
+      return;
+    }
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '450px',
       data: "Bạn chắc chắn muốn lưu thông tin không?"

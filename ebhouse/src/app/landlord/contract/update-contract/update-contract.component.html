@@ -283,13 +283,7 @@
                         <!-- <input class="form-control" type="text" id="tenant-address" disabled> -->
                     </div>
                 </div>
-                <div class="form-group row mt-2">
-                    <label class="col-sm-2 ">Ảnh chứng minh thư</label>
-                  </div>
-          
-                <img src="" alt="" id='imgArnFront'>
-                <div class="mt-2"></div>
-                <img src="" alt="" id='imgArnBack'>
+               
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-success" data-dismiss="modal" (click)='saveTenant()'>Lưu khách
@@ -316,9 +310,7 @@
                                 class="alert alert-danger">
                                 {{CommonMessage.InputRequire}}tên khách thuê
                             </div>
-                            <div *ngIf="createTenantFormGroup.controls['name'].hasError('pattern') && (createTenantFormGroup.controls['name'].dirty || createTenantFormGroup.controls['name'].touched)" class="alert alert-danger">
-                                Vui lòng nhập họ tên hợp lệ
-                            </div>
+                           
                         </div>
                         <div class="col-sm-4">
                             <label for="example-number-input" class="col-form-label required">Số điện thoại</label>
