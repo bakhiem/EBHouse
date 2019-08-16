@@ -21,6 +21,7 @@ import { RoomActivityComponent } from './room/room-activity/room-activity.compon
 import { ManageTenantComponent } from './manage-tenant/manage-tenant.component';
 import { WaterComponent } from './water/water.component';
 import { BhExtrafeeComponent } from './extra-fee/bh-extrafee/bh-extrafee.component';
+import { GuidelineComponent } from './guideline/guideline.component';
 const LandlordChildRouters:Routes = [ {
     path:'landlord',
     component:LandlordComponent,
@@ -91,6 +92,11 @@ const LandlordChildRouters:Routes = [ {
       {
         path: 'water',
         component: WaterComponent
+      }
+      ,
+      {
+        path: 'guideline',
+        component: GuidelineComponent
       }
       
     ]

@@ -17,7 +17,7 @@ import {ErrorInterceptor }from './helpers/error.interceptor';
 import {JwtInterceptor }from './helpers/jwt.interceptor';
 import {NgbModule}from '@ng-bootstrap/ng-bootstrap';
 
-import { LocationStrategy} from '@angular/common';
+import { HashLocationStrategy, LocationStrategy ,APP_BASE_HREF} from '@angular/common';
 
 //landlord routing
 import {LandlordRoutingModule }from './landlord/landlord-routing.module';
@@ -76,7 +76,7 @@ import { AdminModule } from './admin/admin.module';
     NotifiModule,
     AppRoutingModule
   ],
-  providers:[{provide: LocationStrategy, useClass: CustomHashLocationStrategy}, {provide:HTTP_INTERCEPTORS, useClass:JwtInterceptor, multi:true },  {provide:HTTP_INTERCEPTORS, useClass:ErrorInterceptor, multi:true },
+  providers:[{provide: LocationStrategy, useClass: HashLocationStrategy}, {provide:HTTP_INTERCEPTORS, useClass:JwtInterceptor, multi:true },  {provide:HTTP_INTERCEPTORS, useClass:ErrorInterceptor, multi:true },
     UserService],
   entryComponents:[
     ConfirmationDialogComponent,

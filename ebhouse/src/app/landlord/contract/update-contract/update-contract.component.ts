@@ -414,8 +414,6 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
     $('#tenant-phone').html('');
     $('#tenant-address').html('');
     $('#tenant-sex').html('');
-    $('#imgArnFront').attr('src','');
-    $('#imgArnBack').attr('src','');
     $('#tenant-date').html('');
   }
   searchByPhone() {
@@ -457,12 +455,7 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
             if (data.user.sex == 2) {
               $('#tenant-sex').html('Nữ');
             }
-            if (data.imgArnFront) {
-              $('#imgArnFront').attr('src', data.imgArnFront.trim() + "?date=" + new Date().getTime());
-            }
-            if (data.imgArnBack) {
-              $('#imgArnBack').attr('src', data.imgArnBack.trim() + "?date=" + new Date().getTime());
-            }
+           
             if(data.user.dateOfBirth && data.user.dateOfBirth.toLowerCase() != 'null'){
               $('#tenant-date').html(this.formatDateDisplay(data.user.dateOfBirth));
             }

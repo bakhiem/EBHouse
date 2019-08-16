@@ -328,7 +328,6 @@ export class FinancialComponent implements OnInit, OnDestroy {
     let month = '' + (d.getMonth() + 1),
       day = '' + d.getDate(),
       year = d.getFullYear();
-
     if (month.length < 2) month = '0' + month;
     if (day.length < 2) day = '0' + day;
     if (type == 1) {
@@ -384,11 +383,16 @@ export class FinancialComponent implements OnInit, OnDestroy {
     this.createEFFormGroup.get('total').setValue(this.convertCurrency(financialNew.total - (oldDebt - oldPayment)));
     this.createEFFormGroup.get('oldDebt').setValue(this.convertCurrency(oldDebt - oldPayment));
     this.createEFFormGroup.get('money').setValue(this.convertCurrency(Number(financialNew.total)));
-    this.createEFFormGroup.get('description').setValue(financialNew.description);
+    if(financialNew.description != null && financialNew.description.toLowerCase() != 'null'){
+      this.createEFFormGroup.get('description').setValue(financialNew.description);
+    }
     //edit payment
     if (Number(financialNew.payment) > 0) {
       this.isEdit = 1;
-      this.createEFFormGroup.get('createDate').setValue(this.formatDateFull(new Date(financialNew.paymentDate), 1));
+      let dateSplit = financialNew.paymentDate.split(' ');
+      let dateSplit2 = dateSplit[0].split('-');
+      let payDate = dateSplit2[2] + '-' + dateSplit2[1] + '-' + dateSplit2[0];
+      this.createEFFormGroup.get('createDate').setValue(payDate);
       this.createEFFormGroup.get('payment').setValue(this.convertCurrency(financialNew.payment));
       this.createEFFormGroup.get('newDebt').setValue(this.convertCurrency(Number(financialNew.total) - Number(financialNew.payment)));
     }

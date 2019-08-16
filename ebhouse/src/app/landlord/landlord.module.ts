@@ -35,6 +35,7 @@ import { ChartsModule } from 'ng2-charts';
 import { WaterComponent } from './water/water.component';
 
 import { BhExtrafeeComponent } from './extra-fee/bh-extrafee/bh-extrafee.component';
+import { GuidelineComponent } from './guideline/guideline.component';
 @NgModule({
   declarations: [
     LandlordComponent,
@@ -54,7 +55,8 @@ import { BhExtrafeeComponent } from './extra-fee/bh-extrafee/bh-extrafee.compone
     RoomActivityComponent,
     ManageTenantComponent,
     BhExtrafeeComponent,
-    WaterComponent
+    WaterComponent,
+    GuidelineComponent
   ],
   imports: [
     BrowserModule,

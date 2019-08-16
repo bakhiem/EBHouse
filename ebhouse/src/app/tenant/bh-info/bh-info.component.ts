@@ -5,7 +5,6 @@ import { DataService } from '../../user/service/data.service';
 import { PlaceService } from '../../service/place.service';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
-
 import { CommonMessage, Message } from '../../models/message';
 import { TenantServiceService } from '../service/tenant-service.service';
 import { AuthenticationService } from '../../user/service/authentication.service';

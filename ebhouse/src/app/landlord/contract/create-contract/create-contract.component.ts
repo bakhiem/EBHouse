@@ -415,8 +415,6 @@ export class CreateContractComponent implements OnInit, OnDestroy {
     $('#tenant-address').html('');
     $('#tenant-sex').html('');
     $('#tenant-date').html('');
-    $('#imgArnFront').attr('src', '');
-    $('#imgArnBack').attr('src', '');
 
   }
   searchByPhone() {
@@ -459,12 +457,6 @@ export class CreateContractComponent implements OnInit, OnDestroy {
             }
             if (data.user.sex == 2) {
               $('#tenant-sex').html('Nữ');
-            }
-            if (data.imgArnFront) {
-              $('#imgArnFront').attr('src', data.imgArnFront.trim() + "?date=" + new Date().getTime());
-            }
-            if (data.imgArnBack) {
-              $('#imgArnBack').attr('src', data.imgArnBack.trim() + "?date=" + new Date().getTime());
             }
             if(data.user.dateOfBirth && data.user.dateOfBirth.toLowerCase() != 'null'){
               $('#tenant-date').html(this.formatDateDisplay(data.user.dateOfBirth));
