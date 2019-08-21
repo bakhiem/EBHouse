@@ -65,8 +65,25 @@ i.fa.fa-building-o {
 .three-step h4{
     margin-bottom: 0;
 }
+.mini-step{
+    margin-top: 0.5rem;
+    display: list-item;
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+}
 @media only screen and (max-width: 600px) {
     li.has-line:before {
         top: 7%;
     }
   } 
+.mini-step span{
+    padding: 3px;
+    color: #E43A45;
+    border-radius: 0px!important;
+    display: inline;
+    word-wrap: normal;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+    cursor: pointer;
+}

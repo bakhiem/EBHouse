@@ -206,31 +206,32 @@ export class RoomComponent implements OnInit, OnDestroy {
         data: "Bạn chắc chắn muốn lưu thay đổi không?"
       });
       dialogRef.afterClosed().subscribe(result => {
-        if(result){
-        let room: any = {
-          bhouseID: Number(this.currentBh.id),
-          roomTypeID: this.createRoomFormGroup.value.roomType.id,
-          room: {
-            id: this.currentRoom.id,
-            name: this.createRoomFormGroup.value.name.trim().replace(/"/g, "\\\""),
-            description: this.createRoomFormGroup.value.description ? this.createRoomFormGroup.value.description.trim().replace(/"/g, "\\\"") : ''
+        if (result) {
+          let room: any = {
+            bhouseID: Number(this.currentBh.id),
+            roomTypeID: this.createRoomFormGroup.value.roomType.id,
+            room: {
+              id: this.currentRoom.id,
+              name: this.createRoomFormGroup.value.name.trim().replace(/"/g, "\\\""),
+              description: this.createRoomFormGroup.value.description ? this.createRoomFormGroup.value.description.trim().replace(/"/g, "\\\"") : ''
+            }
+          }
+          if (room.roomTypeID == this.currentRoom.roomType.id && room.room.name == this.currentRoom.name && room.room.description == this.currentRoom.description) {
+            this.showErr(CommonMessage.notChangeMess)
+          }
+          else {
+            this.addLoading();
+            this.service.editRoom(room).subscribe(
+              res => {
+                this.successRequestHandle(res);
+              },
+              err => {
+                this.errRequestHandle(err);
+              }
+            )
           }
         }
-        if (room.roomTypeID == this.currentRoom.roomType.id && room.room.name == this.currentRoom.name && room.room.description == this.currentRoom.description) {
-          this.showErr(CommonMessage.notChangeMess)
-        }
-        else {
-          this.addLoading();
-          this.service.editRoom(room).subscribe(
-            res => {
-              this.successRequestHandle(res);
-            },
-            err => {
-              this.errRequestHandle(err);
-            }
-          )
-        }
-       }   })
+      })
 
 
     }
@@ -243,24 +244,25 @@ export class RoomComponent implements OnInit, OnDestroy {
         data: "Bạn chắc chắn muốn tạo phòng không không?"
       });
       dialogRef.afterClosed().subscribe(result => {
-        if(result){
-        let room: any = {
-          boardingHouseID: Number(this.currentBh.id),
-          roomTypeID: this.createRoomFormGroup.value.roomType.id,
-          roomName: this.createRoomFormGroup.value.name.trim().replace(/"/g, "\\\""),
-          description: this.createRoomFormGroup.value.description ? this.createRoomFormGroup.value.description.trim().replace(/"/g, "\\\"") : ''
-        }
-
-        this.addLoading();
-        this.service.createRoom(room).subscribe(
-          res => {
-            this.successRequestHandle(res);
-          },
-          err => {
-            this.errRequestHandle(err);
+        if (result) {
+          let room: any = {
+            boardingHouseID: Number(this.currentBh.id),
+            roomTypeID: this.createRoomFormGroup.value.roomType.id,
+            roomName: this.createRoomFormGroup.value.name.trim().replace(/"/g, "\\\""),
+            description: this.createRoomFormGroup.value.description ? this.createRoomFormGroup.value.description.trim().replace(/"/g, "\\\"") : ''
           }
-        )
-      }  })
+
+          this.addLoading();
+          this.service.createRoom(room).subscribe(
+            res => {
+              this.successRequestHandle(res);
+            },
+            err => {
+              this.errRequestHandle(err);
+            }
+          )
+        }
+      })
 
     }
   }
@@ -294,57 +296,73 @@ export class RoomComponent implements OnInit, OnDestroy {
         data: "Bạn chắc chắn muốn tạo phòng trọ không?"
       });
       dialogRef.afterClosed().subscribe(result => {
-        if(result){
-        let room: any;
-        if (this.createMultiRoomFormGroup.value.name.nameFormat != null) {
-          let arr =   this.createMultiRoomFormGroup.value.name.nameFormat.split(',');
-          if(arr.length > 150){
-            this.showErr(CommonMessage.InputMaxRoom);
+        if (result) {
+          let room: any;
+          var active = $(".nav-link.active").attr("id");
+          console.log(active);
+          if(active == 'home-tab'){
+            if (this.createMultiRoomFormGroup.value.name.nameFormat != null) {
+              let arr = this.createMultiRoomFormGroup.value.name.nameFormat.split(',');
+              if (arr.length > 150) {
+                this.showErr(CommonMessage.InputMaxRoom);
+                return;
+              }
+              room = {
+                boardingHouseID: Number(this.currentBh.id),
+                roomTypeID: this.createMultiRoomFormGroup.value.roomType.id,
+                roomName: this.createMultiRoomFormGroup.value.name.nameFormat,
+                description: this.createMultiRoomFormGroup.value.description ? this.createMultiRoomFormGroup.value.description.trim().replace(/"/g, "\\\"") : ''
+              }
+            }
+            else{
+              this.showErr('Vui lòng nhập tên phòng');
+              return;
+            }
+          }
+          else  if(active == 'profile-tab'){
+            if(!this.createMultiRoomFormGroup.value.name.nameBegin || !this.createMultiRoomFormGroup.value.name.nameEnd){
+              this.showErr('Vui lòng nhập vào phòng bắt đầu và phòng kết thúc');
+              return;
+            }
+            let from = this.createMultiRoomFormGroup.value.name.nameBegin;
+            let to = this.createMultiRoomFormGroup.value.name.nameEnd;
+            let arrRoom = '';
+            if (Number(to) < Number(from)) {
+              this.showErr(CommonMessage.toSmallerThanFrom);
+              return;
+            }
+            if (Number(to) - Number(from) > 150) {
+              this.showErr(CommonMessage.InputMaxRoom);
+              return;
+            }
+            for (let i = Number(from); i <= Number(to); i++) {
+              arrRoom += ',' + i;
+            }
+            if (arrRoom.charAt(0) == ',') {
+              arrRoom = arrRoom.substr(1);
+            }
+            room = {
+              boardingHouseID: Number(this.currentBh.id),
+              roomTypeID: this.createMultiRoomFormGroup.value.roomType.id,
+              roomName: arrRoom,
+              description: this.createMultiRoomFormGroup.value.description ? this.createMultiRoomFormGroup.value.description.trim().replace(/"/g, "\\\"") : ''
+            }
+          }
+          else{
             return;
           }
-          room = {
-            boardingHouseID: Number(this.currentBh.id),
-            roomTypeID: this.createMultiRoomFormGroup.value.roomType.id,
-            roomName: this.createMultiRoomFormGroup.value.name.nameFormat,
-            description: this.createMultiRoomFormGroup.value.description ? this.createMultiRoomFormGroup.value.description.trim().replace(/"/g, "\\\"") : ''
-          }
-        }
-        else {
-          let from = this.createMultiRoomFormGroup.value.name.nameBegin;
-          let to = this.createMultiRoomFormGroup.value.name.nameEnd;
-          let arrRoom = '';
-          if (Number(to) < Number(from)) {
-            this.showErr(CommonMessage.toSmallerThanFrom);
-            return;
-          }
-          if(Number(to) - Number(from) > 150){
-            this.showErr(CommonMessage.InputMaxRoom);
-            return;
-          }
-          for (let i = Number(from); i <= Number(to); i++) {
-            arrRoom += ',' + i;
-          }
-          if (arrRoom.charAt(0) == ',') {
-            arrRoom = arrRoom.substr(1);
-          }
-          room = {
-            boardingHouseID: Number(this.currentBh.id),
-            roomTypeID: this.createMultiRoomFormGroup.value.roomType.id,
-            roomName: arrRoom,
-            description: this.createMultiRoomFormGroup.value.description ? this.createMultiRoomFormGroup.value.description.trim().replace(/"/g, "\\\"") : ''
-          }
-        }
 
-        this.addLoading();
-        this.service.createRoom(room).subscribe(
-          res => {
-            this.successRequestHandle(res);
-          },
-          err => {
-            this.errRequestHandle(err);
-          }
-        )
-     } })
+          this.addLoading();
+          this.service.createRoom(room).subscribe(
+            res => {
+              this.successRequestHandle(res);
+            },
+            err => {
+              this.errRequestHandle(err);
+            }
+          )
+        }
+      })
 
 
     }

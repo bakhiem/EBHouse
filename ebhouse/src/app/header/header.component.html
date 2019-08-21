@@ -21,8 +21,11 @@
             </option>
           </select>
          
-          <li class="dropdown" routerLink="/notification/to">
-            <i class="fa fa-envelope-o"><span *ngIf='totalNoti > 0'>{{totalNoti}}</span></i>
+          <li *ngIf='totalNoti == 0' class="dropdown" style="cursor: auto">
+            <i class="fa fa-envelope-o"></i>
+          </li>
+          <li *ngIf='totalNoti > 0' class="dropdown" routerLink="/notification/to">
+            <i class="fa fa-envelope-o"><span>{{totalNoti}}</span></i>
           </li>
           <button type="button" class="btn btn-info custom-logout ml-3" routerLink="/logout"><i class="fa fa-sign-out"></i><span>Đăng xuất</span></button>
           <!-- <a routerLink="/logout" class="btn btn-info btn-lg custom-logout">
