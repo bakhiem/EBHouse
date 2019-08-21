@@ -3,16 +3,23 @@
     <div class="card">
       <div class="card-body">
         <h2 class="header-title">Hướng dẫn sử dụng dành cho chủ trọ</h2>
-      
+
         <div class="three-step mb-3">
-            <h4 class="header-title">3 bước cơ bản sử dụng phần mềm : </h4>
-            <div class="">1. Thiết lập thông tin ban đầu của nhà trọ</div>
-            <div class="">2. Quản lý thông tin hợp đồng & khách thuê</div>
-            <div class="">3. Công việc hàng tháng : nhập số điện, chi phí phát sinh</div>
+          <h4 class="header-title">3 bước cơ bản sử dụng phần mềm : </h4>
+          <div class="">1. Thiết lập thông tin ban đầu của nhà trọ</div>
+          <div class="">2. Quản lý thông tin hợp đồng & khách thuê</div>
+          <div class="">3. Công việc hàng tháng : nhập số điện, chi phí phát sinh, thông tin thanh toán</div>
         </div>
-        <div class="row step-one">
-            <h4 class="header-title">Bước 1 : Thiết lập thông tin nhà trọ</h4>
-            Để có thể
+        <div class=" step-one">
+          <h4 class="header-title">Bước 1 : Thiết lập thông tin nhà trọ</h4>
+          <div class="mini-step">Để có thể bắt đầu bạn cần phải khai báo thông tin nhà trọ tại <span
+              routerLink="/landlord/bh-info"><i class="fa fa-building-o"></i> Nhà Trọ</span> </div>
+          <div class="mini-step">Sau đó điều chỉnh giá dịch vụ tại <span routerLink="/landlord/utility"><i
+                class="fa fa-cloud"></i> Dịch Vụ</span></div>
+          <div class="mini-step"> Tạo loại phòng ở <span routerLink="/landlord/room-type"><i class="fa fa-home"></i>Loại
+              phòng</span></div>
+          <div class="mini-step">Và cuối cùng là tạo phòng ở <span routerLink="/landlord/room"><i
+                class="ti-home"></i> Thông Tin Phòng</span></div>
         </div>
         <ul class="row">
           <li class='col-4 has-line'>
@@ -37,7 +44,67 @@
             </div>
           </li>
         </ul>
+        <div class=" step-two">
+          <h4 class="header-title">Bước 2 : Quản lý thông tin hợp đồng & khách thuê</h4>
+          <div class="">Sau khi khai báo thông tin ban đầu, bạn đã có đầy đủ thông tin nhà trọ, phòng, giá phòng và dịch vụ. </div>
+          <div class="mini-step">Tiếp theo bạn cần quản lý hợp đồng bao gồm : tạo, sửa hoặc kết thúc hợp đồng tại 
+            <span routerLink="/landlord/contract"><i class="ti-slice"></i> Hợp Đồng</span> </div>
+      
+          <div class="mini-step">Sau khi thêm khách thuê, bạn có thể quản lý thông tin khách thuê tại <span routerLink="/landlord/tenant"><i
+                class="fa fa-user"></i> Quản lý khách thuê</span></div>
+        </div>
+        <ul class="row">
+          <li class='col-4 has-line'>
+            <div class="title child-1">
+              <span class="step-icon">1</span>
+              <span class="step-number"><i class="ti-slice"></i>Tạo Hợp Đồng</span>
+              <span class="step-text">Tạo và quản lý thông tin hợp đồng</span>
+            </div>
+          </li>
+          <li class='col-4'>
+            <div class="title child-2">
+              <span class="step-icon ">2</span>
+              <span class="step-number"><i class="fa fa-user"></i>Khách Thuê</span>
+              <span class="step-text">Thêm khách thuê vào nhà trọ và quản lý thông tin</span>
+            </div>
+          </li>
+          
+        </ul>
+        <div class=" step-three">
+          <h4 class="header-title">Bước 3 : Công việc hàng tháng : nhập số điện, chi phí phát sinh, thông tin thanh toán</h4>
+          <div class="">Công việc hàng tháng của bạn rất đơn giản, bạn chỉ cần nhập số điện, chi phí phát sinh(nếu có), hệ thống sẽ tự động tính toán tiền hàng tháng</div>
+          <div class="mini-step">Nhập số công tơ điện tại <span
+              routerLink="/landlord/electric"><i class="ti-pencil-alt"></i> Chỉ Số Điện</span> </div>
+          <div class="mini-step">Nhập chi phí phát sinh tại <span routerLink="/landlord/extrafee"><i
+                class="ti-pencil-alt"></i> Chi Phí Của Phòng</span></div>
+          <div class="mini-step">Xem tổng tiền hàng tháng, thanh toán của từng phòng <span routerLink="/landlord/financial"><i
+                class="ti-money"></i> Phòng Có Hợp Đồng</span></div>
+        </div>
+        <ul class="row">
+          <li class='col-4 has-line'>
+            <div class="title child-1">
+              <span class="step-icon">1</span>
+              <span class="step-number"><i class="ti-pencil-alt"></i>Công Tơ Điện</span>
+              <span class="step-text">Nhập công tơ điện hàng tháng</span>
+            </div>
+          </li>
+          <li class='col-4 has-line'>
+            <div class="title child-2">
+              <span class="step-icon ">2</span>
+              <span class="step-number"><i class="ti-pencil-alt"></i>Chi Phí Phát Sinh</span>
+              <span class="step-text">Nhập chi phí phát sinh của các phòng</span>
+            </div>
+          </li>
+          <li class='col-4'>
+            <div class="title child-3">
+              <span class="step-icon ">3</span>
+              <span class="step-number"><i class="ti-money"></i>Quản Lý Tài Chính</span>
+              <span class="step-text">Tự động tính tổng tiền của tháng, nhập thông tin thanh toán</span>
+            </div>
+          </li>
+        </ul>
       </div>
+
       <!-- <h4 class="header-title">Hướng dẫn sử dụng dành cho chủ trọ</h4>
           <ul>Nhà trọ
             <li>Tạo nhà trọ & Dịch Vụ</li>

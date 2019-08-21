@@ -85,13 +85,13 @@ export class ConfirmPhoneComponent implements OnInit, OnDestroy {
         }
       }
       var firebaseConfig = {
-        apiKey: "AIzaSyByYbJ4m91-JrXamkGSmAP6sQbePsjb0Sc",
-        authDomain: "ebhouse-666d3.firebaseapp.com",
-        databaseURL: "https://ebhouse-666d3.firebaseio.com",
-        projectId: "ebhouse-666d3",
-        storageBucket: "ebhouse-666d3.appspot.com",
-        messagingSenderId: "37350427217",
-        appId: "1:37350427217:web:b58c559557f49517"
+        apiKey: "AIzaSyBAjNulVCz0z1dAjBQfg9gelaIqZRvRFFI",
+        authDomain: "ebhouse-ddd5d.firebaseapp.com",
+        databaseURL: "https://ebhouse-ddd5d.firebaseio.com",
+        projectId: "ebhouse-ddd5d",
+        storageBucket: "",
+        messagingSenderId: "591222908603",
+        appId: "1:591222908603:web:e3565a03f8ccb693"
       };
       if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
