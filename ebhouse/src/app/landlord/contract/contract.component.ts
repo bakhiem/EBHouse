@@ -190,7 +190,15 @@ export class ContractComponent implements OnInit, OnDestroy {
         console.log(err);
       })
   }
-
+  getRoomName(roomId): string {
+    for (let index = 0; index < this.roomList.length; index++) {
+      const element = this.roomList[index];
+      if (element.id == roomId) {
+        return element.name;
+      }
+    }
+    return '';
+  }
   //view contract disable
   viewOnlyContract(obj) {
     this.service.changeCOntract(this.listContract[obj]);
@@ -237,7 +245,7 @@ export class ContractComponent implements OnInit, OnDestroy {
     this.listContract.forEach(element => {
       //add to contract
       contract = {
-        room: element.room.name,
+        room:  this.getRoomName(element.room.id),
         start: this.formatDate(element.startDate),
         end: this.formatDate(element.endDate),
         price: element.roomPrice,
