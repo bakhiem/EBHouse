@@ -67,7 +67,7 @@ export class DashboardComponent implements OnInit {
       }
     }
     else if (this.isAdmin) {
-      this.router.navigate(['/admin/equipment']);
+      this.router.navigate(['/admin/dashboard']);
     } else {
       this.deleteDataInLocal();
     }
