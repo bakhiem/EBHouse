@@ -94,8 +94,6 @@ export class ToNotificationComponent implements OnInit, OnDestroy {
               case 0:
                   this.notifiListSent = data.listNotification;
                   this.totalPageSent = data.totalPage;
-                 
-
                 break;
               case 1:
                   this.notifiListSeen = data.listNotification;
