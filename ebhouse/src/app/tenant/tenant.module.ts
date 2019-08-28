@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { TenantComponent } from './tenant.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TenantProfileComponent } from './profile/profile.component';
-import { TenantDashboardComponent } from './dashboard/dashboard.component';
 
 
 import { TenantRoutingModule } from './tenant-routing.module';
@@ -27,7 +26,6 @@ import { RoomsInfoComponent } from './rooms-info/rooms-info.component';
 @NgModule({
   declarations: [
     TenantProfileComponent,
-    TenantDashboardComponent,
     TenantComponent,
     BhInfoComponent,
     ContractComponent,
