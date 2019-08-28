@@ -159,7 +159,7 @@ export class ToNotificationComponent implements OnInit, OnDestroy {
           noti = this.notifiListAnswered[index];
         break;
     }
-    $('#detailNotification #notifi_userTo').text(noti.userTo.name);
+    $('#detailNotification #notifi_userTo').text(noti.userFrom.name);
     $('#detailNotification #notifi_subject').text(noti.subject);
     $('#detailNotification #notifi_content').text(noti.content);
     $('#detailNotification #notifi_cDate').text(noti.cDate);

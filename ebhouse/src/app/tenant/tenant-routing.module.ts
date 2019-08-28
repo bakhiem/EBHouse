@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TenantDashboardComponent } from './dashboard/dashboard.component';
 import { TenantProfileComponent } from './profile/profile.component';
 import { TenantComponent } from './tenant.component';
 import { Routes, RouterModule } from '@angular/router';
@@ -19,10 +18,6 @@ const TenantChildRouters: Routes = [
     component: TenantComponent,
     canActivate: [AuthGuard], data: { roles: [Role.Tenant] },
     children: [
-      {
-        path: 'dashboard',
-        component: TenantDashboardComponent
-      },
       {
         path: 'profile',
         component: TenantProfileComponent

@@ -17,7 +17,7 @@ import { SharedServiceService } from './service/shared-service.service';
 })
 export class AppComponent implements OnInit {
   @ViewChild(ToastContainerDirective) toastContainer: ToastContainerDirective;
-  title = 'ebhouse';
+  title = 'EBHouse';
   isLoggedIn$: Observable<boolean>;
   constructor(
     private shareService : SharedServiceService,
