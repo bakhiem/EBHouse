@@ -87,7 +87,7 @@
                             <div class="ml-3">Tổng số : {{ totalPageSeen }} thông báo</div>
                         </div>
                         <div class="row">
-                            <ngb-pagination class='col-12 d-flex justify-content-center' [collectionSize]="totalPageSeen" [(page)]="currentPageSeen" [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event,0)">
+                            <ngb-pagination class='col-12 d-flex justify-content-center' [collectionSize]="totalPageSeen" [(page)]="currentPageSeen" [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event,1)">
                             </ngb-pagination>
                         </div>
 
@@ -128,7 +128,7 @@
                             <div class="ml-3">Tổng số : {{ totalPageAnswered }} thông báo</div>
                         </div>
                         <div class="row">
-                            <ngb-pagination class='col-12 d-flex justify-content-center' [collectionSize]="totalPageAnswered" [(page)]="currentPageAnswered" [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event,0)">
+                            <ngb-pagination class='col-12 d-flex justify-content-center' [collectionSize]="totalPageAnswered" [(page)]="currentPageAnswered" [maxSize]="perPage" [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged($event,2)">
                             </ngb-pagination>
                         </div>
 
@@ -156,9 +156,9 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-12">
-                            <label for="example-number-input"  class="col-form-label col-4 col-md-2">Tiêu Đề:</label>
+                            <label for="example-number-input" class="col-form-label col-4 col-md-2">Tiêu Đề:</label>
                             <span id="notifi_subject" style="margin-left: 1rem;font-weight: 600;"></span>
-                          
+
                         </div>
                         <div class="col-12">
                             <label for="input-content" class="col-4">Nội Dung:</label>
