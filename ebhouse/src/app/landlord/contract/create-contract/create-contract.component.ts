@@ -478,6 +478,9 @@ export class CreateContractComponent implements OnInit, OnDestroy {
             });
 
           }
+          else if (response.type == 3) {
+            this.displayDialog('Không thể thêm chủ trọ vào danh sách khách thuê');
+          }
         }, err => {
           this.removeLoading();
           console.log(err);
