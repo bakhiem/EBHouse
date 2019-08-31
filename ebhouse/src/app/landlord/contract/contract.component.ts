@@ -155,7 +155,7 @@ export class ContractComponent implements OnInit, OnDestroy {
         try {
           let response = JSON.parse("" + res);
           if (response.type == 1) {
-            this.getContract();
+           
             let data = response.data;
             console.log(data)
             let elementAll = {
@@ -164,6 +164,7 @@ export class ContractComponent implements OnInit, OnDestroy {
             }
             data.unshift(elementAll);
             this.roomList = data;
+            this.getContract();
             if (this.roomList.length == 0) {
               // this.message.content = CommonMessage.BhHaveNoRoom;
               // this.message.type = 0;
