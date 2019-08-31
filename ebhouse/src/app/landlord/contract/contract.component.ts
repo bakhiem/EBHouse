@@ -71,7 +71,6 @@ export class ContractComponent implements OnInit, OnDestroy {
     this.subscription = this.shareService.currentBh.subscribe((data) => {
       this.currentBh = data;
       if (this.currentBh && this.currentBh.id) {
-        this.getContract();
         this.getRoomsFromCurrentBh();
       } else if (this.currentBh) {
         this.showInfo(CommonMessage.InputBh)
@@ -156,6 +155,7 @@ export class ContractComponent implements OnInit, OnDestroy {
         try {
           let response = JSON.parse("" + res);
           if (response.type == 1) {
+            this.getContract();
             let data = response.data;
             console.log(data)
             let elementAll = {
