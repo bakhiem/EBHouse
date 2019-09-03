@@ -46,9 +46,11 @@ export class BhInfoComponent implements OnInit, OnDestroy {
         this.getBhInfo();
         this.getUtility();
       }
+      
       else if (this.currentBh) {
         this.showInfo(CommonMessage.TenantNoBh)
       }
+      console.log(this.currentBh)
     })
   }
   resetInfo(){
@@ -77,7 +79,16 @@ export class BhInfoComponent implements OnInit, OnDestroy {
           $('#bh-landlord-address').html(resObject.landlordAddress);
           $('#bh-description').html(resObject.bhDescription);
         } else {
-
+          if(response.type = 3){
+            $('#bh-name').html('');
+            $('#bh-address').html('');
+            $('#bh-landlord-name').html('');
+            $('#bh-landlord-phone').html('');
+            $('#bh-landlord-address').html('');
+            $('#bh-description').html('');
+            this.shareService.currentBh.next(null);
+            this.shareService.getAllBoardingHousesTenant().subscribe();
+          }
         }
 
       },
@@ -120,8 +131,20 @@ export class BhInfoComponent implements OnInit, OnDestroy {
 
           //if bh didn't have list utility
           else {
-
+            
           }
+        }
+        else if(response.type == 3){
+          $('#price-' + 1).html('');
+          $('#price-' + 2).html('');
+          $('#price-' + 3).html('');
+          $('#price-' + 4).html('');
+          $('#select-' + 1).html('');
+          $('#select-' + 2).html('');
+          $('#select-' + 3).html('');
+          $('#select-' + 4).html('');
+          this.shareService.currentBh.next(null);
+          this.shareService.getAllBoardingHousesTenant().subscribe();
         }
       }, err => {
         this.removeLoading();

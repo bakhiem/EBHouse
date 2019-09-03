@@ -79,11 +79,14 @@ export class SharedServiceService {
           this.bhList = response.data;
           if (this.bhList.length > 0 && this.currentBh.value == null) {
             this.currentBh.next(this.bhList[0]);
+           
           }
           else if (response.data.length == 0) {
             this.currentBh.next({});
+           
           }
         }
+        
       }, err => {
         console.log(err);
       }));;

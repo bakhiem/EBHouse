@@ -165,6 +165,12 @@ export class RoomsInfoComponent implements OnInit,OnDestroy {
           this.listRooms = [];
         }
         }
+        else if(response.type == 3){
+          this.shareService.currentBh.next(null);
+          this.shareService.getAllBoardingHousesTenant().subscribe();
+          this.dataSource.data = [];
+          // console.log(response)
+        }
       }, err => {
         this.showErr(CommonMessage.defaultErrMess);
         this.removeLoading();

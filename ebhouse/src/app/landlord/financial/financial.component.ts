@@ -525,7 +525,7 @@ export class FinancialComponent implements OnInit, OnDestroy {
       let removeCommaMoney = money.toString().replace(/[^0-9\-]/g, '');
       this.createEFFormGroup.get('newDebt').setValue(this.convertCurrency(Math.abs(Number(removeCommaMoney) - Number(removeComma))));
       if((Number(removeCommaMoney) - Number(removeComma)) > 0){
-        $('#new-debt-label').html('Số tiền khách nợ')
+        $('#new-debt-label').html('Số tiền khách nợ ')
       }
       else if((Number(removeCommaMoney) - Number(removeComma)) < 0){
         $('#new-debt-label').html('Số tiền khách dư')
