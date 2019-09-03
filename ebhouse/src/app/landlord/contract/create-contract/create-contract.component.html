@@ -17,7 +17,12 @@
                         color: #f96776;">
                             <strong>Lưu ý: </strong> Đây là chức năng hỗ trợ lưu thông tin hợp đồng, không có tính pháp lý và không được sử dụng làm hợp đồng chính thức
                         </div> -->
-                        <div class="alert alert-warning col-sm-10" role="alert">
+                        <div class="alert alert-warning col-sm-10" role="alert" style="
+                        padding: 0;
+                        border: none;
+                        background: none;
+                        color: #ffa52d;
+                    ">
                             <strong>Lưu ý: </strong> Đây là chức năng hỗ trợ lưu thông tin hợp đồng, không có tính pháp lý và không được sử dụng làm hợp đồng chính thức
                         </div>
                         <div class="row">
@@ -91,7 +96,7 @@
                         <div class="form-group row mt-3">
                             <div class="col-sm-4">
                                 <label class="col-form-label required">Người đại diện</label>
-                                <select class="custom-select" formControlName="owner" id='select-owner'>
+                                <select class="custom-select mt-1" formControlName="owner" id='select-owner'>
                                     <option *ngFor="let element of listTenant" [ngValue]="element">
                                         {{element.user.name}}
                                     </option>
@@ -103,7 +108,7 @@
                             </div>
                             <div class="col-sm-4">
                                 <label for="example-text-input" class="col-form-label required">Giá phòng</label>
-                                <div class="input-group">
+                                <div class="input-group mt-1">
                                     <input type="text" class="form-control input-price" formControlName="price">
                                     <div class="input-group-append">
                                         <span class="input-group-text">Đồng</span>
@@ -115,7 +120,12 @@
                                 </div>
                             </div>
                             <div class="col-sm-4">
-                                <label for="example-text-input" class="col-form-label">Đặt cọc</label>
+                                <label for="example-text-input" class="col-form-label">Đặt cọc </label>
+                                <small 
+                                style="margin-top: -10px;
+                                        display: block;
+                                        color: #0c5460;
+                                        font-style: italic;">(Khoản đặt cọc không được tính toán vào tài chính)</small>
                                 <div class="input-group">
                                     <input type="text" class="form-control input-price" formControlName="deposit">
                                     <div class="input-group-append">
@@ -176,14 +186,14 @@
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" class="custom-control-input" id="customCheck1">
                                     <label class="custom-control-label" for="customCheck1">Tăng / giảm tiền phòng tháng đầu tiên </label>
-                                    <div class="alert alert-info" role="alert" style="padding: 0.5rem 1rem">
+                                    <div class="alert alert-info" role="alert" style="padding: 0; background : none; border: none">
                                         <i>(Trường hợp thay đổi giá phòng tháng đầu do khách không bắt đầu ở từ ngày mùng 1)</i>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row collapse" id="mycollapse">
-                            <div class="col-sm-8 ">
+                            <div class="col-sm-8">
                                 <div class="custom-control custom-radio custom-control-inline">
                                     <input type="radio" checked="" id="increase" name="customRadio2"
                                         class="custom-control-input">

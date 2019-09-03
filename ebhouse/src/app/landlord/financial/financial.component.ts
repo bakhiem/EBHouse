@@ -362,7 +362,6 @@ export class FinancialComponent implements OnInit, OnDestroy {
     let utilityFee = Number(data.InternetFee) + Number(data.WaterFee) + Number(data.CleaningFee);
     let lstExtraFee = JSON.parse(CommmonFunction.escapeSpecialChars(data.lstExtraFee));
     let oldDebt = 0;
-    
     let oldPayment = 0;
     if (data.financialOld.length > 0) {
       let financialOld = JSON.parse(CommmonFunction.escapeSpecialChars(data.financialOld));
@@ -381,7 +380,16 @@ export class FinancialComponent implements OnInit, OnDestroy {
       this.listExtraFee.push(element);
     }
     this.createEFFormGroup.get('total').setValue(this.convertCurrency(financialNew.total - (oldDebt - oldPayment)));
-    this.createEFFormGroup.get('oldDebt').setValue(this.convertCurrency(oldDebt - oldPayment));
+    this.createEFFormGroup.get('oldDebt').setValue(this.convertCurrency(Math.abs(oldDebt - oldPayment)));
+    if(oldDebt - oldPayment > 0){
+      $('#old-debt-label').html('Số tiền khách <b>nợ</b> tháng trước')
+    }
+    else if(oldDebt - oldPayment < 0){
+      $('#old-debt-label').html('Số tiền khách <b>dư</b> tháng trước')
+    }
+    else{
+      $('#old-debt-label').html('Dư/nợ cũ')
+    }
     this.createEFFormGroup.get('money').setValue(this.convertCurrency(Number(financialNew.total)));
     if(financialNew.description != null && financialNew.description.toLowerCase() != 'null'){
       this.createEFFormGroup.get('description').setValue(financialNew.description);
@@ -394,7 +402,18 @@ export class FinancialComponent implements OnInit, OnDestroy {
       let payDate = dateSplit2[2] + '-' + dateSplit2[1] + '-' + dateSplit2[0];
       this.createEFFormGroup.get('createDate').setValue(payDate);
       this.createEFFormGroup.get('payment').setValue(this.convertCurrency(financialNew.payment));
-      this.createEFFormGroup.get('newDebt').setValue(this.convertCurrency(Number(financialNew.total) - Number(financialNew.payment)));
+      this.createEFFormGroup.get('newDebt').setValue(this.convertCurrency(Math.abs(Number(financialNew.total) - Number(financialNew.payment))));
+      
+      if((Number(financialNew.total) - Number(financialNew.payment)) > 0){
+        $('#new-debt-label').html('Số tiền khách nợ')
+      }
+      else if((Number(financialNew.total) - Number(financialNew.payment)) < 0){
+        $('#new-debt-label').html('Số tiền khách dư')
+      }
+      else{
+        $('#new-debt-label').html('Dư/nợ mới')
+      }
+
     }
     else {
       this.isEdit = 0;
@@ -404,14 +423,24 @@ export class FinancialComponent implements OnInit, OnDestroy {
       else{
         this.createEFFormGroup.get('createDate').setValue(this.formatDateFull(new Date(), 1));
       }
+      $('#new-debt-label').html('Dư/nợ mới')
     }
     $('#payment').on("keyup", (event) => {
       let input = $('#payment').val();
-      let removeComma = input.toString().replace(/[^0-9]/g, '');
+      let removeComma = input.toString().replace(/[^0-9\-]/g, '');
       if (isNaN(Number(removeComma)) == false) {
         let money = this.createEFFormGroup.get('money').value;
-        let removeCommaMoney = money.toString().replace(/[^0-9]/g, '');
-        this.createEFFormGroup.get('newDebt').setValue(this.convertCurrency(Number(removeCommaMoney) - Number(removeComma)));
+        let removeCommaMoney = money.toString().replace(/[^0-9\-]/g, '');
+        this.createEFFormGroup.get('newDebt').setValue(this.convertCurrency(Math.abs(Number(removeCommaMoney) - Number(removeComma))));
+        if((Number(removeCommaMoney) - Number(removeComma)) > 0){
+          $('#new-debt-label').html('Số tiền khách nợ')
+        }
+        else if((Number(removeCommaMoney) - Number(removeComma)) < 0){
+          $('#new-debt-label').html('Số tiền khách dư')
+        }
+        else{
+          $('#new-debt-label').html('Dư/nợ mới')
+        }
       }
     })
     let isCollapShow1 = 0;
@@ -490,11 +519,20 @@ export class FinancialComponent implements OnInit, OnDestroy {
     this.createEFFormGroup.get('payment').setValue(this.convertCurrency(Number(convertMoney) + Number(payment)))
 
     let input = $('#payment').val();
-    let removeComma = input.toString().replace(/[^0-9]/g, '');
+    let removeComma = input.toString().replace(/[^0-9\-]/g, '');
     if (isNaN(Number(removeComma)) == false) {
       let money = this.createEFFormGroup.get('money').value;
-      let removeCommaMoney = money.toString().replace(/[^0-9]/g, '');
-      this.createEFFormGroup.get('newDebt').setValue(this.convertCurrency(Number(removeCommaMoney) - Number(removeComma)));
+      let removeCommaMoney = money.toString().replace(/[^0-9\-]/g, '');
+      this.createEFFormGroup.get('newDebt').setValue(this.convertCurrency(Math.abs(Number(removeCommaMoney) - Number(removeComma))));
+      if((Number(removeCommaMoney) - Number(removeComma)) > 0){
+        $('#new-debt-label').html('Số tiền khách nợ')
+      }
+      else if((Number(removeCommaMoney) - Number(removeComma)) < 0){
+        $('#new-debt-label').html('Số tiền khách dư')
+      }
+      else{
+        $('#new-debt-label').html('Dư/nợ mới')
+      }
     }
   }
   convertToNumberPrice(value): Number {
