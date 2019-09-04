@@ -763,7 +763,7 @@ export class UpdateContractComponent implements OnInit, OnDestroy {
         mess = JSON.parse("" + res);
         console.log(mess)
         if (mess.type == 1) {
-          this.showSuccess(mess.message);
+          this.showSuccess('Thành công, vui lòng bấm Lưu khách thuê để thêm khách thuê vào hợp đồng');
           $('#modal4').modal('hide');
           this.searchByPhone();
         }
